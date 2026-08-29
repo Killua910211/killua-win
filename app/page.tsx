@@ -1,23 +1,43 @@
+import Link from 'next/link';
+
 const tracks = [
   {
     number: '01',
     title: 'Notes',
     cn: '碎片与思考',
     description: '记录学到的事，以及那些还没有标准答案的问题。',
+    href: '/notes',
+    status: '04 ESSAYS',
   },
   {
     number: '02',
     title: 'Builds',
     cn: '作品与实验',
     description: '放置小产品、原型和其他值得被看见的东西。',
+    status: 'SOON',
   },
   {
     number: '03',
     title: 'Elsewhere',
     cn: '去往别处',
     description: '收集有用的链接，也为下一次相遇留个入口。',
+    status: 'SOON',
   },
 ];
+
+function TrackContents({ track }: { track: (typeof tracks)[number] }) {
+  return (
+    <>
+      <span className="track-number">{track.number}</span>
+      <div>
+        <h3>{track.title}</h3>
+        <p className="track-cn">{track.cn}</p>
+      </div>
+      <p className="track-description">{track.description}</p>
+      <span className="coming">{track.status}</span>
+    </>
+  );
+}
 
 export default function Home() {
   return (
@@ -94,17 +114,17 @@ export default function Home() {
           <span>Space index</span>
         </div>
         <div className="track-list">
-          {tracks.map((track) => (
-            <article className="track" key={track.number}>
-              <span className="track-number">{track.number}</span>
-              <div>
-                <h3>{track.title}</h3>
-                <p className="track-cn">{track.cn}</p>
-              </div>
-              <p className="track-description">{track.description}</p>
-              <span className="coming">SOON</span>
-            </article>
-          ))}
+          {tracks.map((track) =>
+            track.href ? (
+              <Link className="track track-link" href={track.href} key={track.number}>
+                <TrackContents track={track} />
+              </Link>
+            ) : (
+              <article className="track" key={track.number}>
+                <TrackContents track={track} />
+              </article>
+            ),
+          )}
         </div>
       </section>
 

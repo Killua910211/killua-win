@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://killua.win'),
+  metadataBase: new URL('https://www.killua.win'),
   title: 'KILLUA.WIN — A quiet place for loud ideas',
   description: '一个正在生长的个人数字空间，收集作品、实验与有趣的未完成。',
   openGraph: {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     description: '一个正在生长的个人数字空间。',
     type: 'website',
     locale: 'zh_CN',
-    url: 'https://killua.win',
+    url: 'https://www.killua.win',
     images: [{ url: '/og.png', width: 1200, height: 630, alt: 'KILLUA.WIN' }],
   },
   twitter: {
