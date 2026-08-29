@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "killua-win",
+  "main": "vinext/server/app-router-entry",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "killua-win-d1",
+      "database_id": "2216e11b-2dea-4764-98f9-b46a5e49685e",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
