@@ -60,7 +60,6 @@ export default async function NotesPage() {
                 <h2>{post.title}</h2>
                 {post.excerpt ? <p>{post.excerpt}</p> : null}
               </div>
-              <span className="note-source">{post.source}</span>
               <span className="note-arrow" aria-hidden="true">
                 ↗
               </span>
