@@ -7,7 +7,7 @@ const tracks = [
     cn: '碎片与思考',
     description: '记录学到的事，以及那些还没有标准答案的问题。',
     href: '/notes',
-    status: '55 ESSAYS',
+    status: '56 ESSAYS',
   },
   {
     number: '02',
