@@ -10,9 +10,7 @@
     "build": "vinext build",
     "deploy": "wrangler deploy --config dist/server/wrangler.json",
     "start": "vinext start",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "wechat:fetch": "node scripts/fetch-wechat-published.mjs",
-    "wechat:prepare": "node scripts/prepare-wechat-import.mjs"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },
   "dependencies": {
     "next": "16.3.3",
