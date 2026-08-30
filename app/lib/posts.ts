@@ -12,6 +12,7 @@ export interface PostSummary {
 export interface Post extends PostSummary {
   content: string;
   source_url: string | null;
+  ai_summary: string | null;
 }
 
 function errorMessage(error: unknown) {
@@ -39,7 +40,7 @@ export async function listPublishedPosts() {
 export const getPublishedPost = cache(async (slug: string) => {
   try {
     return await env.DB.prepare(
-      `SELECT slug, title, excerpt, content, published_at, source, source_url
+      `SELECT slug, title, excerpt, content, published_at, source, source_url, ai_summary
        FROM posts
        WHERE slug = ? AND status = ?
        LIMIT 1`,

@@ -88,6 +88,13 @@ export default async function PostPage({ params }: PostPageProps) {
                 </a>
               ) : null}
             </div>
+
+            {post.ai_summary ? (
+              <section className="post-analysis" aria-label="AI 分析总结">
+                <span>AI READING NOTE</span>
+                <p>{post.ai_summary}</p>
+              </section>
+            ) : null}
           </div>
         </div>
       </article>
