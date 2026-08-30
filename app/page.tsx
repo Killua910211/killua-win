@@ -51,7 +51,17 @@ export default function Home() {
           <a href="#about">About</a>
           <a href="#space">Index</a>
         </nav>
-        <span className="edition">ED. 001</span>
+        <div className="header-actions">
+          <span className="edition">ED. 001</span>
+          <a
+            className="os-entry"
+            href="https://os.killua.win/today"
+            target="_blank"
+            rel="noreferrer"
+          >
+            KILLUA OS <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </header>
 
       <section className="hero" id="top">
