@@ -50,6 +50,7 @@ export default async function PostPage({ params }: PostPageProps) {
         <nav aria-label="主导航">
           <Link href="/">Home</Link>
           <Link href="/notes">Notes</Link>
+          <Link href="/#builds">Builds</Link>
         </nav>
         <span className="edition">ED. 001</span>
       </header>

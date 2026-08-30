@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SystemReadout } from './system-readout';
 
 const tracks = [
   {
@@ -48,8 +49,8 @@ export default function Home() {
           KILLUA.WIN
         </a>
         <nav aria-label="主导航">
-          <a href="#about">About</a>
-          <a href="#space">Index</a>
+          <Link href="/notes">Notes</Link>
+          <a href="#builds">Builds</a>
         </nav>
         <div className="header-actions">
           <span className="edition">ED. 001</span>
@@ -82,7 +83,7 @@ export default function Home() {
             <br />
             收集作品、实验，和有意思的未完成。
           </p>
-          <a className="round-link" href="#about" aria-label="向下浏览">
+          <a className="round-link" href="#space" aria-label="向下浏览">
             <span>↓</span>
           </a>
         </div>
@@ -91,30 +92,6 @@ export default function Home() {
           <div className="orb-ring" />
           <div className="orb-core" />
           <span>K</span>
-        </div>
-      </section>
-
-      <section className="statement" id="about">
-        <div className="section-label">
-          <span>00</span>
-          <span>Now loading</span>
-        </div>
-        <div className="statement-copy">
-          <p className="eyebrow">The first page</p>
-          <h2>
-            网站已经开始了。
-            <br />
-            剩下的，边走边写。
-          </h2>
-          <div className="statement-meta">
-            <p>
-              这是 killua.win 的第一个版本。这里会逐渐加入文章、项目和更多个人线索。
-            </p>
-            <div className="status">
-              <span className="pulse" />
-              Building in public
-            </div>
-          </div>
         </div>
       </section>
 
@@ -130,13 +107,19 @@ export default function Home() {
                 <TrackContents track={track} />
               </Link>
             ) : (
-              <article className="track" key={track.number}>
+              <article
+                className="track"
+                id={track.number === '02' ? 'builds' : undefined}
+                key={track.number}
+              >
                 <TrackContents track={track} />
               </article>
             ),
           )}
         </div>
       </section>
+
+      <SystemReadout />
 
       <footer>
         <a className="wordmark footer-mark" href="#top">
