@@ -288,6 +288,29 @@ a { color: inherit; text-decoration: none; }
   grid-template-columns: minmax(170px, 22vw) 1fr;
   padding: 110px 4vw 140px;
 }
+.notes-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.notes-categories a {
+  padding: 8px 13px;
+  border: 1px solid rgba(21, 21, 21, 0.28);
+  border-radius: 99px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.notes-categories a:hover,
+.notes-categories a:focus-visible,
+.notes-categories .is-active {
+  background: var(--ink);
+  color: #fff;
+  outline: none;
+}
+.notes-categories span { margin-left: 5px; color: #77736a; }
+.notes-categories .is-active span { color: var(--signal); }
 .notes-list { border-top: 1px solid rgba(21, 21, 21, 0.28); }
 .note-row {
   display: grid;
@@ -318,7 +341,21 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
 }
 .note-number { color: #77736a; }
+.note-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 .note-main time { color: #77736a; }
+.note-meta span {
+  padding: 3px 7px;
+  border: 1px solid rgba(21, 21, 21, 0.22);
+  border-radius: 99px;
+  color: #5f5b53;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
 .note-main h2 {
   margin: 10px 0 8px;
   font-size: clamp(28px, 3.3vw, 50px);

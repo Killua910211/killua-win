@@ -9,8 +9,26 @@ export const metadata: Metadata = {
   description: '旧文章与新想法，在这里继续生长。',
 };
 
-export default async function NotesPage() {
+type NotesPageProps = {
+  searchParams: Promise<{ category?: string }>;
+};
+
+export default async function NotesPage({ searchParams }: NotesPageProps) {
   const posts = await listPublishedPosts();
+  const { category: requestedCategory } = await searchParams;
+  const categoryCounts = posts.reduce<Map<string, number>>((counts, post) => {
+    counts.set(post.category, (counts.get(post.category) ?? 0) + 1);
+    return counts;
+  }, new Map());
+  const categories = [...categoryCounts.entries()].sort(([left], [right]) =>
+    left.localeCompare(right, 'zh-CN'),
+  );
+  const activeCategory = categoryCounts.has(requestedCategory ?? '')
+    ? requestedCategory
+    : undefined;
+  const visiblePosts = activeCategory
+    ? posts.filter((post) => post.category === activeCategory)
+    : posts;
 
   return (
     <main className="notes-page">
@@ -46,25 +64,51 @@ export default async function NotesPage() {
 
       <section className="notes-index">
         <div className="section-label">
-          <span>01—{String(posts.length).padStart(2, '0')}</span>
+          <span>01—{String(visiblePosts.length).padStart(2, '0')}</span>
           <span>Published notes</span>
         </div>
-        <div className="notes-list">
-          {posts.map((post, index) => (
-            <Link className="note-row" href={`/notes/${post.slug}`} key={post.slug}>
-              <span className="note-number">{String(index + 1).padStart(2, '0')}</span>
-              <div className="note-main">
-                <time dateTime={post.published_at}>
-                  {formatPublishedDate(post.published_at)}
-                </time>
-                <h2>{post.title}</h2>
-                {post.excerpt ? <p>{post.excerpt}</p> : null}
-              </div>
-              <span className="note-arrow" aria-hidden="true">
-                ↗
-              </span>
+        <div>
+          <nav className="notes-categories" aria-label="文章分类">
+            <Link
+              aria-current={activeCategory ? undefined : 'page'}
+              className={!activeCategory ? 'is-active' : undefined}
+              href="/notes"
+            >
+              全部 <span>{posts.length}</span>
             </Link>
-          ))}
+            {categories.map(([category, count]) => (
+              <Link
+                aria-current={activeCategory === category ? 'page' : undefined}
+                className={activeCategory === category ? 'is-active' : undefined}
+                href={`/notes?category=${encodeURIComponent(category)}`}
+                key={category}
+              >
+                {category} <span>{count}</span>
+              </Link>
+            ))}
+          </nav>
+          <div className="notes-list">
+            {visiblePosts.map((post, index) => (
+              <Link className="note-row" href={`/notes/${post.slug}`} key={post.slug}>
+                <span className="note-number">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <div className="note-main">
+                  <div className="note-meta">
+                    <time dateTime={post.published_at}>
+                      {formatPublishedDate(post.published_at)}
+                    </time>
+                    <span>{post.category}</span>
+                  </div>
+                  <h2>{post.title}</h2>
+                  {post.excerpt ? <p>{post.excerpt}</p> : null}
+                </div>
+                <span className="note-arrow" aria-hidden="true">
+                  ↗
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

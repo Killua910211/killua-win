@@ -6,6 +6,7 @@ export interface PostSummary {
   title: string;
   excerpt: string | null;
   published_at: string;
+  category: string;
   source: string;
 }
 
@@ -22,7 +23,7 @@ function errorMessage(error: unknown) {
 export async function listPublishedPosts() {
   try {
     const result = await env.DB.prepare(
-      `SELECT slug, title, excerpt, published_at, source
+      `SELECT slug, title, excerpt, published_at, category, source
        FROM posts
        WHERE status = ?
        ORDER BY published_at DESC`,
@@ -40,7 +41,7 @@ export async function listPublishedPosts() {
 export const getPublishedPost = cache(async (slug: string) => {
   try {
     return await env.DB.prepare(
-      `SELECT slug, title, excerpt, content, published_at, source, source_url, ai_summary
+      `SELECT slug, title, excerpt, content, published_at, category, source, source_url, ai_summary
        FROM posts
        WHERE slug = ? AND status = ?
        LIMIT 1`,

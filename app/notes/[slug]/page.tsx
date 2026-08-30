@@ -63,6 +63,7 @@ export default async function PostPage({ params }: PostPageProps) {
             <time dateTime={post.published_at}>
               {formatPublishedDate(post.published_at)}
             </time>
+            <span>{post.category}</span>
             <span>{post.source}</span>
           </div>
           <h1>{post.title}</h1>
