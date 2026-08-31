@@ -138,9 +138,8 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
 ## 首页 04 区依赖的外部端点
 
 `app/components/system-readout.tsx` 从 `https://os.killua.win/api/public/stats`
-取数。那个端点有一条硬规则：**返回类型里不允许出现任何承载内容的字符串字段**，
-只有数字和一个 `yyyy-MM-dd` 的日期。官网这边照此设计 —— 逐字段过一遍数值校验，
-不信任整个对象。
+取数。那个端点有一条硬规则：**返回类型里不允许出现任何承载内容的字符串字段**。
+官网这边照此设计 —— 逐字段过一遍运行期校验，不信任类型断言。
 
 当前契约：
 
@@ -150,30 +149,29 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
   traces: number; commitmentRate: number | null; checkinWeeks: number;
   lastSync: string;                    // yyyy-MM-dd
 
-  // 可选。缺失时首页的「Records by kind」整块不渲染，其余读数照常。
-  // 键沿用 OS 的 RecordCategory 枚举名。
-  recordsByKind?: {
-    DAILY:  number;   // OS 里 category IS NULL —— 走时间线的普通记录
-    SCREEN: number;   // 影视
-    BOOK:   number;   // 书籍
-    GAME:   number;   // 游戏
-    PLACE:  number;   // 足迹
-    FOOD:   number;   // 美食
-    LIFE:   number;   // 人生事件
-  };
+  // 可选。缺失或为空时，首页的「Records by kind」整块不渲染，其余读数照常。
+  // 数组顺序即展示顺序，标签由对端给。
+  kinds?: { key: RecordKind; label: RecordKindLabel; count: number }[];
 }
 ```
 
-`recordsByKind` 用固定键 + 数字，**不要**改成 `[{ label, count }]`：那样标签
-就成了从对端流出来的字符串，上面那条规则就破了。中文标签在
-`system-readout.tsx` 的 `RECORD_CATEGORIES` 里，展示顺序也由它决定。
+**标签由 OS 给、不在官网本地维护映射**，是那边有意的设计：将来新增一个分类，
+这一行自动多出一项，不用记得回来补一份映射（漏了就会显示成 `PODCAST`）。
+OS 把 `label` 的类型收成了从 `RECORD_KIND_LABEL` 推出的**字面量联合**而不是
+`string`，所以上面那条硬规则没有被这次改动破坏 —— 想把一条记录的标题赋给
+`label`，编译不过。
 
-各项之和应当等于 `records`（现在是 `2 + 165 = 167`）。官网不做这个校验 ——
+不过类型是编译期的。官网侧仍然给运行期划了边界（`system-readout.tsx`）：
+条数上限 `MAX_KINDS = 12`、单个标签上限 `MAX_LABEL_LENGTH = 12` 字、
+`count` 逐个过数值校验，不合格的项直接剔除。最坏情况是显示一个错的短词，
+而不可能把一段正文塞进首页。
+
+各项 `count` 之和应当等于 `records`（现在 `2 + 165 = 167`）。官网不做这个断言 ——
 对端算错了不该把首页拖垮 —— 但对不上就说明 OS 侧的分组漏了某一类。
 
 > 调试提示：这个 fetch 带 `next: { revalidate: 3600 }`。改完 OS 端点后，
 > 长时间运行的 `pnpm dev` 会继续用缓存里的旧响应，看起来像是没生效。
-> 重启 dev server，或者直接 `pnpm build` 后用 `pnpm preview` 验证。
+> 重启 dev server，或者 `pnpm build` 后用 `pnpm preview` 验证。
 
 ## 重新生成 Workers 类型
 

@@ -8,31 +8,23 @@ type PublicStats = {
   checkinWeeks: number;
   lastSync: string;
   /**
-   * 记录分类计数。可选 —— 端点没返回时，下面这一块整块不渲染。
+   * 记录按种类拆开，自带中文标签，数组顺序即展示顺序。
+   * 可选 —— 端点没返回时，下面这一块整块不渲染。
    *
-   * 键是固定标识符、值只有数字，中文标签留在本文件里（见 RECORD_CATEGORIES）。
-   * 这是有意的：OS 那个端点的硬规则是「返回类型里不允许出现任何承载内容的
-   * 字符串字段」，如果改成 [{ label, count }] 的数组，标签就成了从对端数据
-   * 流出来的字符串，那条规则就破了。
+   * 标签由对端给而不是官网本地维护映射，是 OS 侧有意的设计：将来新增一个
+   * 分类，这一行自动多出一项，不用记得去另一个仓库补映射。OS 那边把 label
+   * 的类型收成了字面量联合而不是 string，所以「类型上放不进承载内容的
+   * 字符串」那条约束仍然成立。
    *
-   * 键沿用 OS 的 RecordCategory 枚举名；DAILY 不在枚举里，对应 category
-   * 为空的普通记录（schema 注释：空 = 走时间线，非空 = 清单条目）。
+   * 但类型是编译期的，运行期拿到的是对端此刻返回的 JSON，所以这里声明成
+   * unknown，由下面的取值代码划边界。
    */
-  recordsByKind?: Partial<Record<RecordKind, number>>;
+  kinds?: { key?: unknown; label?: unknown; count?: unknown }[];
 };
 
-type RecordKind = 'DAILY' | 'SCREEN' | 'BOOK' | 'GAME' | 'PLACE' | 'FOOD' | 'LIFE';
-
-/** 展示顺序与中文标签，都由这里决定，不从对端取。 */
-const RECORD_CATEGORIES: readonly (readonly [RecordKind, string])[] = [
-  ['DAILY', '日常'],
-  ['SCREEN', '影视'],
-  ['BOOK', '书籍'],
-  ['GAME', '游戏'],
-  ['PLACE', '足迹'],
-  ['FOOD', '美食'],
-  ['LIFE', '人生事件'],
-];
+/** 条数与标签长度的上限。见下面取值处的说明。 */
+const MAX_KINDS = 12;
+const MAX_LABEL_LENGTH = 12;
 
 /**
  * KILLUA OS 的运行读数。
@@ -104,11 +96,20 @@ export async function SystemReadout() {
 
   const lastSync = typeof stats?.lastSync === 'string' ? stats.lastSync : null;
 
-  // 逐个字段过 num()，而不是信任整个对象：端点是运行期返回的 JSON，
-  // TypeScript 的类型断言在这里不构成任何保证。全部取不到就整块不渲染。
-  const byCategory = RECORD_CATEGORIES.map(
-    ([key, label]) => [label, num(stats?.recordsByKind?.[key])] as [string, number | null],
-  ).filter((entry): entry is [string, number] => entry[1] !== null);
+  // 标签来自对端，所以给它划一个运行期边界：非空、不超过 MAX_LABEL_LENGTH
+  // 个字，条数不超过 MAX_KINDS。这样既保留了「新增分类官网不用改」的好处，
+  // 又保证对端出错或被改时，最坏情况也只是显示一个错的短词 —— 而不可能
+  // 把一段正文塞进首页。count 同样逐个过 num()，取不到的那一项直接剔除。
+  const byCategory = (Array.isArray(stats?.kinds) ? stats.kinds : [])
+    .slice(0, MAX_KINDS)
+    .map((kind) => ({
+      label: typeof kind?.label === 'string' ? kind.label.trim() : '',
+      count: num(kind?.count),
+    }))
+    .filter(
+      (kind): kind is { label: string; count: number } =>
+        kind.label.length > 0 && kind.label.length <= MAX_LABEL_LENGTH && kind.count !== null,
+    );
 
   return (
     <section className="readout" id="system" aria-labelledby="readout-heading">
@@ -146,10 +147,10 @@ export async function SystemReadout() {
               Records by kind
             </p>
             <dl className="readout-breakdown-list">
-              {byCategory.map(([label, value]) => (
+              {byCategory.map(({ label, count }) => (
                 <div className="readout-breakdown-item" key={label}>
                   <dt>{label}</dt>
-                  <dd>{value}</dd>
+                  <dd>{count}</dd>
                 </div>
               ))}
             </dl>
