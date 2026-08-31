@@ -794,6 +794,45 @@ footer p:last-child { justify-self: end; }
   letter-spacing: 0;
   color: rgba(255, 255, 255, 0.5);
 }
+/* ── 记录分类明细 ────────────────────────────────────────────
+   Records 那张卡的拆解。刻意比主卡片轻一档：不描边、字号更小，
+   读起来是「上面那个数字的构成」，不是又一组并列指标。 */
+.readout-breakdown { margin-top: 22px; }
+.readout-breakdown-label {
+  margin: 0 0 14px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.52);
+}
+.readout-breakdown-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(204, 255, 0, 0.22);
+}
+.readout-breakdown-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.readout-breakdown-item dt {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.72);
+}
+.readout-breakdown-item dd {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--signal);
+  font-variant-numeric: tabular-nums;
+}
+
 .readout-sync {
   margin: 26px 0 0;
   font-family: var(--font-geist-mono), monospace;

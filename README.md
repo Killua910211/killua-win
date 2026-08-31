@@ -135,6 +135,38 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
 | `/sitemap.xml` `/robots.txt` `/feed.xml` | 索引与订阅 |
 | `/api/database` | 健康检查，返回 `database_version` |
 
+## 首页 04 区依赖的外部端点
+
+`app/components/system-readout.tsx` 从 `https://os.killua.win/api/public/stats`
+取数。那个端点有一条硬规则：**返回类型里不允许出现任何承载内容的字符串字段**，
+只有数字和一个 `yyyy-MM-dd` 的日期。官网这边照此设计 —— 逐字段过一遍数值校验，
+不信任整个对象。
+
+当前契约：
+
+```ts
+{
+  days: number; records: number; decisions: number; decided: number;
+  traces: number; commitmentRate: number | null; checkinWeeks: number;
+  lastSync: string;                    // yyyy-MM-dd
+
+  // 可选。缺失时首页的「Records by kind」整块不渲染，其余读数照常。
+  recordsByCategory?: {
+    daily:  number;   // OS 里 category IS NULL —— 走时间线的普通记录
+    screen: number;   // SCREEN 影视
+    book:   number;   // BOOK   书籍
+    game:   number;   // GAME   游戏
+    place:  number;   // PLACE  足迹
+    food:   number;   // FOOD   美食
+    life:   number;   // LIFE   人生事件
+  };
+}
+```
+
+`recordsByCategory` 用固定键 + 数字，**不要**改成 `[{ label, count }]`：那样标签
+就成了从对端流出来的字符串，上面那条规则就破了。中文标签在
+`system-readout.tsx` 的 `RECORD_CATEGORIES` 里，展示顺序也由它决定。
+
 ## 重新生成 Workers 类型
 
 `worker-configuration.d.ts`（587 KB，已入库）由 wrangler 生成。改了 `wrangler.jsonc`

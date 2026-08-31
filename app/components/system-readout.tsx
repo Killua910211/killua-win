@@ -7,7 +7,35 @@ type PublicStats = {
   commitmentRate: number | null;
   checkinWeeks: number;
   lastSync: string;
+  /**
+   * 记录分类计数。可选 —— 端点还没开始返回时，下面这一块整块不渲染。
+   *
+   * 键是固定标识符、值只有数字，中文标签留在本文件里（见 RECORD_CATEGORIES）。
+   * 这是有意的：OS 那个端点的硬规则是「返回类型里不允许出现任何承载内容的
+   * 字符串字段」，如果改成 [{ label, count }] 的数组，标签就成了从对端数据
+   * 流出来的字符串，那条规则就破了。
+   */
+  recordsByCategory?: {
+    daily: number;
+    screen: number;
+    book: number;
+    game: number;
+    place: number;
+    food: number;
+    life: number;
+  };
 };
+
+/** 展示顺序与中文标签。key 对应 OS 的 RecordCategory 枚举，daily 是 category 为空的普通记录。 */
+const RECORD_CATEGORIES = [
+  ['daily', '日常'],
+  ['screen', '影视'],
+  ['book', '书籍'],
+  ['game', '游戏'],
+  ['place', '足迹'],
+  ['food', '美食'],
+  ['life', '人生事件'],
+] as const;
 
 /**
  * KILLUA OS 的运行读数。
@@ -79,6 +107,12 @@ export async function SystemReadout() {
 
   const lastSync = typeof stats?.lastSync === 'string' ? stats.lastSync : null;
 
+  // 逐个字段过 num()，而不是信任整个对象：端点是运行期返回的 JSON，
+  // TypeScript 的类型断言在这里不构成任何保证。全部取不到就整块不渲染。
+  const byCategory = RECORD_CATEGORIES.map(
+    ([key, label]) => [label, num(stats?.recordsByCategory?.[key])] as [string, number | null],
+  ).filter((entry): entry is [string, number] => entry[1] !== null);
+
   return (
     <section className="readout" id="system" aria-labelledby="readout-heading">
       <div className="section-label light" lang="en">
@@ -108,6 +142,22 @@ export async function SystemReadout() {
             </div>
           ))}
         </dl>
+
+        {byCategory.length > 0 ? (
+          <div className="readout-breakdown">
+            <p className="readout-breakdown-label" lang="en">
+              Records by kind
+            </p>
+            <dl className="readout-breakdown-list">
+              {byCategory.map(([label, value]) => (
+                <div className="readout-breakdown-item" key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ) : null}
 
         {lastSync ? (
           <p className="readout-sync" lang="en">
