@@ -143,7 +143,7 @@ WHERE slug = 'qq-1313065153' AND excerpt <> '疯子常说，滚。特别有韵�
 ------------------------------------------------------------------------------
 -- 3. 正文首行与标题逐字重复（微信三篇）
 --
--- 0010 只移除了正文里的来源署名行，重复的标题行还在。用 LIKE 锚定开头 + SUBSTR
+-- 0010 只移除了正文里的来源署名行，重复的标题行还在。用 INSTR 锚定开头 + SUBSTR
 -- 切除，比裸 REPLACE 安全：wechat-na 的正文第三行同样以「呐，」开头，必须精确匹配
 -- 「呐 + 两个换行」才不会误伤；wechat-han-yao-fu 的第二行「宋代：吕蒙正」是有效的
 -- 作者署名，必须保留。切完后开头不再匹配，故幂等。
@@ -153,19 +153,19 @@ UPDATE posts
 SET content = SUBSTR(content, LENGTH('破窑赋 / 寒窑赋 / 劝世章' || char(10) || char(10)) + 1),
     updated_at = CURRENT_TIMESTAMP
 WHERE slug = 'wechat-han-yao-fu'
-  AND content LIKE '破窑赋 / 寒窑赋 / 劝世章' || char(10) || char(10) || '%';
+  AND INSTR(content, '破窑赋 / 寒窑赋 / 劝世章' || char(10) || char(10)) = 1;
 
 UPDATE posts
 SET content = SUBSTR(content, LENGTH('饥饿' || char(10) || char(10)) + 1),
     updated_at = CURRENT_TIMESTAMP
 WHERE slug = 'wechat-hunger'
-  AND content LIKE '饥饿' || char(10) || char(10) || '%';
+  AND INSTR(content, '饥饿' || char(10) || char(10)) = 1;
 
 UPDATE posts
 SET content = SUBSTR(content, LENGTH('呐' || char(10) || char(10)) + 1),
     updated_at = CURRENT_TIMESTAMP
 WHERE slug = 'wechat-na'
-  AND content LIKE '呐' || char(10) || char(10) || '%';
+  AND INSTR(content, '呐' || char(10) || char(10)) = 1;
 
 ------------------------------------------------------------------------------
 -- 4. 0004 覆盖 0003 时带进来的正文退化
@@ -179,35 +179,35 @@ UPDATE posts
 SET content = REPLACE(content, '那个啥 ！。 有时候', '那个啥！有时候'),
     updated_at = CURRENT_TIMESTAMP
 WHERE slug = 'pawn-seven-moves-forward'
-  AND content LIKE '%那个啥 ！。 有时候%';
+  AND INSTR(content, '那个啥 ！。 有时候') > 0;
 
 -- 0003 原文为『有没有？他没有』。
 UPDATE posts
 SET content = REPLACE(content, '有没有？。 他没有', '有没有？他没有'),
     updated_at = CURRENT_TIMESTAMP
 WHERE slug = 'pawn-seven-moves-forward'
-  AND content LIKE '%有没有？。 他没有%';
+  AND INSTR(content, '有没有？。 他没有') > 0;
 
 -- 恢复 0003 里被 0004 抹掉的 3 处段落空行（否则三组本该分段的句子会被粘成一段）。
--- 替换后模式变成两个换行，不再匹配单换行的搜索串；WHERE 里同样带 content LIKE 守卫，
+-- 替换后模式变成两个换行，不再匹配单换行的搜索串；WHERE 里同样带 INSTR 守卫，
 -- 因此重跑既不改正文、也不会刷新 updated_at。
 UPDATE posts
 SET content = REPLACE(content, '还是回家吧。' || char(10) || '旧人不知我近况，新人不知我过往；', '还是回家吧。' || char(10) || char(10) || '旧人不知我近况，新人不知我过往；'),
     updated_at = CURRENT_TIMESTAMP
 WHERE slug = 'loneliness-is-not-a-misunderstanding'
-  AND content LIKE '%' || '还是回家吧。' || char(10) || '旧人不知我近况，新人不知我过往；' || '%';
+  AND INSTR(content, '还是回家吧。' || char(10) || '旧人不知我近况，新人不知我过往；') > 0;
 
 UPDATE posts
 SET content = REPLACE(content, '有些话告诉了风，风会告诉整片森林。' || char(10) || '成年人多半如此——各自有渡口，方向不同，孤独是常态。', '有些话告诉了风，风会告诉整片森林。' || char(10) || char(10) || '成年人多半如此——各自有渡口，方向不同，孤独是常态。'),
     updated_at = CURRENT_TIMESTAMP
 WHERE slug = 'loneliness-is-not-a-misunderstanding'
-  AND content LIKE '%' || '有些话告诉了风，风会告诉整片森林。' || char(10) || '成年人多半如此——各自有渡口，方向不同，孤独是常态。' || '%';
+  AND INSTR(content, '有些话告诉了风，风会告诉整片森林。' || char(10) || '成年人多半如此——各自有渡口，方向不同，孤独是常态。') > 0;
 
 UPDATE posts
 SET content = REPLACE(content, '短期目标、长期方向、维度层次，都有大致轮廓。' || char(10) || '所以我的问题并不在这两点，而在第三点——我如何存在于他人的眼光之中。', '短期目标、长期方向、维度层次，都有大致轮廓。' || char(10) || char(10) || '所以我的问题并不在这两点，而在第三点——我如何存在于他人的眼光之中。'),
     updated_at = CURRENT_TIMESTAMP
 WHERE slug = 'loneliness-is-not-a-misunderstanding'
-  AND content LIKE '%' || '短期目标、长期方向、维度层次，都有大致轮廓。' || char(10) || '所以我的问题并不在这两点，而在第三点——我如何存在于他人的眼光之中。' || '%';
+  AND INSTR(content, '短期目标、长期方向、维度层次，都有大致轮廓。' || char(10) || '所以我的问题并不在这两点，而在第三点——我如何存在于他人的眼光之中。') > 0;
 
 ------------------------------------------------------------------------------
 -- 5. 导入残留空白清理

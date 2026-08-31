@@ -110,6 +110,25 @@ if (migrationFiles.length === 0) {
   process.exit(1);
 }
 
+// ---------------------------------------- D1 兼容性：迁移里不许出现 LIKE
+//
+// 本地 SQLite 和 Cloudflare D1 对 LIKE 的模式长度限制不同。D1 那边低得多：
+// `LIKE '%那个啥 ！。 有时候%'`（中文 9 字）能过，而跨换行的
+// `LIKE '%还是回家吧。' || char(10) || '旧人不知我近况…%'`（24 字）会直接报
+// `LIKE or GLOB pattern too complex`。这类失败**本地重放测不出来**，只会在
+// `wrangler d1 migrations apply --remote` 那一刻炸在生产库上。
+//
+// INSTR 没有这个限制，语义也够用（`INSTR(x, s) > 0` 等价于 `x LIKE '%s%'`，
+// `INSTR(x, s) = 1` 等价于前缀匹配）。唯一的差别是 LIKE 对 ASCII 字母大小写
+// 不敏感而 INSTR 敏感 —— 真需要忽略大小写时用 LOWER() 显式处理。
+for (const name of migrationFiles) {
+  const sql = stripComments(readFileSync(join(MIGRATIONS_DIR, name), 'utf8'));
+  if (/\bLIKE\b/i.test(sql)) {
+    check(false, `migrations/${name} 里用了 LIKE。D1 的模式长度上限远低于本地 SQLite，` +
+      '这类失败只会在应用到生产库时才暴露 —— 改用 INSTR()。');
+  }
+}
+
 const db = new DatabaseSync(':memory:');
 
 for (const name of migrationFiles) {

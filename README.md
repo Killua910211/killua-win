@@ -35,6 +35,12 @@ pnpm deploy           # build → 应用远程迁移 → wrangler deploy
 
 只想重新部署、不想动数据库时用 `pnpm deploy:only`。
 
+内容类迁移上线前先导一份生产库：
+
+```bash
+pnpm exec wrangler d1 export killua-win-d1 --remote --output .wrangler/backups/pre-NNNN.sql
+```
+
 ## 发一篇新文章
 
 **不要手写 SQL 迁移。** 57 篇正文里 ASCII 单引号数恰好为 0 纯属运气 —— 写进一个 `don't` 就会炸库。
@@ -82,13 +88,19 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
 
 `projects` 表建好了但还没用（首页 02/03 两块标着 `SOON`）。
 
-### 迁移的两条纪律
+### 迁移的三条纪律
 
 1. **每条 INSERT 都要 `ON CONFLICT(slug) DO UPDATE`。** D1 迁移不跑事务，中途失败会留下
    半应用状态；全幂等才能修好直接重跑。
 2. **只前滚，不改历史迁移。** 内容修订走新迁移（`0010`、`0013` 就是这么做的）。
    代价是单个迁移文件不再是最终内容的忠实记录 —— 做内容审计必须按顺序回放全部迁移，
    或者直接查库。
+3. **迁移里不许用 `LIKE`，用 `INSTR`。** D1 对 LIKE 的模式长度限制远低于本地
+   SQLite：`LIKE '%那个啥 ！。 有时候%'`（中文 9 字）能过，跨换行的 24 字
+   模式就会报 `LIKE or GLOB pattern too complex`。**这类失败本地重放测不出来**，
+   只在 `wrangler d1 migrations apply --remote` 那一刻炸在生产库上（0013 就中过一次）。
+   `INSTR(x, s) > 0` 等价于 `x LIKE '%s%'`，`INSTR(x, s) = 1` 等价于前缀匹配。
+   `scripts/replay-migrations.mjs` 现在会静态拦截迁移里的 LIKE。
 
 ## vinext 的几个坑
 
