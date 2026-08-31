@@ -1,9 +1,21 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { formatPublishedDate, getPublishedPost } from '@/app/lib/posts';
+import { SiteFooter } from '@/app/components/site-footer';
+import { SiteHeader } from '@/app/components/site-header';
+import { buildMetadata, SITE } from '@/app/lib/metadata';
+import { formatPublishedDate, getPublishedPost, type Post } from '@/app/lib/posts';
 
-export const dynamic = 'force-dynamic';
+/**
+ * 从 force-dynamic 改成按需 ISR：第一个请求渲染并写入缓存，
+ * 之后一小时内的请求直接命中，不再打 D1。
+ *
+ * 没有 generateStaticParams：vinext 的预渲染阶段跑在纯 Node 里
+ * （run-prerender.js: "no wrangler/miniflare is needed"），构建期没有
+ * D1 绑定，在那里查库会让 `vinext build` 直接失败。所以这里不做构建期
+ * 静态化，只做运行期按需缓存 —— 对一个内容几乎不变的归档站，效果接近。
+ */
+export const revalidate = 3600;
 
 type PostPageProps = {
   params: Promise<{ slug: string }>;
@@ -11,23 +23,50 @@ type PostPageProps = {
 
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
   const { slug } = await params;
+  // getPublishedPost 包了 React cache()，和下面的页面组件共享同一次查询。
   const post = await getPublishedPost(slug);
 
   if (!post) {
-    return { title: '文章未找到 — KILLUA.WIN' };
+    return { title: '文章未找到' };
   }
 
-  return {
-    title: `${post.title} — KILLUA.WIN`,
-    description: post.excerpt ?? undefined,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt ?? undefined,
-      type: 'article',
-      publishedTime: post.published_at,
-      url: `/notes/${post.slug}`,
-    },
+  return buildMetadata({
+    title: post.title,
+    description: post.excerpt ?? SITE.description,
+    path: `/notes/${post.slug}`,
+    type: 'article',
+    ...(post.published_at ? { publishedTime: post.published_at } : {}),
+  });
+}
+
+/**
+ * Article 结构化数据。
+ *
+ * JSON.stringify 不转义 `<`，标题里真出现 "</script" 就能从这个块里逃出去。
+ * 把 `<` 全部转成 < 是这个场景的标准写法 —— JSON 里合法，HTML 解析器
+ * 看不到闭合标签。
+ */
+function ArticleJsonLd({ post }: { post: Post }) {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    ...(post.excerpt ? { description: post.excerpt } : {}),
+    ...(post.published_at ? { datePublished: post.published_at } : {}),
+    dateModified: post.updated_at,
+    inLanguage: 'zh-CN',
+    author: { '@type': 'Person', name: SITE.name },
+    publisher: { '@type': 'Organization', name: SITE.name },
+    mainEntityOfPage: `${SITE.url}/notes/${post.slug}`,
+    image: `${SITE.url}${SITE.ogImage}`,
   };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, '\\u003c') }}
+    />
+  );
 }
 
 export default async function PostPage({ params }: PostPageProps) {
@@ -38,77 +77,72 @@ export default async function PostPage({ params }: PostPageProps) {
     notFound();
   }
 
-  const paragraphs = post.content.split(/\n{2,}/).filter(Boolean);
+  // 只按空行切段。trim() 会吃掉全角空格 U+3000，所以纯全角空格的"空段"
+  // 不会再渲染成一个撑出两行留白的空 <p>。
+  const paragraphs = post.content.split(/\n{2,}/).filter((block) => block.trim() !== '');
+  const archiveYear = post.published_at?.slice(0, 4) ?? null;
 
   return (
-    <main className="post-page">
-      <header className="site-header page-site-header">
-        <Link className="wordmark" href="/" aria-label="killua.win 首页">
-          <span className="wordmark-dot" />
-          KILLUA.WIN
-        </Link>
-        <nav aria-label="主导航">
-          <Link href="/">Home</Link>
-          <Link href="/notes">Notes</Link>
-          <Link href="/#builds">Builds</Link>
-        </nav>
-        <span className="edition">ED. 001</span>
-      </header>
+    <>
+      <SiteHeader current="notes" />
 
-      <article className="post-article">
-        <header className="post-heading">
-          <Link className="back-link" href="/notes">
-            ← Back to notes
-          </Link>
-          <div className="post-meta">
-            <time dateTime={post.published_at}>
-              {formatPublishedDate(post.published_at)}
-            </time>
-            <span>{post.category}</span>
-            <span>{post.source}</span>
-          </div>
-          <h1>{post.title}</h1>
-          {post.excerpt ? <p className="post-deck">{post.excerpt}</p> : null}
-        </header>
+      <main id="main" className="post-page">
+        <ArticleJsonLd post={post} />
 
-        <div className="post-layout">
-          <aside aria-label="文章信息">
-            <span>Archive no.</span>
-            <strong>{post.published_at.slice(0, 4)}</strong>
-          </aside>
-          <div className="post-body">
-            {paragraphs.map((paragraph, index) => (
-              <p key={`${post.slug}-${index}`}>{paragraph}</p>
-            ))}
+        <article className="post-article">
+          <header className="post-heading">
+            <Link className="back-link" href="/notes" lang="en">
+              ← Back to notes
+            </Link>
+            <div className="post-meta">
+              {post.published_at ? (
+                <time dateTime={post.published_at}>
+                  {formatPublishedDate(post.published_at)}
+                </time>
+              ) : null}
+              <span>{post.category}</span>
+              <span>{post.source}</span>
+            </div>
+            <h1>{post.title}</h1>
+            {post.excerpt ? <p className="post-deck">{post.excerpt}</p> : null}
+          </header>
 
-            <div className="post-origin">
-              <span>FROM THE ARCHIVE</span>
-              <p>原载于 {post.source}，迁移时仅清理了排版与异常空格。</p>
-              {post.source_url ? (
-                <a href={post.source_url} rel="noreferrer" target="_blank">
-                  查看原文 ↗
-                </a>
+          <div className="post-layout">
+            {archiveYear ? (
+              <aside aria-label="文章信息">
+                <span lang="en">Archive no.</span>
+                <strong>{archiveYear}</strong>
+              </aside>
+            ) : (
+              <div />
+            )}
+            <div className="post-body">
+              {paragraphs.map((paragraph, index) => (
+                <p key={`${post.slug}-${index}`}>{paragraph}</p>
+              ))}
+
+              <div className="post-origin">
+                <span lang="en">FROM THE ARCHIVE</span>
+                <p>原载于 {post.source}，迁移时仅清理了排版与异常空格。</p>
+                {post.source_url ? (
+                  <a href={post.source_url} rel="noreferrer noopener" target="_blank">
+                    查看原文 ↗
+                  </a>
+                ) : null}
+              </div>
+
+              {post.ai_summary ? (
+                <section className="post-analysis" aria-label="AI 分析总结">
+                  <span lang="en">AI READING NOTE</span>
+                  <p>{post.ai_summary}</p>
+                </section>
               ) : null}
             </div>
-
-            {post.ai_summary ? (
-              <section className="post-analysis" aria-label="AI 分析总结">
-                <span>AI READING NOTE</span>
-                <p>{post.ai_summary}</p>
-              </section>
-            ) : null}
           </div>
-        </div>
-      </article>
+        </article>
+      </main>
 
-      <footer>
-        <Link className="wordmark footer-mark" href="/">
-          <span className="wordmark-dot" />
-          KILLUA.WIN
-        </Link>
-        <p>Ideas need somewhere to land.</p>
-        <p>© 2026 / ALL SYSTEMS NOMINAL</p>
-      </footer>
-    </main>
+      <SiteFooter />
+    </>
   );
 }

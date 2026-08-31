@@ -1,292 +1,57 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { formatPublishedDate, listPublishedPosts } from '@/app/lib/posts';
+import { NotesArchive } from '@/app/components/notes-archive';
+import { NotesPreface } from '@/app/components/notes-preface';
+import { SiteFooter } from '@/app/components/site-footer';
+import { SiteHeader } from '@/app/components/site-header';
+import { buildMetadata } from '@/app/lib/metadata';
+import { listPublishedPosts } from '@/app/lib/posts';
 
-export const dynamic = 'force-dynamic';
-
-export const metadata: Metadata = {
-  title: 'Notes — KILLUA.WIN',
+export const metadata = buildMetadata({
+  title: 'Notes',
   description: '旧文章与新想法，在这里继续生长。',
-};
+  path: '/notes',
+});
 
-type NotesPageProps = {
-  searchParams: Promise<{ category?: string }>;
-};
+/**
+ * 从 force-dynamic 改成每小时再生成。
+ *
+ * 之前分类过滤走 `?category=`，读 searchParams 会让这一页**永远**动态渲染，
+ * 缓存声明写了也没用。现在分类是独立路由段 /notes/category/[category]，
+ * 这一页不再读任何请求态输入，可以整页缓存。
+ */
+export const revalidate = 3600;
 
-export default async function NotesPage({ searchParams }: NotesPageProps) {
+export default async function NotesPage() {
   const posts = await listPublishedPosts();
-  const { category: requestedCategory } = await searchParams;
-  const categoryCounts = posts.reduce<Map<string, number>>((counts, post) => {
-    counts.set(post.category, (counts.get(post.category) ?? 0) + 1);
-    return counts;
-  }, new Map());
-  const categories = [...categoryCounts.entries()].sort(([left], [right]) =>
-    left.localeCompare(right, 'zh-CN'),
-  );
-  const activeCategory = categoryCounts.has(requestedCategory ?? '')
-    ? requestedCategory
-    : undefined;
-  const visiblePosts = activeCategory
-    ? posts.filter((post) => post.category === activeCategory)
-    : posts;
 
   return (
-    <main className="notes-page">
-      <header className="site-header page-site-header">
-        <Link className="wordmark" href="/" aria-label="killua.win 首页">
-          <span className="wordmark-dot" />
-          KILLUA.WIN
-        </Link>
-        <nav aria-label="主导航">
-          <Link href="/">Home</Link>
-          <Link href="/notes">Notes</Link>
-          <Link href="/#builds">Builds</Link>
-        </nav>
-        <span className="edition">ED. 001</span>
-      </header>
+    <>
+      <SiteHeader current="notes" />
 
-      <section className="notes-hero">
-        <div className="section-label light">
-          <span>01</span>
-          <span>Writing archive</span>
-        </div>
-        <div>
-          <p className="eyebrow">Notes / 碎片与思考</p>
-          <h1>
-            OLD WORDS,
-            <br />
-            NEW <span className="outline">LIGHT.</span>
-          </h1>
-          <p className="notes-intro">
-            从旧空间迁来的文字，也会放进以后持续写下的新想法。
-          </p>
-        </div>
-      </section>
-
-      <section className="notes-preface" id="preface">
-        <div className="section-label">
-          <span>02</span>
-          <span>Preface</span>
-        </div>
-        <div className="notes-preface-copy">
-          <p className="eyebrow">2008—Now / Personal arc</p>
-          <h2>
-            从幽默遮住脆弱，
-            <br />
-            到承认并容纳孤独。
-          </h2>
-          <div className="notes-preface-lead">
-            <p>
-              2008年至今，通过分析文章，最核心的变化可以概括为：从一个用幽默遮住脆弱、急于证明自己的青年，逐渐成长为能够理解自己、承担责任，并正视孤独的成年人。
-            </p>
-            <p>
-              这不是一条“从悲观变乐观”的直线，而是一次次回到孤独、自由、价值和关系这些老问题，但每次都站在更高的位置重新理解。
+      <main id="main" className="notes-page">
+        <section className="notes-hero">
+          <div className="section-label light" lang="en">
+            <span>01</span>
+            <span>Writing archive</span>
+          </div>
+          <div>
+            <p className="eyebrow">Notes / 碎片与思考</p>
+            <h1 lang="en">
+              OLD WORDS,
+              <br />
+              NEW <span className="outline">LIGHT.</span>
+            </h1>
+            <p className="notes-intro">
+              从旧空间迁来的文字，也会放进以后持续写下的新想法。
             </p>
           </div>
+        </section>
 
-          <details className="notes-preface-details">
-            <summary>
-              <span>阅读完整前言</span>
-              <span aria-hidden="true">＋</span>
-            </summary>
-            <div className="notes-preface-body">
-              <section>
-                <h3>1. 2008—2010：迷茫、反叛，急于建立自我</h3>
-                <p>
-                  早期思想跳跃，喜欢悖论、反问和拆解权威；一方面认为自己天马行空，另一方面又不断自称“一无是处”“懒”“虚度时间”。
-                </p>
-                <p>这一时期的核心矛盾是：</p>
-                <ul>
-                  <li>想要自由，却还没有支撑自由的能力；</li>
-                  <li>想证明自己的不同，又很在意别人是否看懂、是否认可；</li>
-                  <li>对现实不满，但行动常停留在奋斗口号上。</li>
-                </ul>
-                <p>
-                  《态度决定一切》《健康、快乐、自由》《卒七进一》反复表达同一个愿望：不愿继续维持现状，却还不知道怎样真正改变。
-                </p>
-                <p>那时就像笔下的“卒”——方向感已经出现，但选择还很少，只能先向前。</p>
-              </section>
+        <NotesPreface />
 
-              <section>
-                <h3>2. 2011—2012：创造力爆发，用幽默处理痛苦</h3>
-                <p>
-                  这是写作最密集、想象力最旺盛的阶段。游戏、武侠、历史、爱情、蚊子、面包等素材，全部被改造成荒诞故事。
-                </p>
-                <p>表面上非常搞笑，底层却反复出现：</p>
-                <ul>
-                  <li>失眠、虚度感和无力感；</li>
-                  <li>对自身价值的怀疑；</li>
-                  <li>对爱情、朋友和理解的渴望；</li>
-                  <li>对孤独与被忽视的敏感。</li>
-                </ul>
-                <p>
-                  “忧郁”几乎成了一个经过塑造的个人角色。幽默不仅是文风，也是一层保护：当悲伤被写成笑话，情绪既得到了表达，内心又不必完全暴露。
-                </p>
-                <p>
-                  这一时期并不是真的冷漠或自闭。外婆留下的水饺、兄弟间的感情、对朋友的想念，往往是文章中最真实柔软的部分。真正需要的不是很多人，而是少数人的深度理解。
-                </p>
-              </section>
+        <NotesArchive posts={posts} sectionNumber="01" />
+      </main>
 
-              <section>
-                <h3>3. 2013—2014：关系破裂，向内退缩</h3>
-                <p>
-                  《呵呵》里的“从此山水不相逢”，《破灭》里的流浪、无人问津和跳楼幻想，《便是》中用第三人称描写的自卑、自闭与对虚伪的厌恶，都说明这个阶段出现了明显的情感断裂。
-                </p>
-                <p>表达方式开始从自嘲转向直接面对：</p>
-                <ul>
-                  <li>被抛下；</li>
-                  <li>不被理解；</li>
-                  <li>对关系失望；</li>
-                  <li>对现实中的虚伪和不公产生更强烈的排斥。</li>
-                </ul>
-                <p>
-                  2014年的孤独主题文章，最后把恐怖、模糊和孤独归结为“隐形眼镜掉了”。这仍是一种幽默化处理：仿佛只要解释清楚，孤独便不是真的。
-                </p>
-              </section>
-
-              <section>
-                <h3>4. 2015—2019：拆解幻想，重建自我</h3>
-                <p>这是一个明显的转折阶段。</p>
-                <p>
-                  《几乎成了英雄》仍保留着早期的英雄想象，但已经能够看见理想形象与真实行动之间的距离。《跳》则把复杂情绪压缩为一个重复动作，表现出强烈的改变冲动，却还没有明确方向。
-                </p>
-                <p>
-                  到了《存在即合理》，关注点开始从证明自身价值，转向接受已经发生的经历。过程不再只是通往结果的工具，而被视为生命本身的一部分。
-                </p>
-                <p>
-                  与此同时，个人困境开始被放入环境、分工和制度中理解。问题不再全部归咎于个人，视角由情绪化的自责逐渐转向结构性的观察。
-                </p>
-                <p className="notes-preface-emphasis">
-                  从幻想成为英雄，到承认普通；从要求一切正确，到接受过程；从责怪自身，到理解个人与环境的共同作用。
-                </p>
-              </section>
-
-              <section>
-                <h3>5. 2020—2023：在命运与行动之间寻找平衡</h3>
-                <p>
-                  这一时期的表达明显变短，情绪不再需要大量笑料和故事进行包裹。死亡、饥饿、家庭记忆和英雄冲动，都被压缩进少量意象之中。
-                </p>
-                <p>
-                  早年的英雄情结并未消失，但用途发生了变化。它不再只是补偿现实无力的幻想，而逐渐成为对抗安逸、调动行动力的精神资源。
-                </p>
-                <p>
-                  对命运的理解也更加复杂。个人受到环境、时运、生理条件和社会结构限制，但限制并不意味着放弃行动。豁达与进取不再互相否定，而是成为不同处境下的两种调节方式。
-                </p>
-                <p>这一阶段逐渐形成了较稳定的原则：</p>
-                <ul>
-                  <li>低谷时不过度自责；</li>
-                  <li>状态恢复后继续行动；</li>
-                  <li>得势时保持克制；</li>
-                  <li>面对他人保持正直；</li>
-                  <li>对无法完全理解的世界保留敬畏。</li>
-                </ul>
-                <p>这为后来责任意识的形成提供了重要过渡。</p>
-              </section>
-
-              <section>
-                <h3>6. 2024：从追求自由转向承担责任</h3>
-                <p>
-                  《警醒贴》中的变化非常明确：生命不再只围绕个人感受展开，家人和儿子成为新的坐标。
-                </p>
-                <p>
-                  早年的核心诉求是摆脱束缚、获得自由；到了这里，重点转向身体、心理、智慧和精神上的建设。
-                </p>
-                <p>动力也从证明自身价值，转向获得保护和承担的能力。</p>
-                <p>这是身份上的变化：从寻找自身位置的人，变成意识到自己也是别人依靠的人。</p>
-              </section>
-
-              <section>
-                <h3>7. 2025：承认孤独，容纳孤独</h3>
-                <p>最意味深长的是两篇孤独主题文章之间的变化。</p>
-                <p>
-                  早期倾向于用玩笑解释孤独，仿佛孤独只是认知上的误会；后来则承认孤独是真实存在的，也承认它与长期身处海外、外部反馈不足和现实连接变薄有关。
-                </p>
-                <p>
-                  但这种承认并没有再次导致崩溃。身份、拥有、缺失和目标已经相对清晰，孤独不再被视为必须立即消灭的问题。
-                </p>
-                <p>
-                  心理位置由此发生变化：不是战胜孤独，也不是否认孤独，而是看见、理解并容纳孤独，同时不让孤独代表全部人生。
-                </p>
-              </section>
-
-              <section>
-                <h3>最终</h3>
-                <p>从文章呈现出来的看，真正的成长，不是从忧郁变成不忧郁，而是：</p>
-                <p className="notes-preface-emphasis">
-                  从被情绪带着走，到能够观察情绪；<br />
-                  从依靠别人证明自身价值，到建立相对稳定的自我；<br />
-                  从借助幻想逃离普通，到承认普通生活也有意义；<br />
-                  从把问题全部归咎于自身，到同时看见环境和个人选择；<br />
-                  从只想获得自由，到愿意承担责任；<br />
-                  从否认孤独，到承认孤独而不向孤独投降。
-                </p>
-                <p>
-                  成长并非摆脱了早期的敏感、幽默、想象力和英雄情结，而是逐渐学会重新使用这些部分：让敏感成为洞察，让幽默成为表达，让幻想转化为行动，让孤独成为理解自己的入口。
-                </p>
-              </section>
-            </div>
-          </details>
-        </div>
-      </section>
-
-      <section className="notes-index">
-        <div className="section-label">
-          <span>01—{String(visiblePosts.length).padStart(2, '0')}</span>
-          <span>Published notes</span>
-        </div>
-        <div>
-          <nav className="notes-categories" aria-label="文章分类">
-            <Link
-              aria-current={activeCategory ? undefined : 'page'}
-              className={!activeCategory ? 'is-active' : undefined}
-              href="/notes"
-            >
-              全部 <span>{posts.length}</span>
-            </Link>
-            {categories.map(([category, count]) => (
-              <Link
-                aria-current={activeCategory === category ? 'page' : undefined}
-                className={activeCategory === category ? 'is-active' : undefined}
-                href={`/notes?category=${encodeURIComponent(category)}`}
-                key={category}
-              >
-                {category} <span>{count}</span>
-              </Link>
-            ))}
-          </nav>
-          <div className="notes-list">
-            {visiblePosts.map((post, index) => (
-              <Link className="note-row" href={`/notes/${post.slug}`} key={post.slug}>
-                <span className="note-number">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <div className="note-main">
-                  <div className="note-meta">
-                    <time dateTime={post.published_at}>
-                      {formatPublishedDate(post.published_at)}
-                    </time>
-                    <span>{post.category}</span>
-                  </div>
-                  <h2>{post.title}</h2>
-                  {post.excerpt ? <p>{post.excerpt}</p> : null}
-                </div>
-                <span className="note-arrow" aria-hidden="true">
-                  ↗
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <footer>
-        <Link className="wordmark footer-mark" href="/">
-          <span className="wordmark-dot" />
-          KILLUA.WIN
-        </Link>
-        <p>Ideas need somewhere to land.</p>
-        <p>© 2026 / ALL SYSTEMS NOMINAL</p>
-      </footer>
-    </main>
+      <SiteFooter />
+    </>
   );
 }

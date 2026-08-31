@@ -2,15 +2,23 @@
   "name": "killua-win",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.24.0",
   "engines": {
     "node": ">=22.13.0"
   },
   "scripts": {
     "dev": "vinext dev",
     "build": "vinext build",
-    "deploy": "wrangler deploy --config dist/server/wrangler.json",
-    "start": "vinext start",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "preview": "wrangler dev --config dist/server/wrangler.json --persist-to .wrangler/state",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test:migrations": "node scripts/replay-migrations.mjs",
+    "check": "pnpm lint && pnpm typecheck && pnpm test:migrations",
+    "newpost": "node scripts/mkpost.mjs",
+    "migrate:local": "wrangler d1 migrations apply killua-win-d1 --local",
+    "migrate": "wrangler d1 migrations apply killua-win-d1 --remote",
+    "deploy": "pnpm build && pnpm migrate && wrangler deploy --config dist/server/wrangler.json",
+    "deploy:only": "wrangler deploy --config dist/server/wrangler.json"
   },
   "dependencies": {
     "next": "16.3.3",
@@ -19,7 +27,6 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.54.2",
-    "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
@@ -28,7 +35,6 @@
     "eslint": "9.39.4",
     "eslint-config-next": "16.3.3",
     "react-server-dom-webpack": "19.2.8",
-    "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
     "vinext": "1.0.0-beta.8",
     "vite": "8.2.2",

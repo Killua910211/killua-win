@@ -1,4 +1,49 @@
-@import 'tailwindcss';
+/*
+ * 极简 reset。
+ *
+ * 这些规则原本是 `@import 'tailwindcss'` 顺带带进来的 Preflight。项目里
+ * 一个原子类都没用，却要为此加载整个 Tailwind —— 但设计确实依赖 Preflight
+ * 的几条默认值（尤其是 html 的 line-height: 1.5 和 ul 的 list-style: none），
+ * 直接删掉会让页头小字变紧、前言列表冒出项目符号。
+ *
+ * 所以这里把真正被依赖的那几条显式写出来。每一条都是对着移除前的计算样式
+ * 逐项核对过的，四个页面的计算样式快照前后完全一致。
+ */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  /* Preflight 的值。浏览器默认是 normal（约 1.2），页头、分区标签、页脚
+     这些没有自己写 line-height 的小字会集体收紧。 */
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+p, dl, dd, figure, blockquote, pre { margin: 0; }
+
+ul, ol {
+  /* 前言里的列表现在没有项目符号，靠的就是这一条。 */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  margin: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+}
+
+img, svg, video, canvas { display: block; max-width: 100%; }
 
 :root {
   --ink: #151515;
@@ -86,7 +131,6 @@ a { color: inherit; text-decoration: none; }
 .os-entry:focus-visible {
   background: var(--signal);
   color: var(--ink);
-  outline: none;
 }
 .os-entry span { font-size: 13px; line-height: 0; }
 
@@ -98,7 +142,16 @@ a { color: inherit; text-decoration: none; }
   justify-content: center;
   overflow: hidden;
   padding: 132px 4vw 52px;
-  background: radial-gradient(circle at 72% 50%, rgba(204, 255, 0, 0.11), transparent 21%), linear-gradient(115deg, #121212 0%, #1b1b1b 54%, #0e0e0e 100%);
+  /*
+    最上面那层是收边用的。底下 115deg 那条渐变沿轴向从 #121212 走到 #1b1b1b
+    再到 #0e0e0e，所以 hero 底边在不同 x 位置的颜色是不一样的（最深 14、最浅 27），
+    而紧接着的 .index 是平的 #151515（21）—— 最大差 6 级，在大面积暗色上就是一条
+    看得见的横缝。这一层把底部 42% 渐渐压到 --ink，保证底边**恰好**等于 #151515。
+  */
+  background:
+    linear-gradient(to bottom, transparent 58%, var(--ink) 100%),
+    radial-gradient(circle at 72% 50%, rgba(204, 255, 0, 0.11), transparent 21%),
+    linear-gradient(115deg, #121212 0%, #1b1b1b 54%, #0e0e0e 100%);
   color: #fff;
 }
 .hero::before {
@@ -215,10 +268,11 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.section-label span:first-child { color: #77736a; }
+.section-label span:first-child { color: #69655c; }
 .statement-copy { max-width: 1000px; }
 .eyebrow {
   margin: 0 0 26px;
+  font-weight: 400;
   font-family: var(--font-geist-mono), monospace;
   font-size: 11px;
   letter-spacing: 0.13em;
@@ -268,7 +322,7 @@ a { color: inherit; text-decoration: none; }
 .track-number,
 .coming { font-family: var(--font-geist-mono), monospace; font-size: 10px; letter-spacing: 0.12em; }
 .track-number { color: var(--signal); }
-.track h3 { margin: 0; font-size: clamp(38px, 4.2vw, 68px); font-weight: 520; letter-spacing: -0.05em; }
+.track h2 { margin: 0; font-size: clamp(38px, 4.2vw, 68px); font-weight: 520; letter-spacing: -0.05em; }
 .track-cn,
 .track-description { color: rgba(255, 255, 255, 0.56); }
 .track-cn { margin: 6px 0 0; font-size: 12px; }
@@ -360,7 +414,7 @@ a { color: inherit; text-decoration: none; }
 }
 .notes-preface-details[open] summary span:last-child { transform: rotate(45deg); }
 .notes-preface-details summary:hover,
-.notes-preface-details summary:focus-visible { color: #536b00; outline: none; }
+.notes-preface-details summary:focus-visible { color: #536b00; }
 .notes-preface-body { padding: 20px 0 72px; }
 .notes-preface-body section + section {
   margin-top: 64px;
@@ -389,6 +443,8 @@ a { color: inherit; text-decoration: none; }
   font-size: clamp(17px, 1.5vw, 20px) !important;
 }
 .notes-index {
+  /* 锚点跳转的落点，别贴着视口顶边 */
+  scroll-margin-top: 24px;
   display: grid;
   grid-template-columns: minmax(170px, 22vw) 1fr;
   padding: 110px 4vw 140px;
@@ -412,9 +468,8 @@ a { color: inherit; text-decoration: none; }
 .notes-categories .is-active {
   background: var(--ink);
   color: #fff;
-  outline: none;
 }
-.notes-categories span { margin-left: 5px; color: #77736a; }
+.notes-categories span { margin-left: 5px; color: #69655c; }
 .notes-categories .is-active span { color: var(--signal); }
 .notes-list { border-top: 1px solid rgba(21, 21, 21, 0.28); }
 .note-row {
@@ -431,7 +486,6 @@ a { color: inherit; text-decoration: none; }
   padding-right: 22px;
   padding-left: 22px;
   background: rgba(21, 21, 21, 0.045);
-  outline: none;
 }
 .note-number,
 .note-main time,
@@ -445,13 +499,13 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.11em;
   text-transform: uppercase;
 }
-.note-number { color: #77736a; }
+.note-number { color: #69655c; }
 .note-meta {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-.note-main time { color: #77736a; }
+.note-main time { color: #69655c; }
 .note-meta span {
   padding: 3px 7px;
   border: 1px solid rgba(21, 21, 21, 0.22);
@@ -524,7 +578,7 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   flex-direction: column;
   gap: 8px;
-  color: #77736a;
+  color: #69655c;
 }
 .post-layout aside strong {
   color: var(--ink);
@@ -545,7 +599,7 @@ a { color: inherit; text-decoration: none; }
   padding: 28px;
   border: 1px solid rgba(21, 21, 21, 0.25);
 }
-.post-origin > span { color: #77736a; }
+.post-origin > span { color: #69655c; }
 .post-origin p { margin: 16px 0 18px; color: #5d5a53; font-size: 14px; line-height: 1.7; }
 .post-origin a { display: inline-block; border-bottom: 1px solid var(--ink); padding-bottom: 3px; }
 .post-origin a:hover,
@@ -566,7 +620,9 @@ a { color: inherit; text-decoration: none; }
 .post-analysis p { margin: 16px 0 0; color: #3f4337; font-size: 14px; line-height: 1.8; }
 footer {
   display: grid;
-  min-height: 190px;
+  /* 内容只有一行 15px 高的小字。190px 时上下各空 87px，132px 时各空 59px ——
+     对一条收尾的通栏色块都太厚。80px 让上下各留约 32px，是这个字号该有的呼吸量。 */
+  min-height: 80px;
   grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   padding: 0 4vw;
@@ -641,7 +697,7 @@ footer p:last-child { justify-self: end; }
   .post-body > p:first-child { font-size: 20px; }
   .post-origin { margin-top: 64px; padding: 22px; }
   .post-analysis { padding: 22px; }
-  footer { grid-template-columns: 1fr; gap: 20px; padding: 48px 20px; }
+  footer { grid-template-columns: 1fr; gap: 14px; padding: 34px 20px; }
   footer p:nth-child(2),
   footer p:last-child { justify-self: start; }
 }
@@ -662,14 +718,32 @@ footer p:last-child { justify-self: end; }
 .readout {
   display: grid;
   grid-template-columns: minmax(170px, 22vw) 1fr;
-  padding: 120px 4vw;
+  /*
+    内边距比 .index 的 120px 收一档：01—03 那边三行大字本身就有 560px 内容，
+    撑得住；这边内容只有 330px 左右，同样的内边距会让分区里四成都是空白。
+  */
+  padding: 84px 4vw;
   background: var(--ink);
   color: #fff;
+  /* 上面 .index 也是 --ink，两块无缝相接，靠这条细线分界 */
   border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
-.readout-eyebrow { color: var(--signal); }
+.readout-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--signal);
+}
+.readout-pulse {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 0 5px rgba(204, 255, 0, 0.16);
+}
 .readout-lede {
-  margin: 0 0 56px;
+  margin: 0 0 40px;
   max-width: 640px;
   font-size: 15px;
   line-height: 1.9;
@@ -677,29 +751,48 @@ footer p:last-child { justify-self: end; }
 }
 .readout-grid {
   display: grid;
+  /*
+    卡片各自带边框、彼此留间距，不再共享格线。好处是换行时不会像共享边框那样
+    在最后一行留下一块空的容器底色 —— 指标数量本来就是浮动的（Kept 和
+    Check-ins 取决于对端返回什么）。
+  */
+  /* 150 而不是 168：375px 宽的手机上可用宽度约 338px，168 只放得下 1 列，
+     5 张卡片会堆成 5 行；150 能排 2 列，底部短掉约 230px。桌面不受影响 ——
+     auto-fit 会把空轨道收掉，5 张卡片照样铺满一行。 */
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1px;
+  gap: 12px;
   margin: 0;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 .readout-cell {
-  background: var(--ink);
-  padding: 26px 22px;
+  padding: 24px 22px 26px;
+  /* 0.40 而不是更低：描边就是定义卡片边界的那个东西，WCAG 1.4.11 对界面元素
+     边界要求 ≥3:1。0.34 实测只有 2.81，0.40 是 3.42。 */
+  border: 1px solid rgba(204, 255, 0, 0.4);
+  /* 极淡的信号色底，让卡片从纯黑里浮起来一点，又不至于变成色块 */
+  background: rgba(204, 255, 0, 0.035);
 }
 .readout-cell dt {
   font-family: var(--font-geist-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.52);
 }
 .readout-cell dd {
-  margin: 10px 0 0;
-  font-size: clamp(24px, 3vw, 34px);
-  font-weight: 520;
-  letter-spacing: -0.04em;
+  margin: 16px 0 0;
+  font-size: clamp(34px, 3.4vw, 44px);
+  font-weight: 300;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+  color: var(--signal);
   font-variant-numeric: tabular-nums;
+}
+.readout-unit {
+  margin-left: 5px;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.5);
 }
 .readout-sync {
   margin: 26px 0 0;
@@ -707,8 +800,156 @@ footer p:last-child { justify-self: end; }
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.36);
+  color: rgba(255, 255, 255, 0.46);
 }
 @media (max-width: 880px) {
   .readout { grid-template-columns: 1fr; gap: 34px; padding: 84px 5vw; }
+}
+
+/* ── 焦点可见性 ──────────────────────────────────────────────
+   之前只有 .track-link 写对了焦点环，其余交互元素要么把 outline 关掉、
+   要么和 hover 共用同一条规则（键盘用户看到的对比只有 1.09:1）。
+   这里给所有可聚焦元素一个默认环，深色区域再换成信号色 —— 深色底上
+   画深色描边等于没画。 */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.site-header a:focus-visible,
+.hero a:focus-visible,
+.index a:focus-visible,
+.readout a:focus-visible,
+.notes-hero a:focus-visible,
+.status-hero a:focus-visible,
+.status-hero button:focus-visible,
+.post-heading a:focus-visible {
+  outline-color: var(--signal);
+}
+/* 整行链接：外扩的描边会压到相邻行，改成内描边。 */
+.note-row:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -4px;
+}
+
+/* ── 跳到正文 ────────────────────────────────────────────────
+   body 的第一个可聚焦元素。平时挪出视口，聚焦时落回左上角。 */
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  padding: 12px 18px;
+  background: var(--signal);
+  color: var(--ink);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  transform: translateY(-120%);
+  transition: transform 150ms ease;
+}
+.skip-link:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -6px;
+  transform: translateY(0);
+}
+
+.visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── 分类页 ──────────────────────────────────────────────── */
+.notes-hero-compact { min-height: 420px; }
+.notes-hero-compact h1 {
+  font-size: clamp(46px, 6.5vw, 96px);
+  letter-spacing: -0.055em;
+}
+.notes-intro-link {
+  border-bottom: 1px solid var(--signal);
+  color: var(--signal);
+  padding-bottom: 2px;
+}
+
+/* ── 404 / 500 ───────────────────────────────────────────── */
+.status-page { min-height: 100svh; display: flex; flex-direction: column; }
+.status-hero {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(170px, 22vw) 1fr;
+  align-items: center;
+  padding: 140px 4vw;
+  background: radial-gradient(circle at 78% 40%, rgba(204, 255, 0, 0.11), transparent 24%), var(--ink);
+  color: #fff;
+}
+.status-hero .eyebrow { color: rgba(255, 255, 255, 0.54); }
+.status-hero h1 {
+  margin: 0;
+  font-size: clamp(56px, 8.5vw, 128px);
+  font-weight: 620;
+  letter-spacing: -0.075em;
+  line-height: 0.86;
+}
+.status-intro {
+  max-width: 560px;
+  margin: 44px 0 0;
+  color: rgba(255, 255, 255, 0.63);
+  font-size: 16px;
+  line-height: 1.8;
+}
+.status-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+.status-link {
+  padding: 12px 18px;
+  border: 1px solid rgba(204, 255, 0, 0.58);
+  background: transparent;
+  color: var(--signal);
+  cursor: pointer;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: 180ms ease;
+}
+.status-link:hover { background: var(--signal); color: var(--ink); }
+.status-digest {
+  margin: 28px 0 0;
+  color: rgba(255, 255, 255, 0.46);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+/* ── 文章页加载骨架 ──────────────────────────────────────── */
+.skeleton-line {
+  display: block;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.11);
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+.skeleton-back { width: 140px; height: 12px; }
+.skeleton-meta { display: flex; gap: 24px; margin-top: 90px; }
+.skeleton-meta .skeleton-line { width: 96px; height: 12px; }
+.skeleton-title { height: clamp(50px, 8vw, 116px); margin-top: 30px; max-width: 1080px; }
+.skeleton-title-short { max-width: 620px; margin-top: 18px; }
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+@media (max-width: 760px) {
+  .status-hero { grid-template-columns: 1fr; gap: 52px; padding: 110px 20px 90px; }
+  .status-hero h1 { font-size: clamp(50px, 17vw, 82px); }
+  .notes-hero-compact { min-height: 360px; }
+  .skeleton-meta { margin-top: 68px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
+  .skeleton-line { animation: none; }
 }

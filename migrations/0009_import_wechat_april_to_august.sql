@@ -1,3 +1,4 @@
+-- 审计提示：本文件写入的正文中的『图片：花瓣网』署名行已由 0010 移除，做内容审计时必须按顺序回放全部迁移，不能只看单个文件。
 -- Imported from published WeChat article screenshots supplied by the owner.
 INSERT INTO posts (
   slug,

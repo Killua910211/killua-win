@@ -1,0 +1,47 @@
+name: CI
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# 同一分支上只保留最新一次运行，旧的自动取消
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# 最小权限：只需要读取仓库代码
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: 代码检查
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库代码
+        uses: actions/checkout@v4
+
+      # 不写 version，让 action 读取 package.json 的 packageManager 字段
+      - name: 安装 pnpm（版本取自 package.json 的 packageManager）
+        uses: pnpm/action-setup@v4
+
+      # Node 版本对应 package.json engines.node（>=22.13.0）
+      - name: 配置 Node.js 22 并启用 pnpm 依赖缓存
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: 按 pnpm-lock.yaml 严格安装依赖（锁文件不一致则失败）
+        run: pnpm install --frozen-lockfile
+
+      - name: ESLint 代码规范检查
+        run: pnpm lint
+
+      - name: TypeScript 类型检查（不产出编译结果）
+        run: pnpm exec tsc --noEmit
+
+      - name: 重放 migrations/ 下的 SQL 迁移，校验数据库结构与内容
+        run: node scripts/replay-migrations.mjs
