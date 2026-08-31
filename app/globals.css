@@ -925,31 +925,12 @@ summary:focus-visible {
   letter-spacing: 0.12em;
 }
 
-/* ── 文章页加载骨架 ──────────────────────────────────────── */
-.skeleton-line {
-  display: block;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.11);
-  animation: skeleton-pulse 1.4s ease-in-out infinite;
-}
-.skeleton-back { width: 140px; height: 12px; }
-.skeleton-meta { display: flex; gap: 24px; margin-top: 90px; }
-.skeleton-meta .skeleton-line { width: 96px; height: 12px; }
-.skeleton-title { height: clamp(50px, 8vw, 116px); margin-top: 30px; max-width: 1080px; }
-.skeleton-title-short { max-width: 620px; margin-top: 18px; }
-@keyframes skeleton-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.45; }
-}
-
 @media (max-width: 760px) {
   .status-hero { grid-template-columns: 1fr; gap: 52px; padding: 110px 20px 90px; }
   .status-hero h1 { font-size: clamp(50px, 17vw, 82px); }
   .notes-hero-compact { min-height: 360px; }
-  .skeleton-meta { margin-top: 68px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .skip-link { transition: none; }
-  .skeleton-line { animation: none; }
 }

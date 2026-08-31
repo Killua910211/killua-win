@@ -14,6 +14,13 @@ import { formatPublishedDate, getPublishedPost, type Post } from '@/app/lib/post
  * （run-prerender.js: "no wrangler/miniflare is needed"），构建期没有
  * D1 绑定，在那里查库会让 `vinext build` 直接失败。所以这里不做构建期
  * 静态化，只做运行期按需缓存 —— 对一个内容几乎不变的归档站，效果接近。
+ *
+ * 这一段**不要加 loading.tsx**。它会给整个 segment 套一层 Suspense，
+ * 响应随之变成流式，200 在 notFound() 执行之前就已经提交 —— 线上实测
+ * /notes/<不存在的 slug> 返回 200 而不是 404（没有 loading.tsx 的
+ * /notes/category/<不存在> 同样调用 notFound()，返回的就是 404）。
+ * 软 404 会被搜索引擎收录，代价远大于一块骨架屏。本地 wrangler dev
+ * 不走这条流式路径，所以只能在部署后才看得出来。
  */
 export const revalidate = 3600;
 
@@ -27,7 +34,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   const post = await getPublishedPost(slug);
 
   if (!post) {
-    return { title: '文章未找到' };
+    return { title: '文章未找到', robots: { index: false, follow: true } };
   }
 
   return buildMetadata({

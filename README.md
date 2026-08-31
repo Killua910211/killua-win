@@ -117,6 +117,10 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
   会让 `vinext build` 直接失败。页面用的是按需 ISR（`export const revalidate`）。
 - **ISR 缓存默认是进程内的 `Map`**（`dist/shims/cache-handler.js:50`），
   在 Workers 上等于每个 colo 的 isolate 各存一份。够用，但不跨 isolate 共享。
+- **`/notes/[slug]` 不要加 `loading.tsx`。** 它会给整个 segment 套一层 Suspense，
+  响应变成流式，`notFound()` 之前 200 就已经提交，线上会返回软 404
+  （本地 `wrangler dev` 不走流式路径，测不出来）。对照组：同样调用 `notFound()`
+  但没有 `loading.tsx` 的 `/notes/category/[category]` 返回的就是正确的 404。
 - **`vinext start` 在本项目跑不起来** —— Node 的 ESM loader 解析不了 `cloudflare:workers`。
   要预览生产构建用 `pnpm preview`（走 wrangler）。
 
