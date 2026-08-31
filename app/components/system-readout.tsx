@@ -8,34 +8,31 @@ type PublicStats = {
   checkinWeeks: number;
   lastSync: string;
   /**
-   * 记录分类计数。可选 —— 端点还没开始返回时，下面这一块整块不渲染。
+   * 记录分类计数。可选 —— 端点没返回时，下面这一块整块不渲染。
    *
    * 键是固定标识符、值只有数字，中文标签留在本文件里（见 RECORD_CATEGORIES）。
    * 这是有意的：OS 那个端点的硬规则是「返回类型里不允许出现任何承载内容的
    * 字符串字段」，如果改成 [{ label, count }] 的数组，标签就成了从对端数据
    * 流出来的字符串，那条规则就破了。
+   *
+   * 键沿用 OS 的 RecordCategory 枚举名；DAILY 不在枚举里，对应 category
+   * 为空的普通记录（schema 注释：空 = 走时间线，非空 = 清单条目）。
    */
-  recordsByCategory?: {
-    daily: number;
-    screen: number;
-    book: number;
-    game: number;
-    place: number;
-    food: number;
-    life: number;
-  };
+  recordsByKind?: Partial<Record<RecordKind, number>>;
 };
 
-/** 展示顺序与中文标签。key 对应 OS 的 RecordCategory 枚举，daily 是 category 为空的普通记录。 */
-const RECORD_CATEGORIES = [
-  ['daily', '日常'],
-  ['screen', '影视'],
-  ['book', '书籍'],
-  ['game', '游戏'],
-  ['place', '足迹'],
-  ['food', '美食'],
-  ['life', '人生事件'],
-] as const;
+type RecordKind = 'DAILY' | 'SCREEN' | 'BOOK' | 'GAME' | 'PLACE' | 'FOOD' | 'LIFE';
+
+/** 展示顺序与中文标签，都由这里决定，不从对端取。 */
+const RECORD_CATEGORIES: readonly (readonly [RecordKind, string])[] = [
+  ['DAILY', '日常'],
+  ['SCREEN', '影视'],
+  ['BOOK', '书籍'],
+  ['GAME', '游戏'],
+  ['PLACE', '足迹'],
+  ['FOOD', '美食'],
+  ['LIFE', '人生事件'],
+];
 
 /**
  * KILLUA OS 的运行读数。
@@ -110,7 +107,7 @@ export async function SystemReadout() {
   // 逐个字段过 num()，而不是信任整个对象：端点是运行期返回的 JSON，
   // TypeScript 的类型断言在这里不构成任何保证。全部取不到就整块不渲染。
   const byCategory = RECORD_CATEGORIES.map(
-    ([key, label]) => [label, num(stats?.recordsByCategory?.[key])] as [string, number | null],
+    ([key, label]) => [label, num(stats?.recordsByKind?.[key])] as [string, number | null],
   ).filter((entry): entry is [string, number] => entry[1] !== null);
 
   return (

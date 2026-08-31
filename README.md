@@ -151,21 +151,29 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
   lastSync: string;                    // yyyy-MM-dd
 
   // 可选。缺失时首页的「Records by kind」整块不渲染，其余读数照常。
-  recordsByCategory?: {
-    daily:  number;   // OS 里 category IS NULL —— 走时间线的普通记录
-    screen: number;   // SCREEN 影视
-    book:   number;   // BOOK   书籍
-    game:   number;   // GAME   游戏
-    place:  number;   // PLACE  足迹
-    food:   number;   // FOOD   美食
-    life:   number;   // LIFE   人生事件
+  // 键沿用 OS 的 RecordCategory 枚举名。
+  recordsByKind?: {
+    DAILY:  number;   // OS 里 category IS NULL —— 走时间线的普通记录
+    SCREEN: number;   // 影视
+    BOOK:   number;   // 书籍
+    GAME:   number;   // 游戏
+    PLACE:  number;   // 足迹
+    FOOD:   number;   // 美食
+    LIFE:   number;   // 人生事件
   };
 }
 ```
 
-`recordsByCategory` 用固定键 + 数字，**不要**改成 `[{ label, count }]`：那样标签
+`recordsByKind` 用固定键 + 数字，**不要**改成 `[{ label, count }]`：那样标签
 就成了从对端流出来的字符串，上面那条规则就破了。中文标签在
 `system-readout.tsx` 的 `RECORD_CATEGORIES` 里，展示顺序也由它决定。
+
+各项之和应当等于 `records`（现在是 `2 + 165 = 167`）。官网不做这个校验 ——
+对端算错了不该把首页拖垮 —— 但对不上就说明 OS 侧的分组漏了某一类。
+
+> 调试提示：这个 fetch 带 `next: { revalidate: 3600 }`。改完 OS 端点后，
+> 长时间运行的 `pnpm dev` 会继续用缓存里的旧响应，看起来像是没生效。
+> 重启 dev server，或者直接 `pnpm build` 后用 `pnpm preview` 验证。
 
 ## 重新生成 Workers 类型
 
