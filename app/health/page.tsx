@@ -11,7 +11,6 @@ import {
   HEALTH_TRENDS,
   HEALTH_UPDATED_AT,
   HEALTH_WEEKLY_AVERAGES,
-  HEALTH_WEEKLY_WINDOW,
 } from '@/app/lib/health';
 import { buildMetadata } from '@/app/lib/metadata';
 
@@ -127,7 +126,7 @@ export default function HealthPage() {
             <span>Seven-day average</span>
           </div>
           <div className="health-section-body">
-            <p className="eyebrow">{HEALTH_WEEKLY_WINDOW} / 7 日均值</p>
+            <p className="eyebrow">7 日均值</p>
             <h2 id="health-snapshot-heading">最近一周，身体的平均状态。</h2>
             <p className="health-section-lede">
               以下读数来自最近一个完整七日窗口，帮助你看到一周的整体节奏。
@@ -154,11 +153,10 @@ export default function HealthPage() {
             <span>Long view</span>
           </div>
           <div className="health-section-body">
-            <p className="eyebrow health-trends-eyebrow">2021 → 2026 YTD</p>
+            <p className="eyebrow health-trends-eyebrow">2021 → 2026</p>
             <h2 id="health-trends-heading">把变化放回几年的时间里。</h2>
             <p className="health-section-lede">
               每张图使用报告中的年度日均，不再只截取 2025 与 2026。
-              星号表示 2026 年截至 8 月 31 日的 YTD；起始年份覆盖不足会单独标注。
             </p>
 
             <div className="health-trend-grid">
@@ -193,7 +191,6 @@ export default function HealthPage() {
                             </span>
                             <span className="health-year-label">
                               {point.year}
-                              {point.partial ? '*' : ''}
                             </span>
                           </div>
                         );
@@ -202,14 +199,13 @@ export default function HealthPage() {
                     <dl className="visually-hidden">
                       {trend.points.map((point) => (
                         <div key={point.year}>
-                          <dt>{point.partial ? `${point.year} YTD` : point.year}</dt>
+                          <dt>{point.year}</dt>
                           <dd>
                             {formatValue(point.value, trend.precision)} {trend.unit}
                           </dd>
                         </div>
                       ))}
                     </dl>
-                    <p className="health-trend-note">{trend.note}</p>
                   </article>
                 );
               })}
@@ -229,7 +225,7 @@ export default function HealthPage() {
               <article>
                 <span lang="en">01 / Activity</span>
                 <h3>2025 年出现活动拐点</h3>
-                <p>日均步数从 2024 年的 1,566 上升至 2025 年的 6,123；2026 YTD 为 8,729。</p>
+                <p>日均步数从 2024 年的 1,566 上升至 2025 年的 6,123。</p>
               </article>
               <article>
                 <span lang="en">02 / Recovery</span>
