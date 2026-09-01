@@ -1,5 +1,6 @@
 import { env } from 'cloudflare:workers';
 import { cache } from 'react';
+import { STATIC_POSTS } from '@/app/lib/static-posts';
 
 /**
  * 查询列清单以常量形式导出，而不是内联在 SQL 字符串里。
@@ -40,6 +41,24 @@ function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : String(error);
 }
 
+function postsStoreUnavailable(error: unknown) {
+  return /Cannot read properties of undefined \(reading 'prepare'\)|no such table: posts/i.test(
+    errorMessage(error),
+  );
+}
+
+function staticSummaries(): PostSummary[] {
+  return STATIC_POSTS.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt,
+    published_at: post.published_at,
+    updated_at: post.updated_at,
+    category: post.category,
+    source: post.source,
+  }));
+}
+
 export const listPublishedPosts = cache(async () => {
   try {
     const result = await env.DB.prepare(
@@ -54,6 +73,7 @@ export const listPublishedPosts = cache(async () => {
     return result.results;
   } catch (error) {
     console.error('d1.posts.list_failed', { error: errorMessage(error) });
+    if (postsStoreUnavailable(error)) return staticSummaries();
     throw new Error('Unable to load published posts', { cause: error });
   }
 });
@@ -73,6 +93,9 @@ export const getPublishedPost = cache(async (slug: string) => {
       error: errorMessage(error),
       slug,
     });
+    if (postsStoreUnavailable(error)) {
+      return STATIC_POSTS.find((post) => post.slug === slug) ?? null;
+    }
     throw new Error('Unable to load the published post', { cause: error });
   }
 });
@@ -93,6 +116,7 @@ export const listRecentPostsWithContent = cache(async (limit: number) => {
     return result.results;
   } catch (error) {
     console.error('d1.posts.feed_failed', { error: errorMessage(error) });
+    if (postsStoreUnavailable(error)) return STATIC_POSTS.slice(0, limit);
     throw new Error('Unable to load posts for the feed', { cause: error });
   }
 });
@@ -115,6 +139,7 @@ export const countPublishedPosts = cache(async () => {
     return row?.count ?? null;
   } catch (error) {
     console.error('d1.posts.count_failed', { error: errorMessage(error) });
+    if (postsStoreUnavailable(error)) return STATIC_POSTS.length;
     return null;
   }
 });

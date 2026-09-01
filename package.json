@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test:migrations": "node scripts/replay-migrations.mjs",
+    "generate:static-posts": "node scripts/generate-static-posts.mjs",
     "check": "pnpm lint && pnpm typecheck && pnpm test:migrations",
     "newpost": "node scripts/mkpost.mjs",
     "migrate:local": "wrangler d1 migrations apply killua-win-d1 --local",
