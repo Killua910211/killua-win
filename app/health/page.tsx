@@ -155,9 +155,6 @@ export default function HealthPage() {
           <div className="health-section-body">
             <p className="eyebrow health-trends-eyebrow">2021 → 2026</p>
             <h2 id="health-trends-heading">把变化放回几年的时间里。</h2>
-            <p className="health-section-lede">
-              每张图使用报告中的年度日均，不再只截取 2025 与 2026。
-            </p>
 
             <div className="health-trend-grid">
               {HEALTH_TRENDS.map((trend) => {
