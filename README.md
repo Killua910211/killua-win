@@ -135,7 +135,7 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
 | `/sitemap.xml` `/robots.txt` `/feed.xml` | 索引与订阅 |
 | `/api/database` | 健康检查，返回 `database_version` |
 
-## 首页 04 区依赖的外部端点
+## 首页 05 区依赖的外部端点
 
 `app/components/system-readout.tsx` 从 `https://os.killua.win/api/public/stats`
 取数。那个端点有一条硬规则：**返回类型里不允许出现任何承载内容的字符串字段**。

@@ -77,6 +77,14 @@ export default async function Home() {
       description: '收集有用的链接，也为下一次相遇留个入口。',
       status: 'SOON',
     },
+    {
+      number: '04',
+      title: 'Health',
+      cn: '身体与趋势',
+      description: '从 Apple Health 留下活动、恢复与体能的长期趋势，只展示适合公开的部分。',
+      href: '/health',
+      status: '33 METRICS',
+    },
   ];
 
   return (
@@ -116,7 +124,7 @@ export default async function Home() {
 
         <section className="index" id="space">
           <div className="section-label light" lang="en">
-            <span>01—03</span>
+            <span>01—04</span>
             <span>Space index</span>
           </div>
           <div className="track-list">
@@ -127,7 +135,7 @@ export default async function Home() {
                 </Link>
               ) : (
                 <article
-                  className="track"
+                  className="track track-soon"
                   id={track.number === '02' ? 'builds' : undefined}
                   key={track.number}
                 >

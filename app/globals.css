@@ -50,6 +50,11 @@ img, svg, video, canvas { display: block; max-width: 100%; }
   --paper: #f2f0e8;
   --signal: #ccff00;
   --footer: #aeb49a;
+  --text-secondary: rgba(255, 255, 255, 0.63);
+  --text-tertiary: rgba(255, 255, 255, 0.48);
+  --rule-dark: rgba(255, 255, 255, 0.22);
+  --motion-fast: 120ms;
+  --motion-base: 180ms;
 }
 
 * { box-sizing: border-box; }
@@ -108,7 +113,7 @@ a { color: inherit; text-decoration: none; }
   background: var(--signal);
   content: '';
   transform: scaleX(0);
-  transition: transform 180ms ease;
+  transition: transform var(--motion-base) ease;
 }
 .site-header nav a:hover::after,
 .site-header nav a:focus-visible::after { transform: scaleX(1); }
@@ -192,7 +197,7 @@ a { color: inherit; text-decoration: none; }
 .hero-bottom { align-items: flex-end; margin-top: clamp(44px, 8vh, 90px); }
 .hero-bottom p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.63);
+  color: var(--text-secondary);
   font-family: var(--font-geist-sans), sans-serif;
   font-size: clamp(14px, 1.2vw, 18px);
   line-height: 1.8;
@@ -205,7 +210,7 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 50%;
   font-size: 21px;
-  transition: 180ms ease;
+  transition: var(--motion-base) ease;
 }
 .round-link:hover,
 .round-link:focus-visible { border-color: var(--signal); background: var(--signal); color: var(--ink); transform: translateY(3px); }
@@ -308,20 +313,21 @@ a { color: inherit; text-decoration: none; }
 .pulse { width: 8px; height: 8px; border-radius: 50%; background: #6b8a00; box-shadow: 0 0 0 5px rgba(107, 138, 0, 0.13); }
 .index { background: var(--ink); color: #fff; }
 .section-label.light span:first-child { color: var(--signal); }
-.track-list { border-top: 1px solid rgba(255, 255, 255, 0.22); }
+.track-list { border-top: 1px solid var(--rule-dark); }
 .track {
   display: grid;
   min-height: 188px;
   grid-template-columns: 60px 1.1fr 1fr auto;
   align-items: center;
   gap: 28px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
-  transition: background-color 180ms ease, padding 180ms ease;
+  border-bottom: 1px solid var(--rule-dark);
+  transition: background-color var(--motion-base) ease, padding var(--motion-base) ease;
 }
-.track:hover { padding-right: 24px; padding-left: 24px; background: rgba(255, 255, 255, 0.04); }
+.track-link:hover { padding-right: 24px; padding-left: 24px; background: rgba(255, 255, 255, 0.04); }
 .track-number,
 .coming { font-family: var(--font-geist-mono), monospace; font-size: 10px; letter-spacing: 0.12em; }
 .track-number { color: var(--signal); }
+.track-soon .track-number { color: var(--text-tertiary); }
 .track h2 { margin: 0; font-size: clamp(38px, 4.2vw, 68px); font-weight: 520; letter-spacing: -0.05em; }
 .track-cn,
 .track-description { color: rgba(255, 255, 255, 0.56); }
@@ -410,7 +416,7 @@ a { color: inherit; text-decoration: none; }
 .notes-preface-details summary span:last-child {
   color: #6b8a00;
   font-size: 22px;
-  transition: transform 180ms ease;
+  transition: transform var(--motion-base) ease;
 }
 .notes-preface-details[open] summary span:last-child { transform: rotate(45deg); }
 .notes-preface-details summary:hover,
@@ -479,7 +485,7 @@ a { color: inherit; text-decoration: none; }
   gap: 24px;
   min-height: 190px;
   border-bottom: 1px solid rgba(21, 21, 21, 0.28);
-  transition: background-color 180ms ease, padding 180ms ease;
+  transition: background-color var(--motion-base) ease, padding var(--motion-base) ease;
 }
 .note-row:hover,
 .note-row:focus-visible {
@@ -661,7 +667,7 @@ footer p:last-child { justify-self: end; }
   .statement-meta { grid-template-columns: 1fr; gap: 30px; margin-top: 50px; }
   .track { min-height: 220px; grid-template-columns: 42px 1fr auto; gap: 14px; }
   .track-description { grid-column: 2 / 4; margin-top: -26px; }
-  .track:hover { padding: 0; }
+  .track-link:hover { padding: 0; }
   .notes-hero,
   .notes-preface,
   .notes-index { grid-template-columns: 1fr; padding-right: 20px; padding-left: 20px; }
@@ -703,23 +709,41 @@ footer p:last-child { justify-self: end; }
 }
 
 @media (max-width: 500px) {
-  .site-header { grid-template-columns: auto 1fr; }
-  .site-header nav { justify-self: end; }
-  .os-entry { display: none; }
+  .site-header {
+    grid-template-columns: auto 1fr auto;
+    column-gap: 8px;
+    padding: 0 12px;
+  }
+  .site-header nav { justify-self: center; gap: 8px; }
+  .os-entry {
+    padding: 7px 7px;
+    gap: 4px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .wordmark { gap: 7px; letter-spacing: -0.04em; }
+  .wordmark-dot { width: 8px; height: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .orb-ring { animation: none; }
+  .site-header nav a::after,
+  .os-entry,
+  .round-link,
+  .track,
+  .note-row,
+  .notes-preface-details summary,
+  .skip-link { transition: none; }
 }
 
 /* ── System readout：KILLUA OS 的运行读数 ───────────────────── */
-/* 沿用 .index 的深色版式，与 01—03 分区同一套骨架 */
+/* 沿用 .index 的深色版式，与 01—04 分区同一套骨架 */
 .readout {
   display: grid;
   grid-template-columns: minmax(170px, 22vw) 1fr;
   /*
-    内边距比 .index 的 120px 收一档：01—03 那边三行大字本身就有 560px 内容，
+    内边距比 .index 的 120px 收一档：01—04 那边四行大字本身就有 560px 内容，
     撑得住；这边内容只有 330px 左右，同样的内边距会让分区里四成都是空白。
   */
   padding: 84px 4vw;
@@ -913,6 +937,531 @@ summary:focus-visible {
   border-bottom: 1px solid var(--signal);
   color: var(--signal);
   padding-bottom: 2px;
+}
+
+/* ── Health：Apple Health 的公开聚合视图 ───────────────────── */
+.health-hero {
+  min-height: 660px;
+  background:
+    radial-gradient(circle at 76% 30%, rgba(204, 255, 0, 0.16), transparent 22%),
+    linear-gradient(132deg, #151515 0%, #1b1d18 54%, #111 100%);
+}
+.health-intro { max-width: 650px; }
+.health-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 48px;
+  margin: 42px 0 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(204, 255, 0, 0.25);
+  font-family: var(--font-geist-mono), monospace;
+  text-transform: uppercase;
+}
+.health-hero-meta div { min-width: 150px; }
+.health-hero-meta dt {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+.health-hero-meta dd {
+  margin: 7px 0 0;
+  color: var(--signal);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.health-snapshot,
+.health-trends,
+.health-notes,
+.health-smoking-section {
+  display: grid;
+  grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
+  padding: 110px 4vw 130px;
+}
+.health-snapshot { background: #e8e5db; }
+.health-trends { background: var(--ink); color: #fff; }
+.health-notes,
+.health-smoking-section { background: var(--paper); }
+.health-section-body { min-width: 0; }
+.health-section-body > h2 {
+  max-width: 930px;
+  margin: 0;
+  font-size: clamp(42px, 6.2vw, 88px);
+  font-weight: 520;
+  letter-spacing: -0.065em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+.health-section-lede {
+  max-width: 720px;
+  margin: 42px 0 0;
+  color: #5d5a53;
+  font-size: 15px;
+  line-height: 1.9;
+}
+.health-trends .health-section-lede { color: rgba(255, 255, 255, 0.58); }
+.health-trends-eyebrow { color: var(--signal); }
+.health-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(205px, 1fr));
+  gap: 1px;
+  margin: 60px 0 0;
+  padding: 1px;
+  background: rgba(21, 21, 21, 0.2);
+}
+.health-kpi {
+  min-height: 178px;
+  padding: 26px;
+  background: #f2f0e8;
+}
+.health-kpi dt,
+.health-kpi p,
+.health-year-value,
+.health-year-label,
+.health-note-grid article > span {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.health-kpi dt { color: #69655c; }
+.health-kpi dd {
+  margin: 28px 0 0;
+  color: var(--ink);
+  font-size: clamp(34px, 3.8vw, 52px);
+  font-weight: 320;
+  letter-spacing: -0.055em;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+.health-kpi dd span {
+  margin-left: 7px;
+  color: #69655c;
+  font-size: 12px;
+  font-weight: 450;
+  letter-spacing: 0;
+}
+.health-kpi p { margin: 26px 0 0; color: #8a857a; }
+.health-trend-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 60px;
+}
+.health-trend-card {
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid rgba(204, 255, 0, 0.34);
+  background: rgba(204, 255, 0, 0.025);
+}
+.health-trend-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+}
+.health-trend-heading h3 {
+  font-size: clamp(22px, 2.5vw, 34px);
+  font-weight: 480;
+  letter-spacing: -0.04em;
+}
+.health-trend-heading > span {
+  color: var(--signal);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.health-year-chart {
+  display: grid;
+  grid-template-columns: repeat(var(--trend-count), minmax(0, 1fr));
+  gap: 10px;
+  align-items: end;
+  margin-top: 32px;
+}
+.health-year-column {
+  display: grid;
+  grid-template-rows: 20px 150px 18px;
+  gap: 8px;
+  min-width: 0;
+}
+.health-year-value,
+.health-year-label {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  text-align: center;
+  text-overflow: ellipsis;
+}
+.health-year-value { align-self: end; color: rgba(255, 255, 255, 0.74); }
+.health-year-label { align-self: start; }
+.health-year-rail {
+  display: flex;
+  align-items: flex-end;
+  height: 150px;
+  padding: 0 18%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.035), transparent);
+}
+.health-year-rail > span {
+  display: block;
+  width: 100%;
+  height: var(--bar-height);
+  min-height: 8px;
+  background: rgba(255, 255, 255, 0.26);
+}
+.health-year-rail > span.is-current { background: var(--signal); }
+.health-trend-note {
+  min-height: 44px;
+  margin: 28px 0 0;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.health-note-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 60px;
+  border: 1px solid rgba(21, 21, 21, 0.2);
+  background: rgba(21, 21, 21, 0.2);
+}
+.health-smoking-card {
+  margin-top: 54px;
+  padding: 32px;
+  border: 1px solid rgba(21, 21, 21, 0.24);
+  background: #ebe8de;
+}
+.health-life-card {
+  margin-top: 28px;
+  padding: 32px;
+  border: 1px solid rgba(21, 21, 21, 0.24);
+  background: #ebe8de;
+}
+.health-life-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+.health-smoking-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+.health-smoking-heading > div > span,
+.health-life-heading > div > span,
+.health-smoking-grid dt,
+.health-smoking-source {
+  color: #6b8a00;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.health-life-heading h2,
+.health-smoking-heading h2,
+.health-smoking-heading h3 {
+  margin: 20px 0 0;
+  font-size: clamp(30px, 4vw, 52px);
+  font-weight: 520;
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+.health-life-progress { margin-top: 38px; }
+.health-life-readout {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+}
+.health-life-value-label {
+  display: block;
+  color: #6b8a00;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.health-life-readout strong {
+  display: block;
+  margin-top: 12px;
+  color: var(--ink);
+  font-size: clamp(28px, 4vw, 50px);
+  font-weight: 420;
+  letter-spacing: -0.055em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.health-life-percent {
+  color: #6b8a00;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: clamp(20px, 3vw, 34px);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.05em;
+}
+.health-life-track {
+  height: 10px;
+  margin-top: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(107, 138, 0, 0.38);
+  background: rgba(107, 138, 0, 0.09);
+}
+.health-life-track > span {
+  display: block;
+  width: var(--life-progress);
+  height: 100%;
+  background: #6b8a00;
+}
+.health-smoking-status {
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border: 1px solid rgba(107, 138, 0, 0.4);
+  color: #6b8a00;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+.health-smoking-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 38px 0 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(21, 21, 21, 0.18);
+}
+.health-smoking-grid > div { min-width: 0; }
+.health-smoking-grid dd {
+  margin: 12px 0 0;
+  color: var(--ink);
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 420;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.health-smoking-streak {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(21, 21, 21, 0.18);
+}
+.health-smoking-streak-value {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: clamp(28px, 4vw, 50px) !important;
+  font-weight: 420;
+  letter-spacing: -0.055em !important;
+  line-height: 1 !important;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+.health-smoking-source { margin: 20px 0 0; color: #827d72; letter-spacing: 0.04em; }
+.health-recovery {
+  margin-top: 18px;
+  padding: 32px;
+  border: 1px solid rgba(21, 21, 21, 0.24);
+  background: #e2dfd5;
+}
+.health-recovery-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+.health-recovery-heading > div > span,
+.health-recovery-time,
+.health-recovery-source {
+  color: #6b8a00;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.health-recovery-heading h3 {
+  margin: 18px 0 0;
+  color: var(--ink);
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 520;
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+.health-recovery-badge {
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border: 1px solid rgba(107, 138, 0, 0.4);
+  color: #6b8a00;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+.health-recovery-table-wrap {
+  margin-top: 28px;
+  overflow-x: auto;
+  border-top: 1px solid rgba(21, 21, 21, 0.2);
+}
+.health-recovery-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.health-recovery-table th,
+.health-recovery-table td {
+  padding: 17px 0;
+  border-bottom: 1px solid rgba(21, 21, 21, 0.14);
+  vertical-align: middle;
+  text-align: left;
+}
+.health-recovery-table thead th {
+  padding-top: 15px;
+  padding-bottom: 12px;
+  color: #6b8a00;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.health-recovery-table thead th:first-child { width: 46%; }
+.health-recovery-table thead th:nth-child(2) { width: 20%; text-align: right; }
+.health-recovery-table thead th:last-child { width: 34%; padding-left: 30px; }
+.health-recovery-table tbody th {
+  padding-right: 24px;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 480;
+  letter-spacing: -0.02em;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.health-recovery-table tbody td:nth-child(2) {
+  color: var(--ink);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+.health-recovery-meter {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  margin-top: 9px;
+  overflow: hidden;
+  border: 1px solid rgba(107, 138, 0, 0.38);
+  background: rgba(107, 138, 0, 0.06);
+}
+.health-recovery-meter > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: block;
+  width: var(--recovery-width, 0%);
+  background: #6b8a00;
+}
+.health-recovery-meter.is-unavailable > span { display: none; }
+.health-recovery-table tbody td:last-child {
+  padding-left: 30px;
+  color: #6b8a00;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.health-recovery-table tbody td:last-child span,
+.health-recovery-table tbody td:last-child small { display: block; }
+.health-recovery-table tbody td:last-child small {
+  margin-top: 4px;
+  color: #827d72;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+.health-recovery-source {
+  margin: 22px 0 0;
+  color: #827d72;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+.health-recovery-source a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.health-note-grid article { padding: 30px; background: var(--paper); }
+.health-note-grid article > span { color: #6b8a00; }
+.health-note-grid h3 {
+  margin: 30px 0 16px;
+  font-size: clamp(22px, 2.3vw, 32px);
+  font-weight: 520;
+  letter-spacing: -0.045em;
+  line-height: 1.15;
+}
+.health-note-grid p {
+  color: #5d5a53;
+  font-size: 14px;
+  line-height: 1.85;
+}
+@media (max-width: 880px) {
+  .health-trend-grid { grid-template-columns: 1fr; }
+  .health-note-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .health-hero { min-height: 690px; }
+  .health-hero-meta { gap: 18px 30px; margin-top: 34px; }
+  .health-hero-meta div { min-width: 125px; }
+  .health-snapshot,
+  .health-trends,
+  .health-notes,
+  .health-smoking-section {
+    grid-template-columns: 1fr;
+    gap: 54px;
+    padding: 82px 20px 94px;
+  }
+  .health-section-body > h2 { font-size: clamp(42px, 13vw, 62px); }
+  .health-section-lede { margin-top: 32px; }
+  .health-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 44px; }
+  .health-kpi { min-height: 154px; padding: 20px 16px; }
+  .health-kpi dd { margin-top: 24px; font-size: clamp(30px, 10vw, 42px); }
+  .health-kpi dd span { display: block; margin: 8px 0 0; }
+  .health-kpi p { margin-top: 22px; }
+  .health-trend-grid,
+  .health-note-grid,
+  .health-smoking-card,
+  .health-life-card,
+  .health-recovery { margin-top: 44px; }
+  .health-trend-card { padding: 24px 20px; }
+  .health-smoking-card,
+  .health-life-card,
+  .health-recovery { padding: 28px 24px; }
+  .health-life-readout strong { font-size: clamp(12px, 4.1vw, 28px); }
+  .health-smoking-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 18px; }
+  .health-smoking-streak { grid-template-columns: 1fr; gap: 12px; }
+  .health-smoking-streak-value { font-size: clamp(12px, 4.1vw, 28px) !important; }
+  .health-recovery-table thead th:first-child { width: 39%; }
+  .health-recovery-table thead th:nth-child(2) { width: 22%; }
+  .health-recovery-table thead th:last-child { width: 39%; padding-left: 16px; }
+  .health-recovery-table th,
+  .health-recovery-table td { padding: 14px 0; }
+  .health-recovery-table tbody th { padding-right: 12px; font-size: 13px; }
+  .health-recovery-table tbody td:nth-child(2) { font-size: 14px; }
+  .health-recovery-table tbody td:last-child { padding-left: 16px; font-size: 12px; }
+  .health-recovery-table tbody td:last-child small { font-size: 8px; }
+  .health-note-grid article { padding: 28px 24px; }
+}
+
+@media (max-width: 420px) {
+  .health-kpi-grid { grid-template-columns: 1fr; }
+  .health-smoking-grid { grid-template-columns: 1fr; }
+  .health-recovery-table { font-size: 12px; }
+  .health-recovery-table thead th { font-size: 8px; letter-spacing: 0.04em; }
+  .health-recovery-table thead th:first-child { width: 37%; }
+  .health-recovery-table thead th:nth-child(2) { width: 23%; }
+  .health-recovery-table thead th:last-child { width: 40%; padding-left: 10px; }
+  .health-recovery-table tbody th { padding-right: 8px; font-size: 12px; }
+  .health-recovery-table tbody td:nth-child(2) { font-size: 12px; }
+  .health-recovery-meter { height: 5px; margin-top: 7px; }
+  .health-recovery-table tbody td:last-child { padding-left: 10px; font-size: 11px; }
+  .health-recovery-table tbody td:last-child small { font-size: 7px; letter-spacing: 0; }
 }
 
 /* ── 404 / 500 ───────────────────────────────────────────── */

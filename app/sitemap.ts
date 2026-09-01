@@ -18,6 +18,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = [
     { url: `${SITE.url}/`, changeFrequency: 'monthly', priority: 1 },
     { url: `${SITE.url}/notes`, changeFrequency: 'weekly', priority: 0.9 },
+    {
+      url: `${SITE.url}/health`,
+      lastModified: new Date('2026-08-31T00:00:00+08:00'),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
   ];
 
   let posts;

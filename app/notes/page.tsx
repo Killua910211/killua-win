@@ -46,9 +46,9 @@ export default async function NotesPage() {
           </div>
         </section>
 
-        <NotesPreface />
-
         <NotesArchive posts={posts} sectionNumber="01" />
+
+        <NotesPreface />
       </main>
 
       <SiteFooter />
