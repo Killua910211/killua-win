@@ -969,6 +969,55 @@ summary:focus-visible {
   font-size: 11px;
   letter-spacing: 0.06em;
 }
+.health-page { --health-accent-text: #4e6500; }
+.health-local-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 4vw;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--ink);
+}
+.health-local-nav a {
+  padding: 14px 20px;
+  color: rgba(255, 255, 255, 0.62);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: color var(--motion-base) ease, background-color var(--motion-base) ease;
+}
+.health-local-nav a:hover,
+.health-local-nav a:focus-visible {
+  color: var(--signal);
+  background: rgba(204, 255, 0, 0.08);
+}
+#health-timeline,
+#health-snapshot,
+#health-trends,
+#health-nutrition,
+#health-notes { scroll-margin-top: 58px; }
+.health-page .health-supplement-role,
+.health-page .health-supplement-heading > span,
+.health-page .health-supplement-details dt,
+.health-page .health-note-grid article > span,
+.health-page .health-smoking-heading > div > span,
+.health-page .health-life-heading > div > span,
+.health-page .health-smoking-grid dt,
+.health-page .health-life-value-label,
+.health-page .health-life-percent,
+.health-page .health-smoking-status,
+.health-page .health-recovery-heading > div > span,
+.health-page .health-recovery-time,
+.health-page .health-recovery-source,
+.health-page .health-recovery-badge,
+.health-page .health-recovery-table thead th,
+.health-page .health-recovery-table tbody td:last-child {
+  color: var(--health-accent-text);
+}
 .health-snapshot,
 .health-trends,
 .health-nutrition,
@@ -1181,7 +1230,7 @@ summary:focus-visible {
   letter-spacing: 0.08em;
   line-height: 1.7;
 }
-.health-supplement-details > div:first-child dt { font-weight: 650; }
+.health-supplement-details > div:first-child dd { font-weight: 600; }
 .health-supplement-details dd {
   color: #6d695f;
   font-size: 13px;
@@ -1471,6 +1520,9 @@ summary:focus-visible {
   font-size: 9px;
   letter-spacing: 0.04em;
 }
+.health-smoking-recovery-table thead th:first-child { width: 40%; }
+.health-smoking-recovery-table thead th:nth-child(2) { width: 28%; }
+.health-smoking-recovery-table thead th:last-child { width: 32%; }
 .health-recovery-source {
   margin: 22px 0 0;
   color: #827d72;
@@ -1559,6 +1611,75 @@ summary:focus-visible {
   .health-recovery-meter { height: 5px; margin-top: 7px; }
   .health-recovery-table tbody td:last-child { padding-left: 10px; font-size: 11px; }
   .health-recovery-table tbody td:last-child small { font-size: 7px; letter-spacing: 0; }
+}
+
+@media (max-width: 760px) {
+  .health-local-nav {
+    flex-wrap: nowrap;
+    gap: 0;
+    padding: 0 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .health-local-nav::-webkit-scrollbar { display: none; }
+  .health-local-nav a { flex: 0 0 auto; padding: 13px 16px; }
+  .health-smoking-recovery-table-wrap { overflow-x: visible; }
+  .health-smoking-recovery-table {
+    display: block;
+    table-layout: auto;
+  }
+  .health-smoking-recovery-table thead { display: none; }
+  .health-smoking-recovery-table tbody {
+    display: grid;
+    width: 100%;
+  }
+  .health-smoking-recovery-table tbody tr {
+    display: grid;
+    grid-template-areas:
+      'system recovery'
+      'judgment judgment';
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 16px;
+    row-gap: 8px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(21, 21, 21, 0.14);
+  }
+  .health-smoking-recovery-table tbody th,
+  .health-smoking-recovery-table tbody td {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+  }
+  .health-smoking-recovery-table tbody th {
+    grid-area: system;
+    align-self: start;
+    padding-right: 0;
+    font-size: 14px;
+  }
+  .health-smoking-recovery-table tbody td:nth-child(2) {
+    grid-area: recovery;
+    align-self: start;
+    overflow-wrap: anywhere;
+    text-align: left;
+    white-space: normal;
+    font-size: 15px;
+  }
+  .health-smoking-recovery-table tbody td:last-child {
+    grid-area: judgment;
+    padding-left: 0;
+    font-size: 13px;
+  }
+  .health-smoking-recovery-table .health-recovery-meter {
+    width: 100%;
+    height: 6px;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 420px) {
+  .health-smoking-recovery-table tbody th { font-size: 13px; }
+  .health-smoking-recovery-table tbody td:nth-child(2) { font-size: 14px; }
+  .health-smoking-recovery-table tbody td:last-child { font-size: 12px; }
 }
 
 /* ── 404 / 500 ───────────────────────────────────────────── */
