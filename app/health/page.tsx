@@ -288,9 +288,6 @@ export default function HealthPage() {
               当前覆盖度仅统计页面列出的 6 项补充方案，不包括基础饮食；百分比按当前日用量与成人每日参考值计算，超过 100% 的项目进度条封顶。
             </div>
 
-            <p className="health-nutrition-footnote">
-              这是个人记录，不是医疗诊断或治疗建议；如有肾功能问题、正在用药或其他特殊情况，补充前先咨询医生或药师。钙镁与药物的间隔按医嘱或产品说明执行。
-            </p>
           </div>
         </section>
 

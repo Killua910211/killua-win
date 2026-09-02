@@ -63,9 +63,9 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
     amount: '1 粒 / 日',
     role: '综合维生素与矿物质',
     details: [
-      { label: '定位', text: '广谱补充维生素与矿物质，覆盖当前记录中较容易不足的项目。' },
+      { label: '定位', text: '支持免疫功能、能量代谢、神经系统与骨骼健康，补充多种维生素和矿物质。' },
       { label: '营养价值', text: '1 粒对应标签 2 粒份量的一半：维 A 525 μg、维 C 125 mg、D3 25 μg（1,000 IU）、维 E 8.25 mg、维 K 200 μg、叶酸 333.5 μg DFE、B12 300 μg；另含钙 26 mg、镁 10 mg、锌 7.5 mg、硒 100 μg、碘 37.5 μg。' },
-      { label: '注意', text: '随餐通常更易耐受；使用维 K 拮抗类抗凝药时先咨询。' },
+      { label: '注意', text: '随餐通常更易耐受；维 K 拮抗类抗凝药物使用期间需注意相互作用。' },
     ],
   },
   {
@@ -73,9 +73,9 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
     amount: '1 粒 / 日',
     role: 'Omega-3',
     details: [
-      { label: '定位', text: '浓缩鱼油，用于补充海洋来源的 Omega-3 脂肪酸。' },
+      { label: '定位', text: '支持心血管、脑与视觉相关营养需求，补充海洋来源的 Omega-3 脂肪酸。' },
       { label: '营养价值', text: 'EPA 425 mg + DHA 270 mg，合计约 695 mg；约 10 kcal、1 g 脂肪。' },
-      { label: '注意', text: '与含脂肪的正餐同服通常更容易坚持；使用抗凝或抗血小板药物、近期准备手术时先确认。' },
+      { label: '注意', text: '与含脂肪的正餐同服通常更容易坚持；抗凝或抗血小板药物使用期间、近期准备手术时需注意相互作用。' },
     ],
   },
   {
@@ -83,9 +83,9 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
     amount: '6 g / 日',
     role: '水溶性膳食纤维 / 益生元',
     details: [
-      { label: '定位', text: '以部分水解瓜尔胶为主的水溶性膳食纤维产品。' },
+      { label: '定位', text: '增加水溶性膳食纤维摄入，促进规律排便，并作为益生元支持肠道菌群。' },
       { label: '营养价值', text: '6 g 提供 6 g 水溶性膳食纤维；按 1.9 kcal/g 计为 11.4 kcal。' },
-      { label: '注意', text: '用足量水冲调；初次或肠胃敏感时先用半量，与药物最好错开约 2 小时。' },
+      { label: '注意', text: '用足量水冲调；初次或肠胃敏感时用半量，与药物错开约 2 小时。' },
     ],
   },
   {
@@ -93,7 +93,7 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
     amount: '20 g / 日',
     role: '食物型补充',
     details: [
-      { label: '定位', text: '按固定份量补充不饱和脂肪、维生素 E、镁、铜和少量纤维。' },
+      { label: '定位', text: '提供不饱和脂肪、维生素 E、镁、铜和纤维，支持心血管、神经肌肉与抗氧化相关营养需求。' },
       { label: '营养价值', text: '20 g 单袋标示为 125 kcal、3.4 g 蛋白质、11.6 g 脂肪、4 g 碳水化合物。' },
       { label: '注意', text: '优先无盐少调味版本；提前称量，过敏者不要食用。' },
     ],
@@ -103,9 +103,9 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
     amount: '1 粒 / 日',
     role: '补充钙缺口',
     details: [
-      { label: '定位', text: '柠檬酸钙补充剂，用于补足每日总钙摄入。' },
+      { label: '定位', text: '支持骨骼和牙齿健康，也参与肌肉收缩与神经传导，补充每日钙摄入。' },
       { label: '营养价值', text: '每日 1 粒提供 250 mg 元素钙；与 Basic Nutrients 合计约 276 mg 钙。' },
-      { label: '注意', text: '与左甲状腺素、部分抗生素或铁剂需按说明错开；肾结石史、肾功能异常或高钙血症者先咨询。' },
+      { label: '注意', text: '与左甲状腺素、部分抗生素或铁剂错开；肾结石史、肾功能异常或高钙血症时需注意总摄入。' },
     ],
   },
   {
@@ -113,9 +113,9 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
     amount: '1 粒 / 日',
     role: '补充镁缺口',
     details: [
-      { label: '定位', text: '甘氨酸镁 / 双甘氨酸镁补充剂，用于填补每日镁摄入缺口。' },
+      { label: '定位', text: '参与能量代谢、神经传导、肌肉功能与骨骼健康，补充每日镁摄入。' },
       { label: '营养价值', text: '每日 1 粒提供 120 mg 元素镁；与 Basic Nutrients 合计约 130 mg，参与能量代谢、神经传导、肌肉功能与骨骼健康。' },
-      { label: '注意', text: '肾功能异常者先咨询；与部分抗生素、双膦酸盐需错开。' },
+      { label: '注意', text: '肾功能异常时需注意总摄入；与部分抗生素、双膦酸盐错开。' },
     ],
   },
 ];
