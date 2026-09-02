@@ -7,6 +7,9 @@ import { SmokingRecoveryTimeline } from './smoking-recovery';
 import {
   getHealthLifeProgressSnapshot,
   HEALTH_COVERAGE_START,
+  HEALTH_NUTRITION_COVERAGE,
+  HEALTH_NUTRITION_ROUTINE,
+  HEALTH_SUPPLEMENTS,
   HEALTH_SMOKING_RECORD,
   HEALTH_TRENDS,
   HEALTH_UPDATED_AT,
@@ -16,7 +19,7 @@ import { buildMetadata } from '@/app/lib/metadata';
 
 export const metadata = buildMetadata({
   title: 'Health',
-  description: '从 Apple Health 提取的公开健康快照：活动、睡眠、恢复与体能趋势。',
+  description: '从 Apple Health 提取的公开健康快照：活动、睡眠、恢复、体能趋势与每日营养补充记录。',
   path: '/health',
 });
 
@@ -210,9 +213,64 @@ export default function HealthPage() {
           </div>
         </section>
 
-        <section className="health-notes" aria-labelledby="health-notes-heading">
+        <section className="health-nutrition" aria-labelledby="health-nutrition-heading">
           <div className="section-label" lang="en">
             <span>04</span>
+            <span>Diet &amp; supplements</span>
+          </div>
+          <div className="health-section-body">
+            <p className="eyebrow">Daily nutrition</p>
+            <h2 id="health-nutrition-heading">把每天吃什么，也记录下来。</h2>
+            <p className="health-section-lede">
+              基于个人饮食与补充方案的最终整理，所有数值均为约数，具体以实际包装标签为准。
+            </p>
+
+            <div className="health-routine-grid">
+              {HEALTH_NUTRITION_ROUTINE.map((routine) => (
+                <article className="health-routine-card" key={routine.time}>
+                  <span className="health-nutrition-index" lang="en">{routine.time}</span>
+                  <ul>
+                    {routine.items.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                  <p>{routine.focus}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="health-supplement-grid">
+              {HEALTH_SUPPLEMENTS.map((supplement) => (
+                <article className="health-supplement-card" key={supplement.name}>
+                  <div className="health-supplement-heading">
+                    <h3>{supplement.name}</h3>
+                    <span>{supplement.amount}</span>
+                  </div>
+                  <p className="health-supplement-role">{supplement.role}</p>
+                  <p>{supplement.detail}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="health-coverage-grid">
+              {HEALTH_NUTRITION_COVERAGE.map((item) => (
+                <div className="health-coverage-row" key={item.label}>
+                  <div>
+                    <strong>{item.label}</strong>
+                    <span>{item.status}</span>
+                  </div>
+                  <p>{item.detail}</p>
+                </div>
+              ))}
+            </div>
+
+            <p className="health-nutrition-footnote">
+              这是个人记录，不是医疗诊断或治疗建议；如有肾功能问题、正在用药或其他特殊情况，补充前先咨询医生或药师。钙镁与药物的间隔按医嘱或产品说明执行。
+            </p>
+          </div>
+        </section>
+
+        <section className="health-notes" aria-labelledby="health-notes-heading">
+          <div className="section-label" lang="en">
+            <span>05</span>
             <span>Reading notes</span>
           </div>
           <div className="health-section-body">
