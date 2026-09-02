@@ -8,7 +8,6 @@ import {
   getHealthLifeProgressSnapshot,
   HEALTH_COVERAGE_START,
   HEALTH_NUTRITION_COVERAGE,
-  HEALTH_NUTRITION_ROUTINE,
   HEALTH_SUPPLEMENTS,
   HEALTH_SMOKING_RECORD,
   HEALTH_TRENDS,
@@ -216,26 +215,14 @@ export default function HealthPage() {
         <section className="health-nutrition" aria-labelledby="health-nutrition-heading">
           <div className="section-label" lang="en">
             <span>04</span>
-            <span>Diet &amp; supplements</span>
+            <span>Supplements</span>
           </div>
           <div className="health-section-body">
-            <p className="eyebrow">Daily nutrition</p>
-            <h2 id="health-nutrition-heading">把每天吃什么，也记录下来。</h2>
+            <p className="eyebrow">Supplement plan</p>
+            <h2 id="health-nutrition-heading">把补充方案，也记录下来。</h2>
             <p className="health-section-lede">
-              基于个人饮食与补充方案的最终整理，所有数值均为约数，具体以实际包装标签为准。
+              基于个人补充方案整理；所有数值均为约数，具体以实际包装标签为准。
             </p>
-
-            <div className="health-routine-grid">
-              {HEALTH_NUTRITION_ROUTINE.map((routine) => (
-                <article className="health-routine-card" key={routine.time}>
-                  <span className="health-nutrition-index" lang="en">{routine.time}</span>
-                  <ul>
-                    {routine.items.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                  <p>{routine.focus}</p>
-                </article>
-              ))}
-            </div>
 
             <div className="health-supplement-grid">
               {HEALTH_SUPPLEMENTS.map((supplement) => (

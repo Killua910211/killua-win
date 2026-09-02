@@ -45,40 +45,6 @@ export const HEALTH_WEEKLY_AVERAGES: HealthWeeklyAverage[] = [
   { label: '平均血氧饱和度', value: '96.0', unit: '%', coverage: '7 / 7 DAYS' },
 ];
 
-export type HealthNutritionRoutine = {
-  time: string;
-  items: string[];
-  focus: string;
-};
-
-/** 根据 ChatGPT 对话中最终确认的每日饮食与补充安排。 */
-export const HEALTH_NUTRITION_ROUTINE: HealthNutritionRoutine[] = [
-  {
-    time: '中午',
-    items: [
-      '全蛋 3 个 + 蛋白 3 个',
-      '牛奶约 300 ml',
-      'Thorne Basic Nutrients 2/Day · 1 粒',
-      'Solaray Calcium Citrate · 1 粒',
-    ],
-    focus: '高质量蛋白、胆碱、钙与基础微量营养。',
-  },
-  {
-    time: '白天',
-    items: ['4 种混合坚果 · 20 g', 'Sunfiber AI · 先 3 g，适应后 6 g'],
-    focus: '维生素 E、镁、不饱和脂肪与水溶性膳食纤维。',
-  },
-  {
-    time: '晚餐 / 睡前',
-    items: [
-      '偏瘦牛肉约 270 g + 米饭约 2 碗',
-      'Thorne Super EPA · 1 粒',
-      'Thorne Magnesium Glycinate · 1 粒',
-    ],
-    focus: '高质量蛋白、EPA/DHA 与镁。',
-  },
-];
-
 export type HealthSupplement = {
   name: string;
   amount: string;
@@ -91,37 +57,37 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
     name: 'Thorne Basic Nutrients 2/Day',
     amount: '1 粒 / 日',
     role: '综合维生素与矿物质',
-    detail: '约含维 C 125 mg、D3 25 μg、维 K 200 μg、叶酸 333 μg DFE、锌 7.5 mg、硒 100 μg。',
+    detail: '广谱补充维生素与矿物质；1 粒约含维 A 525 μg、维 C 125 mg、D3 25 μg（1,000 IU）、维 K 约 200 μg、叶酸约 333 μg DFE、B12 约 300 μg，并含锌、硒、碘等。随餐通常更易耐受；使用维 K 拮抗类抗凝药时先咨询。',
   },
   {
     name: 'Thorne Super EPA',
     amount: '1 粒 / 日',
     role: 'Omega-3',
-    detail: 'EPA 425 mg + DHA 270 mg，合计约 695 mg；约 10 kcal、1 g 脂肪。',
+    detail: '浓缩鱼油，EPA 425 mg + DHA 270 mg，合计约 695 mg；约 10 kcal、1 g 脂肪。与含脂肪的正餐同服通常更容易坚持；使用抗凝或抗血小板药物、近期准备手术时先确认。',
   },
   {
     name: 'Sunfiber AI',
-    amount: '3 g → 6 g / 日',
+    amount: '约 6 g / 日',
     role: '水溶性膳食纤维 / 益生元',
-    detail: '先从 3 g 适应，之后约 6 g；6 g 粉约含 5.1 g 膳食纤维，可加入水、牛奶或咖啡。',
+    detail: '以部分水解瓜尔胶为主；约 6 g 粉含约 5.1 g 水溶性膳食纤维、约 12.5 kcal。用足量水冲调；初次或肠胃敏感时先用半量，与药物最好错开约 2 小时。',
   },
   {
     name: 'DAILY NUTS & FRUITS 混合坚果',
     amount: '20 g / 日',
     role: '食物型补充',
-    detail: '无盐无油的杏仁、核桃、腰果与夏威夷果；约 125 kcal、11.6 g 脂肪、3.4 g 蛋白质。',
+    detail: '四种坚果按固定份量补充不饱和脂肪、维生素 E、镁、铜和少量纤维；20 g 约 120–130 kcal、10–12 g 脂肪、1–2 g 纤维，数值随配比浮动。优先无盐少调味版本；有坚果过敏时不要食用。',
   },
   {
     name: 'Solaray Calcium Citrate',
-    amount: '1 粒 / 日',
+    amount: '1 粒起 / 日',
     role: '补充钙缺口',
-    detail: '按当前版本估算，每粒约 250 mg 元素钙；奶制品特别少时再评估是否增加。',
+    detail: '柠檬酸钙补充剂；按当前版本估算，每粒约 250 mg 元素钙。评估的是总钙摄入，不是额外补满固定剂量；与左甲状腺素、部分抗生素或铁剂需按说明错开，肾结石史、肾功能异常或高钙血症者先咨询。',
   },
   {
     name: 'Thorne Magnesium Glycinate',
     amount: '1 粒 / 日',
     role: '补充镁缺口',
-    detail: '按当前版本估算，每粒约 120 mg 元素镁，安排在晚餐后或睡前。',
+    detail: '甘氨酸镁 / 双甘氨酸镁补充剂；按当前版本估算，每粒约 120 mg 元素镁，参与能量代谢、神经传导、肌肉功能与骨骼健康。以个人耐受和产品标签为准；肾功能异常者先咨询，与部分抗生素、双膦酸盐需错开。',
   },
 ];
 
@@ -132,15 +98,14 @@ export type HealthNutritionCoverage = {
 };
 
 export const HEALTH_NUTRITION_COVERAGE: HealthNutritionCoverage[] = [
-  { label: '蛋白质', status: '强项', detail: '约 110–125 g / 日，主要来自蛋、奶与偏瘦牛肉。' },
-  { label: '脂肪', status: '基本合适', detail: '目标约 50–65 g / 日；坚果与鱼油改善脂肪质量。' },
-  { label: '维生素与微量元素', status: '已补强', detail: '复合维生素提供基础兜底，但不等同于蔬菜水果。' },
-  { label: '钙与镁', status: '定向补充', detail: '牛奶、坚果与单独的钙镁产品共同覆盖。' },
-  { label: '膳食纤维', status: '有所改善', detail: 'Sunfiber 解决一部分缺口，但总量仍可能低于理想水平。' },
-  { label: '钾', status: '仍需留意', detail: '不使用高剂量钾片；优先低钠盐或偶尔摄入含钾食物。' },
-  { label: '植物性食物多样性', status: '仍是缺口', detail: '补剂不能替代水果、蔬菜、豆类带来的天然纤维与植物化合物。' },
-  { label: '额外热量', status: '约 150 kcal / 日', detail: '主要来自 20 g 坚果；鱼油约 10 kcal，Sunfiber 约 12.5 kcal。' },
-  { label: '总热量', status: '持续观察', detail: '估算受牛肉部位、牛奶种类、米饭份量与活动量影响。' },
+  { label: '维生素与微量元素', status: '广谱覆盖', detail: 'Basic Nutrients 约提供维 A、C、D3、E、K、B 族、叶酸、B12，以及锌、硒、碘等。' },
+  { label: 'Omega-3', status: '已纳入', detail: 'Super EPA 每日提供约 695 mg EPA + DHA。' },
+  { label: '钙与镁', status: '定向补充', detail: 'Calcium Citrate 每粒约 250 mg 元素钙；Magnesium Glycinate 每粒约 120 mg 元素镁。' },
+  { label: '膳食纤维', status: '有所改善', detail: 'Sunfiber 约提供 5.1 g 水溶性纤维，坚果再提供少量；不能替代多样化食物。' },
+  { label: '优质脂肪', status: '已纳入', detail: '坚果提供单/多不饱和脂肪，Super EPA 提供 EPA 与 DHA。' },
+  { label: '钾', status: '仍需留意', detail: '这套补充方案没有直接解决钾；不自行使用高剂量钾片。' },
+  { label: '植物性食物多样性', status: '仍是缺口', detail: '补剂不能完整提供植物食物中的天然纤维、多酚和类胡萝卜素。' },
+  { label: '额外热量', status: '约 145–155 kcal / 日', detail: '20 g 坚果约 120–130 kcal，Super EPA 约 10 kcal，Sunfiber 约 12.5 kcal。' },
 ];
 
 export type SmokingCessationRecord = {

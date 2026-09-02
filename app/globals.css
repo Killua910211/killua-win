@@ -1120,27 +1120,16 @@ summary:focus-visible {
   font-size: 12px;
   line-height: 1.7;
 }
-.health-routine-grid,
 .health-supplement-grid,
 .health-coverage-grid {
   display: grid;
   gap: 1px;
   background: rgba(21, 21, 21, 0.2);
 }
-.health-routine-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 60px;
-}
-.health-routine-card,
 .health-supplement-card,
 .health-coverage-row {
   background: var(--paper);
 }
-.health-routine-card {
-  min-height: 260px;
-  padding: 28px;
-}
-.health-nutrition-index,
 .health-supplement-role,
 .health-coverage-row > div span {
   color: #6b8a00;
@@ -1148,33 +1137,6 @@ summary:focus-visible {
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-}
-.health-routine-card ul {
-  display: grid;
-  gap: 10px;
-  margin-top: 28px;
-  padding: 0;
-  list-style: none;
-}
-.health-routine-card li {
-  padding-left: 16px;
-  font-size: 16px;
-  line-height: 1.45;
-}
-.health-routine-card li::before {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin: 0 8px 1px -16px;
-  border-radius: 50%;
-  background: var(--signal);
-  content: '';
-}
-.health-routine-card > p {
-  margin-top: 28px;
-  color: #6d695f;
-  font-size: 13px;
-  line-height: 1.7;
 }
 .health-supplement-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1551,7 +1513,6 @@ summary:focus-visible {
   .health-kpi dd span { display: block; margin: 8px 0 0; }
   .health-kpi p { margin-top: 22px; }
   .health-trend-grid,
-  .health-routine-grid,
   .health-supplement-grid,
   .health-coverage-grid,
   .health-note-grid,
@@ -1559,10 +1520,8 @@ summary:focus-visible {
   .health-life-card,
   .health-recovery { margin-top: 44px; }
   .health-trend-card { padding: 24px 20px; }
-  .health-routine-grid { grid-template-columns: 1fr; }
   .health-supplement-grid,
   .health-coverage-grid { grid-template-columns: 1fr; }
-  .health-routine-card { min-height: 0; padding: 24px 20px; }
   .health-supplement-card { min-height: 0; padding: 24px 20px; }
   .health-coverage-row { grid-template-columns: 1fr; gap: 10px; padding: 20px; }
   .health-smoking-card,
