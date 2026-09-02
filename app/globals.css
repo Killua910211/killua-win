@@ -1181,6 +1181,7 @@ summary:focus-visible {
   letter-spacing: 0.08em;
   line-height: 1.7;
 }
+.health-supplement-details > div:first-child dt { font-weight: 650; }
 .health-supplement-details dd {
   color: #6d695f;
   font-size: 13px;
