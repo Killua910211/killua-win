@@ -244,11 +244,11 @@ export default function HealthPage() {
                   <span lang="en">Supplement coverage</span>
                   <h3 id="health-nutrition-heading">补剂的每日营养覆盖</h3>
                 </div>
-                <span className="health-recovery-badge">当前估算</span>
+                <span className="health-recovery-badge">按日用量</span>
               </div>
               <div className="health-recovery-table-wrap">
                 <table className="health-recovery-table">
-                  <caption className="visually-hidden">一天的营养摄入与参考值覆盖度估算</caption>
+                  <caption className="visually-hidden">补剂每日营养摄入与参考值覆盖度</caption>
                   <thead>
                     <tr>
                       <th scope="col">营养素</th>
@@ -285,7 +285,7 @@ export default function HealthPage() {
             </section>
 
             <div className="health-nutrition-reference">
-              当前覆盖度仅统计页面列出的 6 项补充方案，不包括基础饮食；参考值按常用成人每日参考值估算。超过 100% 的项目进度条封顶，具体数值会随产品版本与个人需求变化。
+              当前覆盖度仅统计页面列出的 6 项补充方案，不包括基础饮食；百分比按当前日用量与成人每日参考值计算，超过 100% 的项目进度条封顶。
             </div>
 
             <p className="health-nutrition-footnote">

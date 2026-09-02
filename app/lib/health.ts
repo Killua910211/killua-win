@@ -64,7 +64,7 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
     role: '综合维生素与矿物质',
     details: [
       { label: '定位', text: '广谱补充维生素与矿物质，覆盖当前记录中较容易不足的项目。' },
-      { label: '营养价值', text: '1 粒约含维 A 525 μg、维 C 125 mg、D3 25 μg（1,000 IU）、维 K 约 200 μg、叶酸约 333 μg DFE、B12 约 300 μg，并含锌、硒、碘等。' },
+      { label: '营养价值', text: '1 粒对应标签 2 粒份量的一半：维 A 525 μg、维 C 125 mg、D3 25 μg（1,000 IU）、维 E 8.25 mg、维 K 200 μg、叶酸 333.5 μg DFE、B12 300 μg；另含钙 26 mg、镁 10 mg、锌 7.5 mg、硒 100 μg、碘 37.5 μg。' },
       { label: '注意', text: '随餐通常更易耐受；使用维 K 拮抗类抗凝药时先咨询。' },
     ],
   },
@@ -80,11 +80,11 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
   },
   {
     name: 'Sunfiber AI',
-    amount: '约 6 g / 日',
+    amount: '6 g / 日',
     role: '水溶性膳食纤维 / 益生元',
     details: [
       { label: '定位', text: '以部分水解瓜尔胶为主的水溶性膳食纤维产品。' },
-      { label: '营养价值', text: '约 6 g 粉含约 5.1 g 水溶性膳食纤维、约 12.5 kcal。' },
+      { label: '营养价值', text: '6 g 提供 6 g 水溶性膳食纤维；按 1.9 kcal/g 计为 11.4 kcal。' },
       { label: '注意', text: '用足量水冲调；初次或肠胃敏感时先用半量，与药物最好错开约 2 小时。' },
     ],
   },
@@ -94,17 +94,17 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
     role: '食物型补充',
     details: [
       { label: '定位', text: '按固定份量补充不饱和脂肪、维生素 E、镁、铜和少量纤维。' },
-      { label: '营养价值', text: '20 g 约 120–130 kcal、10–12 g 脂肪、1–2 g 纤维，数值会随坚果配比浮动。' },
+      { label: '营养价值', text: '20 g 单袋标示为 125 kcal、3.4 g 蛋白质、11.6 g 脂肪、4 g 碳水化合物。' },
       { label: '注意', text: '优先无盐少调味版本；提前称量，过敏者不要食用。' },
     ],
   },
   {
     name: 'Solaray Calcium Citrate',
-    amount: '1 粒起 / 日',
+    amount: '1 粒 / 日',
     role: '补充钙缺口',
     details: [
       { label: '定位', text: '柠檬酸钙补充剂，用于补足每日总钙摄入。' },
-      { label: '营养价值', text: '按当前版本估算，每粒约 250 mg 元素钙；评估的是总钙摄入，不是额外补满固定剂量。' },
+      { label: '营养价值', text: '每日 1 粒提供 250 mg 元素钙；与 Basic Nutrients 合计约 276 mg 钙。' },
       { label: '注意', text: '与左甲状腺素、部分抗生素或铁剂需按说明错开；肾结石史、肾功能异常或高钙血症者先咨询。' },
     ],
   },
@@ -114,8 +114,8 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
     role: '补充镁缺口',
     details: [
       { label: '定位', text: '甘氨酸镁 / 双甘氨酸镁补充剂，用于填补每日镁摄入缺口。' },
-      { label: '营养价值', text: '按当前版本估算，每粒约 120 mg 元素镁，参与能量代谢、神经传导、肌肉功能与骨骼健康。' },
-      { label: '注意', text: '以个人耐受和产品标签为准；肾功能异常者先咨询，与部分抗生素、双膦酸盐需错开。' },
+      { label: '营养价值', text: '每日 1 粒提供 120 mg 元素镁；与 Basic Nutrients 合计约 130 mg，参与能量代谢、神经传导、肌肉功能与骨骼健康。' },
+      { label: '注意', text: '肾功能异常者先咨询；与部分抗生素、双膦酸盐需错开。' },
     ],
   },
 ];
@@ -130,19 +130,23 @@ export type HealthNutritionCoverage = {
 };
 
 export const HEALTH_NUTRITION_COVERAGE: HealthNutritionCoverage[] = [
-  { nutrient: '蛋白质', intake: '约 3–4 g', reference: '50 g / 日', coverage: '≈6–8%', visual: 7, judgment: '仅少量贡献' },
-  { nutrient: '脂肪', intake: '约 11–13 g', reference: '78 g / 日', coverage: '≈14–17%', visual: 16, judgment: '少量贡献' },
-  { nutrient: '膳食纤维', intake: '约 6–7 g', reference: '28 g / 日', coverage: '≈21–25%', visual: 23, judgment: '部分覆盖' },
-  { nutrient: '钙', intake: '约 275 mg', reference: '1,000 mg / 日', coverage: '≈28%', visual: 28, judgment: '部分覆盖' },
-  { nutrient: '镁', intake: '约 160–190 mg', reference: '420 mg / 日', coverage: '≈38–45%', visual: 42, judgment: '部分覆盖' },
-  { nutrient: '钾', intake: '少量', reference: '4,700 mg / 日', coverage: '<5%', visual: 3, judgment: '仍未解决' },
-  { nutrient: '维生素 A', intake: '约 525 μg RAE', reference: '900 μg / 日', coverage: '≈58%', visual: 58, judgment: '部分覆盖' },
-  { nutrient: '维生素 C', intake: '约 125 mg', reference: '90 mg / 日', coverage: '≥139%', visual: 100, judgment: '已达到参考值' },
-  { nutrient: '维生素 D3', intake: '约 25 μg', reference: '20 μg / 日', coverage: '≥125%', visual: 100, judgment: '已达到参考值' },
-  { nutrient: '维生素 K', intake: '约 200 μg', reference: '120 μg / 日', coverage: '≥167%', visual: 100, judgment: '已达到参考值' },
-  { nutrient: '叶酸', intake: '约 333 μg DFE', reference: '400 μg DFE / 日', coverage: '≈83%', visual: 83, judgment: '接近参考值' },
-  { nutrient: 'Omega-3（EPA + DHA）', intake: '约 695 mg', reference: '无统一 %DV', coverage: '—', visual: null, judgment: '已纳入' },
-  { nutrient: '额外热量', intake: '约 145–155 kcal', reference: '2,000 kcal / 日', coverage: '≈7–8%', visual: 8, judgment: '影响较小' },
+  // 只统计当前 6 项补充方案可直接得到的数值，不包括基础饮食。
+  { nutrient: '蛋白质', intake: '3.4 g', reference: '50 g / 日', coverage: '≈7%', visual: 7, judgment: '仅少量贡献' },
+  { nutrient: '脂肪', intake: '12.6 g', reference: '78 g / 日', coverage: '≈16%', visual: 16, judgment: '少量贡献' },
+  { nutrient: '总碳水化合物', intake: '4 g', reference: '275 g / 日', coverage: '≈1%', visual: 1, judgment: '影响较小' },
+  { nutrient: '膳食纤维', intake: '6 g', reference: '28 g / 日', coverage: '≈21%', visual: 21, judgment: '部分覆盖' },
+  { nutrient: '钙', intake: '约 276 mg', reference: '成人 19–50 岁 1,000 mg / 日', coverage: '≈28%', visual: 28, judgment: '部分覆盖' },
+  { nutrient: '镁', intake: '130 mg', reference: '420 mg / 日', coverage: '≈31%', visual: 31, judgment: '部分覆盖' },
+  { nutrient: '维生素 A', intake: '525 μg', reference: '900 μg / 日', coverage: '≈58%', visual: 58, judgment: '部分覆盖' },
+  { nutrient: '维生素 C', intake: '125 mg', reference: '90 mg / 日', coverage: '≥139%', visual: 100, judgment: '已达到参考值' },
+  { nutrient: '维生素 D3', intake: '25 μg', reference: '20 μg / 日', coverage: '≥125%', visual: 100, judgment: '已达到参考值' },
+  { nutrient: '维生素 E', intake: '8.25 mg', reference: '15 mg / 日', coverage: '≈55%', visual: 55, judgment: '部分覆盖' },
+  { nutrient: '维生素 K', intake: '200 μg', reference: '120 μg / 日', coverage: '≥167%', visual: 100, judgment: '已达到参考值' },
+  { nutrient: '叶酸', intake: '333.5 μg DFE', reference: '400 μg DFE / 日', coverage: '≈83%', visual: 83, judgment: '接近参考值' },
+  { nutrient: '碘', intake: '37.5 μg', reference: '150 μg / 日', coverage: '≈25%', visual: 25, judgment: '部分覆盖' },
+  { nutrient: '锌', intake: '7.5 mg', reference: '11 mg / 日', coverage: '≈68%', visual: 68, judgment: '部分覆盖' },
+  { nutrient: 'Omega-3（EPA + DHA）', intake: '695 mg', reference: '无统一 %DV', coverage: '—', visual: null, judgment: '已纳入' },
+  { nutrient: '额外热量', intake: '约 146.4 kcal', reference: '2,000 kcal / 日', coverage: '≈7%', visual: 7, judgment: '影响较小' },
 ];
 
 export type SmokingCessationRecord = {
