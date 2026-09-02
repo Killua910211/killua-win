@@ -212,18 +212,12 @@ export default function HealthPage() {
           </div>
         </section>
 
-        <section className="health-nutrition" aria-labelledby="health-nutrition-heading">
+        <section className="health-nutrition" aria-label="补剂方案与每日营养覆盖">
           <div className="section-label" lang="en">
             <span>04</span>
             <span>Supplements</span>
           </div>
           <div className="health-section-body">
-            <p className="eyebrow">Supplement plan</p>
-            <h2 id="health-nutrition-heading">把补充方案，也记录下来。</h2>
-            <p className="health-section-lede">
-              基于个人补充方案整理；所有数值均为约数，具体以实际包装标签为准。
-            </p>
-
             <div className="health-supplement-grid">
               {HEALTH_SUPPLEMENTS.map((supplement) => (
                 <article className="health-supplement-card" key={supplement.name}>
@@ -232,21 +226,66 @@ export default function HealthPage() {
                     <span>{supplement.amount}</span>
                   </div>
                   <p className="health-supplement-role">{supplement.role}</p>
-                  <p>{supplement.detail}</p>
+                  <dl className="health-supplement-details">
+                    {supplement.details.map((detail) => (
+                      <div key={detail.label}>
+                        <dt>{detail.label}</dt>
+                        <dd>{detail.text}</dd>
+                      </div>
+                    ))}
+                  </dl>
                 </article>
               ))}
             </div>
 
-            <div className="health-coverage-grid">
-              {HEALTH_NUTRITION_COVERAGE.map((item) => (
-                <div className="health-coverage-row" key={item.label}>
-                  <div>
-                    <strong>{item.label}</strong>
-                    <span>{item.status}</span>
-                  </div>
-                  <p>{item.detail}</p>
+            <section className="health-recovery health-nutrition-coverage" aria-labelledby="health-nutrition-heading">
+              <div className="health-recovery-heading">
+                <div>
+                  <span lang="en">Daily nutrition coverage</span>
+                  <h3 id="health-nutrition-heading">一天的营养覆盖</h3>
                 </div>
-              ))}
+                <span className="health-recovery-badge">当前估算</span>
+              </div>
+              <div className="health-recovery-table-wrap">
+                <table className="health-recovery-table">
+                  <caption className="visually-hidden">一天的营养摄入与参考值覆盖度估算</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">营养素</th>
+                      <th scope="col">估算摄入 / 参考值</th>
+                      <th scope="col">当前判断</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {HEALTH_NUTRITION_COVERAGE.map((item) => (
+                      <tr key={item.nutrient}>
+                        <th scope="row">{item.nutrient}</th>
+                        <td>
+                          {item.coverage}
+                          <div
+                            className={`health-recovery-meter${item.visual === null ? ' is-unavailable' : ''}`}
+                            aria-hidden="true"
+                          >
+                            <span
+                              style={
+                                item.visual !== null
+                                  ? ({ '--recovery-width': `${item.visual}%` } as CSSProperties)
+                                  : undefined
+                              }
+                            />
+                          </div>
+                          <small className="health-nutrition-intake">{item.intake} · 参考 {item.reference}</small>
+                        </td>
+                        <td>{item.judgment}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <div className="health-nutrition-reference">
+              当前覆盖度按一日摄入记录与常用成人参考值估算；超过 100% 的项目进度条封顶，具体数值会随实际份量、产品版本与个人需求变化。
             </div>
 
             <p className="health-nutrition-footnote">

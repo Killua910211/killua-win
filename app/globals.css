@@ -1120,18 +1120,15 @@ summary:focus-visible {
   font-size: 12px;
   line-height: 1.7;
 }
-.health-supplement-grid,
-.health-coverage-grid {
+.health-supplement-grid {
   display: grid;
   gap: 1px;
   background: rgba(21, 21, 21, 0.2);
 }
-.health-supplement-card,
-.health-coverage-row {
+.health-supplement-card {
   background: var(--paper);
 }
-.health-supplement-role,
-.health-coverage-row > div span {
+.health-supplement-role {
   color: #6b8a00;
   font-family: var(--font-geist-mono), monospace;
   font-size: 10px;
@@ -1167,36 +1164,43 @@ summary:focus-visible {
   white-space: nowrap;
 }
 .health-supplement-role { margin-top: 12px; }
-.health-supplement-card > p:last-child {
+.health-supplement-details {
+  display: grid;
+  gap: 13px;
   margin-top: 18px;
+}
+.health-supplement-details > div {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 14px;
+}
+.health-supplement-details dt {
+  color: #6b8a00;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  line-height: 1.7;
+}
+.health-supplement-details dd {
   color: #6d695f;
   font-size: 13px;
   line-height: 1.7;
 }
-.health-coverage-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-top: 14px;
+.health-nutrition-intake {
+  display: block;
+  margin-top: 7px;
+  color: #827d72;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  white-space: normal;
 }
-.health-coverage-row {
-  display: grid;
-  grid-template-columns: minmax(125px, 0.55fr) minmax(0, 1fr);
-  gap: 18px;
-  padding: 20px 22px;
-}
-.health-coverage-row > div {
-  display: grid;
-  align-content: start;
-  gap: 7px;
-}
-.health-coverage-row > div strong {
-  font-size: 16px;
-  font-weight: 520;
-  letter-spacing: -0.03em;
-}
-.health-coverage-row > p {
-  color: #6d695f;
-  font-size: 13px;
-  line-height: 1.65;
+.health-nutrition-reference {
+  margin-top: 20px;
+  color: #827d72;
+  font-size: 12px;
+  line-height: 1.7;
 }
 .health-nutrition-footnote {
   max-width: 720px;
@@ -1514,16 +1518,14 @@ summary:focus-visible {
   .health-kpi p { margin-top: 22px; }
   .health-trend-grid,
   .health-supplement-grid,
-  .health-coverage-grid,
   .health-note-grid,
   .health-smoking-card,
   .health-life-card,
   .health-recovery { margin-top: 44px; }
   .health-trend-card { padding: 24px 20px; }
-  .health-supplement-grid,
-  .health-coverage-grid { grid-template-columns: 1fr; }
+  .health-supplement-grid { grid-template-columns: 1fr; }
   .health-supplement-card { min-height: 0; padding: 24px 20px; }
-  .health-coverage-row { grid-template-columns: 1fr; gap: 10px; padding: 20px; }
+  .health-supplement-details > div { grid-template-columns: 50px minmax(0, 1fr); gap: 12px; }
   .health-smoking-card,
   .health-life-card,
   .health-recovery { padding: 28px 24px; }
