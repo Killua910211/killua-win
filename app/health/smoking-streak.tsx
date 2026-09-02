@@ -13,8 +13,14 @@ function formatDuration(elapsedMilliseconds: number) {
   return `${days}天${pad(hours)}小时${pad(minutes)}分${pad(seconds)}秒`;
 }
 
-export function SmokingStreak({ lastSmokingAtISO }: { lastSmokingAtISO: string }) {
-  const [now, setNow] = useState<number | null>(null);
+export function SmokingStreak({
+  lastSmokingAtISO,
+  initialNowMilliseconds,
+}: {
+  lastSmokingAtISO: string;
+  initialNowMilliseconds: number;
+}) {
+  const [now, setNow] = useState(initialNowMilliseconds);
 
   useEffect(() => {
     const update = () => setNow(Date.now());
@@ -23,8 +29,8 @@ export function SmokingStreak({ lastSmokingAtISO }: { lastSmokingAtISO: string }
     return () => window.clearInterval(timer);
   }, []);
 
-  const elapsed = now === null ? 0 : now - Date.parse(lastSmokingAtISO);
-  const value = now === null ? '计算中…' : formatDuration(elapsed);
+  const elapsed = Math.max(0, now - Date.parse(lastSmokingAtISO));
+  const value = formatDuration(elapsed);
 
   return (
     <dd className="health-smoking-streak-value" role="timer" aria-label={`当前连续戒烟 ${value}`}>

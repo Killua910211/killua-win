@@ -120,33 +120,93 @@ export const HEALTH_SUPPLEMENTS: HealthSupplement[] = [
   },
 ];
 
+export type HealthNutritionReferenceType = 'RDA' | 'AI' | 'DG' | 'EER' | 'PERSONAL';
+
 export type HealthNutritionCoverage = {
   nutrient: string;
-  intake: string;
-  reference: string;
-  coverage: string;
-  visual: number | null;
-  judgment: string;
+  intake: { amount: number; display: string };
+  reference: { amount: number; display: string; type: HealthNutritionReferenceType };
+  upperLimit?: {
+    amount: number;
+    display: string;
+    note?: string;
+    /** Do not compare a total amount when the UL applies to a narrower form/source. */
+    comparable?: boolean;
+  };
+  /** Labels that use a different unit or nutrient definition are not compared. */
+  comparable?: boolean;
+  comparisonNote?: string;
 };
+
+export type HealthNutritionReferenceStatus = { label: string; progress: number | null };
+export type HealthNutritionUpperLimitStatus = {
+  label: string;
+  tone: 'default' | 'warning' | 'danger';
+};
+
+const HEALTH_NUTRITION_REFERENCE_LABELS: Record<HealthNutritionReferenceType, string> = {
+  RDA: '推奨量',
+  AI: '目安量',
+  DG: '目標量',
+  EER: '推定能量需要量',
+  PERSONAL: '个人中心值',
+};
+
+export function getHealthNutritionReferenceLabel(type: HealthNutritionReferenceType) {
+  return HEALTH_NUTRITION_REFERENCE_LABELS[type];
+}
+
+export function getHealthNutritionReferenceStatus(item: HealthNutritionCoverage): HealthNutritionReferenceStatus {
+  if (item.comparable === false) return { label: '不作覆盖判定', progress: null };
+
+  const coverage = item.intake.amount / item.reference.amount;
+  if (item.reference.type === 'EER') {
+    return { label: '补剂热量占日参考量', progress: Math.min(coverage, 1) };
+  }
+  if (item.reference.type === 'PERSONAL') {
+    return { label: '补剂热量占个人中心值', progress: Math.min(coverage, 1) };
+  }
+  if (coverage < 0.8) return { label: '部分覆盖', progress: coverage };
+  if (coverage < 1) return { label: '接近参考量', progress: coverage };
+  return { label: `已达到${getHealthNutritionReferenceLabel(item.reference.type)}`, progress: 1 };
+}
+
+export function getHealthNutritionUpperLimitStatus(
+  item: HealthNutritionCoverage,
+): HealthNutritionUpperLimitStatus | null {
+  if (!item.upperLimit) return null;
+  const { upperLimit } = item;
+  if (item.comparable === false || upperLimit.comparable === false) {
+    return { label: upperLimit.display, tone: 'default' };
+  }
+
+  const ratio = item.intake.amount / upperLimit.amount;
+  const label = `${upperLimit.display} · 当前约为上限的 ${Math.round(ratio * 100)}%`;
+  if (ratio >= 1) return { label, tone: 'danger' };
+  if (ratio >= 0.8) return { label, tone: 'warning' };
+  return { label, tone: 'default' };
+}
 
 export const HEALTH_NUTRITION_COVERAGE: HealthNutritionCoverage[] = [
   // 只统计当前 6 项补充方案可直接得到的数值，不包括基础饮食。
-  { nutrient: '蛋白质', intake: '3.4 g', reference: '50 g / 日', coverage: '≈7%', visual: 7, judgment: '仅少量贡献' },
-  { nutrient: '脂肪', intake: '12.6 g', reference: '78 g / 日', coverage: '≈16%', visual: 16, judgment: '少量贡献' },
-  { nutrient: '总碳水化合物', intake: '4 g', reference: '275 g / 日', coverage: '≈1%', visual: 1, judgment: '影响较小' },
-  { nutrient: '膳食纤维', intake: '6 g', reference: '28 g / 日', coverage: '≈21%', visual: 21, judgment: '部分覆盖' },
-  { nutrient: '钙', intake: '约 276 mg', reference: '成人 19–50 岁 1,000 mg / 日', coverage: '≈28%', visual: 28, judgment: '部分覆盖' },
-  { nutrient: '镁', intake: '130 mg', reference: '420 mg / 日', coverage: '≈31%', visual: 31, judgment: '部分覆盖' },
-  { nutrient: '维生素 A', intake: '525 μg', reference: '900 μg / 日', coverage: '≈58%', visual: 58, judgment: '部分覆盖' },
-  { nutrient: '维生素 C', intake: '125 mg', reference: '90 mg / 日', coverage: '≥139%', visual: 100, judgment: '已达到参考值' },
-  { nutrient: '维生素 D3', intake: '25 μg', reference: '20 μg / 日', coverage: '≥125%', visual: 100, judgment: '已达到参考值' },
-  { nutrient: '维生素 E', intake: '8.25 mg', reference: '15 mg / 日', coverage: '≈55%', visual: 55, judgment: '部分覆盖' },
-  { nutrient: '维生素 K', intake: '200 μg', reference: '120 μg / 日', coverage: '≥167%', visual: 100, judgment: '已达到参考值' },
-  { nutrient: '叶酸', intake: '333.5 μg DFE', reference: '400 μg DFE / 日', coverage: '≈83%', visual: 83, judgment: '接近参考值' },
-  { nutrient: '碘', intake: '37.5 μg', reference: '150 μg / 日', coverage: '≈25%', visual: 25, judgment: '部分覆盖' },
-  { nutrient: '锌', intake: '7.5 mg', reference: '11 mg / 日', coverage: '≈68%', visual: 68, judgment: '部分覆盖' },
-  { nutrient: 'Omega-3（EPA + DHA）', intake: '695 mg', reference: '无统一 %DV', coverage: '—', visual: null, judgment: '已纳入' },
-  { nutrient: '额外热量', intake: '约 146.4 kcal', reference: '2,000 kcal / 日', coverage: '≈7%', visual: 7, judgment: '影响较小' },
+  // 参考基准：日本人の食事摂取基準（2025年版），30–49 岁男性。
+  // 脂肪与碳水化合物按个人中心值 2,100 kcal / 日换算为克数。
+  { nutrient: '蛋白质', intake: { amount: 3.4, display: '3.4 g' }, reference: { amount: 65, display: '65 g / 日', type: 'RDA' } },
+  { nutrient: '脂肪', intake: { amount: 12.6, display: '12.6 g' }, reference: { amount: 47, display: '20–30%E（约 47–70 g / 日）', type: 'DG' } },
+  { nutrient: '总碳水化合物', intake: { amount: 4, display: '4 g' }, reference: { amount: 263, display: '50–65%E（约 263–341 g / 日）', type: 'DG' } },
+  { nutrient: '膳食纤维', intake: { amount: 6, display: '6 g' }, reference: { amount: 22, display: '22 g / 日以上', type: 'DG' } },
+  { nutrient: '钙', intake: { amount: 276, display: '约 276 mg' }, reference: { amount: 750, display: '750 mg / 日', type: 'RDA' }, upperLimit: { amount: 2500, display: '耐容上限 2,500 mg / 日' } },
+  { nutrient: '镁', intake: { amount: 130, display: '130 mg' }, reference: { amount: 380, display: '380 mg / 日', type: 'RDA' }, upperLimit: { amount: 350, display: '耐容上限 350 mg / 日', note: '仅适用于通常食品以外的来源' } },
+  { nutrient: '维生素 A', intake: { amount: 525, display: '525 μg RAE' }, reference: { amount: 900, display: '900 μg RAE / 日', type: 'RDA' }, upperLimit: { amount: 2700, display: '耐容上限 2,700 μg RAE / 日', note: '仅适用于不含前维生素 A 类胡萝卜素的维生素 A', comparable: false } },
+  { nutrient: '维生素 C', intake: { amount: 125, display: '125 mg' }, reference: { amount: 100, display: '100 mg / 日', type: 'RDA' } },
+  { nutrient: '维生素 D3', intake: { amount: 25, display: '25 μg' }, reference: { amount: 9, display: '9 μg / 日', type: 'AI' }, upperLimit: { amount: 100, display: '耐容上限 100 μg / 日' } },
+  { nutrient: '维生素 E', intake: { amount: 8.25, display: '8.25 mg' }, reference: { amount: 6.5, display: '6.5 mg / 日', type: 'AI' }, upperLimit: { amount: 800, display: '耐容上限 800 mg / 日', note: '以 α-生育酚计' } },
+  { nutrient: '维生素 K', intake: { amount: 200, display: '200 μg' }, reference: { amount: 150, display: '150 μg / 日', type: 'AI' } },
+  { nutrient: '叶酸', intake: { amount: 333.5, display: '333.5 μg DFE' }, reference: { amount: 240, display: '240 μg / 日', type: 'RDA' }, upperLimit: { amount: 1000, display: '耐容上限 1,000 μg / 日', note: '适用于通常食品以外来源的叶酸', comparable: false }, comparable: false, comparisonNote: '标签以 DFE 标示，未换算为日本表内叶酸当量。' },
+  { nutrient: '碘', intake: { amount: 37.5, display: '37.5 μg' }, reference: { amount: 140, display: '140 μg / 日', type: 'RDA' }, upperLimit: { amount: 3000, display: '耐容上限 3,000 μg / 日' } },
+  { nutrient: '锌', intake: { amount: 7.5, display: '7.5 mg' }, reference: { amount: 9.5, display: '9.5 mg / 日', type: 'RDA' }, upperLimit: { amount: 45, display: '耐容上限 45 mg / 日' } },
+  { nutrient: 'Omega-3（EPA + DHA）', intake: { amount: 695, display: '695 mg' }, reference: { amount: 2200, display: 'n-3 系脂肪酸 2.2 g / 日', type: 'AI' }, comparable: false, comparisonNote: 'EPA + DHA 不能直接等同于 n-3 系脂肪酸总量。' },
+  { nutrient: '额外热量', intake: { amount: 146.4, display: '约 146.4 kcal' }, reference: { amount: 2100, display: '2,100 kcal / 日', type: 'PERSONAL' } },
 ];
 
 export type SmokingCessationRecord = {

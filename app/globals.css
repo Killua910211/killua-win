@@ -725,6 +725,20 @@ footer p:last-child { justify-self: end; }
   .wordmark-dot { width: 8px; height: 8px; }
 }
 
+/* 320px 宽度下三项主导航与外链入口无法同时容纳；优先保留站内导航。 */
+@media (max-width: 340px) {
+  .site-header {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 10px;
+  }
+  .site-header nav {
+    justify-self: end;
+    gap: 7px;
+    min-width: 0;
+  }
+  .header-actions .os-entry { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .orb-ring { animation: none; }
@@ -1246,12 +1260,29 @@ summary:focus-visible {
   line-height: 1.5;
   white-space: normal;
 }
-.health-nutrition-reference {
-  margin-top: 20px;
-  color: #827d72;
-  font-size: 12px;
-  line-height: 1.7;
+.health-nutrition-amount {
+  display: block;
+  color: var(--ink);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 17px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
+.health-nutrition-upper-limit {
+  display: block;
+  margin-top: 4px;
+  color: #827d72;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  white-space: normal;
+}
+.health-nutrition-upper-limit.is-warning,
+.health-recovery-table tbody td:last-child small.is-warning { color: #a66a00; }
+.health-nutrition-upper-limit.is-danger,
+.health-recovery-table tbody td:last-child small.is-danger { color: #b33b32; }
+.health-nutrition-status { display: block; }
 .health-nutrition-footnote {
   max-width: 720px;
   margin-top: 28px;
@@ -1337,11 +1368,22 @@ summary:focus-visible {
   white-space: nowrap;
 }
 .health-life-percent {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
   color: #6b8a00;
   font-family: var(--font-geist-mono), monospace;
   font-size: clamp(20px, 3vw, 34px);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.05em;
+}
+.health-life-percent-note {
+  color: #6b8a00;
+  font-size: 11px;
+  letter-spacing: 0;
+  line-height: 1.4;
 }
 .health-life-track {
   height: 10px;
@@ -1520,6 +1562,14 @@ summary:focus-visible {
   font-size: 9px;
   letter-spacing: 0.04em;
 }
+.health-nutrition-coverage .health-recovery-table thead th:first-child { width: 24%; }
+.health-nutrition-coverage .health-recovery-table thead th:nth-child(2) { width: 50%; text-align: left; }
+.health-nutrition-coverage .health-recovery-table thead th:last-child { width: 26%; padding-left: 30px; }
+.health-nutrition-coverage .health-recovery-table tbody td:nth-child(2) {
+  text-align: left;
+  white-space: normal;
+}
+.health-nutrition-coverage .health-recovery-meter { margin-top: 9px; }
 .health-smoking-recovery-table thead th:first-child { width: 40%; }
 .health-smoking-recovery-table thead th:nth-child(2) { width: 28%; }
 .health-smoking-recovery-table thead th:last-child { width: 32%; }
@@ -1595,6 +1645,10 @@ summary:focus-visible {
   .health-recovery-table tbody td:nth-child(2) { font-size: 14px; }
   .health-recovery-table tbody td:last-child { padding-left: 16px; font-size: 12px; }
   .health-recovery-table tbody td:last-child small { font-size: 8px; }
+  .health-nutrition-coverage .health-recovery-table thead th:first-child { width: 22%; }
+  .health-nutrition-coverage .health-recovery-table thead th:nth-child(2) { width: 52%; }
+  .health-nutrition-coverage .health-recovery-table thead th:last-child { width: 26%; padding-left: 16px; }
+  .health-nutrition-amount { font-size: 14px; }
   .health-note-grid article { padding: 28px 24px; }
 }
 
@@ -1611,6 +1665,11 @@ summary:focus-visible {
   .health-recovery-meter { height: 5px; margin-top: 7px; }
   .health-recovery-table tbody td:last-child { padding-left: 10px; font-size: 11px; }
   .health-recovery-table tbody td:last-child small { font-size: 7px; letter-spacing: 0; }
+  .health-nutrition-coverage .health-recovery-table thead th:first-child { width: 22%; }
+  .health-nutrition-coverage .health-recovery-table thead th:nth-child(2) { width: 52%; }
+  .health-nutrition-coverage .health-recovery-table thead th:last-child { width: 26%; padding-left: 10px; }
+  .health-nutrition-amount { font-size: 12px; }
+  .health-nutrition-upper-limit { font-size: 7px; }
 }
 
 @media (max-width: 760px) {

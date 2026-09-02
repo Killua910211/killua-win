@@ -52,7 +52,10 @@ export function LifeProgress({ snapshot }: { snapshot: HealthLifeProgressSnapsho
           <span className="health-life-value-label">已存活</span>
           <strong>{durationLabel}</strong>
         </div>
-        <span className="health-life-percent">{percentLabel}</span>
+        <span className="health-life-percent">
+          <span className="health-life-percent-value">{percentLabel}</span>
+          <span className="health-life-percent-note">/ 80 年展示刻度</span>
+        </span>
       </div>
       <div
         className="health-life-track"

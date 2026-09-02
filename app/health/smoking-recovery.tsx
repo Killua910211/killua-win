@@ -52,7 +52,7 @@ export function SmokingRecoveryTimeline() {
         <span className="health-recovery-badge">用户记录</span>
       </div>
       <div className="health-recovery-table-wrap">
-        <table className="health-recovery-table">
+        <table className="health-recovery-table health-smoking-recovery-table">
           <caption className="visually-hidden">戒烟后的身体变化估算记录</caption>
           <thead>
             <tr>

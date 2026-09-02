@@ -13,6 +13,9 @@ import {
   HEALTH_TRENDS,
   HEALTH_UPDATED_AT,
   HEALTH_WEEKLY_AVERAGES,
+  getHealthNutritionReferenceLabel,
+  getHealthNutritionReferenceStatus,
+  getHealthNutritionUpperLimitStatus,
 } from '@/app/lib/health';
 import { buildMetadata } from '@/app/lib/metadata';
 
@@ -30,7 +33,10 @@ function formatValue(value: number, precision: number) {
 }
 
 export default function HealthPage() {
+  // 同一次服务端渲染的时间同时作为已存活时间和戒烟计时的首屏基准，
+  // 避免客户端接管前出现“计算中…”或两个读数基准不一致。
   const lifeProgressSnapshot = getHealthLifeProgressSnapshot();
+  const initialNowMilliseconds = lifeProgressSnapshot.asOfMilliseconds;
 
   return (
     <>
@@ -39,7 +45,7 @@ export default function HealthPage() {
       <main id="main" className="health-page">
         <section className="notes-hero health-hero">
           <div className="section-label light" lang="en">
-            <span>04</span>
+            <span>00</span>
             <span>Health readout</span>
           </div>
           <div>
@@ -71,7 +77,15 @@ export default function HealthPage() {
           </div>
         </section>
 
-        <section className="health-smoking-section" aria-label="个人时间线">
+        <nav className="health-local-nav" aria-label="健康页分区">
+          <a href="#health-timeline">时间线</a>
+          <a href="#health-snapshot">一周均值</a>
+          <a href="#health-trends">长期趋势</a>
+          <a href="#health-nutrition">补剂</a>
+          <a href="#health-notes">阅读</a>
+        </nav>
+
+        <section id="health-timeline" className="health-smoking-section" aria-label="个人时间线">
           <div className="section-label" lang="en">
             <span>01</span>
             <span>Personal timeline</span>
@@ -114,7 +128,10 @@ export default function HealthPage() {
                 </div>
                 <div className="health-smoking-streak">
                   <dt>当前连续戒烟</dt>
-                  <SmokingStreak lastSmokingAtISO={HEALTH_SMOKING_RECORD.lastSmokingAtISO} />
+                  <SmokingStreak
+                    lastSmokingAtISO={HEALTH_SMOKING_RECORD.lastSmokingAtISO}
+                    initialNowMilliseconds={initialNowMilliseconds}
+                  />
                 </div>
               </dl>
             </article>
@@ -122,7 +139,7 @@ export default function HealthPage() {
           </div>
         </section>
 
-        <section className="health-snapshot" aria-labelledby="health-snapshot-heading">
+        <section id="health-snapshot" className="health-snapshot" aria-labelledby="health-snapshot-heading">
           <div className="section-label" lang="en">
             <span>02</span>
             <span>Seven-day average</span>
@@ -149,7 +166,7 @@ export default function HealthPage() {
           </div>
         </section>
 
-        <section className="health-trends" aria-labelledby="health-trends-heading">
+        <section id="health-trends" className="health-trends" aria-labelledby="health-trends-heading">
           <div className="section-label light" lang="en">
             <span>03</span>
             <span>Long view</span>
@@ -212,7 +229,7 @@ export default function HealthPage() {
           </div>
         </section>
 
-        <section className="health-nutrition" aria-label="补剂方案与每日营养覆盖">
+        <section id="health-nutrition" className="health-nutrition" aria-label="补剂方案与每日营养覆盖">
           <div className="section-label" lang="en">
             <span>04</span>
             <span>Supplements</span>
@@ -241,57 +258,69 @@ export default function HealthPage() {
             <section className="health-recovery health-nutrition-coverage" aria-labelledby="health-nutrition-heading">
               <div className="health-recovery-heading">
                 <div>
-                  <span lang="en">Supplement coverage</span>
+                  <span lang="en">Japan DRI 2025 / Male 30–49</span>
                   <h3 id="health-nutrition-heading">补剂的每日营养覆盖</h3>
                 </div>
-                <span className="health-recovery-badge">按日用量</span>
+                <span className="health-recovery-badge">30–49 岁男性</span>
               </div>
+              <p className="health-nutrition-footnote">
+                仅统计本页列出的补充摄入，不包含基础饮食；达到参考量不等于全天营养充足。
+              </p>
               <div className="health-recovery-table-wrap">
                 <table className="health-recovery-table">
-                  <caption className="visually-hidden">补剂每日营养摄入与参考值覆盖度</caption>
+                  <caption className="visually-hidden">补剂每日营养摄入、参考量与耐容上限量</caption>
                   <thead>
                     <tr>
                       <th scope="col">营养素</th>
-                      <th scope="col">估算摄入 / 参考值</th>
-                      <th scope="col">当前判断</th>
+                      <th scope="col">当前摄入 / 参考量</th>
+                      <th scope="col">状态</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {HEALTH_NUTRITION_COVERAGE.map((item) => (
-                      <tr key={item.nutrient}>
-                        <th scope="row">{item.nutrient}</th>
-                        <td>
-                          {item.coverage}
-                          <div
-                            className={`health-recovery-meter${item.visual === null ? ' is-unavailable' : ''}`}
-                            aria-hidden="true"
-                          >
-                            <span
-                              style={
-                                item.visual !== null
-                                  ? ({ '--recovery-width': `${item.visual}%` } as CSSProperties)
-                                  : undefined
-                              }
-                            />
-                          </div>
-                          <small className="health-nutrition-intake">{item.intake} · 参考 {item.reference}</small>
-                        </td>
-                        <td>{item.judgment}</td>
-                      </tr>
-                    ))}
+                    {HEALTH_NUTRITION_COVERAGE.map((item) => {
+                      const referenceStatus = getHealthNutritionReferenceStatus(item);
+                      const upperLimitStatus = getHealthNutritionUpperLimitStatus(item);
+
+                      return (
+                        <tr key={item.nutrient}>
+                          <th scope="row">{item.nutrient}</th>
+                          <td>
+                            <strong className="health-nutrition-amount">{item.intake.display}</strong>
+                            {referenceStatus.progress !== null ? (
+                              <div className="health-recovery-meter" aria-hidden="true">
+                                <span
+                                  style={{ '--recovery-width': `${referenceStatus.progress * 100}%` } as CSSProperties}
+                                />
+                              </div>
+                            ) : null}
+                            <small className="health-nutrition-intake">
+                              {getHealthNutritionReferenceLabel(item.reference.type)} {item.reference.display}
+                            </small>
+                            {upperLimitStatus ? (
+                              <small className={`health-nutrition-upper-limit is-${upperLimitStatus.tone}`}>
+                                {upperLimitStatus.label}
+                                {item.upperLimit?.note ? `（${item.upperLimit.note}）` : ''}
+                              </small>
+                            ) : null}
+                          </td>
+                          <td>
+                            <span className="health-nutrition-status">{referenceStatus.label}</span>
+                            {item.comparisonNote ? <small>{item.comparisonNote}</small> : null}
+                            {upperLimitStatus?.tone === 'warning' ? <small className="is-warning">接近耐容上限</small> : null}
+                            {upperLimitStatus?.tone === 'danger' ? <small className="is-danger">超过耐容上限</small> : null}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
             </section>
 
-            <div className="health-nutrition-reference">
-              当前覆盖度仅统计页面列出的 6 项补充方案，不包括基础饮食；百分比按当前日用量与成人每日参考值计算，超过 100% 的项目进度条封顶。
-            </div>
-
           </div>
         </section>
 
-        <section className="health-notes" aria-labelledby="health-notes-heading">
+        <section id="health-notes" className="health-notes" aria-labelledby="health-notes-heading">
           <div className="section-label" lang="en">
             <span>05</span>
             <span>Reading notes</span>
@@ -308,7 +337,7 @@ export default function HealthPage() {
               <article>
                 <span lang="en">02 / Recovery</span>
                 <h3>恢复指标同向变化</h3>
-                <p>年度日均静息心率下降，HRV 上升；两项只描述趋势，不构成诊断。</p>
+                <p>年度日均静息心率下降，HRV 上升。</p>
               </article>
               <article>
                 <span lang="en">03 / Capacity</span>
