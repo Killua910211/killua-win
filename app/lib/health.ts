@@ -130,18 +130,19 @@ export type HealthNutritionCoverage = {
 };
 
 export const HEALTH_NUTRITION_COVERAGE: HealthNutritionCoverage[] = [
-  { nutrient: '蛋白质', intake: '约 108–123 g', reference: '50 g / 日', coverage: '≈216–246%', visual: 100, judgment: '超过参考值' },
-  { nutrient: '碳水化合物', intake: '约 110–140 g', reference: '275 g / 日', coverage: '≈40–51%', visual: 46, judgment: '仍低于参考值' },
-  { nutrient: '脂肪', intake: '约 46–62 g', reference: '78 g / 日', coverage: '≈59–79%', visual: 69, judgment: '接近参考值' },
-  { nutrient: '膳食纤维', intake: '约 7–9 g', reference: '28 g / 日', coverage: '≈25–32%', visual: 29, judgment: '仍明显不足' },
-  { nutrient: '钙', intake: '约 625–725 mg', reference: '1,000 mg / 日', coverage: '≈63–73%', visual: 68, judgment: '接近但未满' },
-  { nutrient: '镁', intake: '约 280–370 mg', reference: '420 mg / 日', coverage: '≈67–88%', visual: 78, judgment: '大部分覆盖' },
-  { nutrient: '钾', intake: '约 1,900–2,400 mg', reference: '4,700 mg / 日', coverage: '≈40–51%', visual: 46, judgment: '仍需留意' },
-  { nutrient: '维生素 C', intake: '约 125 mg+', reference: '90 mg / 日', coverage: '≥139%', visual: 100, judgment: '已达到参考值' },
-  { nutrient: '维生素 D3', intake: '约 25 μg+', reference: '20 μg / 日', coverage: '≥125%', visual: 100, judgment: '已达到参考值' },
-  { nutrient: '维生素 K', intake: '约 200 μg+', reference: '120 μg / 日', coverage: '≥167%', visual: 100, judgment: '已达到参考值' },
-  { nutrient: '叶酸', intake: '约 333 μg DFE+', reference: '400 μg DFE / 日', coverage: '≥83%', visual: 83, judgment: '接近参考值' },
+  { nutrient: '蛋白质', intake: '约 3–4 g', reference: '50 g / 日', coverage: '≈6–8%', visual: 7, judgment: '仅少量贡献' },
+  { nutrient: '脂肪', intake: '约 11–13 g', reference: '78 g / 日', coverage: '≈14–17%', visual: 16, judgment: '少量贡献' },
+  { nutrient: '膳食纤维', intake: '约 6–7 g', reference: '28 g / 日', coverage: '≈21–25%', visual: 23, judgment: '部分覆盖' },
+  { nutrient: '钙', intake: '约 275 mg', reference: '1,000 mg / 日', coverage: '≈28%', visual: 28, judgment: '部分覆盖' },
+  { nutrient: '镁', intake: '约 160–190 mg', reference: '420 mg / 日', coverage: '≈38–45%', visual: 42, judgment: '部分覆盖' },
+  { nutrient: '钾', intake: '少量', reference: '4,700 mg / 日', coverage: '<5%', visual: 3, judgment: '仍未解决' },
+  { nutrient: '维生素 A', intake: '约 525 μg RAE', reference: '900 μg / 日', coverage: '≈58%', visual: 58, judgment: '部分覆盖' },
+  { nutrient: '维生素 C', intake: '约 125 mg', reference: '90 mg / 日', coverage: '≥139%', visual: 100, judgment: '已达到参考值' },
+  { nutrient: '维生素 D3', intake: '约 25 μg', reference: '20 μg / 日', coverage: '≥125%', visual: 100, judgment: '已达到参考值' },
+  { nutrient: '维生素 K', intake: '约 200 μg', reference: '120 μg / 日', coverage: '≥167%', visual: 100, judgment: '已达到参考值' },
+  { nutrient: '叶酸', intake: '约 333 μg DFE', reference: '400 μg DFE / 日', coverage: '≈83%', visual: 83, judgment: '接近参考值' },
   { nutrient: 'Omega-3（EPA + DHA）', intake: '约 695 mg', reference: '无统一 %DV', coverage: '—', visual: null, judgment: '已纳入' },
+  { nutrient: '额外热量', intake: '约 145–155 kcal', reference: '2,000 kcal / 日', coverage: '≈7–8%', visual: 8, judgment: '影响较小' },
 ];
 
 export type SmokingCessationRecord = {
