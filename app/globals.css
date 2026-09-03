@@ -1870,6 +1870,25 @@ summary:focus-visible {
   .health-smoking-recovery-table tbody td:last-child { font-size: 12px; }
 }
 
+@media (max-width: 340px) {
+  /* 320px 视口也要一次看见全部五个分区入口，避免最后一项被截在屏幕外。 */
+  .health-local-nav {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding-right: 8px;
+    padding-left: 8px;
+    overflow-x: visible;
+  }
+  .health-local-nav a {
+    flex: none;
+    padding: 12px 2px;
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    text-align: center;
+    white-space: nowrap;
+  }
+}
+
 /* ── 404 / 500 ───────────────────────────────────────────── */
 .status-page { min-height: 100svh; display: flex; flex-direction: column; }
 .status-hero {
