@@ -42,7 +42,7 @@ function errorMessage(error: unknown) {
 }
 
 function postsStoreUnavailable(error: unknown) {
-  return /Cannot read properties of undefined \(reading 'prepare'\)|no such table: posts/i.test(
+  return /Cannot read properties of undefined \(reading 'prepare'\)|no such table: posts|row read limit/i.test(
     errorMessage(error),
   );
 }
