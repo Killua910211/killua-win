@@ -150,8 +150,8 @@ a { color: inherit; text-decoration: none; }
   /*
     最上面那层是收边用的。底下 115deg 那条渐变沿轴向从 #121212 走到 #1b1b1b
     再到 #0e0e0e，所以 hero 底边在不同 x 位置的颜色是不一样的（最深 14、最浅 27），
-    而紧接着的 .index 是平的 #151515（21）—— 最大差 6 级，在大面积暗色上就是一条
-    看得见的横缝。这一层把底部 42% 渐渐压到 --ink，保证底边**恰好**等于 #151515。
+    下一段同样以深色为底，最大差 6 级在大面积暗色上就是一条看得见的横缝。
+    这层把底部 42% 渐渐压到 --ink，保证衔接自然。
   */
   background:
     linear-gradient(to bottom, transparent 58%, var(--ink) 100%),
@@ -258,8 +258,7 @@ a { color: inherit; text-decoration: none; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.statement,
-.index {
+.statement {
   display: grid;
   grid-template-columns: minmax(170px, 22vw) 1fr;
   padding: 120px 4vw;
@@ -311,32 +310,7 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
 }
 .pulse { width: 8px; height: 8px; border-radius: 50%; background: #6b8a00; box-shadow: 0 0 0 5px rgba(107, 138, 0, 0.13); }
-.index { background: var(--ink); color: #fff; }
 .section-label.light span:first-child { color: var(--signal); }
-.track-list { border-top: 1px solid var(--rule-dark); }
-.track {
-  display: grid;
-  min-height: 188px;
-  grid-template-columns: 60px 1.1fr 1fr auto;
-  align-items: center;
-  gap: 28px;
-  border-bottom: 1px solid var(--rule-dark);
-  transition: background-color var(--motion-base) ease, padding var(--motion-base) ease;
-}
-.track-link:hover { padding-right: 24px; padding-left: 24px; background: rgba(255, 255, 255, 0.04); }
-.track-number,
-.coming { font-family: var(--font-geist-mono), monospace; font-size: 10px; letter-spacing: 0.12em; }
-.track-number { color: var(--signal); }
-.track-soon .track-number { color: var(--text-tertiary); }
-.track h2 { margin: 0; font-size: clamp(38px, 4.2vw, 68px); font-weight: 520; letter-spacing: -0.05em; }
-.track-cn,
-.track-description { color: rgba(255, 255, 255, 0.56); }
-.track-cn { margin: 6px 0 0; font-size: 12px; }
-.track-description { max-width: 330px; margin: 0; font-size: 13px; line-height: 1.75; }
-.coming { padding: 7px 10px; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 99px; }
-.track-link .coming { border-color: var(--signal); color: var(--signal); }
-.track-link:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
-#builds { scroll-margin-top: 24px; }
 
 .page-site-header {
   position: relative;
@@ -366,6 +340,46 @@ a { color: inherit; text-decoration: none; }
   font-size: 16px;
   line-height: 1.8;
 }
+.notes-arc-teaser {
+  display: grid;
+  grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
+  padding: 68px 4vw 78px;
+  border-bottom: 1px solid rgba(21, 21, 21, 0.18);
+  background: #efede4;
+}
+.notes-arc-teaser-copy { max-width: 960px; }
+.notes-arc-teaser-copy h2 {
+  max-width: 900px;
+  margin: 0;
+  font-size: clamp(36px, 5vw, 70px);
+  font-weight: 520;
+  letter-spacing: -0.06em;
+  line-height: 1.06;
+}
+.notes-arc-teaser-intro {
+  margin: 30px 0 0;
+  color: #5d5a53;
+  font-size: 16px;
+  line-height: 1.8;
+}
+.notes-arc-teaser-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 28px;
+  border-bottom: 1px solid rgba(21, 21, 21, 0.45);
+  padding-bottom: 4px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.notes-arc-teaser-link span:last-child {
+  color: #6b8a00;
+  font-size: 18px;
+  transition: transform 180ms ease;
+}
+.notes-arc-teaser-link:hover span:last-child,
+.notes-arc-teaser-link:focus-visible span:last-child { transform: translate(3px, 3px); }
 .notes-preface {
   display: grid;
   grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
@@ -477,7 +491,46 @@ a { color: inherit; text-decoration: none; }
 }
 .notes-categories span { margin-left: 5px; color: #69655c; }
 .notes-categories .is-active span { color: var(--signal); }
+.notes-years {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 15px;
+  margin: -8px 0 34px;
+}
+.notes-years-label,
+.notes-year-heading {
+  font-family: var(--font-geist-mono), monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.notes-years-label {
+  margin-right: 4px;
+  color: #69655c;
+  font-size: 10px;
+}
+.notes-years a {
+  border-bottom: 1px solid rgba(21, 21, 21, 0.28);
+  padding-bottom: 2px;
+  color: #4f4b44;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+}
+.notes-years a:hover,
+.notes-years a:focus-visible { border-color: #6b8a00; color: #536b00; }
 .notes-list { border-top: 1px solid rgba(21, 21, 21, 0.28); }
+.notes-year-group { scroll-margin-top: 24px; }
+.notes-year-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 17px 0 11px;
+  border-bottom: 1px solid rgba(21, 21, 21, 0.18);
+  color: #69655c;
+  font-size: 10px;
+}
+.notes-year-heading span:first-child { color: var(--ink); font-size: 21px; letter-spacing: -0.04em; }
 .note-row {
   display: grid;
   grid-template-columns: 52px minmax(0, 1fr) 28px;
@@ -662,18 +715,19 @@ footer p:last-child { justify-self: end; }
   .orb { top: 45%; right: -10vw; width: 68vw; opacity: 0.8; }
   .hero-bottom { z-index: 3; margin-top: auto; }
   .round-link { width: 50px; height: 50px; flex: 0 0 auto; }
-  .statement,
-  .index { grid-template-columns: 1fr; gap: 60px; padding: 82px 20px; }
+  .statement { grid-template-columns: 1fr; gap: 60px; padding: 82px 20px; }
   .statement-meta { grid-template-columns: 1fr; gap: 30px; margin-top: 50px; }
-  .track { min-height: 220px; grid-template-columns: 42px 1fr auto; gap: 14px; }
-  .track-description { grid-column: 2 / 4; margin-top: -26px; }
-  .track-link:hover { padding: 0; }
   .notes-hero,
+  .notes-arc-teaser,
   .notes-preface,
   .notes-index { grid-template-columns: 1fr; padding-right: 20px; padding-left: 20px; }
   .notes-hero { min-height: 600px; gap: 70px; padding-top: 72px; padding-bottom: 70px; }
   .notes-hero h1 { font-size: clamp(58px, 19vw, 88px); }
   .notes-intro { margin-top: 42px; }
+  .notes-arc-teaser { gap: 38px; padding-top: 60px; padding-bottom: 68px; }
+  .notes-arc-teaser-copy h2 { font-size: clamp(38px, 12vw, 56px); }
+  .notes-arc-teaser-intro { margin-top: 25px; }
+  .notes-arc-teaser-link { margin-top: 24px; }
   .notes-preface { gap: 60px; padding-top: 82px; padding-bottom: 92px; }
   .notes-preface-copy h2 { font-size: clamp(42px, 13vw, 62px); }
   .notes-preface-lead { margin-top: 44px; }
@@ -683,15 +737,26 @@ footer p:last-child { justify-self: end; }
   .notes-preface-body p,
   .notes-preface-body li { font-size: 15px; line-height: 1.9; }
   .notes-index { gap: 52px; padding-top: 80px; padding-bottom: 100px; }
+  .notes-years { margin-top: -18px; margin-bottom: 28px; }
+  .notes-year-heading { padding-top: 14px; padding-bottom: 10px; }
+  .notes-year-heading span:first-child { font-size: 19px; }
   .note-row {
     grid-template-columns: 34px minmax(0, 1fr) 22px;
     gap: 12px;
-    min-height: 210px;
-    padding: 22px 0;
+    min-height: 176px;
+    padding: 18px 0;
   }
   .note-row:hover,
   .note-row:focus-visible { padding-right: 0; padding-left: 0; }
-  .note-main h2 { font-size: 31px; }
+  .note-main h2 { margin-top: 8px; margin-bottom: 6px; font-size: clamp(24px, 8vw, 31px); line-height: 1.08; }
+  .note-main p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    font-size: 12px;
+    line-height: 1.6;
+  }
   .note-arrow { grid-column: 3; grid-row: 1; }
   .post-heading { padding: 52px 20px 72px; }
   .post-meta { margin-top: 68px; }
@@ -745,25 +810,21 @@ footer p:last-child { justify-self: end; }
   .site-header nav a::after,
   .os-entry,
   .round-link,
-  .track,
   .note-row,
   .notes-preface-details summary,
   .skip-link { transition: none; }
 }
 
 /* ── System readout：KILLUA OS 的运行读数 ───────────────────── */
-/* 沿用 .index 的深色版式，与 01—04 分区同一套骨架 */
+/* 使用首页深色版式，与 hero 自然衔接。 */
 .readout {
   display: grid;
   grid-template-columns: minmax(170px, 22vw) 1fr;
-  /*
-    内边距比 .index 的 120px 收一档：01—04 那边四行大字本身就有 560px 内容，
-    撑得住；这边内容只有 330px 左右，同样的内边距会让分区里四成都是空白。
-  */
+  /* 内容较紧凑，保持适中的区块内边距。 */
   padding: 84px 4vw;
   background: var(--ink);
   color: #fff;
-  /* 上面 .index 也是 --ink，两块无缝相接，靠这条细线分界 */
+  /* 与上方深色 Hero 以细线分界。 */
   border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 .readout-eyebrow {
@@ -884,10 +945,7 @@ footer p:last-child { justify-self: end; }
 }
 
 /* ── 焦点可见性 ──────────────────────────────────────────────
-   之前只有 .track-link 写对了焦点环，其余交互元素要么把 outline 关掉、
-   要么和 hover 共用同一条规则（键盘用户看到的对比只有 1.09:1）。
-   这里给所有可聚焦元素一个默认环，深色区域再换成信号色 —— 深色底上
-   画深色描边等于没画。 */
+   交互元素共用高对比焦点环，深色区域换成信号色，避免深色描边不可见。 */
 a:focus-visible,
 button:focus-visible,
 summary:focus-visible {
@@ -896,7 +954,6 @@ summary:focus-visible {
 }
 .site-header a:focus-visible,
 .hero a:focus-visible,
-.index a:focus-visible,
 .readout a:focus-visible,
 .notes-hero a:focus-visible,
 .status-hero a:focus-visible,
@@ -1106,6 +1163,14 @@ summary:focus-visible {
   letter-spacing: 0;
 }
 .health-kpi p { margin: 26px 0 0; color: #8a857a; }
+.health-snapshot-window {
+  margin-top: 18px;
+  color: #827d72;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 .health-trend-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1569,6 +1634,7 @@ summary:focus-visible {
   text-align: left;
   white-space: normal;
 }
+.health-nutrition-coverage .health-recovery-heading h3 { margin-top: 0; }
 .health-nutrition-coverage .health-recovery-meter { margin-top: 9px; }
 .health-smoking-recovery-table thead th:first-child { width: 40%; }
 .health-smoking-recovery-table thead th:nth-child(2) { width: 28%; }
@@ -1632,6 +1698,10 @@ summary:focus-visible {
   .health-smoking-card,
   .health-life-card,
   .health-recovery { padding: 28px 24px; }
+  .health-smoking-section .health-recovery {
+    margin-top: 32px;
+    padding: 24px 20px;
+  }
   .health-life-readout strong { font-size: clamp(12px, 4.1vw, 28px); }
   .health-smoking-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 18px; }
   .health-smoking-streak { grid-template-columns: 1fr; gap: 12px; }
@@ -1670,6 +1740,65 @@ summary:focus-visible {
   .health-nutrition-coverage .health-recovery-table thead th:last-child { width: 26%; padding-left: 10px; }
   .health-nutrition-amount { font-size: 12px; }
   .health-nutrition-upper-limit { font-size: 7px; }
+}
+
+@media (max-width: 560px) {
+  .health-nutrition-coverage .health-recovery-table-wrap { overflow-x: visible; }
+  .health-nutrition-coverage .health-recovery-table {
+    display: block;
+    table-layout: auto;
+  }
+  .health-nutrition-coverage .health-recovery-table thead { display: none; }
+  .health-nutrition-coverage .health-recovery-table tbody {
+    display: grid;
+    width: 100%;
+  }
+  .health-nutrition-coverage .health-recovery-table tbody tr {
+    display: grid;
+    grid-template-areas:
+      'nutrient amount'
+      'detail detail'
+      'status status';
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(21, 21, 21, 0.14);
+  }
+  .health-nutrition-coverage .health-recovery-table tbody th,
+  .health-nutrition-coverage .health-recovery-table tbody td {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+  }
+  .health-nutrition-coverage .health-recovery-table tbody th {
+    grid-area: nutrient;
+    align-self: start;
+    padding-right: 0;
+    font-size: 14px;
+  }
+  .health-nutrition-coverage .health-recovery-table tbody td:nth-child(2) { display: contents; }
+  .health-nutrition-amount {
+    grid-area: amount;
+    align-self: start;
+    font-size: 15px;
+    text-align: right;
+  }
+  .health-nutrition-detail {
+    grid-area: detail;
+    min-width: 0;
+    padding-top: 9px;
+  }
+  .health-nutrition-coverage .health-recovery-meter {
+    height: 6px;
+    margin-top: 0;
+  }
+  .health-nutrition-coverage .health-recovery-table tbody td:last-child {
+    grid-area: status;
+    padding: 8px 0 0;
+    font-size: 12px;
+  }
+  .health-nutrition-coverage .health-recovery-table tbody td:last-child small { font-size: 9px; }
+  .health-nutrition-upper-limit { font-size: 9px; }
 }
 
 @media (max-width: 760px) {

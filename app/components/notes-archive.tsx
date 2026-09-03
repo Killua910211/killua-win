@@ -15,6 +15,20 @@ export function NotesArchive({ posts, activeCategory, sectionNumber }: NotesArch
   const visiblePosts = activeCategory
     ? posts.filter((post) => post.category === activeCategory)
     : posts;
+  const yearGroups = new Map<string, Array<{ post: PostSummary; index: number }>>();
+
+  visiblePosts.forEach((post, index) => {
+    const year = post.published_at?.slice(0, 4) ?? '未注明';
+    const entries = yearGroups.get(year) ?? [];
+    entries.push({ post, index });
+    yearGroups.set(year, entries);
+  });
+
+  const groupedPosts = [...yearGroups.entries()].map(([year, entries]) => ({
+    year,
+    entries,
+    anchorId: year === '未注明' ? 'archive-year-unknown' : `archive-year-${year}`,
+  }));
 
   return (
     /*
@@ -49,37 +63,55 @@ export function NotesArchive({ posts, activeCategory, sectionNumber }: NotesArch
             </Link>
           ))}
         </nav>
+        {groupedPosts.length > 1 ? (
+          <nav className="notes-years" aria-label="按年份跳转">
+            <span className="notes-years-label">年份</span>
+            {groupedPosts.map(({ year, anchorId }) => (
+              <a href={`#${anchorId}`} key={anchorId}>
+                {year}
+              </a>
+            ))}
+          </nav>
+        ) : null}
         <div className="notes-list">
-          {visiblePosts.map((post, index) => (
-            /*
-              prefetch={false}：这一页最多同时挂 57 个链接，默认的视口预取
-              会在滚动时把每一篇文章页都完整渲染一遍（本项目没有 loading 骨架
-              可供只取外壳），等于 57 次 Worker 调用 + 57 次 D1 查询 + 全文下载。
-              列表页的点击率远低于 100%，这笔预取不划算。
-            */
-            <Link
-              className="note-row"
-              href={`/notes/${post.slug}`}
-              key={post.slug}
-              prefetch={false}
-            >
-              <span className="note-number">{String(index + 1).padStart(2, '0')}</span>
-              <div className="note-main">
-                <div className="note-meta">
-                  {post.published_at ? (
-                    <time dateTime={post.published_at}>
-                      {formatPublishedDate(post.published_at)}
-                    </time>
-                  ) : null}
-                  <span>{post.category}</span>
-                </div>
-                <h2>{post.title}</h2>
-                {post.excerpt ? <p>{post.excerpt}</p> : null}
+          {groupedPosts.map(({ year, entries, anchorId }) => (
+            <section className="notes-year-group" id={anchorId} key={anchorId}>
+              <div className="notes-year-heading">
+                <span>{year}</span>
+                <span>{entries.length} 篇</span>
               </div>
-              <span className="note-arrow" aria-hidden="true">
-                ↗
-              </span>
-            </Link>
+              {entries.map(({ post, index }) => (
+                /*
+                  prefetch={false}：这一页最多同时挂 57 个链接，默认的视口预取
+                  会在滚动时把每一篇文章页都完整渲染一遍（本项目没有 loading 骨架
+                  可供只取外壳），等于 57 次 Worker 调用 + 57 次 D1 查询 + 全文下载。
+                  列表页的点击率远低于 100%，这笔预取不划算。
+                */
+                <Link
+                  className="note-row"
+                  href={`/notes/${post.slug}`}
+                  key={post.slug}
+                  prefetch={false}
+                >
+                  <span className="note-number">{String(index + 1).padStart(2, '0')}</span>
+                  <div className="note-main">
+                    <div className="note-meta">
+                      {post.published_at ? (
+                        <time dateTime={post.published_at}>
+                          {formatPublishedDate(post.published_at)}
+                        </time>
+                      ) : null}
+                      <span>{post.category}</span>
+                    </div>
+                    <h2>{post.title}</h2>
+                    {post.excerpt ? <p>{post.excerpt}</p> : null}
+                  </div>
+                  <span className="note-arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </Link>
+              ))}
+            </section>
           ))}
         </div>
       </div>

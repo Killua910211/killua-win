@@ -1,4 +1,5 @@
 import { NotesArchive } from '@/app/components/notes-archive';
+import { NotesArcTeaser } from '@/app/components/notes-arc-teaser';
 import { NotesPreface } from '@/app/components/notes-preface';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
@@ -45,6 +46,8 @@ export default async function NotesPage() {
             </p>
           </div>
         </section>
+
+        <NotesArcTeaser />
 
         <NotesArchive posts={posts} sectionNumber="01" />
 

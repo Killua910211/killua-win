@@ -9,7 +9,7 @@ export function NotesPreface() {
   return (
     <section className="notes-preface" id="preface">
       <div className="section-label">
-        <span>02</span>
+        <span>03</span>
         <span>Preface</span>
       </div>
       <div className="notes-preface-copy">

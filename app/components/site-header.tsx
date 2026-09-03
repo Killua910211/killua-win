@@ -41,9 +41,6 @@ export function SiteHeader({ variant = 'solid', current }: SiteHeaderProps) {
         <Link aria-current={current === 'health' ? 'page' : undefined} href="/health">
           Health
         </Link>
-        <a className="nav-secondary" href={onHome ? '#builds' : '/#builds'}>
-          Builds
-        </a>
       </nav>
 
       <div className="header-actions">

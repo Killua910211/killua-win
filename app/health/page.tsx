@@ -37,6 +37,10 @@ export default function HealthPage() {
   // 避免客户端接管前出现“计算中…”或两个读数基准不一致。
   const lifeProgressSnapshot = getHealthLifeProgressSnapshot();
   const initialNowMilliseconds = lifeProgressSnapshot.asOfMilliseconds;
+  const weeklyWindowLabels = new Set(
+    HEALTH_WEEKLY_AVERAGES.map((item) => item.coverage.replace(/\s+(?:DAYS|NIGHTS)$/, '')),
+  );
+  const sharedWeeklyWindow = weeklyWindowLabels.size === 1 ? [...weeklyWindowLabels][0] : null;
 
   return (
     <>
@@ -82,7 +86,7 @@ export default function HealthPage() {
           <a href="#health-snapshot">一周均值</a>
           <a href="#health-trends">长期趋势</a>
           <a href="#health-nutrition">补剂</a>
-          <a href="#health-notes">阅读</a>
+          <a href="#health-notes">数据观察</a>
         </nav>
 
         <section id="health-timeline" className="health-smoking-section" aria-label="个人时间线">
@@ -150,6 +154,7 @@ export default function HealthPage() {
             <p className="health-section-lede">
               以下读数来自最近一个完整七日窗口，帮助你看到一周的整体节奏。
             </p>
+            {sharedWeeklyWindow ? <p className="health-snapshot-window">完整窗口 · {sharedWeeklyWindow} 日</p> : null}
 
             <dl className="health-kpi-grid">
               {HEALTH_WEEKLY_AVERAGES.map((item) => (
@@ -159,7 +164,7 @@ export default function HealthPage() {
                     {item.value}
                     {item.unit ? <span>{item.unit}</span> : null}
                   </dd>
-                  <p lang="en">{item.coverage}</p>
+                  {sharedWeeklyWindow ? null : <p lang="en">{item.coverage}</p>}
                 </div>
               ))}
             </dl>
@@ -235,33 +240,11 @@ export default function HealthPage() {
             <span>Supplements</span>
           </div>
           <div className="health-section-body">
-            <div className="health-supplement-grid">
-              {HEALTH_SUPPLEMENTS.map((supplement) => (
-                <article className="health-supplement-card" key={supplement.name}>
-                  <div className="health-supplement-heading">
-                    <h3>{supplement.name}</h3>
-                    <span>{supplement.amount}</span>
-                  </div>
-                  <p className="health-supplement-role">{supplement.role}</p>
-                  <dl className="health-supplement-details">
-                    {supplement.details.map((detail) => (
-                      <div key={detail.label}>
-                        <dt>{detail.label}</dt>
-                        <dd>{detail.text}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </article>
-              ))}
-            </div>
-
             <section className="health-recovery health-nutrition-coverage" aria-labelledby="health-nutrition-heading">
               <div className="health-recovery-heading">
                 <div>
-                  <span lang="en">Japan DRI 2025 / Male 30–49</span>
                   <h3 id="health-nutrition-heading">补剂的每日营养覆盖</h3>
                 </div>
-                <span className="health-recovery-badge">30–49 岁男性</span>
               </div>
               <p className="health-nutrition-footnote">
                 仅统计本页列出的补充摄入，不包含基础饮食；达到参考量不等于全天营养充足。
@@ -286,22 +269,24 @@ export default function HealthPage() {
                           <th scope="row">{item.nutrient}</th>
                           <td>
                             <strong className="health-nutrition-amount">{item.intake.display}</strong>
-                            {referenceStatus.progress !== null ? (
-                              <div className="health-recovery-meter" aria-hidden="true">
-                                <span
-                                  style={{ '--recovery-width': `${referenceStatus.progress * 100}%` } as CSSProperties}
-                                />
-                              </div>
-                            ) : null}
-                            <small className="health-nutrition-intake">
-                              {getHealthNutritionReferenceLabel(item.reference.type)} {item.reference.display}
-                            </small>
-                            {upperLimitStatus ? (
-                              <small className={`health-nutrition-upper-limit is-${upperLimitStatus.tone}`}>
-                                {upperLimitStatus.label}
-                                {item.upperLimit?.note ? `（${item.upperLimit.note}）` : ''}
+                            <div className="health-nutrition-detail">
+                              {referenceStatus.progress !== null ? (
+                                <div className="health-recovery-meter" aria-hidden="true">
+                                  <span
+                                    style={{ '--recovery-width': `${referenceStatus.progress * 100}%` } as CSSProperties}
+                                  />
+                                </div>
+                              ) : null}
+                              <small className="health-nutrition-intake">
+                                {getHealthNutritionReferenceLabel(item.reference.type)} {item.reference.display}
                               </small>
-                            ) : null}
+                              {upperLimitStatus ? (
+                                <small className={`health-nutrition-upper-limit is-${upperLimitStatus.tone}`}>
+                                  {upperLimitStatus.label}
+                                  {item.upperLimit?.note ? `（${item.upperLimit.note}）` : ''}
+                                </small>
+                              ) : null}
+                            </div>
                           </td>
                           <td>
                             <span className="health-nutrition-status">{referenceStatus.label}</span>
@@ -317,32 +302,51 @@ export default function HealthPage() {
               </div>
             </section>
 
+            <div className="health-supplement-grid">
+              {HEALTH_SUPPLEMENTS.map((supplement) => (
+                <article className="health-supplement-card" key={supplement.name}>
+                  <div className="health-supplement-heading">
+                    <h3>{supplement.name}</h3>
+                    <span>{supplement.amount}</span>
+                  </div>
+                  <p className="health-supplement-role">{supplement.role}</p>
+                  <dl className="health-supplement-details">
+                    {supplement.details.map((detail) => (
+                      <div key={detail.label}>
+                        <dt>{detail.label}</dt>
+                        <dd>{detail.text}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
         <section id="health-notes" className="health-notes" aria-labelledby="health-notes-heading">
           <div className="section-label" lang="en">
             <span>05</span>
-            <span>Reading notes</span>
+            <span>Data observations</span>
           </div>
           <div className="health-section-body">
-            <p className="eyebrow">Milestones / 长期变化</p>
+            <p className="eyebrow">Observations / 长期变化</p>
             <h2 id="health-notes-heading">数字之外，也记录主动改变。</h2>
             <div className="health-note-grid">
               <article>
                 <span lang="en">01 / Activity</span>
                 <h3>2025 年出现活动拐点</h3>
-                <p>日均步数从 2024 年的 1,566 上升至 2025 年的 6,123。</p>
+                <p>长期低活动阶段在 2025 年明显结束。</p>
               </article>
               <article>
                 <span lang="en">02 / Recovery</span>
                 <h3>恢复指标同向变化</h3>
-                <p>年度日均静息心率下降，HRV 上升。</p>
+                <p>恢复相关读数在长期尺度上呈现同向改善。</p>
               </article>
               <article>
                 <span lang="en">03 / Capacity</span>
                 <h3>体能指标缓慢改善</h3>
-                <p>VO₂ Max 年度日均从 32.8 上升至 36.3，近期单次记录为 37.19。</p>
+                <p>体能读数维持缓慢改善趋势。</p>
               </article>
             </div>
           </div>

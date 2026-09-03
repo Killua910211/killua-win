@@ -1,10 +1,8 @@
 import { Suspense } from 'react';
-import Link from 'next/link';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { SystemReadout } from '@/app/components/system-readout';
 import { buildMetadata, SITE } from '@/app/lib/metadata';
-import { countPublishedPosts } from '@/app/lib/posts';
 
 export const metadata = buildMetadata({
   title: null,
@@ -24,69 +22,7 @@ export const metadata = buildMetadata({
  */
 export const revalidate = 3600;
 
-type Track = {
-  number: string;
-  title: string;
-  cn: string;
-  description: string;
-  href?: string;
-  status: string;
-};
-
-function TrackContents({ track }: { track: Track }) {
-  return (
-    <>
-      <span className="track-number">{track.number}</span>
-      <div>
-        <h2 lang="en">{track.title}</h2>
-        <p className="track-cn">{track.cn}</p>
-      </div>
-      <p className="track-description">{track.description}</p>
-      <span className="coming" lang="en">
-        {track.status}
-      </span>
-    </>
-  );
-}
-
-export default async function Home() {
-  // 取不到就退回一个静态文案 —— countPublishedPosts 内部吞掉错误返回 null，
-  // 首页不该因为一个计数而具备 500 的可能。
-  const publishedCount = await countPublishedPosts();
-
-  const tracks: Track[] = [
-    {
-      number: '01',
-      title: 'Notes',
-      cn: '碎片与思考',
-      description: '记录学到的事，以及那些还没有标准答案的问题。',
-      href: '/notes',
-      status: publishedCount === null ? 'ARCHIVE' : `${publishedCount} ESSAYS`,
-    },
-    {
-      number: '02',
-      title: 'Builds',
-      cn: '作品与实验',
-      description: '放置小产品、原型和其他值得被看见的东西。',
-      status: 'SOON',
-    },
-    {
-      number: '03',
-      title: 'Elsewhere',
-      cn: '去往别处',
-      description: '收集有用的链接，也为下一次相遇留个入口。',
-      status: 'SOON',
-    },
-    {
-      number: '04',
-      title: 'Health',
-      cn: '身体与趋势',
-      description: '从 Apple Health 留下活动、恢复与体能的长期趋势，只展示适合公开的部分。',
-      href: '/health',
-      status: '33 METRICS',
-    },
-  ];
-
+export default function Home() {
   return (
     <>
       <SiteHeader variant="overlay" current="home" />
@@ -110,7 +46,7 @@ export default async function Home() {
               <br />
               收集作品、实验，和有意思的未完成。
             </p>
-            <a className="round-link" href="#space" aria-label="向下浏览">
+            <a className="round-link" href="#system" aria-label="向下浏览">
               <span aria-hidden="true">↓</span>
             </a>
           </div>
@@ -119,30 +55,6 @@ export default async function Home() {
             <div className="orb-ring" />
             <div className="orb-core" />
             <span>K</span>
-          </div>
-        </section>
-
-        <section className="index" id="space">
-          <div className="section-label light" lang="en">
-            <span>01—04</span>
-            <span>Space index</span>
-          </div>
-          <div className="track-list">
-            {tracks.map((track) =>
-              track.href ? (
-                <Link className="track track-link" href={track.href} key={track.number}>
-                  <TrackContents track={track} />
-                </Link>
-              ) : (
-                <article
-                  className="track track-soon"
-                  id={track.number === '02' ? 'builds' : undefined}
-                  key={track.number}
-                >
-                  <TrackContents track={track} />
-                </article>
-              ),
-            )}
           </div>
         </section>
 
