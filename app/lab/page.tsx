@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { buildMetadata } from '@/app/lib/metadata';
@@ -118,13 +117,13 @@ export default function LabPage() {
             </div>
 
             <figure className="lab-hero-visual">
-              <Image
+              <img
                 src="/lab/orbital-silence.jpg"
                 alt="巨大黑色球体与荧光绿色轨道构成的超现实地景"
                 width={1122}
                 height={1402}
-                sizes="(max-width: 760px) 100vw, 34vw"
-                priority
+                loading="eager"
+                fetchPriority="high"
               />
               <figcaption lang="en">
                 <span>GEN 003</span>
@@ -171,12 +170,12 @@ export default function LabPage() {
               {IMAGE_STUDIES.map((study) => (
                 <article className="lab-study" key={study.number}>
                   <div className="lab-study-media">
-                    <Image
+                    <img
                       src={study.src}
                       alt={study.alt}
                       width={1122}
                       height={1402}
-                      sizes="(max-width: 760px) 100vw, 58vw"
+                      loading="lazy"
                     />
                     <span className="lab-study-number" lang="en">
                       GEN {study.number}
