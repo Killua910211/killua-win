@@ -2227,3 +2227,30 @@ summary:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .skip-link { transition: none; }
 }
+
+/* ── Lab：只收集榜单 ─────────────────────────────────────── */
+.lab-rankings-hero { min-height: 430px; }
+.lab-rankings-hero h1 { font-size: clamp(58px, 8.2vw, 118px); }
+.lab-rankings {
+  display: grid;
+  grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
+  padding: 110px 4vw 132px;
+}
+.lab-ranking-item { width: min(100%, 900px); }
+.lab-ranking-item a {
+  display: block;
+  background: #07131e;
+  transition: transform var(--motion-base) ease;
+}
+.lab-ranking-item a:hover { transform: translateY(-4px); }
+.lab-ranking-item a:focus-visible { outline: 3px solid #6b8a00; outline-offset: 5px; }
+.lab-ranking-item img { width: 100%; height: auto; }
+
+@media (max-width: 760px) {
+  .lab-rankings-hero { min-height: 390px; }
+  .lab-rankings { grid-template-columns: 1fr; gap: 48px; padding: 76px 20px 94px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-ranking-item a { transition: none; }
+}
