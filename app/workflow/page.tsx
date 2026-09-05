@@ -109,7 +109,7 @@ export default function WorkflowPage() {
               <span className="is-system">SYSTEM / 预览与验证</span>
             </div>
 
-            <ol className="workflow-flow" aria-label="AI 辅助开发的八个步骤">
+            <ol className="workflow-flow" aria-label="AI 辅助开发的九个步骤">
               {WORKFLOW_STEPS.map((step) => (
                 <li className={`workflow-step is-${step.tone}`} key={step.number}>
                   <div className="workflow-step-meta" lang="en">
