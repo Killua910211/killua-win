@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
-      url: `${SITE.url}/lab`,
+      url: `${SITE.url}/workflow`,
       lastModified: new Date('2026-09-05T00:00:00+08:00'),
       changeFrequency: 'monthly',
       priority: 0.7,
