@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getNodeById, nodeHref, type PhilosophyNode } from './tree';
 import { getStudyGuide } from './study-guides';
+import { getCoreEntryLedger, type LedgerParagraph } from './content-ledger';
 
 type HeadingLevel = 'h2' | 'h3';
 
@@ -88,13 +89,76 @@ export function NodeBody({
   const positions = node.positions ?? [];
   const figures = node.figures ?? [];
   const guide = getStudyGuide(node.id);
+  const ledger = getCoreEntryLedger(node.id);
   const related = (node.related ?? [])
     .map((id) => getNodeById(id))
     .filter((relatedNode): relatedNode is PhilosophyNode => Boolean(relatedNode));
   const sources = node.sources ?? [];
 
+  const sourceLinks = (paragraph: LedgerParagraph) =>
+    paragraph.sourceIds?.map((sourceId) => {
+      const source = ledger?.sources.find((item) => item.id === sourceId);
+      if (!source) return null;
+      return (
+        <a
+          className="philosophy-citation"
+          href={source.url}
+          key={source.id}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`来源 ${source.id}：${source.title}（在新标签页打开）`}
+        >
+          [{source.id}]
+        </a>
+      );
+    });
+
   return (
     <div className="philosophy-body-main">
+      {ledger && (
+        <section className="philosophy-block philosophy-entry-status" aria-labelledby={`${node.id}-status`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-status`}>
+            本条范围与状态
+          </BlockHeading>
+          <p className="philosophy-entry-status-label">{ledger.status}</p>
+          <p className="philosophy-entry-status-text">{ledger.scope}</p>
+        </section>
+      )}
+
+      {ledger && (
+        <section className="philosophy-block" aria-labelledby={`${node.id}-origin`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-origin`}>
+            问题为何会出现
+          </BlockHeading>
+          <div className="philosophy-ledger-prose">
+            {ledger.origin.map((paragraph, index) => (
+              <p key={`${paragraph.kind}-${index}`}>
+                <span className="philosophy-content-kind">{paragraph.kind}</span>
+                {paragraph.text}
+                {sourceLinks(paragraph)}
+              </p>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {ledger && (
+        <section className="philosophy-block" aria-labelledby={`${node.id}-boundaries`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-boundaries`}>
+            定义与边界
+          </BlockHeading>
+          <div className="philosophy-ledger-prose">
+            {ledger.boundaries.map((paragraph, index) => (
+              <p key={`${paragraph.kind}-${index}`}>
+                <span className="philosophy-content-kind">{paragraph.kind}</span>
+                {paragraph.text}
+                {sourceLinks(paragraph)}
+              </p>
+            ))}
+          </div>
+        </section>
+      )}
+
       {notes.length > 0 && (
         <section className="philosophy-block" aria-labelledby={`${node.id}-notes`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-notes`}>
@@ -157,6 +221,23 @@ export function NodeBody({
               </li>
             ))}
           </ol>
+        </section>
+      )}
+
+      {ledger && (
+        <section className="philosophy-block" aria-labelledby={`${node.id}-objections`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-objections`}>
+            有力反对及回应
+          </BlockHeading>
+          <div className="philosophy-ledger-prose">
+            {ledger.objections.map((paragraph, index) => (
+              <p key={`${paragraph.kind}-${index}`}>
+                <span className="philosophy-content-kind">{paragraph.kind}</span>
+                {paragraph.text}
+                {sourceLinks(paragraph)}
+              </p>
+            ))}
+          </div>
         </section>
       )}
 
@@ -225,6 +306,42 @@ export function NodeBody({
         </section>
       ) : null}
 
+      {ledger && (
+        <section className="philosophy-block" aria-labelledby={`${node.id}-confusions`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-confusions`}>
+            容易混淆的地方
+          </BlockHeading>
+          <ul className="philosophy-confusions">
+            {ledger.confusions.map((paragraph, index) => (
+              <li key={`${paragraph.kind}-${index}`}>
+                <span className="philosophy-content-kind">{paragraph.kind}</span>
+                {paragraph.text}
+                {sourceLinks(paragraph)}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {ledger && ledger.historicalContext.length > 0 && (
+        <section className="philosophy-block" aria-labelledby={`${node.id}-history`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-history`}>
+            放回历史线索
+          </BlockHeading>
+          <ul className="philosophy-history-links">
+            {ledger.historicalContext.map((item) => {
+              const historyNode = getNodeById(item.nodeId);
+              return (
+                <li key={item.nodeId}>
+                  {historyNode ? <Link href={nodeHref(historyNode)}>{item.label}</Link> : <span>{item.label}</span>}
+                  <p>{item.note}</p>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+
       {guide && (
         <section className="philosophy-block" aria-labelledby={`${node.id}-next-questions`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-next-questions`}>
@@ -258,7 +375,30 @@ export function NodeBody({
         </section>
       )}
 
-      {sources.length > 0 && (
+      {ledger ? (
+        <section className="philosophy-block" aria-labelledby={`${node.id}-sources`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-sources`}>
+            来源与核验记录
+          </BlockHeading>
+          <p className="philosophy-block-intro">
+            每项只说明本轮实际核对到的定位和它支持的论断；原典入口不等于整部文本已经完成校勘。
+          </p>
+          <ol className="philosophy-source-records">
+            {ledger.sources.map((source) => (
+              <li key={source.id}>
+                <p className="philosophy-source-id">{source.id} · {source.kind} · 已核验</p>
+                <a href={source.url} target="_blank" rel="noreferrer">
+                  {source.title}
+                  <span aria-hidden="true"> ↗</span>
+                  <span className="sr-only">（在新标签页打开）</span>
+                </a>
+                <p><strong>定位：</strong>{source.locator}</p>
+                <p><strong>用于：</strong>{source.supports}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : sources.length > 0 && (
         <section className="philosophy-block" aria-labelledby={`${node.id}-sources`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-sources`}>
             延伸阅读
@@ -274,6 +414,32 @@ export function NodeBody({
               </li>
             ))}
           </ul>
+        </section>
+      )}
+
+      {ledger && (
+        <section className="philosophy-block" aria-labelledby={`${node.id}-review`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-review`}>
+            本轮审查与待办
+          </BlockHeading>
+          <p className="philosophy-review-meta">{ledger.review.mode} · {ledger.review.checkedOn}</p>
+          <ol className="philosophy-review-findings">
+            {ledger.review.findings.map((finding) => (
+              <li key={finding.location}>
+                <h3>{finding.location}</h3>
+                <p><strong>发现：</strong>{finding.issue}</p>
+                <p><strong>依据：</strong>{finding.evidence}</p>
+                <p><strong>修订：</strong>{finding.revision}</p>
+              </li>
+            ))}
+          </ol>
+          <p className="philosophy-review-impact"><strong>相邻条目影响：</strong>{ledger.review.adjacentImpact}</p>
+          <p className="philosophy-review-impact"><strong>下一优先：</strong>{ledger.review.nextPriority}</p>
+          {ledger.review.remaining.length > 0 && (
+            <ul className="philosophy-review-todos">
+              {ledger.review.remaining.map((item) => <li key={item}>待办：{item}</li>)}
+            </ul>
+          )}
         </section>
       )}
     </div>

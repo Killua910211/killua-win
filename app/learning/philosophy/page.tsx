@@ -3,6 +3,7 @@ import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { buildMetadata } from '@/app/lib/metadata';
 import { CoreQuestionGroups, NodeBody, type QuestionGroup } from './node-content';
+import { philosophyCoverage } from './coverage';
 import {
   coreSection,
   coreQuestions,
@@ -74,9 +75,33 @@ export default function PhilosophyOverviewPage() {
           </div>
         </section>
 
-        <section className="philosophy-section" aria-labelledby="philosophy-core-heading">
+        <section className="philosophy-section" aria-labelledby="philosophy-coverage-heading">
           <div className="section-label" lang="en">
             <span>03</span>
+            <span>Edition scope</span>
+          </div>
+          <div className="philosophy-section-body">
+            <p className="eyebrow">Scope / 覆盖范围</p>
+            <h2 className="philosophy-section-heading" id="philosophy-coverage-heading">
+              这不是一份已经完成的名词表
+            </h2>
+            <p className="philosophy-lede">
+              每篇的状态由正文、来源定位和审查记录决定；目录、标题和参考书目本身不算完成。
+            </p>
+            <dl className="philosophy-coverage-map">
+              {Object.values(philosophyCoverage).map((item) => (
+                <div key={item.label}>
+                  <dt>{item.label}</dt>
+                  <dd>{item.detail}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+
+        <section className="philosophy-section" aria-labelledby="philosophy-core-heading">
+          <div className="section-label" lang="en">
+            <span>04</span>
             <span>By question</span>
           </div>
           <div className="philosophy-section-body">
@@ -98,7 +123,7 @@ export default function PhilosophyOverviewPage() {
 
         <section className="philosophy-section" aria-labelledby="philosophy-traditions-heading">
           <div className="section-label" lang="en">
-            <span>04</span>
+            <span>05</span>
             <span>By tradition</span>
           </div>
           <div className="philosophy-section-body">

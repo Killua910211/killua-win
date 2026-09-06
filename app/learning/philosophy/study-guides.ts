@@ -504,9 +504,9 @@ export const studyGuides: Record<string, StudyGuide> = {
       },
       {
         author: '卢恰诺·弗洛里迪与 J. W. 桑德斯',
-        work: '〈人工行动者与分布式道德〉',
+        work: '〈论人工行动者的道德性〉（On the Morality of Artificial Agents）',
         period: '2004',
-        contribution: '讨论人工行动者如何在没有完整意图或意识的情况下仍改变道德责任的分配方式。',
+        contribution: '区分人工行动者的道德相关性与可责备性，提示“会造成后果”并不自动等于“应承担道德责任”。',
         readingQuestion: '能造成道德相关后果的系统，是否一定需要被当作道德行动者？',
       },
       {
