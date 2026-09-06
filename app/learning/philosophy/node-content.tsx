@@ -128,7 +128,7 @@ export function NodeBody({
       {ledger && (
         <section className="philosophy-block" aria-labelledby={`${node.id}-origin`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-origin`}>
-            问题为何会出现
+            {ledger.sectionHeadings?.origin ?? '问题为何会出现'}
           </BlockHeading>
           <div className="philosophy-ledger-prose">
             {ledger.origin.map((paragraph, index) => (
@@ -145,7 +145,7 @@ export function NodeBody({
       {ledger && (
         <section className="philosophy-block" aria-labelledby={`${node.id}-boundaries`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-boundaries`}>
-            定义与边界
+            {ledger.sectionHeadings?.boundaries ?? '定义与边界'}
           </BlockHeading>
           <div className="philosophy-ledger-prose">
             {ledger.boundaries.map((paragraph, index) => (
@@ -227,7 +227,7 @@ export function NodeBody({
       {ledger && (
         <section className="philosophy-block" aria-labelledby={`${node.id}-objections`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-objections`}>
-            有力反对及回应
+            {ledger.sectionHeadings?.objections ?? '有力反对及回应'}
           </BlockHeading>
           <div className="philosophy-ledger-prose">
             {ledger.objections.map((paragraph, index) => (
@@ -309,7 +309,7 @@ export function NodeBody({
       {ledger && (
         <section className="philosophy-block" aria-labelledby={`${node.id}-confusions`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-confusions`}>
-            容易混淆的地方
+            {ledger.sectionHeadings?.confusions ?? '容易混淆的地方'}
           </BlockHeading>
           <ul className="philosophy-confusions">
             {ledger.confusions.map((paragraph, index) => (
@@ -326,7 +326,7 @@ export function NodeBody({
       {ledger && ledger.historicalContext.length > 0 && (
         <section className="philosophy-block" aria-labelledby={`${node.id}-history`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-history`}>
-            放回历史线索
+            {ledger.sectionHeadings?.historicalContext ?? '放回历史线索'}
           </BlockHeading>
           <ul className="philosophy-history-links">
             {ledger.historicalContext.map((item) => {

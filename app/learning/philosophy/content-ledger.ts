@@ -33,6 +33,13 @@ export type ReviewFinding = {
 export type CoreEntryLedger = {
   status: '核验正文｜自审完成';
   scope: string;
+  sectionHeadings?: Partial<{
+    origin: string;
+    boundaries: string;
+    objections: string;
+    confusions: string;
+    historicalContext: string;
+  }>;
   origin: LedgerParagraph[];
   boundaries: LedgerParagraph[];
   objections: LedgerParagraph[];
@@ -50,6 +57,77 @@ export type CoreEntryLedger = {
 };
 
 export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
+  'pt-buddhist': {
+    status: '核验正文｜自审完成',
+    scope: '本条是佛教哲学的首版历史入口：说明苦、无我、缘起、空性与认识论如何在不同文本与学派中形成问题；不把它归结为一种“东方心灵疗法”，也不代替佛教史、宗教实践或各语种原典的专题研究。',
+    sectionHeadings: { origin: '历史起点与问题线索', boundaries: '文本层次与概念边界', objections: '内部论辩与解释争议', confusions: '常见误读', historicalContext: '相邻传统与问题' },
+    origin: [
+      { kind: '概括', text: '早期佛教以苦及其止息为实践取向，同时以无常、苦、无我分析经验与执取；这不是先完成一套抽象形而上学再附带伦理，而是让关于人、因果和认识的论证服务于解脱问题。', sourceIds: ['BUD-1'] },
+      { kind: '概括', text: '后来的论师并未只重复同一套口号：部派阿毗达磨、以龙树为代表的中观、瑜伽行及佛教逻辑认识论，分别就法、空性、心识、推理与语言发展争论。用“佛教认为”抹平它们，会先损失争论本身。', sourceIds: ['BUD-2', 'BUD-3'] },
+    ],
+    boundaries: [
+      { kind: '概括', text: '无我针对的是可被执为恒常、独立、主宰的自我，不是取消日常的人称、记忆、因果连续或伦理训练。不同传统对人格、心识和业的解释并不相同。', sourceIds: ['BUD-1', 'BUD-2'] },
+      { kind: '概括', text: '中观的空性以缘起反对自性：事物不是靠自身、脱离条件而成立。它需要与二谛、论辩对象和后世注释传统一起理解，不能直译成“世界不存在”或近代哲学中的单一反实在论。', sourceIds: ['BUD-3'] },
+    ],
+    objections: [
+      { kind: '概括', text: '无我面对一个真正困难：若没有不变主体，记忆归属、业报和修行进展凭什么连接？不同佛教理论诉诸因果连续、五蕴分析、相续或其他资源来回答；这些不是一个被全体接受的简单答案。', sourceIds: ['BUD-2'] },
+      { kind: '概括', text: '空性也被批评为削弱因果与规范。中观回应以约定层次保留因果、语言和修行，但“约定”如何有规范约束力，以及二谛关系如何理解，仍是内部解释争议。', sourceIds: ['BUD-3'] },
+    ],
+    confusions: [
+      { kind: '解释性重构', text: '“无我”不等于否认痛苦、责任或他人，也不自动等于现代心理学的“自我只是幻觉”。' },
+      { kind: '解释性重构', text: '“空”不等于“虚无”；“缘起”也不等于任何相关性都构成因果解释。', sourceIds: ['BUD-3'] },
+      { kind: '解释性重构', text: '把瑜伽行简称为“唯心主义”会掩盖其围绕表象、认识错误和修行的具体争论。', sourceIds: ['BUD-2'] },
+    ],
+    historicalContext: [
+      { nodeId: 'pt-indian-vedanta', label: '奥义书与吠檀多等传统', note: '比较 ātman、brahman 与佛教无我时，先核对各传统自身的论证和文本层次。' },
+      { nodeId: 'pt-chinese-later', label: '两汉至近现代：传承、佛教与重构', note: '佛教进入汉语世界涉及翻译、注释、制度与新问题，不能被看作原理论的无损复制。' },
+      { nodeId: 'pt-mind-self', label: '心灵、身体与“我”', note: '以无我分析挑战固定自我，但不把它预设为当代人格同一性的直接答案。' },
+    ],
+    sources: [
+      { id: 'BUD-1', title: 'SEP：Buddha', kind: '学术综述', url: 'https://plato.stanford.edu/entries/buddha/', locator: '导论、§2–§4', checked: true, supports: '早期佛教的苦、无常、无我、缘起与实践目标。' },
+      { id: 'BUD-2', title: 'SEP：Mind in Indian Buddhist Philosophy', kind: '学术综述', url: 'https://plato.stanford.edu/archives/spr2017/entries/mind-indian-buddhism/', locator: '导论、§1.1、§5.6', checked: true, supports: '无我、心识理论和不同佛教路径的不可化约性。' },
+      { id: 'BUD-3', title: 'SEP：Nāgārjuna', kind: '学术综述', url: 'https://plato.stanford.edu/entries/nagarjuna/', locator: '导论、§2–§3', checked: true, supports: '自性、缘起、空性、二谛与虚无论误读。' },
+    ],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
+      { location: '摘要与人物', issue: '原页面将无我、空性、心识并列，却没有文本层次与学派差异。', evidence: 'BUD-1、BUD-2、BUD-3 分别处理早期佛教、印度佛教心识与中观。', revision: '新增历史起点、概念边界与内部论辩，避免单一“佛教观点”。' },
+      { location: '例子｜失败者标签', issue: '原例子容易将无我心理治疗化。', evidence: 'BUD-1 将相关分析置于苦与止息；BUD-2 讨论理论分歧。', revision: '保留例子为入门，不把它当作无我论证或修行建议。' },
+    ], remaining: ['尚未逐段核对《阿含》《中论》及瑜伽行论书的汉译版本和梵／藏文本；不可把本页当作原典释读。'], adjacentImpact: '“心灵与自我”“存在与变化”“解释与传统”三页均须链接到此处，并保留跨传统不可直接对译的提醒。', nextPriority: '补写中国佛教的翻译、注释与宗派形成，避免印度佛教代表全部佛教历史。' },
+  },
+  'pt-nyaya': {
+    status: '核验正文｜自审完成',
+    scope: '本条介绍正理（Nyāya）及其与胜论关联的认识—论辩传统，重点是 pramāṇa、推理、证言与反驳；不把它化为“印度版形式逻辑”，也不在本页解决各时期作者、文本归属和新正理技术语言的全部问题。',
+    sectionHeadings: { origin: '历史起点与论辩任务', boundaries: '认识手段与推理边界', objections: '争论与方法难题', confusions: '常见误读', historicalContext: '相邻传统与问题' },
+    origin: [
+      { kind: '概括', text: '正理传统把获得真知、排除错误和在论辩中给出理由作为相连任务。它以 pramāṇa 讨论知觉、推理、比喻与证言等方式，并细分命题、理由、例证、反例和谬误；这说明认识论与辩论规范在此不可分开。', sourceIds: ['NYA-1'] },
+      { kind: '概括', text: '印度认识论并无单一清单：正理与其他学派对有效认识手段的数量、证言地位、对象和错误理论有不同答案。把 pramāṇa 简单译为“证据”会遗漏它关于认识成功条件的技术含义。', sourceIds: ['NYA-1'] },
+    ],
+    boundaries: [
+      { kind: '概括', text: '从烟推知火不是“看到烟就猜火”：推理需要被推论项与理由项之间的遍在／伴随关系，并须面对反例、观察条件和推理用途。正理的五支论证也不是任意比演绎多三步，而服务于公共论辩中的展示。', sourceIds: ['NYA-1'] },
+      { kind: '概括', text: '证言在正理传统中可成为知识来源，却不等于服从权威；说话者的可信性、话语理解、意向和对象条件都进入评价。', sourceIds: ['NYA-1'] },
+    ],
+    objections: [
+      { kind: '概括', text: '对推理的难题是：遍在关系如何确立而不循环？仅见到许多烟火同现并不能自动排除隐藏条件。正理回应会引入正反例、排除阻碍条件等分析，但其成功与否正是后续论辩的一部分。', sourceIds: ['NYA-1'] },
+      { kind: '概括', text: '不同学派会争论证言是否独立于推理、语言是否能可靠指称、知觉是否带概念。因而“正理承认证言”不是终点，而是要进一步追问可信性的规范来自何处。', sourceIds: ['NYA-1'] },
+    ],
+    confusions: [
+      { kind: '解释性重构', text: '“五支论证”不等于现代形式逻辑的失败版本；它有不同的交流目的、语义资源和论辩情境。' },
+      { kind: '解释性重构', text: '承认证言不等于取消检验；问题转为可靠说话者、理解、传递和反驳如何组织。' },
+      { kind: '解释性重构', text: '“印度哲学重直觉、不重论证”与正理传统的材料直接冲突。' },
+    ],
+    historicalContext: [
+      { nodeId: 'pt-buddhist', label: '佛教哲学：苦、无我、缘起与认识', note: '佛教认识论与正理传统既共享论辩空间，也在知觉、推理和对象上激烈分歧。' },
+      { nodeId: 'pt-knowledge-sources', label: '知识从哪里来，边界又在哪里？', note: '把感知、推理和证言作为可争论的认识手段，而非只套进经验主义／理性主义。' },
+      { nodeId: 'pt-logic', label: '什么是好推理与有效论证？', note: '比较论证形式时要先说明目的、语言与谬误理论，不能只寻找一一对应符号。' },
+    ],
+    sources: [
+      { id: 'NYA-1', title: 'SEP：Epistemology in Classical Indian Philosophy', kind: '学术综述', url: 'https://plato.stanford.edu/entries/epistemology-india/', locator: '导论、§1–§2', checked: true, supports: 'pramāṇa、知觉、推理、证言和印度学派间的认识论争论。' },
+      { id: 'NYA-2', title: 'SEP：Analytic Philosophy in Early Modern India', kind: '学术综述', url: 'https://plato.stanford.edu/entries/early-modern-india/', locator: '导论、§2', checked: true, supports: '新正理及早期近世印度论证传统的延续，反对把其视为古代余响。' },
+    ],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
+      { location: '例子｜烟与火', issue: '原例子只把正理写成“看到烟所以有火”的直觉。', evidence: 'NYA-1 将推理置于遍在关系、反例和认识手段之中。', revision: '补入推理条件、反例和公共展示的功能。' },
+      { location: '人物列表', issue: '原文罗列作者，未说明该传统解决什么知识问题。', evidence: 'NYA-1 的组织中心是 pramāṇa 与知识条件。', revision: '以认识、推理和证言的争论重写历史入口。' },
+    ], remaining: ['尚未逐一核对《正理经》、注释与新正理论书的中文／英译及作者年代。'], adjacentImpact: '“知识来源”和“逻辑”页应回链到本条；不可把正理只当作西方逻辑史之外的旁注。', nextPriority: '补写胜论的范畴论与正理—佛教论辩的原典阅读路径。' },
+  },
   'pt-being-change': {
     status: '核验正文｜自审完成',
     scope: '本条比较“什么存在”“一个东西如何在变化中仍是它自己”“何为基本存在者”三组问题；不把日常分类、物理学模型与形而上学本体论混作彼此的直接结论。',
