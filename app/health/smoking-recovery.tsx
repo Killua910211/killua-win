@@ -43,14 +43,14 @@ const SMOKING_RECOVERY_ROWS: SmokingRecoveryRow[] = [
 
 export function SmokingRecoveryTimeline() {
   return (
-    <section className="health-recovery" aria-labelledby="health-recovery-heading">
-      <div className="health-recovery-heading">
+    <details className="health-recovery" aria-labelledby="health-recovery-heading">
+      <summary className="health-recovery-heading">
         <div>
           <span lang="en">03 / Smoking recovery</span>
           <h3 id="health-recovery-heading">戒烟后的身体变化</h3>
         </div>
         <span className="health-recovery-badge">用户记录</span>
-      </div>
+      </summary>
       <div className="health-recovery-table-wrap">
         <table className="health-recovery-table health-smoking-recovery-table">
           <caption className="visually-hidden">戒烟后的身体变化估算记录</caption>
@@ -88,7 +88,6 @@ export function SmokingRecoveryTimeline() {
           </tbody>
         </table>
       </div>
-
-    </section>
+    </details>
   );
 }

@@ -1,15 +1,15 @@
 /**
- * /notes 的前言。
+ * /notes 首屏附近的前言。
  *
- * 从 app/notes/page.tsx 原样搬过来 —— 正文一个字没动，只调整了缩进。
- * 分离出来是因为分类页 /notes/category/[category] 复用同一套列表组件，
- * 但不该重复这段整体性的长文。
+ * 之前这段长文整个放在页面最底部，首屏只有一个指向它的链接。现在挪到
+ * hero 后面，但只露 2-3 行摘要——原本的两段导语和七节长文全部收进
+ * <details>，默认折叠，展开了才付出阅读成本。
  */
 export function NotesPreface() {
   return (
     <section className="notes-preface" id="preface">
       <div className="section-label">
-        <span>03</span>
+        <span>02</span>
         <span>Preface</span>
       </div>
       <div className="notes-preface-copy">
@@ -19,14 +19,9 @@ export function NotesPreface() {
           <br />
           到承认并容纳孤独。
         </h2>
-        <div className="notes-preface-lead">
-          <p>
-            2008年至今，最核心的变化可以概括为：从一个用幽默遮住脆弱、急于证明自己的青年，逐渐成长为能够理解自己、承担责任，并正视孤独的成年人。
-          </p>
-          <p>
-            这不是一条“从悲观变乐观”的直线，而是一次次回到孤独、自由、价值和关系这些老问题，但每次都站在更高的位置重新理解。
-          </p>
-        </div>
+        <p className="notes-preface-summary">
+          2008 年至今，从一个用幽默遮住脆弱、急于证明自己的青年，逐渐成长为能理解自己、承担责任、并正视孤独的成年人——不是一条直线，而是一次次回到孤独、自由、价值和关系这些老问题，每次都站得更高一点。
+        </p>
 
         <details className="notes-preface-details">
           <summary>
@@ -34,6 +29,15 @@ export function NotesPreface() {
             <span aria-hidden="true">＋</span>
           </summary>
           <div className="notes-preface-body">
+            <div className="notes-preface-lead">
+              <p>
+                2008年至今，最核心的变化可以概括为：从一个用幽默遮住脆弱、急于证明自己的青年，逐渐成长为能够理解自己、承担责任，并正视孤独的成年人。
+              </p>
+              <p>
+                这不是一条“从悲观变乐观”的直线，而是一次次回到孤独、自由、价值和关系这些老问题，但每次都站在更高的位置重新理解。
+              </p>
+            </div>
+
             <section>
               <h3>1. 2008—2010：迷茫、反叛，急于建立自我</h3>
               <p>

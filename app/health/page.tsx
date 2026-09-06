@@ -6,6 +6,7 @@ import { LifeProgress } from './life-progress';
 import { SmokingRecoveryTimeline } from './smoking-recovery';
 import {
   getHealthLifeProgressSnapshot,
+  getHealthWeeklyAverageDisplay,
   HEALTH_COVERAGE_START,
   HEALTH_NUTRITION_COVERAGE,
   HEALTH_SUPPLEMENTS,
@@ -13,6 +14,10 @@ import {
   HEALTH_TRENDS,
   HEALTH_UPDATED_AT,
   HEALTH_WEEKLY_AVERAGES,
+  HEALTH_WEEKLY_DATA_UPDATED_AT,
+  HEALTH_WEEKLY_TIME_ZONE,
+  HEALTH_WEEKLY_WINDOW_END,
+  HEALTH_WEEKLY_WINDOW_START,
   getHealthNutritionReferenceLabel,
   getHealthNutritionReferenceStatus,
   getHealthNutritionUpperLimitStatus,
@@ -37,10 +42,6 @@ export default function HealthPage() {
   // 避免客户端接管前出现“计算中…”或两个读数基准不一致。
   const lifeProgressSnapshot = getHealthLifeProgressSnapshot();
   const initialNowMilliseconds = lifeProgressSnapshot.asOfMilliseconds;
-  const weeklyWindowLabels = new Set(
-    HEALTH_WEEKLY_AVERAGES.map((item) => item.coverage.replace(/\s+(?:DAYS|NIGHTS)$/, '')),
-  );
-  const sharedWeeklyWindow = weeklyWindowLabels.size === 1 ? [...weeklyWindowLabels][0] : null;
 
   return (
     <>
@@ -82,92 +83,121 @@ export default function HealthPage() {
         </section>
 
         <nav className="health-local-nav" aria-label="健康页分区">
-          <a href="#health-timeline">时间线</a>
           <a href="#health-snapshot">一周均值</a>
+          <a href="#health-timeline">时间线</a>
           <a href="#health-trends">长期趋势</a>
           <a href="#health-nutrition">补剂</a>
           <a href="#health-notes">数据观察</a>
         </nav>
 
-        <section id="health-timeline" className="health-smoking-section" aria-label="个人时间线">
+        <section id="health-snapshot" className="health-snapshot" aria-labelledby="health-snapshot-heading">
           <div className="section-label" lang="en">
             <span>01</span>
+            <span>Seven-day window</span>
+          </div>
+          <div className="health-section-body">
+            <p className="eyebrow">完整记录周 / 7 日均值</p>
+            <h2 id="health-snapshot-heading">
+              {HEALTH_WEEKLY_WINDOW_START} — {HEALTH_WEEKLY_WINDOW_END}
+            </h2>
+            <p className="health-section-lede">
+              这个记录周的日期与更新时间均来自固定数据，不随页面访问时刻变化。
+            </p>
+            <dl className="health-snapshot-window">
+              <div>
+                <dt>窗口开始</dt>
+                <dd>{HEALTH_WEEKLY_WINDOW_START}</dd>
+              </div>
+              <div>
+                <dt>窗口结束</dt>
+                <dd>{HEALTH_WEEKLY_WINDOW_END}</dd>
+              </div>
+              <div>
+                <dt>时区</dt>
+                <dd>{HEALTH_WEEKLY_TIME_ZONE}</dd>
+              </div>
+              <div>
+                <dt>数据更新时间</dt>
+                <dd>{HEALTH_WEEKLY_DATA_UPDATED_AT}</dd>
+              </div>
+            </dl>
+
+            <dl className="health-kpi-grid">
+              {HEALTH_WEEKLY_AVERAGES.map((item) => {
+                const display = getHealthWeeklyAverageDisplay(item);
+                return (
+                  <div className={`health-kpi is-${item.status}`} key={item.label}>
+                    <dt>{item.label}</dt>
+                    <dd>
+                      <span className="health-kpi-value">
+                        {display.value}
+                        {display.unit ? <span className="health-kpi-unit">{display.unit}</span> : null}
+                      </span>
+                    </dd>
+                    <p>
+                      {item.validDays ?? '—'} / {item.totalDays} {item.sampleUnit}覆盖
+                    </p>
+                    {display.note ? <p className="health-kpi-note">{display.note}</p> : null}
+                  </div>
+                );
+              })}
+            </dl>
+          </div>
+        </section>
+
+        <section id="health-timeline" className="health-smoking-section" aria-label="个人时间线">
+          <div className="section-label" lang="en">
+            <span>02</span>
             <span>Personal timeline</span>
           </div>
           <div className="health-section-body">
             <p className="eyebrow">Milestones / 长期变化</p>
-            <article className="health-life-card" aria-labelledby="health-life-heading">
-              <div className="health-life-heading">
-                <div>
-                  <span lang="en">01 / Life progress</span>
-                  <h2 id="health-life-heading">已存活时间</h2>
+            <div className="health-memorial-grid">
+              <article className="health-life-card" aria-labelledby="health-life-heading">
+                <div className="health-life-heading">
+                  <div>
+                    <span lang="en">01 / Life progress</span>
+                    <h2 id="health-life-heading">已存活时间</h2>
+                  </div>
                 </div>
-              </div>
-              <LifeProgress snapshot={lifeProgressSnapshot} />
-            </article>
-            <article className="health-smoking-card" aria-labelledby="health-smoking-heading">
-              <div className="health-smoking-heading">
-                <div>
-                  <span lang="en">02 / Smoking cessation</span>
-                  <h2 id="health-smoking-heading">戒烟记录</h2>
+                <LifeProgress snapshot={lifeProgressSnapshot} />
+              </article>
+              <article className="health-smoking-card" aria-labelledby="health-smoking-heading">
+                <div className="health-smoking-heading">
+                  <div>
+                    <span lang="en">02 / Smoking cessation</span>
+                    <h2 id="health-smoking-heading">戒烟记录</h2>
+                  </div>
+                  <span className="health-smoking-status">{HEALTH_SMOKING_RECORD.confirmation}</span>
                 </div>
-                <span className="health-smoking-status">{HEALTH_SMOKING_RECORD.confirmation}</span>
-              </div>
-              <dl className="health-smoking-grid">
-                <div>
-                  <dt>最后一支烟</dt>
-                  <dd>{HEALTH_SMOKING_RECORD.lastSmokingAt}</dd>
-                </div>
-                <div>
-                  <dt>时区</dt>
-                  <dd>{HEALTH_SMOKING_RECORD.timeZone}</dd>
-                </div>
-                <div>
-                  <dt>吸烟史</dt>
-                  <dd>{HEALTH_SMOKING_RECORD.smokingHistory}</dd>
-                </div>
-                <div>
-                  <dt>戒烟前日均</dt>
-                  <dd>{HEALTH_SMOKING_RECORD.dailyCigarettes}</dd>
-                </div>
-                <div className="health-smoking-streak">
-                  <dt>当前连续戒烟</dt>
-                  <SmokingStreak
-                    lastSmokingAtISO={HEALTH_SMOKING_RECORD.lastSmokingAtISO}
-                    initialNowMilliseconds={initialNowMilliseconds}
-                  />
-                </div>
-              </dl>
-            </article>
+                <dl className="health-smoking-grid">
+                  <div>
+                    <dt>最后一支烟</dt>
+                    <dd>{HEALTH_SMOKING_RECORD.lastSmokingAt}</dd>
+                  </div>
+                  <div>
+                    <dt>时区</dt>
+                    <dd>{HEALTH_SMOKING_RECORD.timeZone}</dd>
+                  </div>
+                  <div>
+                    <dt>吸烟史</dt>
+                    <dd>{HEALTH_SMOKING_RECORD.smokingHistory}</dd>
+                  </div>
+                  <div>
+                    <dt>戒烟前日均</dt>
+                    <dd>{HEALTH_SMOKING_RECORD.dailyCigarettes}</dd>
+                  </div>
+                  <div className="health-smoking-streak">
+                    <dt>当前连续戒烟</dt>
+                    <SmokingStreak
+                      lastSmokingAtISO={HEALTH_SMOKING_RECORD.lastSmokingAtISO}
+                      initialNowMilliseconds={initialNowMilliseconds}
+                    />
+                  </div>
+                </dl>
+              </article>
+            </div>
             <SmokingRecoveryTimeline />
-          </div>
-        </section>
-
-        <section id="health-snapshot" className="health-snapshot" aria-labelledby="health-snapshot-heading">
-          <div className="section-label" lang="en">
-            <span>02</span>
-            <span>Seven-day average</span>
-          </div>
-          <div className="health-section-body">
-            <p className="eyebrow">7 日均值</p>
-            <h2 id="health-snapshot-heading">最近一周，身体的平均状态。</h2>
-            <p className="health-section-lede">
-              以下读数来自最近一个完整七日窗口，帮助你看到一周的整体节奏。
-            </p>
-            {sharedWeeklyWindow ? <p className="health-snapshot-window">完整窗口 · {sharedWeeklyWindow} 日</p> : null}
-
-            <dl className="health-kpi-grid">
-              {HEALTH_WEEKLY_AVERAGES.map((item) => (
-                <div className="health-kpi" key={item.label}>
-                  <dt>{item.label}</dt>
-                  <dd>
-                    {item.value}
-                    {item.unit ? <span>{item.unit}</span> : null}
-                  </dd>
-                  {sharedWeeklyWindow ? null : <p lang="en">{item.coverage}</p>}
-                </div>
-              ))}
-            </dl>
           </div>
         </section>
 

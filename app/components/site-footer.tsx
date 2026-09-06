@@ -8,7 +8,7 @@ export function SiteFooter() {
         KILLUA.WIN
       </Link>
       <p lang="en">Ideas need somewhere to land.</p>
-      <p lang="en">© 2026 / ALL SYSTEMS NOMINAL</p>
+      <p lang="en">© 2026 / PERSONAL ARCHIVE</p>
     </footer>
   );
 }

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Suspense } from 'react';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
@@ -41,11 +42,12 @@ export default function Home() {
           </h1>
 
           <div className="hero-bottom">
-            <p>
-              一个正在生长的个人数字空间。
-              <br />
-              收集作品、实验，和有意思的未完成。
-            </p>
+            <div className="hero-intro">
+              <p>写下长期思考，记录身体的变化，也整理我正在使用的 AI 开发流程。</p>
+              <Link className="hero-primary-action" href="/notes#reading-paths">
+                阅读精选 <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
             <a className="round-link" href="#system" aria-label="向下浏览">
               <span aria-hidden="true">↓</span>
             </a>

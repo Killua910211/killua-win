@@ -28,21 +28,55 @@ export function getHealthLifeProgressSnapshot(
   return { asOfMilliseconds, elapsedMilliseconds, totalDays, percent };
 }
 
+/**
+ * 该窗口为此前已完成的 Apple Health 七日分析所覆盖的真实日期区间，
+ * 是写死的显式常量，不由页面访问时刻计算得出，避免每次访问漂移。
+ */
+export const HEALTH_WEEKLY_WINDOW_START = '2026-08-25';
+export const HEALTH_WEEKLY_WINDOW_END = '2026-08-31';
+export const HEALTH_WEEKLY_TIME_ZONE = '北京时间 (UTC+8)';
+/** 本周窗口数据的更新时间，与页面级 HEALTH_UPDATED_AT 一致。 */
+export const HEALTH_WEEKLY_DATA_UPDATED_AT = HEALTH_UPDATED_AT;
+
+export type HealthMetricStatus = 'ok' | 'zero' | 'unknown' | 'error';
+
 export type HealthWeeklyAverage = {
   label: string;
   value: string;
   unit?: string;
-  coverage: string;
+  /** 窗口内实际有读数的天数/夜数。 */
+  validDays: number | null;
+  /** 窗口总天数/夜数，恒为 7。 */
+  totalDays: number;
+  sampleUnit: '天' | '夜';
+  /**
+   * ok：真实读数；zero：真实为 0（非缺失）；
+   * unknown：窗口内暂无该指标读数；error：本次读取失败。
+   */
+  status: HealthMetricStatus;
 };
 
-/** 数值来自此前已完成的 Apple Health 七日分析。 */
+export type HealthWeeklyAverageDisplay = {
+  value: string;
+  unit?: string;
+  note: string | null;
+};
+
+export function getHealthWeeklyAverageDisplay(item: HealthWeeklyAverage): HealthWeeklyAverageDisplay {
+  if (item.status === 'unknown') return { value: '—', note: '窗口内暂无读数' };
+  if (item.status === 'error') return { value: '读取失败', note: '本次读取失败，非真实为 0' };
+  if (item.status === 'zero') return { value: item.value, unit: item.unit, note: '真实读数为 0' };
+  return { value: item.value, unit: item.unit, note: null };
+}
+
+/** 数值来自此前已完成的 Apple Health 七日分析，窗口见 HEALTH_WEEKLY_WINDOW_START/END。 */
 export const HEALTH_WEEKLY_AVERAGES: HealthWeeklyAverage[] = [
-  { label: '日均步数', value: '13,800', unit: '步 / 日', coverage: '7 / 7 DAYS' },
-  { label: '日均活动能量', value: '493', unit: 'kcal / 日', coverage: '7 / 7 DAYS' },
-  { label: '平均睡眠', value: '7.5', unit: '小时 / 夜', coverage: '7 / 7 NIGHTS' },
-  { label: '平均静息心率', value: '64.1', unit: 'bpm', coverage: '7 / 7 DAYS' },
-  { label: '平均 HRV · SDNN', value: '52.4', unit: 'ms', coverage: '7 / 7 DAYS' },
-  { label: '平均血氧饱和度', value: '96.0', unit: '%', coverage: '7 / 7 DAYS' },
+  { label: '日均步数', value: '13,800', unit: '步 / 日', validDays: 7, totalDays: 7, sampleUnit: '天', status: 'ok' },
+  { label: '日均活动能量', value: '493', unit: 'kcal / 日', validDays: 7, totalDays: 7, sampleUnit: '天', status: 'ok' },
+  { label: '平均睡眠', value: '7.5', unit: '小时 / 夜', validDays: 7, totalDays: 7, sampleUnit: '夜', status: 'ok' },
+  { label: '平均静息心率', value: '64.1', unit: 'bpm', validDays: 7, totalDays: 7, sampleUnit: '天', status: 'ok' },
+  { label: '平均 HRV · SDNN', value: '52.4', unit: 'ms', validDays: 7, totalDays: 7, sampleUnit: '天', status: 'ok' },
+  { label: '平均血氧饱和度', value: '96.0', unit: '%', validDays: 7, totalDays: 7, sampleUnit: '天', status: 'ok' },
 ];
 
 export type HealthSupplementDetail = {

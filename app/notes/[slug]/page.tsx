@@ -4,7 +4,13 @@ import { notFound } from 'next/navigation';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { buildMetadata, SITE } from '@/app/lib/metadata';
-import { formatPublishedDate, getPublishedPost, type Post } from '@/app/lib/posts';
+import {
+  formatPublishedDate,
+  getPublishedPost,
+  listPublishedPosts,
+  type Post,
+} from '@/app/lib/posts';
+import { getRelatedPosts } from '@/app/lib/related-posts';
 
 /**
  * 从 force-dynamic 改成按需 ISR：第一个请求渲染并写入缓存，
@@ -89,6 +95,16 @@ export default async function PostPage({ params }: PostPageProps) {
   const paragraphs = post.content.split(/\n{2,}/).filter((block) => block.trim() !== '');
   const archiveYear = post.published_at?.slice(0, 4) ?? null;
 
+  const allPosts = await listPublishedPosts();
+  const relatedPosts = getRelatedPosts(post, allPosts);
+
+  // 返回目录尽量带着来时的浏览上下文：能定位到年份就带年份锚点，
+  // 落回分类页而不是笼统的 /notes，点回去还站在同一批文章里。
+  const backHref = archiveYear
+    ? `/notes/category/${encodeURIComponent(post.category)}#archive-year-${archiveYear}`
+    : `/notes/category/${encodeURIComponent(post.category)}#archive`;
+  const backLabel = archiveYear ? `← Back to ${post.category} · ${archiveYear}` : `← Back to ${post.category}`;
+
   return (
     <>
       <SiteHeader current="notes" />
@@ -98,8 +114,8 @@ export default async function PostPage({ params }: PostPageProps) {
 
         <article className="post-article">
           <header className="post-heading">
-            <Link className="back-link" href="/notes" lang="en">
-              ← Back to notes
+            <Link className="back-link" href={backHref}>
+              {backLabel}
             </Link>
             <div className="post-meta">
               {post.published_at ? (
@@ -139,9 +155,32 @@ export default async function PostPage({ params }: PostPageProps) {
               </div>
 
               {post.ai_summary ? (
-                <section className="post-analysis" aria-label="AI 分析总结">
-                  <span lang="en">AI READING NOTE</span>
+                <details className="post-analysis">
+                  <summary>
+                    <span lang="en">AI READING NOTE</span>
+                    <span aria-hidden="true">＋</span>
+                  </summary>
                   <p>{post.ai_summary}</p>
+                </details>
+              ) : null}
+
+              {relatedPosts.length > 0 ? (
+                <section className="post-related" aria-label="相关文章">
+                  <span lang="en">READ NEXT</span>
+                  <ul>
+                    {relatedPosts.map((related) => (
+                      <li key={related.slug}>
+                        <Link href={`/notes/${related.slug}`} prefetch={false}>
+                          {related.title}
+                        </Link>
+                        {related.published_at ? (
+                          <time dateTime={related.published_at}>
+                            {formatPublishedDate(related.published_at)}
+                          </time>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
                 </section>
               ) : null}
             </div>

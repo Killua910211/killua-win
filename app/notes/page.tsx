@@ -1,6 +1,6 @@
 import { NotesArchive } from '@/app/components/notes-archive';
-import { NotesArcTeaser } from '@/app/components/notes-arc-teaser';
 import { NotesPreface } from '@/app/components/notes-preface';
+import { NotesReadingPaths } from '@/app/components/notes-reading-paths';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { buildMetadata } from '@/app/lib/metadata';
@@ -29,7 +29,7 @@ export default async function NotesPage() {
       <SiteHeader current="notes" />
 
       <main id="main" className="notes-page">
-        <section className="notes-hero">
+        <section className="notes-hero notes-hero-compact">
           <div className="section-label light" lang="en">
             <span>01</span>
             <span>Writing archive</span>
@@ -47,11 +47,11 @@ export default async function NotesPage() {
           </div>
         </section>
 
-        <NotesArcTeaser />
-
-        <NotesArchive posts={posts} sectionNumber="01" />
-
         <NotesPreface />
+
+        <NotesReadingPaths posts={posts} sectionNumber="03" />
+
+        <NotesArchive posts={posts} sectionNumber="04" />
       </main>
 
       <SiteFooter />

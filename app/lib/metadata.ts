@@ -4,7 +4,7 @@ export const SITE = {
   url: 'https://www.killua.win',
   name: 'KILLUA.WIN',
   tagline: 'A quiet place for loud ideas',
-  description: '一个正在生长的个人数字空间，收集作品、实验与有趣的未完成。',
+  description: '一个关于长期写作、健康记录与 AI 辅助开发流程的个人数字空间。',
   ogImage: '/og.png',
   locale: 'zh_CN',
 } as const;
