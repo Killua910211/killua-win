@@ -7,7 +7,7 @@ type SiteHeaderProps = {
    */
   variant?: 'overlay' | 'solid';
   /** 当前页，用于给对应导航项加 aria-current。 */
-  current?: 'home' | 'notes' | 'health' | 'mind';
+  current?: 'home' | 'notes' | 'health' | 'mind' | 'learning';
 };
 
 export function SiteHeader({ variant = 'solid', current }: SiteHeaderProps) {
@@ -32,7 +32,7 @@ export function SiteHeader({ variant = 'solid', current }: SiteHeaderProps) {
       )}
 
       <nav aria-label="主导航" lang="en">
-        <Link aria-current={current === 'home' ? 'page' : undefined} href="/">
+        <Link className="nav-secondary" aria-current={current === 'home' ? 'page' : undefined} href="/">
           Home
         </Link>
         <Link aria-current={current === 'notes' ? 'page' : undefined} href="/notes">
@@ -43,6 +43,9 @@ export function SiteHeader({ variant = 'solid', current }: SiteHeaderProps) {
         </Link>
         <Link aria-current={current === 'mind' ? 'page' : undefined} href="/mind">
           Mind
+        </Link>
+        <Link aria-current={current === 'learning' ? 'page' : undefined} href="/learning">
+          Learn
         </Link>
       </nav>
 

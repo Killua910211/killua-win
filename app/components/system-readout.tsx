@@ -204,7 +204,7 @@ export async function SystemReadout() {
   return (
     <section className="readout" id="system" aria-labelledby="readout-heading">
       <div className="section-label light" lang="en">
-        <span>01</span>
+        <span>02</span>
         <span>System readout</span>
       </div>
 

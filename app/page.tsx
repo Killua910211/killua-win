@@ -48,7 +48,7 @@ export default function Home() {
                 阅读精选 <span aria-hidden="true">↗</span>
               </Link>
             </div>
-            <a className="round-link" href="#system" aria-label="向下浏览">
+            <a className="round-link" href="#learning" aria-label="向下浏览">
               <span aria-hidden="true">↓</span>
             </a>
           </div>
@@ -57,6 +57,23 @@ export default function Home() {
             <div className="orb-ring" />
             <div className="orb-core" />
             <span>K</span>
+          </div>
+        </section>
+
+        <section className="home-learning" id="learning" aria-labelledby="home-learning-heading">
+          <div className="section-label">
+            <span>01</span>
+            <span>Learning atlas</span>
+          </div>
+          <div className="home-learning-body">
+            <p className="eyebrow">New section / 学习空间</p>
+            <h2 id="home-learning-heading">知识不是一排书名，<br />而是一组彼此相连的问题。</h2>
+            <div className="home-learning-bottom">
+              <p>从哲学体系树开始，把不同学科整理成可以探索、比较和持续生长的个人地图。</p>
+              <Link href="/learning">
+                进入学习空间 <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
           </div>
         </section>
 
