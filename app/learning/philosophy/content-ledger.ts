@@ -1,3 +1,5 @@
+import { remainingEntryLedgers } from './remaining-content-ledgers';
+
 /**
  * 研究层：把“文章写了什么”与“为什么能这样写”放在同一处。
  *
@@ -57,6 +59,7 @@ export type CoreEntryLedger = {
 };
 
 export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
+  ...remainingEntryLedgers,
   'pt-freedom': {
     status: '核验正文｜自审完成',
     scope: '本条讨论行为受原因、性格与制度条件影响时，何种控制足以谈自由与归责；不把刑事责任、心理治疗和宗教修行直接化约为同一判断，也不预设“自由”必然是完全无因的选择。',

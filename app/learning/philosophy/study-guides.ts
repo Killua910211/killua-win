@@ -1,3 +1,5 @@
+import { remainingStudyGuides } from './remaining-study-guides';
+
 export type StudyConcept = {
   term: string;
   explanation: string;
@@ -29,6 +31,7 @@ export type StudyGuide = {
  * 概念、论证链、原典入口与练习问题放在同一张学习页上。
  */
 export const studyGuides: Record<string, StudyGuide> = {
+  ...remainingStudyGuides,
   'pt-freedom': {
     orientation: '不要先问“我是不是完全不受影响”。先区分：我能否在相关意义上另作选择；行动是否由我的理由与反思产生；社会能否、以及应否，以何种方式要求我解释、修复或承受谴责。三者相连，但不会由一句“都是环境造成的”或“终究是你选的”完成。',
     concepts: [
