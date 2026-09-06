@@ -4176,13 +4176,18 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   }
 
   .hero h1 {
-    max-width: min(72vw, 1250px);
-    font-size: clamp(72px, 9vw, 154px);
+    max-width: min(61vw, 1160px);
+    margin-left: min(22vw, 422px);
+    font-size: clamp(72px, 8.4vw, 138px);
     line-height: 0.84;
   }
 
   .hero-bottom {
     margin-top: clamp(32px, 5vh, 64px);
+  }
+
+  .hero-bottom .hero-intro {
+    margin-left: min(22vw, 422px);
   }
 
   .notes-hero,
@@ -4195,6 +4200,16 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .notes-hero,
   .health-hero {
     align-items: center;
+  }
+
+  .notes-hero h1,
+  .health-hero h1,
+  .mind-hero h1,
+  .learning-hero h1 {
+    max-width: 11ch;
+    font-size: clamp(72px, 8.4vw, 138px);
+    letter-spacing: 0.018em;
+    line-height: 0.84;
   }
 
   .learning-hero {
