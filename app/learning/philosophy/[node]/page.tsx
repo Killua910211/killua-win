@@ -21,6 +21,10 @@ type NodePageProps = {
   params: Promise<{ node: string }>;
 };
 
+// 条目正文由随部署发布的来源账驱动。关闭跨部署的页面缓存，避免新修订的
+// 历史／问题页继续显示上一版静态正文；静态素材仍由 CDN 缓存。
+export const revalidate = 0;
+
 /**
  * 除总览外，全部节点都在构建期生成。
  *
