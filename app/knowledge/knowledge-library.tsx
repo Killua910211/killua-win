@@ -146,7 +146,9 @@ export function KnowledgeLibrary() {
               {visibleCards.map((card, index) => (
                 <button className={`knowledge-card knowledge-card-${card.tone} ${selectedCard?.id === card.id ? 'is-selected' : ''}`} key={card.id} onClick={() => setSelectedId(card.id)} type="button" aria-pressed={selectedCard?.id === card.id}>
                   <span className="knowledge-card-topline"><span>{String(index + 1).padStart(2, '0')}</span><span>{card.tag}</span></span>
-                  <strong>{card.title}</strong>
+                  <strong>
+                    {card.id === 'emotion' ? <>理解情绪，<span className="type-keep">不等于</span>消化情绪。</> : card.title}
+                  </strong>
                   <span className="knowledge-card-source">{card.category} · {card.source}</span>
                 </button>
               ))}
@@ -155,7 +157,9 @@ export function KnowledgeLibrary() {
             {selectedCard ? (
               <article className="knowledge-detail" aria-live="polite">
                 <div className="knowledge-detail-topline"><span>{selectedCard.tag}</span><span>Selected card</span></div>
-                <h3>{selectedCard.title}</h3>
+                <h3>
+                  {selectedCard.id === 'emotion' ? <>理解情绪，<span className="type-keep">不等于</span>消化情绪。</> : selectedCard.title}
+                </h3>
                 <p className="knowledge-idea">{selectedCard.idea}</p>
                 <div className="knowledge-takeaway">
                   <span className="knowledge-subhead">Takeaway / 带走</span>
@@ -177,7 +181,9 @@ export function KnowledgeLibrary() {
         </div>
         <div>
           <p className="eyebrow">A living archive / 让它继续生长</p>
-          <h2 id="knowledge-method-heading">每一张卡片，都应该能在下一次对话或下一次决定里派上用场。</h2>
+          <h2 id="knowledge-method-heading">
+            每一张卡片，都应该能在<span className="type-keep">下一次对话</span>或<span className="type-keep">下一次决定</span>里派上用场。
+          </h2>
           <div className="knowledge-method-grid">
             <div><span>01</span><p>提炼</p><small>从长对话里留下一个真正可复述的判断。</small></div>
             <div><span>02</span><p>验证</p><small>区分事实、推论和只适用于当下的个人观察。</small></div>

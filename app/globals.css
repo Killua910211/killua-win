@@ -3582,3 +3582,195 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   border-left-color: var(--black-4);
   color: var(--warm-gray);
 }
+
+/* ── Editorial type and structure review ─────────────────────
+   Keep short Chinese phrases intact, then balance display lines as phrases
+   instead of breaking at arbitrary characters. */
+.notes-preface-copy h2,
+.note-main h2,
+.health-section-body > h2,
+.health-life-heading h2,
+.health-smoking-heading h2,
+.health-recovery-heading h3,
+.health-note-grid h3,
+.mind-overview h2,
+.mind-core-grid h3,
+.mind-workspace-heading h2,
+.mind-detail h3,
+.mind-review h2,
+.mind-review-card strong,
+.mind-closing-note p,
+.knowledge-index-heading h2,
+.knowledge-card strong,
+.knowledge-detail h3,
+.knowledge-method h2,
+.home-learning-body h2,
+.learning-section-body > h2,
+.learning-question-group h3,
+.learning-question-title,
+.learning-tradition h3,
+.learning-method-body h2,
+.philosophy-hero h1,
+.philosophy-section-heading,
+.philosophy-position-name,
+.philosophy-children-title {
+  word-break: normal;
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+
+.notes-preface-copy p,
+.note-main p,
+.health-section-lede,
+.health-note-grid p,
+.mind-core-grid p,
+.mind-detail p,
+.mind-review-intro,
+.knowledge-card p,
+.knowledge-idea,
+.learning-section-lede,
+.learning-question-group-summary,
+.learning-tradition > p,
+.philosophy-summary,
+.philosophy-question,
+.philosophy-paragraph {
+  text-wrap: pretty;
+}
+
+.type-keep { white-space: nowrap; }
+
+/* Personal timeline: one typographic hierarchy shared by all milestones. */
+.health-memorial-stack {
+  margin-top: 40px;
+  padding-left: 0;
+}
+.health-memorial-stack::before,
+.health-memorial-stack .health-life-card::before,
+.health-memorial-stack .health-life-card::after,
+.health-memorial-stack .health-smoking-card::before,
+.health-memorial-stack .health-smoking-card::after,
+.health-memorial-stack > .health-recovery::before,
+.health-memorial-stack > .health-recovery::after {
+  display: none;
+}
+.health-memorial-stack .health-life-card,
+.health-memorial-stack .health-smoking-card {
+  grid-template-columns: minmax(210px, 0.55fr) minmax(0, 1.45fr);
+  gap: clamp(36px, 5vw, 76px);
+  padding: 42px 0;
+}
+.health-milestone-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.health-milestone-label b {
+  color: var(--ember);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+.health-milestone-label b::after {
+  margin-left: 10px;
+  color: var(--black-4);
+  content: '/';
+}
+.health-memorial-stack .health-life-heading h2,
+.health-memorial-stack .health-smoking-heading h2 {
+  margin-top: 17px;
+  font-size: clamp(27px, 2.25vw, 34px);
+  line-height: 1.08;
+}
+.health-memorial-stack .health-life-readout strong {
+  font-size: clamp(26px, 2.35vw, 35px);
+  line-height: 1;
+}
+.health-memorial-stack .health-life-percent {
+  font-size: clamp(21px, 1.9vw, 28px);
+}
+.health-memorial-stack .health-smoking-streak-value {
+  font-size: clamp(25px, 2.25vw, 34px) !important;
+}
+.health-memorial-stack > .health-recovery {
+  padding: 38px 0;
+}
+.health-memorial-stack > .health-recovery .health-recovery-heading > div > .health-milestone-label {
+  display: flex;
+}
+.health-memorial-stack > .health-recovery .health-recovery-heading h3 {
+  margin-top: 17px;
+  font-size: clamp(27px, 2.25vw, 34px);
+  line-height: 1.08;
+}
+
+/* Give long display copy enough measure before asking it to wrap. */
+.mind-overview h2 { max-width: 1040px; }
+.mind-core-grid h3 { max-width: 490px; }
+.mind-workspace-heading h2 { max-width: 790px; }
+.mind-detail h3 { max-width: 820px; }
+.knowledge-detail h3 { max-width: 590px; }
+
+@media (max-width: 760px) {
+  .mind-hero h1 {
+    max-width: 100%;
+    font-size: clamp(34px, 9.7vw, 44px);
+    letter-spacing: -0.01em;
+    line-height: 0.9;
+  }
+
+  .orb span { display: none; }
+
+  .health-memorial-stack .health-life-card,
+  .health-memorial-stack .health-smoking-card {
+    padding: 30px 0;
+  }
+  .health-memorial-stack .health-life-heading h2,
+  .health-memorial-stack .health-smoking-heading h2,
+  .health-memorial-stack > .health-recovery .health-recovery-heading h3 {
+    margin-top: 14px;
+    font-size: clamp(26px, 8vw, 31px);
+  }
+  .health-memorial-stack .health-life-progress,
+  .health-memorial-stack .health-smoking-grid { margin-top: 30px; }
+  .health-memorial-stack .health-life-readout strong {
+    font-size: clamp(24px, 7.2vw, 30px);
+  }
+  .health-memorial-stack .health-life-percent {
+    justify-content: flex-start;
+    font-size: 23px;
+  }
+  .health-memorial-stack > .health-recovery { padding: 30px 0; }
+  .health-memorial-stack > .health-recovery .health-recovery-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px 18px;
+  }
+  .health-memorial-stack > .health-recovery .health-recovery-heading > div {
+    grid-column: 1 / -1;
+  }
+  .health-memorial-stack > .health-recovery .health-recovery-summary-meta {
+    grid-column: 1;
+    grid-row: 2;
+    margin-left: 0;
+  }
+  .health-memorial-stack > .health-recovery .health-recovery-heading::after {
+    grid-column: 2;
+    grid-row: 2;
+    margin-left: 0;
+  }
+
+  .health-section-body > h2 {
+    font-size: clamp(38px, 10.8vw, 46px);
+  }
+}
+
+@media (max-width: 520px) {
+  .knowledge-card-grid { grid-template-columns: 1fr; }
+  .knowledge-card { min-height: 168px; }
+}

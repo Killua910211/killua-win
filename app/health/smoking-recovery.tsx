@@ -46,7 +46,10 @@ export function SmokingRecoveryTimeline() {
     <details className="health-recovery" aria-labelledby="health-recovery-heading">
       <summary className="health-recovery-heading">
         <div>
-          <span lang="en">03 / Smoking recovery</span>
+          <span className="health-milestone-label" aria-hidden="true">
+            <b>03</b>
+            <span>Recovery</span>
+          </span>
           <h3 id="health-recovery-heading">戒烟后的身体变化</h3>
         </div>
         <span className="health-recovery-summary-meta">20 项变化</span>

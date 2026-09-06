@@ -97,12 +97,20 @@ export default function HealthPage() {
               <div className="health-memorial-grid">
                 <article className="health-life-card" aria-labelledby="health-life-heading">
                   <div className="health-life-heading">
+                    <span className="health-milestone-label" aria-hidden="true">
+                      <b>01</b>
+                      <span>Life</span>
+                    </span>
                     <h2 id="health-life-heading">已存活时间</h2>
                   </div>
                   <LifeProgress snapshot={lifeProgressSnapshot} />
                 </article>
                 <article className="health-smoking-card" aria-labelledby="health-smoking-heading">
                   <div className="health-smoking-heading">
+                    <span className="health-milestone-label" aria-hidden="true">
+                      <b>02</b>
+                      <span>Quit</span>
+                    </span>
                     <h2 id="health-smoking-heading">戒烟记录</h2>
                   </div>
                   <dl className="health-smoking-grid">
