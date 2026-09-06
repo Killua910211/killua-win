@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getNodeById, nodeHref, type PhilosophyNode } from './tree';
+import { getStudyGuide } from './study-guides';
 
 type HeadingLevel = 'h2' | 'h3';
 
@@ -68,8 +69,8 @@ export function CoreQuestionGroups({
 }
 
 /**
- * 节点正文。总览页和每个节点页共用同一套渲染，
- * 保证 data.json 里的每一个字段都有落点：不做摘要，不做裁剪。
+ * 节点正文。总览页和每个节点页共用同一套渲染：基础树数据保持完整呈现，
+ * 新增核心问题则在其上叠加概念、论证和原典的精读层。
  *
  * headingLevel 让同一套内容在「本页主体」和「某一节里的一块」两种位置
  * 都能保持标题层级连续。
@@ -86,6 +87,7 @@ export function NodeBody({
   const notes = node.notes ?? [];
   const positions = node.positions ?? [];
   const figures = node.figures ?? [];
+  const guide = getStudyGuide(node.id);
   const related = (node.related ?? [])
     .map((id) => getNodeById(id))
     .filter((relatedNode): relatedNode is PhilosophyNode => Boolean(relatedNode));
@@ -106,6 +108,23 @@ export function NodeBody({
         </section>
       )}
 
+      {guide && (
+        <section className="philosophy-block philosophy-study-intro" aria-labelledby={`${node.id}-orientation`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-orientation`}>
+            先把问题拆开
+          </BlockHeading>
+          <p className="philosophy-study-orientation">{guide.orientation}</p>
+          <dl className="philosophy-concept-grid">
+            {guide.concepts.map((concept) => (
+              <div key={concept.term}>
+                <dt>{concept.term}</dt>
+                <dd>{concept.explanation}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
+
       {positions.length > 0 && (
         <section className="philosophy-block" aria-labelledby={`${node.id}-positions`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-positions`}>
@@ -119,6 +138,16 @@ export function NodeBody({
                 </p>
                 <SubHeading className="philosophy-position-name">{position.name}</SubHeading>
                 <p className="philosophy-position-text">{position.text}</p>
+                {guide?.positionPaths[index] && (
+                  <div className="philosophy-position-path">
+                    <p>论证路径</p>
+                    <ol>
+                      {guide.positionPaths[index].map((step) => (
+                        <li key={step}>{step}</li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
                 {position.objection && (
                   <p className="philosophy-position-objection">
                     <span className="philosophy-tag">反对意见</span>
@@ -131,7 +160,35 @@ export function NodeBody({
         </section>
       )}
 
-      {figures.length > 0 && (
+      {guide && (
+        <section className="philosophy-block" aria-labelledby={`${node.id}-texts`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-texts`}>
+            人物与原典：从哪里读起
+          </BlockHeading>
+          <p className="philosophy-block-intro">
+            先抓住每部文本在争论中解决什么问题，再回到原文核对论证；不要把作者的名字当成某个立场的标签。
+          </p>
+          <ol className="philosophy-texts">
+            {guide.texts.map((text, index) => (
+              <li key={`${text.author}-${text.work}`}>
+                <p className="philosophy-text-index" aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </p>
+                <p className="philosophy-text-author">{text.author}</p>
+                <h3>{text.work}</h3>
+                <p className="philosophy-text-period">{text.period}</p>
+                <p className="philosophy-text-contribution">{text.contribution}</p>
+                <p className="philosophy-text-question">
+                  <span>带着这个问题读</span>
+                  {text.readingQuestion}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      {!guide && figures.length > 0 && (
         <section className="philosophy-block" aria-labelledby={`${node.id}-figures`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-figures`}>
             相关人物与文本
@@ -144,12 +201,40 @@ export function NodeBody({
         </section>
       )}
 
-      {node.example && (
+      {guide ? (
+        <section className="philosophy-block" aria-labelledby={`${node.id}-case`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-case`}>
+            案例推演
+          </BlockHeading>
+          <div className="philosophy-case-study">
+            <h3>{guide.caseStudy.title}</h3>
+            <p>{guide.caseStudy.setup}</p>
+            <ol>
+              {guide.caseStudy.prompts.map((prompt) => (
+                <li key={prompt}>{prompt}</li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      ) : node.example ? (
         <section className="philosophy-block" aria-labelledby={`${node.id}-example`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-example`}>
             一个例子
           </BlockHeading>
           <p className="philosophy-example">{node.example}</p>
+        </section>
+      ) : null}
+
+      {guide && (
+        <section className="philosophy-block" aria-labelledby={`${node.id}-next-questions`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-next-questions`}>
+            带着问题继续读
+          </BlockHeading>
+          <ul className="philosophy-next-questions">
+            {guide.nextQuestions.map((question) => (
+              <li key={question}>{question}</li>
+            ))}
+          </ul>
         </section>
       )}
 
