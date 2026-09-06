@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { SectionNav } from '@/app/components/section-nav';
+import { PageHero } from '@/app/components/page-hero';
 import { SmokingStreak } from './smoking-streak';
 import { LifeProgress } from './life-progress';
 import { SmokingRecoveryTimeline } from './smoking-recovery';
@@ -45,23 +46,14 @@ export default function HealthPage() {
       <SiteHeader current="health" />
 
       <main id="main" className="health-page">
-        <section className="notes-hero health-hero">
-          <div className="section-label light" lang="en">
-            <span>01</span>
-            <span>Health readout</span>
-          </div>
-          <div>
-            <p className="eyebrow">Apple Health / Public view</p>
-            <h1 lang="en">
-              BODY,
-              <br />
-              IN <span className="outline">MOTION.</span>
-            </h1>
-            <p className="notes-intro health-intro">
-              记录活动、睡眠、恢复与体能的长期变化。
-              <br />
-              从日常读数里，看见身体的节奏。
-            </p>
+        <PageHero
+          description={<>记录活动、睡眠、恢复与体能的长期变化。<br />从日常读数里，看见身体的节奏。</>}
+          eyebrow="Apple Health / Public view"
+          label="Health readout"
+          number="01"
+          title={<>BODY,<br />IN <span className="outline">MOTION.</span></>}
+          titleId="health-title"
+          footer={
             <dl className="health-hero-meta" lang="en">
               <div>
                 <dt>Coverage</dt>
@@ -76,8 +68,8 @@ export default function HealthPage() {
                 <dd>{HEALTH_UPDATED_AT}</dd>
               </div>
             </dl>
-          </div>
-        </section>
+          }
+        />
 
         <SectionNav
           label="健康页分区"

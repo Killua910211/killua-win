@@ -1,11 +1,6 @@
 type PublicStats = {
   days?: unknown;
   records?: unknown;
-  decisions?: unknown;
-  decided?: unknown;
-  traces?: unknown;
-  commitmentRate?: unknown;
-  checkinWeeks?: unknown;
   lastSync?: unknown;
   /**
    * 记录按种类拆开，自带中文标签，数组顺序即展示顺序。
@@ -144,16 +139,7 @@ export async function SystemReadout() {
 
   const days = num(stats.days);
 
-  // 数字和单位分开渲染：数字走 44px 的信号绿，单位走 15px 的白 —— 仪表读数的
-  // 比例靠这个悬殊拉开，写成 "3 days" 一个字符串就做不到。
-  const plural = (n: number, unit: string) => `${unit}${n === 1 ? '' : 's'}`;
-
   const records = num(stats.records);
-  const decisions = num(stats.decisions);
-  const decided = num(stats.decided);
-  const traces = num(stats.traces);
-  const commitmentRate = num(stats.commitmentRate);
-  const checkinWeeks = num(stats.checkinWeeks);
 
   const rows: { label: string; value: string; unit?: string }[] = [
     {
@@ -161,29 +147,13 @@ export async function SystemReadout() {
       value: displayCount(days),
       ...(days !== null ? { unit: '天' } : {}),
     },
-    { label: 'Records', value: displayCount(records) },
-    {
-      label: 'Decisions',
-      value: displayCount(decisions),
-      ...(decided !== null ? { unit: `/ ${decided} settled` } : {}),
-    },
-    { label: 'Traces', value: displayCount(traces) },
+    { label: '已归档', value: displayCount(records) },
   ];
-  if (commitmentRate !== null) rows.push({ label: 'Kept', value: `${commitmentRate}%` });
-  if (checkinWeeks !== null) {
-    rows.push({
-      label: 'Check-ins',
-      value: String(checkinWeeks),
-      unit: plural(checkinWeeks, 'week'),
-    });
-  }
 
   // 只信对端此刻给的字符串；取不到就明说「未知」，绝不用本地当前时间
   // 顶替 —— 那会把一次失败的同步伪装成刚刚成功过。
   const lastSync = getLastSync(stats.lastSync);
-  const hasData = [days, records, decisions, traces, commitmentRate, checkinWeeks].some(
-    (value) => value !== null,
-  );
+  const hasData = [days, records].some((value) => value !== null);
   const readoutState = getReadoutState({ loaded: result.ok, hasData, lastSync });
 
   // 标签来自对端，所以给它划一个运行期边界：非空、不超过 MAX_LABEL_LENGTH
@@ -206,18 +176,18 @@ export async function SystemReadout() {
     <section className="readout" id="system" aria-labelledby="readout-heading">
       <div className="section-label light" lang="en">
         <span>02</span>
-        <span>System readout</span>
+        <span>Field archive</span>
       </div>
 
       <div className="readout-body">
         <h2 className="eyebrow readout-eyebrow" id="readout-heading" lang="en">
           <span className={`readout-pulse is-${readoutState}`} aria-hidden="true" />
-          KILLUA OS · Public snapshot
+          KILLUA OS · Personal field archive
         </h2>
         <p className="readout-lede">
-          一个自建的个人记录与决策系统，每天在用。
+          一个用来记录发生、找回信息、完成事情的个人系统。
           <br />
-          下面是它自己报出来的数字 —— 不含任何一条记录的内容。
+          公开区只展示脱敏汇总，不展示任何记录、任务或待看内容。
         </p>
 
         <dl className="readout-grid">
@@ -235,7 +205,7 @@ export async function SystemReadout() {
         {byCategory.length > 0 ? (
           <div className="readout-breakdown">
             <p className="readout-breakdown-label" lang="en">
-              Records by kind
+              Archive composition
             </p>
             <dl className="readout-breakdown-list">
               {byCategory.map(({ label, count }) => (
@@ -247,6 +217,8 @@ export async function SystemReadout() {
             </dl>
           </div>
         ) : null}
+
+        <p className="readout-scope">记录 · 待审 · 待完成 · 待看</p>
 
         {/*
           「最后同步」「接口可达性」和「数据状态」分开陈述。lastSync 没有就

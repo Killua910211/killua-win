@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { SectionNav } from '@/app/components/section-nav';
+import { PageHero } from '@/app/components/page-hero';
 import { SystemReadout } from '@/app/components/system-readout';
 import { buildMetadata, SITE } from '@/app/lib/metadata';
 
@@ -30,36 +31,23 @@ export default function Home() {
       <SiteHeader current="home" />
 
       <main id="main">
-        <section className="hero" id="top">
-          <div className="hero-kicker">
-            <span lang="en">01 / Personal space</span>
-            <span lang="en">Shanghai / UTC+8</span>
-          </div>
-
-          <h1 lang="en">
-            A QUIET PLACE
-            <br />
-            FOR <span className="outline">LOUD</span> IDEAS.
-          </h1>
-
-          <div className="hero-bottom">
-            <div className="hero-intro">
-              <p>写下长期思考，记录身体的变化，也整理我和 AI 一起思考的过程。</p>
-              <Link className="hero-primary-action" href="/notes#archive">
-                阅读精选 <span aria-hidden="true">↗</span>
-              </Link>
-            </div>
-            <a className="round-link" href="#learning" aria-label="向下浏览">
-              <span aria-hidden="true">↓</span>
-            </a>
-          </div>
-
-          <div className="orb" aria-hidden="true">
-            <div className="orb-ring" />
-            <div className="orb-core" />
-            <span>K</span>
-          </div>
-        </section>
+        <PageHero
+          decoration={<div className="orb"><div className="orb-ring" /><div className="orb-core" /><span>K</span></div>}
+          description="写下长期思考，记录身体的变化，也整理我和 AI 一起思考的过程。"
+          eyebrow="Personal space / 上海"
+          id="top"
+          label="Personal space"
+          number="01"
+          title={<><span>A QUIET</span><br />PLACE FOR <span className="outline">LOUD</span> IDEAS.</>}
+          titleId="home-title"
+          variant="home"
+          action={
+            <>
+              <Link className="page-hero__primary-action" href="/notes#archive">阅读精选 <span aria-hidden="true">↗</span></Link>
+              <a className="page-hero__secondary-action" href="#learning">浏览学习地图 <span aria-hidden="true">↓</span></a>
+            </>
+          }
+        />
 
         <SectionNav
           label="首页分区"

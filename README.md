@@ -135,7 +135,7 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
 | `/sitemap.xml` `/robots.txt` `/feed.xml` | 索引与订阅 |
 | `/api/database` | 健康检查，返回 `database_version` |
 
-## 首页 05 区依赖的外部端点
+## 首页 OS 区依赖的外部端点
 
 `app/components/system-readout.tsx` 从 `https://os.killua.win/api/public/stats`
 取数。那个端点有一条硬规则：**返回类型里不允许出现任何承载内容的字符串字段**。
@@ -145,11 +145,10 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
 
 ```ts
 {
-  days: number; records: number; decisions: number; decided: number;
-  traces: number; commitmentRate: number | null; checkinWeeks: number;
+  days: number; records: number;
   lastSync: string;                    // yyyy-MM-dd
 
-  // 可选。缺失或为空时，首页的「Records by kind」整块不渲染，其余读数照常。
+  // 可选。缺失或为空时，首页的「Archive composition」整块不渲染，其余读数照常。
   // 数组顺序即展示顺序，标签由对端给。
   kinds?: { key: RecordKind; label: RecordKindLabel; count: number }[];
 }
@@ -166,8 +165,8 @@ OS 把 `label` 的类型收成了从 `RECORD_KIND_LABEL` 推出的**字面量联
 `count` 逐个过数值校验，不合格的项直接剔除。最坏情况是显示一个错的短词，
 而不可能把一段正文塞进首页。
 
-各项 `count` 之和应当等于 `records`（现在 `2 + 165 = 167`）。官网不做这个断言 ——
-对端算错了不该把首页拖垮 —— 但对不上就说明 OS 侧的分组漏了某一类。
+各项 `count` 之和应当等于 `records`。官网不做这个断言 —— 对端算错了不该把首页
+拖垮 —— 但对不上就说明 OS 侧的分组漏了某一类。
 
 > 调试提示：这个 fetch 带 `next: { revalidate: 3600 }`。改完 OS 端点后，
 > 长时间运行的 `pnpm dev` 会继续用缓存里的旧响应，看起来像是没生效。

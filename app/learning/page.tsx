@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { SectionNav } from '@/app/components/section-nav';
+import { PageHero } from '@/app/components/page-hero';
 import { buildMetadata } from '@/app/lib/metadata';
 import { CoreQuestionGroups, type QuestionGroup } from './philosophy/node-content';
 import {
@@ -46,20 +47,14 @@ export default function LearningPage() {
           Hero 现在是工作台的顶栏，不是海报：移动端整块压到 480px 以内，
           主 CTA 直接出现在首屏，且始终指向哲学地图——这里没有「上次读到哪」。
         */}
-        <section className="learning-hero" aria-labelledby="learning-title">
-          <div className="section-label light" lang="en">
-            <span>01</span>
-            <span>Learning desk</span>
-          </div>
-          <div className="learning-hero-body">
-            <p className="eyebrow">Learn / 学习空间</p>
-            <h1 id="learning-title" lang="en">
-              FIND THE <span className="outline">QUESTION.</span>
-            </h1>
-            <p className="learning-hero-intro">
-              先定位问题，再比较立场。哲学部分已经铺好 {philosophyNodes.length} 个节点、
-              {coreQuestions.length} 个核心问题。
-            </p>
+        <PageHero
+          description={<>先定位问题，再比较立场。哲学部分已经铺好 {philosophyNodes.length} 个节点、{coreQuestions.length} 个核心问题。</>}
+          eyebrow="Learn / 学习空间"
+          label="Learning desk"
+          number="01"
+          title={<>FIND THE <span className="outline">QUESTION.</span></>}
+          titleId="learning-title"
+          action={
             <div className="learning-resume">
               <Link className="learning-resume-cta" href="/learning/philosophy">
                 <span>进入哲学地图</span>
@@ -69,12 +64,12 @@ export default function LearningPage() {
                 {questionDomains.length} 个问题域 · 想到哪个问题就从哪个问题读起，随时可以回来重看。
               </p>
             </div>
-            <p className="learning-hero-foot" lang="en">
+          }
+          footer={<p className="learning-hero-foot" lang="en">
               <span>Subject 001 · Philosophy · {philosophyNodes.length} nodes</span>
               <span>Growing archive · 2026</span>
-            </p>
-          </div>
-        </section>
+            </p>}
+        />
 
         <SectionNav
           label="学习页分区"

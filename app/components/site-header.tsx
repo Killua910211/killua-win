@@ -72,56 +72,53 @@ export function SiteHeader({ current }: SiteHeaderProps) {
 
   return (
     <header className="site-header">
-      {/*
-        首页的 wordmark 指向页内锚点（平滑回到顶部），内页指向站点根。
-        用普通 <a> 而不是 <Link> 是有意的：同页锚点不需要走路由。
-      */}
-      {onHome ? (
-        <a className="wordmark" href="#top" aria-label="killua.win 首页">
-          <span className="wordmark-dot" aria-hidden="true" />
-          KILLUA.WIN
-        </a>
-      ) : (
-        <Link className="wordmark" href="/" aria-label="killua.win 首页">
-          <span className="wordmark-dot" aria-hidden="true" />
-          KILLUA.WIN
-        </Link>
-      )}
-
-      <nav className="desktop-nav" aria-label="主导航" lang="en">
-        {navigationItems.map((item) => (
-          <Link
-            className={item.key === 'home' ? 'nav-secondary' : undefined}
-            aria-current={current === item.key ? 'page' : undefined}
-            href={item.href}
-            key={item.key}
-          >
-            {item.label}
+      <div className="site-header__inner">
+        {/* 首页的 wordmark 指向页内锚点，内页则回到站点根。 */}
+        {onHome ? (
+          <a className="wordmark" href="#top" aria-label="killua.win 首页">
+            <span className="wordmark-dot" aria-hidden="true" />
+            KILLUA.WIN
+          </a>
+        ) : (
+          <Link className="wordmark" href="/" aria-label="killua.win 首页">
+            <span className="wordmark-dot" aria-hidden="true" />
+            KILLUA.WIN
           </Link>
-        ))}
-      </nav>
+        )}
 
-      <div className="header-actions">
-        <span className="edition" lang="en">
-          ED. 001
-        </span>
-        <a className="os-entry" href="https://os.killua.win/today" target="_blank" rel="noreferrer">
-          KILLUA OS <span aria-hidden="true">↗</span>
-        </a>
+        <nav className="desktop-nav" aria-label="主导航" lang="en">
+          {navigationItems.map((item) => (
+            <Link
+              className={item.key === 'home' ? 'nav-secondary' : undefined}
+              aria-current={current === item.key ? 'page' : undefined}
+              href={item.href}
+              key={item.key}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="header-actions">
+          <span className="edition" lang="en">ED. 001</span>
+          <a className="os-entry" href="https://os.killua.win/today" target="_blank" rel="noreferrer">
+            KILLUA OS <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <button
+          aria-controls="mobile-main-navigation"
+          aria-expanded={isMenuOpen}
+          aria-label={isMenuOpen ? '关闭主导航' : '打开主导航'}
+          className="mobile-nav-toggle"
+          onClick={() => setIsMenuOpen((open) => !open)}
+          ref={menuButtonRef}
+          type="button"
+        >
+          <span aria-hidden="true" className="mobile-nav-toggle-icon" />
+          <span>{isMenuOpen ? 'Close' : 'Menu'}</span>
+        </button>
       </div>
-
-      <button
-        aria-controls="mobile-main-navigation"
-        aria-expanded={isMenuOpen}
-        aria-label={isMenuOpen ? '关闭主导航' : '打开主导航'}
-        className="mobile-nav-toggle"
-        onClick={() => setIsMenuOpen((open) => !open)}
-        ref={menuButtonRef}
-        type="button"
-      >
-        <span aria-hidden="true" className="mobile-nav-toggle-icon" />
-        <span>{isMenuOpen ? 'Close' : 'Menu'}</span>
-      </button>
 
       <nav
         aria-label="移动端主导航"

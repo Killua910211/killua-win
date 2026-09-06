@@ -3,6 +3,7 @@ import { NotesPreface } from '@/app/components/notes-preface';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { SectionNav } from '@/app/components/section-nav';
+import { PageHero } from '@/app/components/page-hero';
 import { buildMetadata } from '@/app/lib/metadata';
 import { listPublishedPosts } from '@/app/lib/posts';
 
@@ -29,23 +30,15 @@ export default async function NotesPage() {
       <SiteHeader current="notes" />
 
       <main id="main" className="notes-page">
-        <section className="notes-hero notes-hero-compact" id="notes-top">
-          <div className="section-label light" lang="en">
-            <span>01</span>
-            <span>Writing archive</span>
-          </div>
-          <div>
-            <p className="eyebrow">Notes / 碎片与思考</p>
-            <h1 lang="en">
-              OLD WORDS,
-              <br />
-              NEW <span className="outline">LIGHT.</span>
-            </h1>
-            <p className="notes-intro">
-              从旧空间迁来的文字，也会放进以后持续写下的新想法。
-            </p>
-          </div>
-        </section>
+        <PageHero
+          description="从旧空间迁来的文字，也会放进以后持续写下的新想法。"
+          eyebrow="Notes / 碎片与思考"
+          id="notes-top"
+          label="Writing archive"
+          number="01"
+          title={<>OLD WORDS,<br />NEW <span className="outline">LIGHT.</span></>}
+          titleId="notes-title"
+        />
 
         <SectionNav
           label="文章页分区"
