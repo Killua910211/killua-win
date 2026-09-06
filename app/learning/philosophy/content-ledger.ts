@@ -57,6 +57,180 @@ export type CoreEntryLedger = {
 };
 
 export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
+  'pt-freedom': {
+    status: '核验正文｜自审完成',
+    scope: '本条讨论行为受原因、性格与制度条件影响时，何种控制足以谈自由与归责；不把刑事责任、心理治疗和宗教修行直接化约为同一判断，也不预设“自由”必然是完全无因的选择。',
+    origin: [
+      { kind: '概括', text: '自由意志问题在两种直觉的冲突中产生：行动似乎是由过去与规律、性格和处境造成的；谴责、赞许与惩罚又似乎要求行动以某种方式“取决于”行动者。争论因此同时涉及因果、控制和道德实践。', sourceIds: ['FRE-1', 'FRE-2'] },
+      { kind: '解释性重构', text: '将问题分为“本可以做别的吗”“行动是否出自我”“应否赞许、谴责或修复”，可以避免把形而上学结论直接换成政策结论。即使不同意基本应得，也仍须安排预防、保护、解释和补偿。' },
+    ],
+    boundaries: [
+      { kind: '概括', text: '决定论指在既定过去和自然规律下，未来只有一种展开方式；它不同于宿命论，也不等于“原因已经被科学完全发现”。相容论问这样的决定论是否仍允许相关的行动控制；不相容论则认为关键自由不能与之共存。', sourceIds: ['FRE-1', 'FRE-2'] },
+      { kind: '概括', text: '道德责任至少可区分为可归属性、可要求说明与可追究性；它们许可的反应和所需控制条件未必相同。把一次错误都直接推到“此人应受惩罚”会跳过这些区分。', sourceIds: ['FRE-1'] },
+    ],
+    objections: [
+      { kind: '概括', text: '不相容论的有力论证是：若行为是自己不能控制的过去与规律的必然结果，它就并非真正由自己决定。相容论者回应，相关控制不要求控制过去和规律，而要求行动出自自己的理由、反思或对理由的响应，并且未受胁迫等妨碍。双方分歧正在“取决于我”需要何种控制。', sourceIds: ['FRE-2'] },
+      { kind: '概括', text: '若为摆脱决定论而把行动归于随机事件，随机性不会自动给行动者更多控制。自由意志论因此还须说明一个非决定的行动怎样仍可被行动者恰当地作为源头。', sourceIds: ['FRE-1'] },
+    ],
+    confusions: [
+      { kind: '解释性重构', text: '解释一个行为的成因，不等于为它开脱；但它可能改变我们应使用的回应，例如治疗、约束、修复或谴责。' },
+      { kind: '解释性重构', text: '没有外在胁迫只是相容论的一类必要资源，不等于已经解决行动为何“属于我”的全部问题。' },
+      { kind: '争议性判断', text: '把儒家或佛教修养直接贴为相容论或不相容论会错过其自身关于习气、关系、觉知和解脱的目标；这里最多作问题上的并置。', sourceIds: ['FRE-1'] },
+    ],
+    historicalContext: [
+      { nodeId: 'pt-western-modern', label: '近代：知识、科学与政治秩序', note: '霍布斯、休谟、斯宾诺莎与康德把因果、选择和道德法则放进不同近代框架。' },
+      { nodeId: 'pt-confucian', label: '先秦：儒家及其伦理—政治问题', note: '从习礼、学习与德性养成进入“在条件中变得更能负责”的不同问题结构。' },
+      { nodeId: 'pt-responsibility', label: '自由、责任与道德运气', note: '继续讨论归责、运气和制度回应，避免用一条自由理论包办所有问题。' },
+    ],
+    sources: [
+      { id: 'FRE-1', title: 'SEP：Free Will', kind: '学术综述', url: 'https://plato.stanford.edu/entries/freewill/', locator: '导论、§1–§3，尤其 §2.1–§2.5', checked: true, supports: '控制、另作可能、源头性、相容／不相容论与责任的联系。' },
+      { id: 'FRE-2', title: 'SEP：Moral Responsibility', kind: '学术综述', url: 'https://plato.stanford.edu/entries/moral-responsibility/', locator: '§1，尤其关于决定论、后果论证与相容论的段落', checked: true, supports: '决定论的界定、后果论证及相容论对控制的回应。' },
+    ],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
+      { location: '主要立场｜相容论', issue: '原内容把相容论缩为“想做什么就做什么”。', evidence: 'FRE-1、FRE-2 都将理由响应、源头性和责任类型列为未决争论。', revision: '改为控制条件的竞争性说明，并加入胁迫与理由的区分。' },
+      { location: '案例推演｜愤怒消息', issue: '原案例暗示理解原因只会削弱责任。', evidence: 'FRE-1 区分自由与不同责任实践。', revision: '改问不同回应的依据，避免把解释与免责等同。' },
+    ], remaining: ['尚未逐一核验中文译本中“自由意志”“自发”“自主”等术语的使用差异。'], adjacentImpact: '“责任”页不得从决定论直接推出废除一切归责；“儒家”页不得用当代自由意志标签覆盖修养语境。', nextPriority: '补写道德运气、刑罚正当性与中国、印度自由问题的独立来源账。' },
+  },
+  'pt-logic': {
+    status: '核验正文｜自审完成',
+    scope: '本条介绍演绎有效、归纳支持和解释性推断如何分别评价理由；不把形式逻辑当成所有好判断的自动裁判，也不因真实生活复杂而放弃检查前提、歧义和反例。',
+    origin: [
+      { kind: '概括', text: '人们不仅会争论结论，也会争论结论是否由给出的理由支持。逻辑把这种支持的结构显明：在经典演绎中，有效意味着不存在前提全真而结论假的解释；这只评价保真形式，不保证前提真实。', sourceIds: ['LOG-1'] },
+      { kind: '概括', text: '日常论证还要处理含混语境、概率、因果和对话目标。非形式谬误研究因此不只把句子符号化，而要说明一种论证为何看似有力、在哪个语境和标准下失败。', sourceIds: ['LOG-2'] },
+    ],
+    boundaries: [
+      { kind: '概括', text: '有效（valid）与健全（sound）不同：前者关乎形式上保真，后者还要求前提为真。可推导性是某一演算中能否推出，语义有效性则以解释或模型刻画；二者的关系属于元逻辑问题。', sourceIds: ['LOG-1'] },
+      { kind: '解释性重构', text: '归纳和最佳解释推断不承诺结论必然为真，而比较样本、替代假设、反例、预测和背景知识给予的支持力度。它们不能由一张“形式有效／无效”表格代替。' },
+    ],
+    objections: [
+      { kind: '概括', text: '把经典逻辑视为唯一正确逻辑会忽略直觉主义、相关逻辑等针对不同语言、推理目标或悖论的方案；反过来，存在多种逻辑也不意味着可随意选规则。需要说明对象语言、语义、推理任务和代价。', sourceIds: ['LOG-1'] },
+      { kind: '概括', text: '“谬误”并非每种情形都有机械定义；它通常是看起来比实际更好的论证。歧义、语境和对话目的会影响评价，故背名称不能代替重建前提、结论和隐含跳步。', sourceIds: ['LOG-2'] },
+    ],
+    confusions: [
+      { kind: '解释性重构', text: '前提假而论证有效并不矛盾；它只说明若前提为真，结论不能为假。' },
+      { kind: '解释性重构', text: '相关性不是因果性，统计关联也不自动消除混杂、选择偏差和替代解释。' },
+      { kind: '解释性重构', text: '形式化是澄清工具，也是模型；它会忽略语气、语境、权力关系或事实调查，须说明它保留了什么。', sourceIds: ['LOG-1'] },
+    ],
+    historicalContext: [
+      { nodeId: 'pt-western-ancient', label: '古典与希腊化时期', note: '从亚里士多德三段论、论辩与谬误传统进入，不把古典逻辑当作现代符号系统的粗略预演。' },
+      { nodeId: 'pt-nyaya', label: '正理、胜论及认识—论辩传统', note: '比较推理、反例和论辩目的时，保留 pramāṇa 与五支论证的自身语境。' },
+      { nodeId: 'pt-knowledge-sources', label: '知识从哪里来，边界又在哪里？', note: '好推理仍须与证据、证言和可纠错实践结合。' },
+    ],
+    sources: [
+      { id: 'LOG-1', title: 'SEP：Classical Logic', kind: '学术综述', url: 'https://plato.stanford.edu/entries/logic-classical/', locator: '导论、§2–§6', checked: true, supports: '论证、有效性、推导、语义、健全性／完备性和“唯一正确逻辑”问题。' },
+      { id: 'LOG-2', title: 'SEP：Fallacies', kind: '学术综述', url: 'https://plato.stanford.edu/entries/fallacies/', locator: '导论、§1、§3–§4', checked: true, supports: '非形式谬误的语境性、似是而非条件及分类争议。' },
+    ],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
+      { location: '主要立场｜演绎有效性', issue: '原文将有效性说成“结论为真”。', evidence: 'LOG-1 将有效性界定为没有前提全真而结论假的解释。', revision: '增加有效／健全、前提／形式的分工。' },
+      { location: '案例推演｜带伞下雨', issue: '原例只贴“相关不等于因果”标签。', evidence: 'LOG-2 要求重建论证与其失败条件。', revision: '要求列出混杂变量、反事实和替代解释，而非背诵谬误名。' },
+    ], remaining: ['归纳、贝叶斯和因果推断尚未建立各自独立的原典阅读卡。'], adjacentImpact: '“语言意义”页须提醒论证可因歧义失效；“正理”页不能被降格为欧洲逻辑的附录。', nextPriority: '补写归纳、因果与解释推断，并对接正理、墨辩的原典材料。' },
+  },
+  'pt-language-meaning': {
+    status: '核验正文｜自审完成',
+    scope: '本条讨论词语、句子、说话者、使用场景和社会实践怎样共同承担意义与真理要求；不把命名当作贴标签的纯技术，也不从语言塑造经验直接推出“没有独立事实”。',
+    origin: [
+      { kind: '概括', text: '语言问题从一个日常事实出现：同一句话可以指向世界、传递意图、承诺行动、造成伤害或误导。词义研究、句子组合、语境与真理的理论各抓住其中不同层面，不能由“意义来自使用”一语合并。', sourceIds: ['LAN-1', 'LAN-2'] },
+      { kind: '概括', text: '早期中国的名（ming）与实（shi）讨论将正确用名连接到行动、礼、秩序与论辩。它不是现代语言学或指称理论的原样前身，却提供了语言具有规范和实践作用的不同问题框架。', sourceIds: ['LAN-3'] },
+    ],
+    boundaries: [
+      { kind: '概括', text: '词的意义、句子的真值条件、说话者意图和话语效果不是同一个对象。一个词可有稳定用法而在语境中指不同对象；一句事实正确的话也可能在特定语境中误导。', sourceIds: ['LAN-1', 'LAN-2'] },
+      { kind: '概括', text: '真理承担者可能被理解为信念、命题、句子或话语；选择何者会影响对应、紧缩和语义理论的表达。语言与真理密切相关，却不能把所有有意义的言语行为都缩为断言事实。', sourceIds: ['LAN-2'] },
+    ],
+    objections: [
+      { kind: '概括', text: '纯指称取向难说明虚构、抽象词、隐喻与规范性语言；纯使用取向则须说明误用、跨语境批评和真理为何不只是群体习惯。较好的比较应问各理论解释了什么，并说明其余现象的代价。', sourceIds: ['LAN-1', 'LAN-2'] },
+      { kind: '概括', text: '把名实或正名直接等同于专制规定用语是有力但过快的批评：它忽略文本中正确使用、可行动性和社会秩序的连结，也忽略谁有资格定名本身可被追问。历史语境不自动使规范免受批评。', sourceIds: ['LAN-3'] },
+    ],
+    confusions: [
+      { kind: '解释性重构', text: '“语言影响我们看见什么”不等于事实随意由语言制造；它要求区分分类、注意、制度后果和经验对象。' },
+      { kind: '解释性重构', text: '“同一词有不同含义”不自动构成谬误，只有论证在关键处偷换含义才会断裂。' },
+      { kind: '解释性重构', text: '“正名”不等于把词典固定；其翻译、文本目的和社会规范含义都是争论对象。', sourceIds: ['LAN-3'] },
+    ],
+    historicalContext: [
+      { nodeId: 'pt-legalism', label: '先秦：墨家、名家、法家等论辩线索', note: '名实、辩与规范治理需与墨辩、名家和法家材料对读，不能只围绕儒家。' },
+      { nodeId: 'pt-confucian', label: '先秦：儒家及其伦理—政治问题', note: '名的正确使用与礼、行动和角色关系相连，但不应被简化成词汇政策。' },
+      { nodeId: 'pt-logic', label: '什么是好推理与有效论证？', note: '歧义、语境与隐含前提会改变论证是否真的支持结论。' },
+    ],
+    sources: [
+      { id: 'LAN-1', title: 'SEP：Word Meaning', kind: '学术综述', url: 'https://plato.stanford.edu/entries/word-meaning/', locator: '导论、§1、§3', checked: true, supports: '词义、组合性、外在主义／内在主义和语境主义的不同问题。' },
+      { id: 'LAN-2', title: 'SEP：Truth', kind: '学术综述', url: 'https://plato.stanford.edu/entries/truth/', locator: '§1、§6', checked: true, supports: '真理承担者和真理—语言关系。' },
+      { id: 'LAN-3', title: 'SEP：Logic and Language in Early Chinese Philosophy', kind: '学术综述', url: 'https://plato.stanford.edu/entries/chinese-logic-language/', locator: '导论、§2', checked: true, supports: '名、正名的实践／规范维度及其非纯描述性功能。' },
+    ],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
+      { location: '主要立场｜使用与实践', issue: '原内容把“使用”写成只要大家同意就正确。', evidence: 'LAN-1 区分词义、语境和多种理论；LAN-2 保留真理问题。', revision: '加入误用、批评与真理要求的难题。' },
+      { location: '跨传统连接｜名实', issue: '原文把名实当作现代语言哲学的提前版本。', evidence: 'LAN-3 将其放入行动、秩序与早期中国论辩。', revision: '改为并置问题，并提示翻译与历史边界。' },
+    ], remaining: ['尚未逐节核验《论语》《墨经》《荀子·正名》的中文校勘版本。'], adjacentImpact: '“解释”页须区分文本意义与作者意图；“身份与压迫”页应说明命名的制度后果而非只作修辞批评。', nextPriority: '补写言语行为、翻译和中国名实论辩的原典阅读路径。' },
+  },
+  'pt-western-modern': {
+    status: '核验正文｜自审完成',
+    scope: '本条提供 17—18 世纪欧洲哲学的首版问题地图，串联知识、自然、心灵与政治权威；不把它写成“理性主义战胜经验主义”的单线进步史，也不以此替代跨区域的近世哲学史。',
+    sectionHeadings: { origin: '历史起点与问题结构', boundaries: '时段、标签与材料边界', objections: '史学分类的争议', confusions: '常见误读', historicalContext: '相邻传统与问题' },
+    origin: [
+      { kind: '概括', text: '近代欧洲哲学中的知识问题与科学、宗教、国家和教育并不分离：新的自然解释、怀疑论压力和政治冲突，使人们重新问理性、感官、方法、权威与自由的界限。人物之间并非在同一议题上排队接力。', sourceIds: ['MOD-1'] },
+      { kind: '解释性重构', text: '从笛卡尔的确定性诉求、洛克和休谟对经验与观念的分析，到康德对认识条件的重构，可以得到一条教学路线；但这只是一条进入路径，不是时代的全部内容。' },
+    ],
+    boundaries: [
+      { kind: '概括', text: '“理性主义／经验主义”原本是围绕知识来源、先天观念、直觉与感官经验的相对限定区分。一个哲学家可在某个领域重理性、在另一个领域重经验，故这两个标签既不穷尽人物，也不能替代具体文本。', sourceIds: ['MOD-1'] },
+      { kind: '概括', text: '把近代只限定为几位男性形而上学家的谱系，会掩盖情感、教育、政治、宗教宽容等论争及大量未被经典叙事收纳的人物。标签本身也塑造了教学正典。', sourceIds: ['MOD-1'] },
+    ],
+    objections: [
+      { kind: '概括', text: '“大陆理性主义对英国经验主义”的讲法易于教学，却会误导：笛卡尔有经验研究取向，洛克在道德和推理问题上也赋予理性重要角色，霍布斯、伊丽莎白·波希米亚等更难被放入二分。回应不是取消比较，而是每次说明比较的领域和限度。', sourceIds: ['MOD-1'] },
+      { kind: '解释性重构', text: '将科学革命解释为理性取代传统，也会忽略实验、仪器、制度、殖民与宗教争论。思想史不是背景装饰，而会改变“知识”“自然”和“政治”的含义。' },
+    ],
+    confusions: [
+      { kind: '解释性重构', text: '“近代”不是普遍世界时间标签；此页是欧洲历史线索，不应用来给中国、印度或伊斯兰哲学划分时期。' },
+      { kind: '解释性重构', text: '经验主义不等于“只相信眼睛”，理性主义也不等于“反对经验”。', sourceIds: ['MOD-1'] },
+      { kind: '解释性重构', text: '康德不是二分法的简单终点；将他只写成综合者会遮蔽批判哲学的多重问题。' },
+    ],
+    historicalContext: [
+      { nodeId: 'pt-knowledge-sources', label: '知识从哪里来，边界又在哪里？', note: '把经验、理性、证言和知识限度拆开，而非只把人物放队。' },
+      { nodeId: 'pt-mind-self', label: '心灵、身体与“我”', note: '身心、人格与自我认识的近代争论要回到具体文本。' },
+      { nodeId: 'pt-legitimacy', label: '何种权力与制度是正当的？', note: '自然权利、契约、服从和政治权威是同一时期另一组重要问题。' },
+    ],
+    sources: [
+      { id: 'MOD-1', title: 'SEP：Rationalism vs. Empiricism', kind: '学术综述', url: 'https://plato.stanford.edu/entries/rationalism-empiricism/', locator: '导论、§1、§4，尤其关于分类局限的段落', checked: true, supports: '理性主义／经验主义的限定含义、非穷尽性及历史正典问题。' },
+      { id: 'MOD-2', title: 'SEP：Early Modern Rationalism', kind: '学术综述', url: 'https://plato.stanford.edu/entries/rationalism-early-modern/', locator: '导论、§1', checked: true, supports: '“早期近代理性主义”作为史学范畴和教学简化的局限。' },
+    ],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
+      { location: '摘要｜理性主义／经验主义', issue: '原文将二分法当作该时段的组织事实。', evidence: 'MOD-1 明确指出人物可跨领域，且分类会遮蔽丰富性。', revision: '改为带边界的教学路径，并列出被遗漏问题。' },
+      { location: '人物列表', issue: '原内容只堆名字，未显示问题之间的连接。', evidence: 'MOD-1 以知识来源为一条线，且提醒不可外推成共同纲领。', revision: '新增知识、自然、心灵与政治的结构性入口。' },
+    ], remaining: ['尚未逐篇核对女性哲学家、殖民知识史和科学实践的专门史料。'], adjacentImpact: '核心问题页应把近代作为一种历史语境而非普遍哲学基准；“中国／印度／伊斯兰”页须保留各自时段。', nextPriority: '补写科学革命、自然法与近代政治的原典／史学阅读路径。' },
+  },
+  'pt-confucian': {
+    status: '核验正文｜自审完成',
+    scope: '本条是先秦儒家伦理—政治问题的首版入口，比较孔子相关文本、孟子与荀子的修养和人性论；不把“儒家”当作固定的国家意识形态，也不把礼、孝或性善简化为服从口号。',
+    sectionHeadings: { origin: '历史起点与问题结构', boundaries: '文本、术语与传承边界', objections: '内部论辩与当代质问', confusions: '常见误读', historicalContext: '相邻传统与问题' },
+    origin: [
+      { kind: '概括', text: '早期儒家将德性、礼、学习、家庭角色和治理相互连结：问题不只是“遵守哪条规则”，而是人在关系和制度中如何形成能辨别、关怀并承担角色的人。孔子相关思想又在后世被多种文本和解释传统重构。', sourceIds: ['CON-1'] },
+      { kind: '概括', text: '孟子把恻隐等道德端绪与涵养相连；荀子则把欲望、学习、礼与有意识的塑造置于核心。两者分歧不是简单的“乐观／悲观”，而关系到道德能力、习得和制度的不同解释。', sourceIds: ['CON-2', 'CON-3'] },
+    ],
+    boundaries: [
+      { kind: '概括', text: 'Ru（儒）早于孔子而与礼乐、经典专家相关；“Confucian”既可指早期文本，也可指后来的哲学、教育和制度传统。阅读时须标出在说哪一层，而不是把两千年实践倒灌进《论语》。', sourceIds: ['CON-1'] },
+      { kind: '概括', text: '礼不是一套可脱离关系和情境的外在仪式；但它也不只是个人感受。它涉及身体习惯、角色期待、情感养成和政治秩序，故既可能支持相互尊重，也可能被用来固化不平等。', sourceIds: ['CON-1', 'CON-3'] },
+    ],
+    objections: [
+      { kind: '概括', text: '对孟子式道德端绪的质问是：恶行、贫困、暴力和偏私如何进入理论？相关回应会强调端绪是可扩展亦可遮蔽的能力，而非自动完成的善。评价仍须说明教育与物质条件为何能支持或损坏养成。', sourceIds: ['CON-2'] },
+      { kind: '概括', text: '荀子将自然欲望、审慎努力、师法与礼联系起来，能解释为何德性需要学习；批评者则问这种秩序如何避免把既有权威定为标准。不能用“性恶”推成人人天生邪恶，也不能把礼的历史形式免于批评。', sourceIds: ['CON-3'] },
+    ],
+    confusions: [
+      { kind: '解释性重构', text: '性善不等于人总会做好事；性恶也不等于每个人道德上不可救药。两者都须放回性、情、习和修养的论证。', sourceIds: ['CON-2', 'CON-3'] },
+      { kind: '解释性重构', text: '孝与礼不是自动压倒所有关系中的不平等、伤害或异议；如何批判坏的角色期待是仍待论证的问题。' },
+      { kind: '解释性重构', text: '把孔子等同于一个固定“传统文化符号”会掩盖经典、注释和现代政治中的多重重读。', sourceIds: ['CON-1'] },
+    ],
+    historicalContext: [
+      { nodeId: 'pt-daoism', label: '先秦：道家与自然、行动问题', note: '比较自然、行动和规范时，先看相互批评和文本差异，而不制作儒道二元标签。' },
+      { nodeId: 'pt-legalism', label: '先秦：墨家、名家、法家等论辩线索', note: '礼、法、兼爱、名实和治理在竞争性方案中展开。' },
+      { nodeId: 'pt-care', label: '关系、照护与依赖', note: '关系性伦理可从儒家获得资源，却也需面对性别、代际与权力的批评。' },
+    ],
+    sources: [
+      { id: 'CON-1', title: 'SEP：Confucius', kind: '学术综述', url: 'https://plato.stanford.edu/entries/confucius/', locator: '导论、§2 及后世接受相关段落', checked: true, supports: '文本来源不确定性、礼仪心理、德性、社会政治及后世多重定位。' },
+      { id: 'CON-2', title: 'SEP：Mencius', kind: '学术综述', url: 'https://plato.stanford.edu/entries/mencius/', locator: '导论及人性、修养、政治哲学相关章节', checked: true, supports: '孟子的人性、道德端绪、修养与经验条件的复杂结构。' },
+      { id: 'CON-3', title: 'SEP：Chinese Ethics / Xunzi', kind: '学术综述', url: 'https://plato.stanford.edu/entries/ethics-chinese/', locator: '§2.6；并参见 Xunzi §2–§5', checked: true, supports: '荀子对性、欲望、礼、师法和有意识努力的分析。' },
+    ],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
+      { location: '主要立场｜性善／性恶', issue: '原内容将分歧压缩成两种性格判断。', evidence: 'CON-2、CON-3 分别将端绪、欲望、学习、礼和实践置于论证中。', revision: '重写为道德能力与养成条件的争论。' },
+      { location: '人物与传统', issue: '原内容默认孔子思想与后世儒家制度同义。', evidence: 'CON-1 指出文本来源、经典化和现代再定位的多层历史。', revision: '新增文本、术语与传承边界。' },
+    ], remaining: ['尚未逐段核对《论语》《孟子》《荀子》的中文校勘本与早期注本。'], adjacentImpact: '“照护”“自由”“正当性”页可在此互链，但不能把儒家关系性直接当作当代规范结论。', nextPriority: '补写墨家、道家、法家与宋明重构，以呈现儒家之外和儒家内部的连续论辩。' },
+  },
   'pt-buddhist': {
     status: '核验正文｜自审完成',
     scope: '本条是佛教哲学的首版历史入口：说明苦、无我、缘起、空性与认识论如何在不同文本与学派中形成问题；不把它归结为一种“东方心灵疗法”，也不代替佛教史、宗教实践或各语种原典的专题研究。',
