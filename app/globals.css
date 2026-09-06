@@ -4197,6 +4197,22 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
     min-height: calc(100svh - 90px);
   }
 
+  /* 分区导航属于 Health 的首屏收尾，首屏内可见；滚动后仍按原逻辑吸顶。 */
+  .health-hero {
+    min-height: calc(100svh - 138px);
+  }
+
+  .health-local-nav {
+    min-height: 48px;
+  }
+
+  .health-local-nav a {
+    display: inline-flex;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
   .notes-hero,
   .health-hero {
     align-items: center;
