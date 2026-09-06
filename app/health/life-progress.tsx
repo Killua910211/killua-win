@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState, type CSSProperties } from 'react';
-import type { HealthLifeProgressSnapshot } from '@/app/lib/health';
+import { HEALTH_BIRTH_AT_ISO, type HealthLifeProgressSnapshot } from '@/app/lib/health';
+import { formatCalendarDuration } from './calendar-duration';
 
 const DAY_MS = 86_400_000;
 const REFERENCE_YEARS = 80;
@@ -17,20 +18,6 @@ function getReadout(snapshot: HealthLifeProgressSnapshot, nowMilliseconds: numbe
   return { elapsedMilliseconds, percent };
 }
 
-function formatLifeDuration(elapsedMilliseconds: number) {
-  const totalSeconds = Math.max(0, Math.floor(elapsedMilliseconds / 1_000));
-  const secondsPerYear = REFERENCE_YEAR_DAYS * 24 * 60 * 60;
-  const years = Math.floor(totalSeconds / secondsPerYear);
-  const remainderAfterYears = totalSeconds - Math.floor(years * secondsPerYear);
-  const days = Math.floor(remainderAfterYears / (24 * 60 * 60));
-  const hours = Math.floor((remainderAfterYears % (24 * 60 * 60)) / (60 * 60));
-  const minutes = Math.floor((remainderAfterYears % (60 * 60)) / 60);
-  const seconds = remainderAfterYears % 60;
-  const pad = (value: number) => value.toString().padStart(2, '0');
-
-  return `${years}年${days}天${pad(hours)}小时${pad(minutes)}分${pad(seconds)}秒`;
-}
-
 export function LifeProgress({ snapshot }: { snapshot: HealthLifeProgressSnapshot }) {
   const [nowMilliseconds, setNowMilliseconds] = useState(snapshot.asOfMilliseconds);
 
@@ -42,7 +29,7 @@ export function LifeProgress({ snapshot }: { snapshot: HealthLifeProgressSnapsho
   }, []);
 
   const readout = getReadout(snapshot, nowMilliseconds);
-  const durationLabel = formatLifeDuration(readout.elapsedMilliseconds);
+  const durationLabel = formatCalendarDuration(Date.parse(HEALTH_BIRTH_AT_ISO), nowMilliseconds);
   const percentLabel = `${readout.percent.toFixed(1)}%`;
   const progressStyle = { '--life-progress': `${readout.percent}%` } as CSSProperties;
 
