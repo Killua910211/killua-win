@@ -3,88 +3,72 @@
  * 这些局部样式覆盖了早期的卡片皮肤，避免影响其他页面仍需保留的组件。
  */
 .coreGrid {
-  gap: 0;
-  border-top: 1px solid var(--black-4);
-  border-bottom: 1px solid var(--black-4);
+  gap: 16px;
+  border: 0;
 }
 
 .coreGrid > article,
 .coreGrid > article:last-child {
-  min-height: 0;
-  padding: 28px 0 32px;
-  border: 0;
-  border-bottom: 1px solid var(--black-4);
-  background: transparent;
+  min-height: 218px;
+  padding: 24px 26px 30px;
+  border: 1px solid var(--black-4);
+  border-top: 2px solid var(--ember);
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
   box-shadow: none;
 }
 
 .coreGrid > article:last-child {
-  padding-left: 32px;
-  border-bottom: 0;
+  padding-left: 26px;
   border-left: 1px solid var(--black-4);
 }
 
 .detail {
-  min-height: 0;
-  padding: 28px 0 42px;
-  border: 0;
-  border-top: 1px solid var(--black-4);
-  border-bottom: 1px solid var(--black-4);
-  background: transparent;
+  min-height: 620px;
+  padding: 28px 30px 42px;
+  border: 1px solid var(--black-4);
+  border-top: 2px solid var(--ember);
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
   box-shadow: none;
 }
 
 .reviewGrid {
-  gap: 0;
-  border-top: 1px solid var(--black-4);
-  border-bottom: 1px solid var(--black-4);
+  gap: 16px;
+  border: 0;
 }
 
 .reviewCard,
 .reviewCard:hover,
 .reviewCard:focus-visible {
-  min-height: 0;
-  padding: 27px 0 30px;
-  border: 0;
-  border-bottom: 1px solid var(--black-4);
-  background: transparent;
+  min-height: 188px;
+  padding: 20px 22px 22px;
+  border: 1px solid var(--black-4);
+  border-top: 2px solid var(--ember);
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
   box-shadow: none;
   transform: none;
 }
 
 .reviewCard:nth-child(even) {
-  padding-left: 32px;
+  padding-left: 22px;
   border-left: 1px solid var(--black-4);
 }
 
-.reviewCard:nth-last-child(-n + 2) {
-  border-bottom: 0;
-}
-
 .reviewCard :global(strong) {
-  margin-top: 17px;
+  margin-top: 28px;
 }
 
 .reviewCard :global(.mind-review-answer) {
-  margin-top: 17px;
+  margin-top: auto;
 }
 
 @media (max-width: 760px) {
   .coreGrid > article:last-child {
-    padding-left: 0;
+    padding-left: 26px;
     border-left: 0;
   }
 
   .reviewCard:nth-child(even) {
-    padding-left: 0;
+    padding-left: 22px;
     border-left: 0;
-  }
-
-  .reviewCard:nth-last-child(-n + 2) {
-    border-bottom: 1px solid var(--black-4);
-  }
-
-  .reviewCard:last-child {
-    border-bottom: 0;
   }
 }
