@@ -81,11 +81,16 @@ function formatDuration(startMilliseconds: number, nowMilliseconds: number) {
     afterMonths = addYearsAndMonths(remainder, 0, months);
   }
 
-  const days = Math.floor(
-    (toComparableMilliseconds(end) - toComparableMilliseconds(afterMonths)) / DAY_MS,
+  const remainingSeconds = Math.floor(
+    (toComparableMilliseconds(end) - toComparableMilliseconds(afterMonths)) / 1_000,
   );
+  const days = Math.floor(remainingSeconds / (DAY_MS / 1_000));
+  const hours = Math.floor((remainingSeconds % (DAY_MS / 1_000)) / 3_600);
+  const minutes = Math.floor((remainingSeconds % 3_600) / 60);
+  const seconds = remainingSeconds % 60;
+  const pad = (value: number) => value.toString().padStart(2, '0');
 
-  return years > 0 ? `${years}年${months}月${days}天` : `${months}月${days}天`;
+  return `${years}年${months}月${days}天${pad(hours)}小时${pad(minutes)}分${pad(seconds)}秒`;
 }
 
 export function SmokingStreak({
