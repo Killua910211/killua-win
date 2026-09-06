@@ -2,13 +2,8 @@ import Link from 'next/link';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { buildMetadata } from '@/app/lib/metadata';
+import { CoreQuestionGroups, type QuestionGroup } from './philosophy/node-content';
 import {
-  CoreQuestionChecklist,
-  PhilosophyResume,
-  type ChecklistGroup,
-} from './philosophy/reading-state';
-import {
-  coreQuestionIds,
   coreQuestions,
   isCoreQuestion,
   nodeHref,
@@ -20,7 +15,7 @@ import {
 export const metadata = buildMetadata({
   title: '学习空间｜哲学与跨学科问题地图',
   description:
-    '按问题组织的个人学习工作台：17 个哲学核心问题、三条平行的传统导航，以及记录到哪一步的阅读进度。',
+    '按问题组织的个人学习工作台：17 个哲学核心问题、五个问题域，以及西方、中国、印度三条平行的传统导航，可以随时回来查。',
   path: '/learning',
 });
 
@@ -30,7 +25,7 @@ const roadmap = [
   ['04', 'SCIENCE', '科学', '从证据、模型与实验出发'],
 ] as const;
 
-const questionGroups: ChecklistGroup[] = questionDomains.map((domain) => ({
+const questionGroups: QuestionGroup[] = questionDomains.map((domain) => ({
   id: domain.id,
   title: domain.title,
   href: nodeHref(domain),
@@ -42,12 +37,6 @@ const questionGroups: ChecklistGroup[] = questionDomains.map((domain) => ({
   })),
 }));
 
-const resumeQuestions = coreQuestions.map((question) => ({
-  id: question.id,
-  title: question.title,
-  href: nodeHref(question),
-}));
-
 export default function LearningPage() {
   return (
     <>
@@ -55,7 +44,7 @@ export default function LearningPage() {
       <main id="main" className="learning-page">
         {/*
           Hero 现在是工作台的顶栏，不是海报：移动端整块压到 480px 以内，
-          主 CTA 直接出现在首屏，进度由客户端读旧的 localStorage 键补上。
+          主 CTA 直接出现在首屏，且始终指向哲学地图——这里没有「上次读到哪」。
         */}
         <section className="learning-hero" aria-labelledby="learning-title">
           <div className="section-label light" lang="en">
@@ -71,11 +60,15 @@ export default function LearningPage() {
               先定位问题，再比较立场。哲学部分已经铺好 {philosophyNodes.length} 个节点、
               {coreQuestions.length} 个核心问题。
             </p>
-            <PhilosophyResume
-              coreIds={coreQuestionIds}
-              questions={resumeQuestions}
-              overviewHref="/learning/philosophy"
-            />
+            <div className="learning-resume">
+              <Link className="learning-resume-cta" href="/learning/philosophy">
+                <span>进入哲学地图</span>
+                <span aria-hidden="true">↗</span>
+              </Link>
+              <p className="learning-resume-hint">
+                {questionDomains.length} 个问题域 · 想到哪个问题就从哪个问题读起，随时可以回来重看。
+              </p>
+            </div>
             <p className="learning-hero-foot" lang="en">
               <span>Subject 001 · Philosophy · {philosophyNodes.length} nodes</span>
               <span>Growing archive · 2026</span>
@@ -94,14 +87,14 @@ export default function LearningPage() {
               {coreQuestions.length} 个核心问题，<br />每一个都可以单独读完。
             </h2>
             <p className="learning-section-lede">
-              这是主学习路径：按问题类型排列，而不是按国别、时代或哲学家。读过的会记在本地浏览器里，换设备不会同步。
+              这是主学习路径：按问题类型排列，而不是按国别、时代或哲学家。每个问题都可以单独打开，也可以隔很久再回来重读。
             </p>
             <p className="learning-section-actions">
               <Link className="learning-inline-link" href="/learning/philosophy">
                 哲学总览 <span aria-hidden="true">↗</span>
               </Link>
             </p>
-            <CoreQuestionChecklist coreIds={coreQuestionIds} groups={questionGroups} />
+            <CoreQuestionGroups groups={questionGroups} />
           </div>
         </section>
 

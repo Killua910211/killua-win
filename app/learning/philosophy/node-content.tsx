@@ -3,6 +3,70 @@ import { getNodeById, nodeHref, type PhilosophyNode } from './tree';
 
 type HeadingLevel = 'h2' | 'h3';
 
+export type QuestionGroup = {
+  id: string;
+  title: string;
+  href: string;
+  summary: string;
+  questions: { id: string; title: string; href: string }[];
+};
+
+/**
+ * 「按问题」区块：五个问题域 + 17 个核心问题的真实链接。
+ *
+ * 这里刻意没有任何状态：这份地图是可以反复回来查的参考，不是一次性课程，
+ * 所以只有编号、标题和一个静态的题目数，没有读没读过的区分。
+ */
+export function CoreQuestionGroups({
+  groups,
+  headingLevel = 'h3',
+}: {
+  groups: QuestionGroup[];
+  headingLevel?: 'h3' | 'h4';
+}) {
+  const GroupHeading = headingLevel;
+  const QuestionHeading = headingLevel === 'h3' ? 'h4' : 'h5';
+
+  return (
+    <div className="learning-question-groups">
+      {groups.map((group, groupIndex) => {
+        // 编号在整个列表里连续（01–17），而不是每组重新数。
+        const questionOffset = groups
+          .slice(0, groupIndex)
+          .reduce((total, item) => total + item.questions.length, 0);
+
+        return (
+          <article className="learning-question-group" key={group.id}>
+            <div className="learning-question-group-head">
+              <GroupHeading>
+                <Link className="learning-question-domain-link" href={group.href}>
+                  {group.title}
+                </Link>
+              </GroupHeading>
+              <p className="learning-question-count">{group.questions.length} 个问题</p>
+            </div>
+            <p className="learning-question-group-summary">{group.summary}</p>
+            <ul className="learning-question-list">
+              {group.questions.map((question, questionIndex) => (
+                <li key={question.id}>
+                  <Link className="learning-question-link" href={question.href}>
+                    <span className="learning-question-index" lang="en" aria-hidden="true">
+                      {String(questionOffset + questionIndex + 1).padStart(2, '0')}
+                    </span>
+                    <QuestionHeading className="learning-question-title">
+                      {question.title}
+                    </QuestionHeading>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </article>
+        );
+      })}
+    </div>
+  );
+}
+
 /**
  * 节点正文。总览页和每个节点页共用同一套渲染，
  * 保证 data.json 里的每一个字段都有落点：不做摘要，不做裁剪。

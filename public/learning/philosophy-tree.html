@@ -79,9 +79,6 @@
     .pt-button:focus-visible, .pt-tree-button:focus-visible, .pt-related-link:focus-visible, .pt-search-result:focus-visible, .pt-tab:focus-visible, .pt-source-link:focus-visible { outline: 3px solid color-mix(in srgb, var(--pt-focus) 45%, transparent); outline-offset: 2px; }
     .pt-search-wrap { position: relative; flex: 1 1 280px; margin-left: auto; }
     .pt-search { width: 100%; border: 1px solid rgba(21,21,21,.4); border-radius: 0; padding: 9px 36px 9px 11px; color: var(--pt-ink); background: rgba(242,240,232,.88); font-size: 14px; }
-    .pt-progress { display: flex; min-width: 200px; align-items: center; gap: 10px; color: var(--pt-muted); font: 10px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .05em; }
-    .pt-progress-track { width: 80px; height: 3px; overflow: hidden; background: rgba(21,21,21,.18); }
-    .pt-progress-bar { display: block; width: 0; height: 100%; background: #6b8a00; transition: width .25s ease; }
     .pt-search::placeholder { color: #7b827d; }
     .pt-search-clear { position: absolute; top: 50%; right: 4px; transform: translateY(-50%); display: none; border: 0; border-radius: 4px; padding: 4px 7px; color: var(--pt-accent); background: transparent; cursor: pointer; font: 700 13px/1 ui-sans-serif, sans-serif; }
     .pt-search-clear:hover { background: var(--pt-accent-soft); }
@@ -154,8 +151,6 @@
       .pt-toolbar { gap: 7px; }
       .pt-toolbar .pt-button { padding: 6px 8px; font-size: 12px; }
       .pt-search-wrap { order: 2; flex-basis: 100%; margin-left: 0; }
-      .pt-progress { order: 3; width: 100%; justify-content: space-between; }
-      .pt-progress-track { flex: 1; }
       .pt-layout { display: block; padding-top: 16px; }
       .pt-mobile-tabs { display: flex; gap: 1px; margin-bottom: 15px; border: 1px solid var(--pt-line); border-radius: 5px; padding: 3px; background: var(--pt-soft); }
       .pt-tab { flex: 1; border: 0; border-radius: 3px; padding: 8px; color: var(--pt-muted); background: transparent; cursor: pointer; font: 700 13px/1.2 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
@@ -193,9 +188,6 @@
     .pt-toolbar { position: sticky; z-index: 12; top: 0; padding: 16px 0; border-bottom-color: rgba(255,255,255,.22); background: rgba(21,21,21,.95); backdrop-filter: blur(14px); }
     .pt-button { border-color: rgba(255,255,255,.3); color: #fff; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .06em; }
     .pt-button:hover { border-color: var(--pt-signal); background: var(--pt-signal); color: var(--pt-ink); }
-    .pt-progress { color: rgba(255,255,255,.56); }
-    .pt-progress-track { background: rgba(255,255,255,.18); }
-    .pt-progress-bar { background: var(--pt-signal); }
     .pt-search { border-color: rgba(255,255,255,.32); color: #fff; background: rgba(255,255,255,.06); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
     .pt-search::placeholder { color: rgba(255,255,255,.45); }
     .pt-search-clear { color: var(--pt-signal); }
@@ -291,10 +283,6 @@
         <button class="pt-button" type="button" data-pt-action="expand">展开全部</button>
         <button class="pt-button" type="button" data-pt-action="collapse">收起全部</button>
         <button class="pt-button" type="button" data-pt-action="overview">返回总览</button>
-        <div class="pt-progress" aria-label="核心问题阅读进度">
-          <span id="pt-progress-label">已阅读 0 / 17</span>
-          <span class="pt-progress-track"><span class="pt-progress-bar" id="pt-progress-bar"></span></span>
-        </div>
         <div class="pt-search-wrap">
           <label class="pt-sr-only" for="pt-search">搜索节点</label>
           <input class="pt-search" id="pt-search" type="search" autocomplete="off" placeholder="搜索名称、关键词或人物，如“自由”“庄子”“康德”">
@@ -771,14 +759,10 @@
     const directory = root.querySelector("#pt-directory");
     const detail = root.querySelector("#pt-detail");
     const storageKey = "pt-philosophy-tree:v1:expanded";
-    const visitedStorageKey = "pt-philosophy-tree:v1:visited";
-    const progressLabel = document.getElementById("pt-progress-label");
-    const progressBar = document.getElementById("pt-progress-bar");
     const hashPrefix = "#pt-node=";
     const nodeMap = new Map();
     const parentMap = new Map();
     const expanded = new Set();
-    const visited = new Set();
     let selectedId = PHILOSOPHY_TREE_DATA.id;
     let query = "";
 
@@ -789,21 +773,8 @@
       (node.children || []).forEach((child) => indexNodes(child, node.id));
     }
     indexNodes(PHILOSOPHY_TREE_DATA);
+    // 核心问题只用来编号和串前后导航：这一页不记录读过哪些节点。
     const coreNodes = [...nodeMap.values()].filter((node) => node.type === "核心问题");
-
-    function readVisited() {
-      try {
-        const saved = JSON.parse(window.localStorage.getItem(visitedStorageKey));
-        if (Array.isArray(saved)) saved.filter((id) => coreNodes.some((node) => node.id === id)).forEach((id) => visited.add(id));
-      } catch (_) { /* 存储被禁用或不可读时保留空进度。 */ }
-    }
-    function markVisited(node) {
-      if (node && node.type === "核心问题") visited.add(node.id);
-      try { window.localStorage.setItem(visitedStorageKey, JSON.stringify([...visited])); } catch (_) { /* 页面仍可正常使用。 */ }
-      const percent = coreNodes.length ? Math.round((visited.size / coreNodes.length) * 100) : 0;
-      progressLabel.textContent = `已阅读 ${visited.size} / ${coreNodes.length}`;
-      progressBar.style.width = `${percent}%`;
-    }
 
     function readSavedExpanded() {
       try {
@@ -977,7 +948,7 @@
     }
     function selectNode(id, options = {}) {
       if (!nodeMap.has(id)) return;
-      selectedId = id; expandAncestors(id); saveExpanded(); markVisited(nodeMap.get(id)); renderTree(); renderDetail(); updateHash(id);
+      selectedId = id; expandAncestors(id); saveExpanded(); renderTree(); renderDetail(); updateHash(id);
       if (options.switchMobile) setMobileView("detail");
       if (options.focusDetail) detailHost.focus({ preventScroll: true });
     }
@@ -1007,7 +978,7 @@
     });
     root.querySelectorAll("[data-pt-view]").forEach((tab) => tab.addEventListener("click", () => setMobileView(tab.dataset.ptView)));
     window.addEventListener("hashchange", () => { if (applyHash()) { renderTree(); renderDetail(); } });
-    readSavedExpanded(); readVisited(); defaultExpansion(); applyHash(); markVisited(nodeMap.get(selectedId)); renderTree(); renderDetail(); setMobileView("directory");
+    readSavedExpanded(); defaultExpansion(); applyHash(); renderTree(); renderDetail(); setMobileView("directory");
   })();
   </script>
 </body>

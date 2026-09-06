@@ -5,11 +5,8 @@ import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { buildMetadata } from '@/app/lib/metadata';
 import { NodeBody, NodeChildren } from '../node-content';
-import { ReadingProgress } from '../reading-state';
 import {
-  coreQuestionIds,
   getNodeBySlug,
-  isCoreQuestion,
   neighborsOf,
   nodeHref,
   nodePath,
@@ -67,7 +64,6 @@ export default async function PhilosophyNodePage({ params }: NodePageProps) {
 
   const trail = nodePath(node.id).slice(0, -1);
   const { previous, next } = neighborsOf(node.id);
-  const core = isCoreQuestion(node);
   const childrenTitle =
     node.type === '问题领域'
       ? '这个问题域下的核心问题'
@@ -104,11 +100,6 @@ export default async function PhilosophyNodePage({ params }: NodePageProps) {
               <h1 id="philosophy-node-title">{node.title}</h1>
               {node.question && <p className="philosophy-question">{node.question}</p>}
               <p className="philosophy-summary">{node.summary}</p>
-              <ReadingProgress
-                coreIds={coreQuestionIds}
-                markId={core ? node.id : undefined}
-                caption={core ? `${coreQuestionIds.length} core questions` : 'Reading progress'}
-              />
             </div>
           </section>
 

@@ -128,7 +128,6 @@ export function isCoreQuestion(node: PhilosophyNode): boolean {
 
 /** 17 个核心问题，顺序即阅读顺序。 */
 export const coreQuestions: readonly PhilosophyNode[] = orderedNodes.filter(isCoreQuestion);
-export const coreQuestionIds: readonly string[] = coreQuestions.map((node) => node.id);
 
 const coreGroup = nodeById.get('pt-core');
 const traditionsGroup = nodeById.get('pt-traditions');

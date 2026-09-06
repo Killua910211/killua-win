@@ -2,10 +2,8 @@ import Link from 'next/link';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { buildMetadata } from '@/app/lib/metadata';
-import { NodeBody } from './node-content';
-import { CoreQuestionChecklist, ReadingProgress, type ChecklistGroup } from './reading-state';
+import { CoreQuestionGroups, NodeBody, type QuestionGroup } from './node-content';
 import {
-  coreQuestionIds,
   coreSection,
   isCoreQuestion,
   neighborsOf,
@@ -23,7 +21,7 @@ export const metadata = buildMetadata({
   path: '/learning/philosophy',
 });
 
-const checklistGroups: ChecklistGroup[] = questionDomains.map((domain) => ({
+const questionGroups: QuestionGroup[] = questionDomains.map((domain) => ({
   id: domain.id,
   title: domain.title,
   href: nodeHref(domain),
@@ -60,10 +58,6 @@ export default function PhilosophyOverviewPage() {
               <p className="philosophy-question">{philosophyTree.question}</p>
             )}
             <p className="philosophy-summary">{philosophyTree.summary}</p>
-            <ReadingProgress
-              coreIds={coreQuestionIds}
-              caption={`${coreQuestionIds.length} core questions`}
-            />
           </div>
         </section>
 
@@ -98,7 +92,7 @@ export default function PhilosophyOverviewPage() {
                 ))}
               </ul>
             )}
-            <CoreQuestionChecklist coreIds={coreQuestionIds} groups={checklistGroups} />
+            <CoreQuestionGroups groups={questionGroups} />
           </div>
         </section>
 
