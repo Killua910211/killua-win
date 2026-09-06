@@ -6,7 +6,7 @@ type NotesArchiveProps = {
   posts: readonly PostSummary[];
   /** 当前分类；undefined 表示「全部」。 */
   activeCategory?: string;
-  /** 左侧序号栏显示的分区编号。 */
+  /** Published notes 分区显示的编号。 */
   sectionNumber: string;
 };
 
@@ -15,12 +15,12 @@ export function NotesArchive({ posts, activeCategory, sectionNumber }: NotesArch
   const visiblePosts = activeCategory
     ? posts.filter((post) => post.category === activeCategory)
     : posts;
-  const yearGroups = new Map<string, Array<{ post: PostSummary; index: number }>>();
+  const yearGroups = new Map<string, PostSummary[]>();
 
-  visiblePosts.forEach((post, index) => {
+  visiblePosts.forEach((post) => {
     const year = post.published_at?.slice(0, 4) ?? '未注明';
     const entries = yearGroups.get(year) ?? [];
-    entries.push({ post, index });
+    entries.push(post);
     yearGroups.set(year, entries);
   });
 
@@ -74,17 +74,9 @@ export function NotesArchive({ posts, activeCategory, sectionNumber }: NotesArch
           </nav>
         ) : null}
         <div className="notes-list">
-          {groupedPosts.map(({ year, entries, anchorId }, groupIndex) => (
+          {groupedPosts.map(({ entries, anchorId }) => (
             <section className="notes-year-group" id={anchorId} key={anchorId}>
-              <div className="notes-year-heading">
-                <span>{year}</span>
-                <span>{entries.length} 篇</span>
-              </div>
-              {entries.map(({ post, index }, entryIndex) => {
-                // 只有列表里最靠前的那一篇（当前分类下最新发布的一篇）放大展示，
-                // 其余归档行保持紧凑，这样首屏能塞下更多真实文章而不是空白。
-                const isFeatured = groupIndex === 0 && entryIndex === 0;
-
+              {entries.map((post) => {
                 return (
                   /*
                     prefetch={false}：这一页最多同时挂 57 个链接，默认的视口预取
@@ -93,12 +85,11 @@ export function NotesArchive({ posts, activeCategory, sectionNumber }: NotesArch
                     列表页的点击率远低于 100%，这笔预取不划算。
                   */
                   <Link
-                    className={isFeatured ? 'note-row note-row-featured' : 'note-row'}
+                    className="note-row"
                     href={`/notes/${post.slug}`}
                     key={post.slug}
                     prefetch={false}
                   >
-                    <span className="note-number">{String(index + 1).padStart(2, '0')}</span>
                     <div className="note-main">
                       <div className="note-meta">
                         {post.published_at ? (
