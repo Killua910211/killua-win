@@ -4164,3 +4164,40 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
     text-transform: uppercase;
   }
 }
+
+/* ── Desktop first-viewport rhythm ────────────────────────────
+   顶层页面的第一段都以 header 以下的剩余视口为基准：首屏结束处恰好
+   进入下一章节，不让归档页过早露出正文，也不让首页的行动按钮掉到折线下。 */
+@media (min-width: 761px) {
+  .hero {
+    min-height: 100svh;
+    padding-top: 120px;
+    padding-bottom: 36px;
+  }
+
+  .hero h1 {
+    max-width: min(72vw, 1250px);
+    font-size: clamp(72px, 9vw, 154px);
+    line-height: 0.84;
+  }
+
+  .hero-bottom {
+    margin-top: clamp(32px, 5vh, 64px);
+  }
+
+  .notes-hero,
+  .health-hero,
+  .mind-hero,
+  .learning-hero {
+    min-height: calc(100svh - 90px);
+  }
+
+  .notes-hero,
+  .health-hero {
+    align-items: center;
+  }
+
+  .learning-hero {
+    align-items: center;
+  }
+}

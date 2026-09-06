@@ -31,7 +31,7 @@ export default function Home() {
       <main id="main">
         <section className="hero" id="top">
           <div className="hero-kicker">
-            <span lang="en">Personal space</span>
+            <span lang="en">01 / Personal space</span>
             <span lang="en">Shanghai / UTC+8</span>
           </div>
 

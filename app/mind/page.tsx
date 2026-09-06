@@ -17,7 +17,7 @@ export default function MindPage() {
       <main id="main" className="mind-page">
         <section className="mind-hero">
           <div className="section-label light" lang="en">
-            <span>01 / 06</span>
+            <span>01</span>
             <span>Cognitive notebook</span>
           </div>
           <div>

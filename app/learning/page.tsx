@@ -47,7 +47,7 @@ export default function LearningPage() {
         */}
         <section className="learning-hero" aria-labelledby="learning-title">
           <div className="section-label light" lang="en">
-            <span>01 / 04</span>
+            <span>01</span>
             <span>Learning desk</span>
           </div>
           <div className="learning-hero-body">

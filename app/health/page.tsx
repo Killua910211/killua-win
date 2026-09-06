@@ -46,7 +46,7 @@ export default function HealthPage() {
       <main id="main" className="health-page">
         <section className="notes-hero health-hero">
           <div className="section-label light" lang="en">
-            <span>00</span>
+            <span>01</span>
             <span>Health readout</span>
           </div>
           <div>
