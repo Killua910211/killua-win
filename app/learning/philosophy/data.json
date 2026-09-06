@@ -978,6 +978,316 @@
               ]
             }
           ]
+        },
+        {
+          "id": "pt-boundaries",
+          "title": "6. 边界、处境与未来",
+          "type": "问题领域",
+          "summary": "把哲学带到学科与生活的交界：宗教和终极关怀、死亡与意义、科学解释、非人生命、身份压迫以及人工智能。",
+          "question": "当旧有分类不足以容纳新的经验、技术和全球风险时，我们该怎样扩展理由与责任的边界？",
+          "positions": [
+            {
+              "name": "原则扩展",
+              "text": "把既有的权利、效用、德性或正义原则应用到新对象与新情境。",
+              "objection": "旧原则可能预设了需要被重新检验的人类中心、个人主义或技术中立观。"
+            },
+            {
+              "name": "处境与关系取向",
+              "text": "从身体、照护、生态依赖、身份与权力关系出发，修正抽象理论的盲点。",
+              "objection": "若缺少可公开辩护的标准，处境差异也可能让批评失去共同尺度。"
+            },
+            {
+              "name": "跨学科取向",
+              "text": "让哲学分析与科学事实、历史经验、宗教研究和技术实践相互校正。",
+              "objection": "哲学不能把规范判断外包给经验学科，也不能脱离专业证据独自断言。"
+            }
+          ],
+          "figures": [
+            "这些议题没有一条单独谱系：从帕斯卡、克尔凯郭尔、尼采与杜威，到西蒙娜·德·波伏瓦、法农、辛格、普拉姆伍德和当代技术哲学，都只提供了地图的一部分。"
+          ],
+          "example": "当一个自动决策系统影响医疗、招聘或信贷时，问题同时涉及知识可靠性、责任、偏见、制度正当性与何种生活值得追求。",
+          "related": [
+            "pt-knowledge",
+            "pt-ethics",
+            "pt-political",
+            "pt-history-tech"
+          ],
+          "sources": [
+            {
+              "label": "SEP：Philosophy of Religion",
+              "url": "https://plato.stanford.edu/entries/philosophy-religion/"
+            },
+            {
+              "label": "SEP：Feminist Philosophy",
+              "url": "https://plato.stanford.edu/entries/feminist-philosophy/"
+            }
+          ],
+          "children": [
+            {
+              "id": "pt-religion-reason",
+              "title": "信仰、理性与恶的问题",
+              "type": "核心问题",
+              "summary": "宗教哲学不替任何传统布道，而是分析关于神圣、终极实在、信仰、经验与恶的论证，并追问理性评价的边界。",
+              "question": "宗教信念需要怎样的证据或理由？苦难与恶是否反驳全知、全能、全善的神？",
+              "positions": [
+                {
+                  "name": "自然神学与证据主义",
+                  "text": "通过宇宙、秩序、意识或道德经验为宗教信念提出公共论证，并接受证据检验。",
+                  "objection": "相关论证往往允许多种解释，也未必能导出某个具体传统的全部教义。"
+                },
+                {
+                  "name": "信仰与实践取向",
+                  "text": "认为宗教信念也扎根于承诺、生活形式、共同体或基本信念，不必都由中立前提推演。",
+                  "objection": "若完全免于公共质疑，可能难以区分有根据的信仰、偏见与自我欺骗。"
+                },
+                {
+                  "name": "怀疑论与自然主义批判",
+                  "text": "认为自然解释更节省假设，或主张恶与神的属性之间存在逻辑或证据张力。",
+                  "objection": "自然解释的成功本身未必解决意义、价值或终极解释问题。"
+                }
+              ],
+              "figures": [
+                "安瑟伦、阿奎那、伊本·西那、安萨里、帕斯卡、休谟与当代宗教哲学家提供了彼此冲突的论证；不同宗教传统对“神”“信仰”和“恶”的理解并不相同。"
+              ],
+              "example": "面对灾难，有人把它视为对信仰的反驳，有人诉诸自由意志或有限认知。哲学分析会分别检验这些回应的前提、解释力和道德代价。",
+              "related": [
+                "pt-knowledge-sources",
+                "pt-good-life",
+                "pt-islamic-reason-revelation",
+                "pt-indian-vedanta"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Philosophy of Religion",
+                  "url": "https://plato.stanford.edu/entries/philosophy-religion/"
+                },
+                {
+                  "label": "SEP：The Problem of Evil",
+                  "url": "https://plato.stanford.edu/entries/evil/"
+                }
+              ]
+            },
+            {
+              "id": "pt-death-meaning",
+              "title": "死亡会使生命失去还是获得意义？",
+              "type": "核心问题",
+              "summary": "生命意义问题既关心人生是否需要超越个人的目的，也关心死亡、荒诞、投入与关系如何改变价值判断。",
+              "question": "有限生命能够拥有不依赖永恒保证的意义吗？死亡对死者究竟是不是伤害？",
+              "positions": [
+                {
+                  "name": "超越性意义",
+                  "text": "把完整意义与神、终极实在、宇宙秩序或来世联系起来。",
+                  "objection": "即使有超越秩序，个人为何应认同它、它又为何有价值，仍需说明。"
+                },
+                {
+                  "name": "自然主义的客观价值",
+                  "text": "认为创造、求知、关爱或正义等活动能在有限生命中形成不只取决于主观满意的意义。",
+                  "objection": "何种价值足够客观，以及失败或被压迫的人是否因此较少有意义，都可能引发争议。"
+                },
+                {
+                  "name": "存在主义与实践建构",
+                  "text": "意义并非预先写好，而在选择、承诺、关系与面对荒诞的行动中形成。",
+                  "objection": "个人选择若缺乏限制，可能把有害投入也误当成同等有意义。"
+                }
+              ],
+              "figures": [
+                "伊壁鸠鲁讨论死亡为何不应被恐惧；克尔凯郭尔、尼采、海德格尔、萨特与加缪以不同方式连接有限性、焦虑、自由和意义。"
+              ],
+              "example": "如果一项长期工作无人记得，它是否因此失去意义？回答会暴露你更重视结果、关系、体验、德性还是公共价值。",
+              "related": [
+                "pt-good-life",
+                "pt-mind-self",
+                "pt-religion-reason",
+                "pt-buddhist"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：The Meaning of Life",
+                  "url": "https://plato.stanford.edu/entries/life-meaning/"
+                },
+                {
+                  "label": "SEP：Death",
+                  "url": "https://plato.stanford.edu/entries/death/"
+                }
+              ]
+            },
+            {
+              "id": "pt-science-reality",
+              "title": "科学如何解释世界，又有什么边界？",
+              "type": "核心问题",
+              "summary": "科学哲学讨论证据、模型、因果、解释、可重复性与理论变化，也检验“科学”与伪科学的划界为何困难。",
+              "question": "科学理论是在发现真实结构，还是在构造有效模型？什么会使一个解释比竞争解释更好？",
+              "positions": [
+                {
+                  "name": "科学实在论",
+                  "text": "成熟科学理论的成功给了我们相信其不可观察实体和结构近似真实的理由。",
+                  "objection": "科学史上许多曾经成功的理论后来被放弃，成功未必保证本体论真实。"
+                },
+                {
+                  "name": "反实在论与工具主义",
+                  "text": "把理论首先看作组织经验、预测现象的工具，对不可观察对象保持克制。",
+                  "objection": "仅强调经验充分性，可能难以解释理论为何能跨情境预测并支持干预。"
+                },
+                {
+                  "name": "历史与实践取向",
+                  "text": "科学知识产生于范式、仪器、实验技能、同行制度和社会价值共同构成的实践。",
+                  "objection": "承认历史与社会条件不等于自然事实只是共同体投票的结果。"
+                }
+              ],
+              "figures": [
+                "波普尔以可证伪性讨论划界；库恩研究范式与科学革命；拉卡托斯、费耶阿本德及当代科学哲学进一步改变了问题框架。"
+              ],
+              "example": "一个模型能准确预测流行病曲线，却对个体病例经常出错。它可能仍是好模型，但我们必须区分预测范围、因果解释与使用目的。",
+              "related": [
+                "pt-knowledge-sources",
+                "pt-logic",
+                "pt-being-change",
+                "pt-history-tech"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Scientific Realism",
+                  "url": "https://plato.stanford.edu/entries/scientific-realism/"
+                },
+                {
+                  "label": "SEP：Scientific Explanation",
+                  "url": "https://plato.stanford.edu/entries/scientific-explanation/"
+                }
+              ]
+            },
+            {
+              "id": "pt-environment-animals",
+              "title": "道德共同体应包括动物与自然吗？",
+              "type": "核心问题",
+              "summary": "环境伦理与动物伦理追问痛苦、生命、物种、生态系统与未来世代能否拥有道德地位，以及人的繁荣是否必须重新定义。",
+              "question": "只有能推理或互惠的主体才有道德地位吗？个体动物、物种与生态整体发生冲突时应怎样权衡？",
+              "positions": [
+                {
+                  "name": "感受能力与利益",
+                  "text": "能感受痛苦与愉悦，就有需要被平等考虑的利益；物种归属本身不是忽视痛苦的理由。",
+                  "objection": "仅以感受能力为中心，较难直接说明植物、物种与生态系统的价值。"
+                },
+                {
+                  "name": "权利与生命主体",
+                  "text": "某些非人动物拥有不可仅作为手段对待的生命与权利。",
+                  "objection": "权利门槛如何划定，以及保护个体与生态管理冲突时怎么办，仍需回答。"
+                },
+                {
+                  "name": "生态中心与关系伦理",
+                  "text": "价值也存在于物种、土地共同体、相互依赖和人对地方的照护关系中。",
+                  "objection": "整体利益若缺少限制，可能牺牲具体个体或把“自然”浪漫化。"
+                }
+              ],
+              "figures": [
+                "边沁曾以能否受苦切入动物问题；辛格、雷根、利奥波德、奈斯与普拉姆伍德代表不同伦理线索；原住民哲学中的土地关系不能被简化为西方环境主义的例证。"
+              ],
+              "example": "为保护濒危岛屿鸟类而捕杀入侵哺乳动物，可能同时实现生态保护并伤害有感受的个体，单一口号不足以解决冲突。",
+              "related": [
+                "pt-right-action",
+                "pt-care",
+                "pt-justice",
+                "pt-history-tech"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Environmental Ethics",
+                  "url": "https://plato.stanford.edu/entries/ethics-environmental/"
+                },
+                {
+                  "label": "SEP：The Moral Status of Animals",
+                  "url": "https://plato.stanford.edu/entries/moral-animal/"
+                }
+              ]
+            },
+            {
+              "id": "pt-identity-oppression",
+              "title": "身份、压迫与认识不公如何形成？",
+              "type": "核心问题",
+              "summary": "女性主义、种族哲学、残障哲学与非殖民思想分析身份如何在身体、制度和话语中形成，并追问谁更容易被听见、被相信或被排除。",
+              "question": "身份是个人选择、社会分类、历史结构，还是多者交织？受压迫经验能提供特殊知识，却会不会也被本质化？",
+              "positions": [
+                {
+                  "name": "结构性压迫分析",
+                  "text": "不平等不仅来自个体偏见，也由制度规则、空间、劳动分工与累积历史共同维持。",
+                  "objection": "结构概念若过于笼统，可能难以定位具体责任与可改变的机制。"
+                },
+                {
+                  "name": "交叉性取向",
+                  "text": "性别、种族、阶级、残障等关系相互塑造，不能分别分析后再简单相加。",
+                  "objection": "分析维度无限增加时，仍需要形成可行动的共同政治与判断尺度。"
+                },
+                {
+                  "name": "身份批判与反本质主义",
+                  "text": "警惕把历史形成的群体当作拥有固定本质，同时保留身份作为团结与纠正不公的政治作用。",
+                  "objection": "过快解构身份，可能削弱受影响群体命名共同伤害和组织行动的能力。"
+                }
+              ],
+              "figures": [
+                "波伏瓦、杜波依斯、法农、艾丽斯·马里昂·杨、克伦肖与弗里克等分别影响性别、种族、结构压迫、交叉性和认识不公讨论。"
+              ],
+              "example": "同样的专业意见若因说话者的口音、性别或残障而被系统性低估，问题不只是态度失礼，也涉及证言如何分配可信度。",
+              "related": [
+                "pt-knowledge-sources",
+                "pt-language-meaning",
+                "pt-care",
+                "pt-justice"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Feminist Philosophy",
+                  "url": "https://plato.stanford.edu/entries/feminist-philosophy/"
+                },
+                {
+                  "label": "SEP：Epistemic Injustice",
+                  "url": "https://plato.stanford.edu/entries/epistemic-injustice/"
+                }
+              ]
+            },
+            {
+              "id": "pt-ai-future",
+              "title": "人工智能能否行动、负责或拥有道德地位？",
+              "type": "核心问题",
+              "summary": "人工智能哲学连接心灵、知识与技术伦理：系统是否理解、谁对自动化伤害负责，以及能力、意识和道德地位之间是什么关系。",
+              "question": "表现得像理解是否就是理解？当许多人和系统共同造成后果时，责任应怎样分配？",
+              "positions": [
+                {
+                  "name": "功能与行为标准",
+                  "text": "若系统稳定实现理解、推理或自主行动的相关功能，就有理由赋予它相应的心智能力描述。",
+                  "objection": "外在表现可能由模式匹配产生，未必包含语义理解、体验或真正目标。"
+                },
+                {
+                  "name": "意识与具身标准",
+                  "text": "真正理解或道德地位可能要求主观体验、身体互动、自主目标或持续自我。",
+                  "objection": "我们也无法直接观察他人意识，严格标准可能演变成不可检验的排除。"
+                },
+                {
+                  "name": "社会技术系统取向",
+                  "text": "先分析设计者、机构、数据、用户与受影响者构成的责任网络，而不是急于把机器当作孤立行动者。",
+                  "objection": "强调分布式责任可能让每个参与者都声称自己只负责很小一部分。"
+                }
+              ],
+              "figures": [
+                "图灵把问题转向可观察的智能表现；塞尔的中文房间质疑语法处理是否足以产生理解；当代讨论进一步涉及机器意识、算法偏见与责任缺口。"
+              ],
+              "example": "医疗模型给出错误建议时，责任可能涉及训练数据、开发团队、采购机构、临床人员与监管规则；把一切归给“算法”反而遮蔽了可问责的人。",
+              "related": [
+                "pt-mind-self",
+                "pt-science-reality",
+                "pt-responsibility",
+                "pt-history-tech"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Artificial Intelligence",
+                  "url": "https://plato.stanford.edu/entries/artificial-intelligence/"
+                },
+                {
+                  "label": "SEP：Ethics of Artificial Intelligence and Robotics",
+                  "url": "https://plato.stanford.edu/entries/ethics-ai/"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -1355,6 +1665,266 @@
                 {
                   "label": "SEP：Naturalism in Classical Indian Philosophy",
                   "url": "https://plato.stanford.edu/entries/naturalism-india/"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pt-islamic",
+          "title": "伊斯兰哲学｜历史导航",
+          "type": "传统导航",
+          "summary": "伊斯兰世界的哲学活动跨越阿拉伯语、波斯语等多种语言，并与神学、法学、医学、科学和犹太哲学长期互动；它不只是希腊哲学的保存站。",
+          "notes": [
+            "称谓提醒：“阿拉伯哲学”强调主要学术语言，“伊斯兰哲学”强调文明与问题语境；二者都不能假定所有思想家是阿拉伯人或穆斯林。"
+          ],
+          "related": [
+            "pt-religion-reason",
+            "pt-knowledge-sources",
+            "pt-western-medieval",
+            "pt-interpretation"
+          ],
+          "sources": [
+            {
+              "label": "SEP：Arabic and Islamic Philosophy of Religion",
+              "url": "https://plato.stanford.edu/entries/arabic-islamic-religion/"
+            }
+          ],
+          "children": [
+            {
+              "id": "pt-islamic-translation",
+              "title": "翻译运动与哲学学科的形成",
+              "type": "历史时段",
+              "summary": "8—10世纪前后，希腊语、叙利亚语与波斯语知识被译入阿拉伯语，并在新的宫廷、城市、宗教与科学语境中被选择、改写和争论。",
+              "figures": [
+                "肯迪、法拉比及翻译家侯奈因·伊本·伊斯哈格等处在哲学术语和学科逐渐成形的环境中；“翻译”同时也是概念创造。"
+              ],
+              "example": "同一个希腊概念进入阿拉伯语后，可能同时面对语义选择、神学限制和医学用途；知识传播不是把原文原封不动搬家。",
+              "related": [
+                "pt-language-meaning",
+                "pt-interpretation",
+                "pt-western-ancient",
+                "pt-western-medieval"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Greek Sources in Arabic and Islamic Philosophy",
+                  "url": "https://plato.stanford.edu/entries/arabic-islamic-greek/"
+                }
+              ]
+            },
+            {
+              "id": "pt-islamic-reason-revelation",
+              "title": "存在、理智与启示的古典论辩",
+              "type": "传统线索",
+              "summary": "法拉比、伊本·西那、安萨里、伊本·鲁世德等围绕存在、因果、灵魂、先知知识与哲学论证的权限提出分歧方案。",
+              "question": "哲学证明、宗教启示与神学论证发生冲突时，谁应解释谁？",
+              "positions": [
+                {
+                  "name": "哲学证明的系统化",
+                  "text": "以逻辑和形而上学构造关于存在、第一因、理智与灵魂的系统，并解释启示性知识。",
+                  "objection": "其必然性与因果框架受到神学家对神意和特殊事件的挑战。"
+                },
+                {
+                  "name": "神学批判与偶因论",
+                  "text": "强调神的自由与创造，质疑哲学家把因果联系或世界秩序理解为独立必然。",
+                  "objection": "若自然因果只是一种习惯性次序，科学解释和人的行动能力需要重新说明。"
+                },
+                {
+                  "name": "协调与解释层次",
+                  "text": "认为可靠证明与真正启示不应最终矛盾，冲突可能来自文本解释或受众层次不同。",
+                  "objection": "谁有权判定“可靠证明”与正确解释，本身就是知识与政治问题。"
+                }
+              ],
+              "figures": [
+                "伊本·西那对存在与本质的区分影响深远；安萨里批评哲学家的若干主张；伊本·鲁世德为哲学论证的合法性辩护。"
+              ],
+              "example": "药物与康复之间是稳定自然因果、概率关系，还是神持续创造的事件次序？不同回答会改变我们理解科学规律与神意的方式。",
+              "related": [
+                "pt-being-change",
+                "pt-knowledge-sources",
+                "pt-religion-reason",
+                "pt-science-reality"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Ibn Sina’s Metaphysics",
+                  "url": "https://plato.stanford.edu/entries/ibn-sina-metaphysics/"
+                },
+                {
+                  "label": "SEP：al-Ghazali",
+                  "url": "https://plato.stanford.edu/entries/al-ghazali/"
+                }
+              ]
+            },
+            {
+              "id": "pt-islamic-later",
+              "title": "后古典传统、现代性与改革",
+              "type": "历史时段",
+              "summary": "12世纪之后的伊斯兰哲学并未消失，而在经院教育、照明哲学、苏菲形而上学、奥斯曼与伊朗传统以及近现代改革论辩中继续发展。",
+              "figures": [
+                "苏赫拉瓦迪、伊本·阿拉比、穆拉·萨德拉等发展出彼此不同的形而上学；近现代思想家则重新讨论理性、殖民、国家、法律与宗教改革。"
+              ],
+              "example": "把哲学史写成“希腊—阿拉伯保存—欧洲复兴”，会让多个世纪仍在教学、注释与创新的思想活动从地图上消失。",
+              "related": [
+                "pt-history-tech",
+                "pt-interpretation",
+                "pt-western-medieval",
+                "pt-identity-oppression"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Arabic and Islamic Metaphysics",
+                  "url": "https://plato.stanford.edu/entries/arabic-islamic-metaphysics/"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pt-african",
+          "title": "非洲与非裔哲学｜问题导航",
+          "type": "传统导航",
+          "summary": "非洲哲学涵盖口述与书写传统、人格与共同体、知识与语言、殖民经验、种族和解放等论辩；大陆内部以及非裔离散社群之间差异巨大。",
+          "notes": [
+            "范围提醒：不能把整个非洲压成单一“共同体主义”，也不能把哲学只定义为采用欧洲学术形式的写作；谁有权命名哲学本身就是争论的一部分。"
+          ],
+          "related": [
+            "pt-good-life",
+            "pt-identity-oppression",
+            "pt-justice",
+            "pt-language-meaning"
+          ],
+          "sources": [
+            {
+              "label": "SEP：African Sage Philosophy",
+              "url": "https://plato.stanford.edu/entries/african-sage/"
+            },
+            {
+              "label": "IEP：African Philosophy",
+              "url": "https://iep.utm.edu/african-philosophy/"
+            }
+          ],
+          "children": [
+            {
+              "id": "pt-african-method",
+              "title": "什么算作非洲哲学？",
+              "type": "方法论争论",
+              "summary": "20世纪的重要争论检验：群体世界观、格言和口述知识是否足以被称为哲学，还是哲学必须包含可辨认作者的批判论证。",
+              "positions": [
+                {
+                  "name": "民族哲学路径",
+                  "text": "从语言、神话、格言与共同世界观中重构哲学范畴，反驳非洲缺乏理性思想的殖民叙事。",
+                  "objection": "若把集体信念直接当作哲学，容易抹去内部争论并把文化描述误作论证。"
+                },
+                {
+                  "name": "专业与批判哲学路径",
+                  "text": "强调个人作者、明确论证和可反驳性，以避免把传统整体浪漫化。",
+                  "objection": "用现代学院规范作唯一门槛，可能再次排除口述、实践与不同知识形式。"
+                },
+                {
+                  "name": "思想家访谈与多方法路径",
+                  "text": "通过记录个体智者的理由与分歧，或结合文本、田野和概念分析，打破“集体无作者”与“只有学院才算”的二选一。",
+                  "objection": "记录者的翻译、选材和权力位置仍会影响我们看到的论证。"
+                }
+              ],
+              "figures": [
+                "普拉西德·坦佩尔斯的著作引发长期争论；保兰·洪通吉批评民族哲学；亨利·奥德拉·奥鲁卡推动“智者哲学”研究。"
+              ],
+              "example": "一句关于共同体的谚语可以是哲学材料，但还需要追问：谁赞同、谁反对、理由是什么、它在不同情境中是否成立。",
+              "related": [
+                "pt-interpretation",
+                "pt-language-meaning",
+                "pt-knowledge-sources",
+                "pt-african-personhood"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：African Sage Philosophy",
+                  "url": "https://plato.stanford.edu/entries/african-sage/"
+                }
+              ]
+            },
+            {
+              "id": "pt-african-personhood",
+              "title": "人格、共同体与 Ubuntu",
+              "type": "传统线索",
+              "summary": "多种非洲哲学讨论人如何在关系中成为人格、共同体对道德成长有何作用，以及关系性是否能与个人权利和批判能力相容。",
+              "question": "“通过他人而成为人”意味着人格是共同体授予的成就，还是每个人先天地拥有不可取消的地位？",
+              "positions": [
+                {
+                  "name": "强共同体主义",
+                  "text": "人格的成熟地位通过参与共同生活、履行义务与发展德性逐步实现。",
+                  "objection": "若共同体拥有最终权威，异议者、儿童或不能满足角色期待的人可能被降格。"
+                },
+                {
+                  "name": "温和共同体主义",
+                  "text": "承认关系构成人的身份与责任，同时保留个人尊严、权利和反思共同体的能力。",
+                  "objection": "当关系义务与个人权利真正冲突时，“平衡”仍需要更明确原则。"
+                },
+                {
+                  "name": "Ubuntu 的伦理解释",
+                  "text": "把促进友爱、认同、互助与和解的关系视为重要道德目标。",
+                  "objection": "Ubuntu 在不同语言、政治项目和商业话语中的意义并不统一，不能作为万能口号。"
+                }
+              ],
+              "figures": [
+                "夸梅·吉耶凯、伊费阿尼·门基蒂与莫戈贝·拉莫塞等对人格、共同体和 Ubuntu 提出不同理论；这些概念不是无争议的非洲本质。"
+              ],
+              "example": "一个年轻人拒绝家族为其安排的职业时，冲突不仅是个人自由对传统，也涉及家族投入、相互照护、性别角色和谁能解释共同利益。",
+              "related": [
+                "pt-mind-self",
+                "pt-care",
+                "pt-good-life",
+                "pt-confucian"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：African Ethics",
+                  "url": "https://plato.stanford.edu/entries/african-ethics/"
+                }
+              ]
+            },
+            {
+              "id": "pt-africana-race",
+              "title": "种族、殖民与解放",
+              "type": "传统线索",
+              "summary": "非裔与反殖民哲学分析种族分类、双重意识、殖民暴力、语言与身体经验，并讨论解放是否需要制度变革、文化重建和新的主体关系。",
+              "positions": [
+                {
+                  "name": "种族的社会建构",
+                  "text": "种族不是具有固定边界的生物本质，却能通过法律、空间、劳动和社会认知产生真实后果。",
+                  "objection": "仅说“社会建构”还不足以解释不同制度如何运作，也不能让既有伤害自动消失。"
+                },
+                {
+                  "name": "生活经验与现象学",
+                  "text": "分析被种族化的身体如何在凝视、语言、恐惧和行动空间中经验世界。",
+                  "objection": "经验描述需要避免把某一位置当作所有群体成员的统一声音。"
+                },
+                {
+                  "name": "非殖民与解放实践",
+                  "text": "知识、文化与制度都可能延续殖民结构，解放因而不只是形式独立或个体态度改变。",
+                  "objection": "诉诸传统或民族统一也可能压抑内部差异，并产生新的权力中心。"
+                }
+              ],
+              "figures": [
+                "杜波依斯讨论双重意识；法农分析殖民主义、种族化与暴力；恩克鲁玛、塞泽尔等从不同政治与文化路径思考非殖民化。"
+              ],
+              "example": "一座城市拆除殖民纪念碑时，争论同时涉及历史事实、公共记忆、谁被纪念、是否抹去历史以及空间怎样塑造公民归属。",
+              "related": [
+                "pt-identity-oppression",
+                "pt-justice",
+                "pt-history-tech",
+                "pt-legitimacy"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Philosophy of Race",
+                  "url": "https://plato.stanford.edu/entries/race/"
+                },
+                {
+                  "label": "SEP：Frantz Fanon",
+                  "url": "https://plato.stanford.edu/entries/frantz-fanon/"
                 }
               ]
             }

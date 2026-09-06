@@ -26,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
-    // 40 个哲学节点：总览是 /learning/philosophy，其余各占一页。
+    // 哲学总览与每个知识节点各占一页。
     // 旧的 /learning/philosophy-tree 仍然可访问，但它的 canonical 已经指向
     // 新总览，所以不再出现在地图里，免得两套 URL 抢同一批内容。
     ...allNodePaths().map((path, index) => ({

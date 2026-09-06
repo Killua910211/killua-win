@@ -3,9 +3,8 @@ import rawTree from './data.json';
 /**
  * 哲学体系树的唯一结构化内容源。
  *
- * data.json 是从 public/learning/philosophy-tree.html 里那份内联数据机械
- * 提取出来的：40 个节点、17 个核心问题，字段一一对应，没有增删。旧静态页
- * 仍然保留作为 /learning/philosophy-tree 的兼容兜底，但新路由只读这一份。
+ * data.json 最初从 public/learning/philosophy-tree.html 里的内联数据提取，
+ * 现在是持续扩展的新路由内容源。旧静态页只保留为兼容兜底。
  */
 
 export type PhilosophySource = {
@@ -126,7 +125,7 @@ export function isCoreQuestion(node: PhilosophyNode): boolean {
   return node.type === CORE_QUESTION_TYPE;
 }
 
-/** 17 个核心问题，顺序即阅读顺序。 */
+/** 全部核心问题，顺序即阅读顺序。 */
 export const coreQuestions: readonly PhilosophyNode[] = orderedNodes.filter(isCoreQuestion);
 
 const coreGroup = nodeById.get('pt-core');
@@ -141,9 +140,9 @@ export const coreSection: PhilosophyNode = coreGroup;
 /** 平行历史导航的分组节点（“传统地图｜平行历史导航”）。 */
 export const traditionsSection: PhilosophyNode = traditionsGroup;
 
-/** 五个问题域，每个域下挂着它自己的核心问题。 */
+/** 问题域，每个域下挂着它自己的核心问题。 */
 export const questionDomains: readonly PhilosophyNode[] = coreSection.children ?? [];
-/** 三条传统线索，每条下挂着历史时段或思想线索。 */
+/** 传统线索，每条下挂着历史时段或思想线索。 */
 export const traditions: readonly PhilosophyNode[] = traditionsSection.children ?? [];
 
 /** 供 sitemap 使用：所有节点对应的站内路径。 */

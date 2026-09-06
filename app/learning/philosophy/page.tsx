@@ -5,6 +5,7 @@ import { buildMetadata } from '@/app/lib/metadata';
 import { CoreQuestionGroups, NodeBody, type QuestionGroup } from './node-content';
 import {
   coreSection,
+  coreQuestions,
   isCoreQuestion,
   neighborsOf,
   nodeHref,
@@ -16,8 +17,7 @@ import {
 
 export const metadata = buildMetadata({
   title: '哲学 · 从问题开始',
-  description:
-    '按问题组织的哲学地图：五个问题域、17 个核心问题，以及西方、中国、印度三条平行的历史导航。',
+  description: `按问题组织的哲学地图：${questionDomains.length} 个问题域、${coreQuestions.length} 个核心问题，以及 ${traditions.length} 条平行的传统导航。`,
   path: '/learning/philosophy',
 });
 

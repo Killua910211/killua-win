@@ -3006,7 +3006,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .learning-inline-link:hover,
 .learning-inline-link:focus-visible { background: var(--ink); color: #fff; }
 
-/* 五个问题域 × 17 个核心问题：一组静态链接，没有状态列。 */
+/* 问题域与核心问题：一组静态链接，没有状态列。 */
 .learning-question-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 40px; margin-top: 46px; }
 .learning-question-group { min-width: 0; padding-top: 15px; border-top: 2px solid var(--ink); }
 .learning-question-group-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }

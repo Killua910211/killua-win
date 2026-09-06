@@ -22,7 +22,7 @@ type NodePageProps = {
 };
 
 /**
- * 39 个节点全部在构建期生成。
+ * 除总览外，全部节点都在构建期生成。
  *
  * 数据来自仓库里的 data.json，没有数据库依赖，所以和 /notes 的分类页不同，
  * 这里可以放心用 generateStaticParams —— vinext 的预渲染跑在纯 Node 里。

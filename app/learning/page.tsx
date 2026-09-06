@@ -14,8 +14,7 @@ import {
 
 export const metadata = buildMetadata({
   title: '学习空间｜哲学与跨学科问题地图',
-  description:
-    '按问题组织的个人学习工作台：17 个哲学核心问题、五个问题域，以及西方、中国、印度三条平行的传统导航，可以随时回来查。',
+  description: `按问题组织的个人学习工作台：${coreQuestions.length} 个哲学核心问题、${questionDomains.length} 个问题域，以及 ${traditions.length} 条平行的传统导航，可以随时回来查。`,
   path: '/learning',
 });
 

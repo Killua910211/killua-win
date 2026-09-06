@@ -12,7 +12,7 @@ export type QuestionGroup = {
 };
 
 /**
- * 「按问题」区块：五个问题域 + 17 个核心问题的真实链接。
+ * 「按问题」区块：全部问题域与核心问题的真实链接。
  *
  * 这里刻意没有任何状态：这份地图是可以反复回来查的参考，不是一次性课程，
  * 所以只有编号、标题和一个静态的题目数，没有读没读过的区分。
@@ -30,7 +30,7 @@ export function CoreQuestionGroups({
   return (
     <div className="learning-question-groups">
       {groups.map((group, groupIndex) => {
-        // 编号在整个列表里连续（01–17），而不是每组重新数。
+        // 编号在整个列表里连续，而不是每组重新数。
         const questionOffset = groups
           .slice(0, groupIndex)
           .reduce((total, item) => total + item.questions.length, 0);
