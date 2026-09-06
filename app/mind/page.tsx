@@ -1,5 +1,6 @@
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
+import { SectionNav } from '@/app/components/section-nav';
 import { buildMetadata } from '@/app/lib/metadata';
 import { KnowledgeLibrary } from '@/app/knowledge/knowledge-library';
 import { MindExplorer } from './mind-explorer';
@@ -38,6 +39,15 @@ export default function MindPage() {
             <span>Archive 001 · 2026.08</span>
           </div>
         </section>
+        <SectionNav
+          label="认知页分区"
+          items={[
+            { href: '#mind-overview', label: '核心地图' },
+            { href: '#mind-workspace', label: '主题线索' },
+            { href: '#mind-review', label: '自我复习' },
+            { href: '#mind-library', label: '对话索引' },
+          ]}
+        />
 
         <MindExplorer />
         <KnowledgeLibrary />

@@ -1416,7 +1416,7 @@ summary:focus-visible {
   letter-spacing: 0.06em;
 }
 .health-page { --health-accent-text: #4e6500; }
-.health-local-nav {
+.section-local-nav {
   position: sticky;
   top: 0;
   z-index: 20;
@@ -1427,7 +1427,7 @@ summary:focus-visible {
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
   background: var(--ink);
 }
-.health-local-nav a {
+.section-local-nav a {
   padding: 14px 20px;
   color: rgba(255, 255, 255, 0.62);
   font-family: var(--font-mono), monospace;
@@ -1436,8 +1436,8 @@ summary:focus-visible {
   text-decoration: none;
   transition: color var(--motion-base) ease, background-color var(--motion-base) ease;
 }
-.health-local-nav a:hover,
-.health-local-nav a:focus-visible {
+.section-local-nav a:hover,
+.section-local-nav a:focus-visible {
   color: var(--signal);
   background: rgba(224, 99, 42, 0.08);
 }
@@ -1445,7 +1445,20 @@ summary:focus-visible {
 #health-snapshot,
 #health-trends,
 #health-nutrition,
-#health-notes { scroll-margin-top: 58px; }
+#health-notes,
+#top,
+#learning,
+#system,
+#notes-top,
+#preface,
+#archive,
+#mind-overview,
+#mind-workspace,
+#mind-review,
+#mind-library,
+#learning-questions,
+#learning-traditions,
+#learning-method { scroll-margin-top: 58px; }
 .health-page .health-supplement-role,
 .health-page .health-supplement-heading > span,
 .health-page .health-supplement-details dt,
@@ -2430,15 +2443,15 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 }
 
 @media (max-width: 760px) {
-  .health-local-nav {
+  .section-local-nav {
     flex-wrap: nowrap;
     gap: 0;
     padding: 0 20px;
     overflow-x: auto;
     scrollbar-width: none;
   }
-  .health-local-nav::-webkit-scrollbar { display: none; }
-  .health-local-nav a { flex: 0 0 auto; padding: 13px 16px; }
+  .section-local-nav::-webkit-scrollbar { display: none; }
+  .section-local-nav a { flex: 0 0 auto; padding: 13px 16px; }
   .health-smoking-recovery-table-wrap { overflow-x: visible; }
   .health-smoking-recovery-table {
     display: block;
@@ -4350,16 +4363,23 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
     min-height: calc(100svh - 90px);
   }
 
-  /* 分区导航属于 Health 的首屏收尾，首屏内可见；滚动后仍按原逻辑吸顶。 */
-  .health-hero {
+  /* 分区导航属于首屏收尾，首屏内可见；滚动后仍按原逻辑吸顶。 */
+  .hero {
+    min-height: calc(100svh - 48px);
+  }
+
+  .notes-hero,
+  .health-hero,
+  .mind-hero,
+  .learning-hero {
     min-height: calc(100svh - 138px);
   }
 
-  .health-local-nav {
+  .section-local-nav {
     min-height: 48px;
   }
 
-  .health-local-nav a {
+  .section-local-nav a {
     display: inline-flex;
     align-items: center;
     padding-top: 0;

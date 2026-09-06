@@ -2,6 +2,7 @@ import { NotesArchive } from '@/app/components/notes-archive';
 import { NotesPreface } from '@/app/components/notes-preface';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
+import { SectionNav } from '@/app/components/section-nav';
 import { buildMetadata } from '@/app/lib/metadata';
 import { listPublishedPosts } from '@/app/lib/posts';
 
@@ -28,7 +29,7 @@ export default async function NotesPage() {
       <SiteHeader current="notes" />
 
       <main id="main" className="notes-page">
-        <section className="notes-hero notes-hero-compact">
+        <section className="notes-hero notes-hero-compact" id="notes-top">
           <div className="section-label light" lang="en">
             <span>01</span>
             <span>Writing archive</span>
@@ -45,6 +46,15 @@ export default async function NotesPage() {
             </p>
           </div>
         </section>
+
+        <SectionNav
+          label="文章页分区"
+          items={[
+            { href: '#notes-top', label: '开场' },
+            { href: '#preface', label: '序言' },
+            { href: '#archive', label: '文章归档' },
+          ]}
+        />
 
         <NotesPreface />
 

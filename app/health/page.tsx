@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
+import { SectionNav } from '@/app/components/section-nav';
 import { SmokingStreak } from './smoking-streak';
 import { LifeProgress } from './life-progress';
 import { SmokingRecoveryTimeline } from './smoking-recovery';
@@ -78,13 +79,16 @@ export default function HealthPage() {
           </div>
         </section>
 
-        <nav className="health-local-nav" aria-label="健康页分区">
-          <a href="#health-timeline">时间线</a>
-          <a href="#health-snapshot">一周均值</a>
-          <a href="#health-trends">长期趋势</a>
-          <a href="#health-nutrition">补剂</a>
-          <a href="#health-notes">数据观察</a>
-        </nav>
+        <SectionNav
+          label="健康页分区"
+          items={[
+            { href: '#health-timeline', label: '时间线' },
+            { href: '#health-snapshot', label: '一周均值' },
+            { href: '#health-trends', label: '长期趋势' },
+            { href: '#health-nutrition', label: '补剂' },
+            { href: '#health-notes', label: '数据观察' },
+          ]}
+        />
 
         <section id="health-timeline" className="health-smoking-section" aria-label="个人时间线">
           <div className="section-label" lang="en">

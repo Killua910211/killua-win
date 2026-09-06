@@ -116,7 +116,7 @@ export function KnowledgeLibrary() {
 
   return (
     <>
-      <section className="knowledge-index" aria-labelledby="knowledge-index-heading">
+      <section className="knowledge-index" id="mind-library" aria-labelledby="knowledge-index-heading">
         <div className="section-label">
           <span>05</span>
           <span>Card index</span>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
+import { SectionNav } from '@/app/components/section-nav';
 import { buildMetadata } from '@/app/lib/metadata';
 import { CoreQuestionGroups, type QuestionGroup } from './philosophy/node-content';
 import {
@@ -75,7 +76,16 @@ export default function LearningPage() {
           </div>
         </section>
 
-        <section className="learning-questions" aria-labelledby="learning-questions-heading">
+        <SectionNav
+          label="学习页分区"
+          items={[
+            { href: '#learning-questions', label: '按问题' },
+            { href: '#learning-traditions', label: '按传统' },
+            { href: '#learning-method', label: '学习方法' },
+          ]}
+        />
+
+        <section className="learning-questions" id="learning-questions" aria-labelledby="learning-questions-heading">
           <div className="section-label" lang="en">
             <span>02</span>
             <span>By question</span>
@@ -97,7 +107,7 @@ export default function LearningPage() {
           </div>
         </section>
 
-        <section className="learning-traditions" aria-labelledby="learning-traditions-heading">
+        <section className="learning-traditions" id="learning-traditions" aria-labelledby="learning-traditions-heading">
           <div className="section-label light" lang="en">
             <span>03</span>
             <span>By tradition</span>
@@ -132,7 +142,7 @@ export default function LearningPage() {
           </div>
         </section>
 
-        <section className="learning-method" aria-labelledby="learning-method-heading">
+        <section className="learning-method" id="learning-method" aria-labelledby="learning-method-heading">
           <div className="section-label light" lang="en">
             <span>04</span>
             <span>How to use</span>

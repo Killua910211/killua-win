@@ -108,7 +108,7 @@ export function MindExplorer() {
 
   return (
     <>
-      <section className="mind-overview" aria-labelledby="mind-overview-heading">
+      <section className="mind-overview" id="mind-overview" aria-labelledby="mind-overview-heading">
         <div className="section-label">
           <span>02</span>
           <span>Reading map</span>
@@ -133,7 +133,7 @@ export function MindExplorer() {
         </div>
       </section>
 
-      <section className="mind-workspace" aria-labelledby="mind-workspace-heading">
+      <section className="mind-workspace" id="mind-workspace" aria-labelledby="mind-workspace-heading">
         <div className="section-label light">
           <span>03</span>
           <span>Explore by theme</span>
@@ -191,7 +191,7 @@ export function MindExplorer() {
         </div>
       </section>
 
-      <section className="mind-review" aria-labelledby="mind-review-heading">
+      <section className="mind-review" id="mind-review" aria-labelledby="mind-review-heading">
         <div className="section-label">
           <span>04</span>
           <span>Review loop</span>

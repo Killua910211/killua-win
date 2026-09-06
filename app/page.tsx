@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
+import { SectionNav } from '@/app/components/section-nav';
 import { SystemReadout } from '@/app/components/system-readout';
 import { buildMetadata, SITE } from '@/app/lib/metadata';
 
@@ -59,6 +60,15 @@ export default function Home() {
             <span>K</span>
           </div>
         </section>
+
+        <SectionNav
+          label="首页分区"
+          items={[
+            { href: '#top', label: '开场' },
+            { href: '#learning', label: '学习地图' },
+            { href: '#system', label: '系统读数' },
+          ]}
+        />
 
         <section className="home-learning" id="learning" aria-labelledby="home-learning-heading">
           <div className="section-label">
