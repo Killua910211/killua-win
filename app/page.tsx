@@ -27,7 +27,7 @@ export const revalidate = 3600;
 export default function Home() {
   return (
     <>
-      <SiteHeader variant="overlay" current="home" />
+      <SiteHeader current="home" />
 
       <main id="main">
         <section className="hero" id="top">
