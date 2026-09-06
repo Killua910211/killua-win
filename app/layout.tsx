@@ -1,16 +1,30 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Barlow, Barlow_Condensed, Bebas_Neue, JetBrains_Mono } from 'next/font/google';
 import { SITE } from '@/app/lib/metadata';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const barlow = Barlow({
+  variable: '--font-barlow',
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const barlowCondensed = Barlow_Condensed({
+  variable: '--font-barlow-condensed',
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+});
+
+const bebasNeue = Bebas_Neue({
+  variable: '--font-bebas-neue',
+  subsets: ['latin'],
+  weight: '400',
+});
+
+const jetBrainsMono = JetBrains_Mono({
+  variable: '--font-jetbrains-mono',
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
 });
 
 /**
@@ -36,7 +50,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="zh-CN">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body
+        className={`${barlow.variable} ${barlowCondensed.variable} ${bebasNeue.variable} ${jetBrainsMono.variable}`}
+      >
         {/*
           跳转到正文。放在 body 的第一个位置，是键盘用户拿到的第一个焦点；
           平时用 clip 隐藏，聚焦时才显形。

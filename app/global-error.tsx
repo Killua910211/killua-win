@@ -13,15 +13,15 @@ export default function GlobalError({ reset }: { error: Error; reset: () => void
           minHeight: '100vh',
           display: 'grid',
           placeItems: 'center',
-          background: '#151515',
-          color: '#f2f0e8',
+          background: '#080809',
+          color: '#f2ede8',
           fontFamily: 'system-ui, sans-serif',
           textAlign: 'center',
           padding: '24px',
         }}
       >
         <div>
-          <p style={{ color: '#ccff00', letterSpacing: '0.14em', fontSize: 11 }}>KILLUA.WIN</p>
+          <p style={{ color: '#e0632a', letterSpacing: '0.14em', fontSize: 11 }}>KILLUA.WIN</p>
           <h1 style={{ fontWeight: 520, letterSpacing: '-0.04em' }}>站点没能启动</h1>
           <p style={{ opacity: 0.7, lineHeight: 1.8 }}>请稍后再试一次。</p>
           <button
@@ -30,9 +30,9 @@ export default function GlobalError({ reset }: { error: Error; reset: () => void
             style={{
               marginTop: 16,
               padding: '10px 18px',
-              border: '1px solid #ccff00',
+              border: '1px solid #e0632a',
               background: 'transparent',
-              color: '#ccff00',
+              color: '#e0632a',
               cursor: 'pointer',
               font: 'inherit',
             }}

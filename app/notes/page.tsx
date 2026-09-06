@@ -1,6 +1,5 @@
 import { NotesArchive } from '@/app/components/notes-archive';
 import { NotesPreface } from '@/app/components/notes-preface';
-import { NotesReadingPaths } from '@/app/components/notes-reading-paths';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { buildMetadata } from '@/app/lib/metadata';
@@ -49,9 +48,7 @@ export default async function NotesPage() {
 
         <NotesPreface />
 
-        <NotesReadingPaths posts={posts} sectionNumber="03" />
-
-        <NotesArchive posts={posts} sectionNumber="04" />
+        <NotesArchive posts={posts} sectionNumber="03" />
       </main>
 
       <SiteFooter />

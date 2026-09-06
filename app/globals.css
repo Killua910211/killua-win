@@ -46,15 +46,29 @@ button {
 img, svg, video, canvas { display: block; max-width: 100%; }
 
 :root {
-  --ink: #151515;
-  --paper: #f2f0e8;
-  --signal: #ccff00;
-  --footer: #aeb49a;
-  --text-secondary: rgba(255, 255, 255, 0.63);
-  --text-tertiary: rgba(255, 255, 255, 0.48);
-  --rule-dark: rgba(255, 255, 255, 0.22);
+  --black: #080809;
+  --black-2: #0e0e11;
+  --black-3: #1a1a1f;
+  --black-4: #252529;
+  --ember: #e0632a;
+  --ember-hot: #f07840;
+  --glacier: #4aacb8;
+  --warm-white: #f2ede8;
+  --warm-gray: #a8a3a0;
+  --rock-gray: #6a6560;
+  --ink: var(--black);
+  --paper: var(--black-2);
+  --signal: var(--ember);
+  --footer: var(--black-2);
+  --text-secondary: var(--warm-gray);
+  --text-tertiary: var(--rock-gray);
+  --rule-dark: rgba(242, 237, 232, 0.18);
+  --font-body: var(--font-barlow), system-ui, sans-serif;
+  --font-condensed: var(--font-barlow-condensed), sans-serif;
+  --font-display: var(--font-bebas-neue), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
   --motion-fast: 120ms;
-  --motion-base: 180ms;
+  --motion-base: 220ms;
 }
 
 * { box-sizing: border-box; }
@@ -62,11 +76,11 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-geist-sans), Arial, sans-serif;
+  color: var(--warm-white);
+  font-family: var(--font-body);
 }
 a { color: inherit; text-decoration: none; }
-::selection { background: var(--signal); color: var(--ink); }
+::selection { background: var(--ember); color: var(--warm-white); }
 
 .site-header {
   position: absolute;
@@ -75,15 +89,16 @@ a { color: inherit; text-decoration: none; }
   left: 0;
   display: grid;
   width: 100%;
-  height: 84px;
+  height: 90px;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 0 4vw;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 11px;
-  letter-spacing: 0.12em;
+  padding: 0 3vw;
+  border-bottom: 1px solid rgba(242, 237, 232, 0.12);
+  color: var(--warm-white);
+  font-family: var(--font-condensed);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 .wordmark {
@@ -91,19 +106,21 @@ a { color: inherit; text-decoration: none; }
   width: max-content;
   align-items: center;
   gap: 10px;
-  font-weight: 650;
-  letter-spacing: -0.02em;
+  color: var(--warm-white);
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
 }
 .wordmark-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--signal);
-  box-shadow: 0 0 0 4px rgba(204, 255, 0, 0.16);
+  width: 7px;
+  height: 18px;
+  background: var(--ember);
+  clip-path: polygon(0 0, 100% 10%, 100% 100%, 0 90%);
 }
 .site-header nav { display: flex; align-items: center; gap: 30px; }
 .site-header > .edition { justify-self: end; }
-.site-header nav a { position: relative; font-size: 14px; letter-spacing: 0.08em; }
+.site-header nav a { position: relative; color: var(--warm-gray); font-size: 13px; letter-spacing: 0.12em; }
 /*
  * 视觉尺寸不变，但点击热区要接近 44px：用一个不可见的 ::before 把命中区域
  * 往上下各撑开 12px（14px 字号、1.5 行高的文字本身约 21px 高，加起来约 45px），
@@ -123,7 +140,7 @@ a { color: inherit; text-decoration: none; }
   bottom: -6px;
   left: 0;
   height: 1px;
-  background: var(--signal);
+  background: var(--ember);
   content: '';
   transform: scaleX(0);
   transition: transform var(--motion-base) ease;
@@ -141,15 +158,18 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 9px 12px;
-  border: 1px solid rgba(204, 255, 0, 0.58);
-  color: var(--signal);
-  transition: 180ms ease;
+  padding: 10px 18px;
+  border: 1px solid var(--ember);
+  background: var(--ember);
+  color: var(--warm-white);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 100%, 8px 100%);
+  transition: background var(--motion-base) ease, transform var(--motion-base) ease;
 }
 .os-entry:hover,
 .os-entry:focus-visible {
-  background: var(--signal);
-  color: var(--ink);
+  background: var(--ember-hot);
+  color: var(--warm-white);
+  transform: translateY(-2px);
 }
 .os-entry span { font-size: 13px; line-height: 0; }
 
@@ -160,7 +180,7 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-  padding: 132px 4vw 52px;
+  padding: 142px 4vw 54px;
   /*
     最上面那层是收边用的。底下 115deg 那条渐变沿轴向从 #121212 走到 #1b1b1b
     再到 #0e0e0e，所以 hero 底边在不同 x 位置的颜色是不一样的（最深 14、最浅 27），
@@ -168,17 +188,22 @@ a { color: inherit; text-decoration: none; }
     这层把底部 42% 渐渐压到 --ink，保证衔接自然。
   */
   background:
-    linear-gradient(to bottom, transparent 58%, var(--ink) 100%),
-    radial-gradient(circle at 72% 50%, rgba(204, 255, 0, 0.11), transparent 21%),
-    linear-gradient(115deg, #121212 0%, #1b1b1b 54%, #0e0e0e 100%);
-  color: #fff;
+    linear-gradient(to bottom, transparent 52%, var(--black) 100%),
+    radial-gradient(circle at 76% 46%, rgba(224, 99, 42, 0.12), transparent 23%),
+    radial-gradient(circle at 92% 12%, rgba(74, 172, 184, 0.055), transparent 25%),
+    linear-gradient(135deg, var(--black-3) 0%, var(--black-2) 45%, var(--black) 100%);
+  color: var(--warm-white);
 }
 .hero::before {
   position: absolute;
   inset: 0;
-  opacity: 0.21;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-  background-size: 72px 72px;
+  opacity: 0.18;
+  background-image:
+    radial-gradient(circle, rgba(242, 237, 232, 0.48) 0 1px, transparent 1.5px),
+    linear-gradient(rgba(242, 237, 232, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242, 237, 232, 0.08) 1px, transparent 1px);
+  background-position: 0 0, 0 0, 0 0;
+  background-size: 96px 96px, 96px 96px, 96px 96px;
   content: '';
   mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent);
 }
@@ -188,11 +213,11 @@ a { color: inherit; text-decoration: none; }
   z-index: 2;
   display: flex;
   justify-content: space-between;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
 }
 .hero-kicker {
   margin-bottom: 32px;
-  color: rgba(255, 255, 255, 0.54);
+  color: var(--rock-gray);
   font-size: 10px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -200,19 +225,21 @@ a { color: inherit; text-decoration: none; }
 .hero h1 {
   position: relative;
   z-index: 2;
-  max-width: 1220px;
+  max-width: 980px;
   margin: 0;
-  font-size: clamp(58px, 10.5vw, 168px);
-  font-weight: 620;
-  letter-spacing: -0.075em;
-  line-height: 0.81;
+  font-family: var(--font-display);
+  font-size: clamp(72px, 11vw, 176px);
+  font-weight: 400;
+  letter-spacing: 0.015em;
+  line-height: 0.82;
+  text-wrap: balance;
 }
-.outline { color: transparent; -webkit-text-stroke: 1.5px var(--signal); }
+.outline { color: var(--ember); -webkit-text-stroke: 0; }
 .hero-bottom { align-items: flex-end; margin-top: clamp(44px, 8vh, 90px); }
 .hero-bottom p {
   margin: 0;
-  color: var(--text-secondary);
-  font-family: var(--font-geist-sans), sans-serif;
+  color: var(--warm-gray);
+  font-family: var(--font-body);
   font-size: clamp(14px, 1.2vw, 18px);
   line-height: 1.8;
 }
@@ -224,14 +251,19 @@ a { color: inherit; text-decoration: none; }
   gap: 12px;
   margin-top: 22px;
   padding: 0 18px;
-  border: 1px solid var(--signal);
-  background: var(--signal);
-  color: var(--ink);
-  font-family: var(--font-geist-mono), monospace;
+  border: 1px solid var(--ember);
+  background: var(--ember);
+  color: var(--warm-white);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 100%, 8px 100%);
+  font-family: var(--font-condensed);
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background var(--motion-base) ease, transform var(--motion-base) ease;
 }
+.hero-primary-action:hover,
+.hero-primary-action:focus-visible { background: var(--ember-hot); transform: translateY(-2px); }
 .hero-primary-action span { font-size: 16px; transition: transform var(--motion-base) ease; }
 .hero-primary-action:hover span,
 .hero-primary-action:focus-visible span { transform: translate(3px, -3px); }
@@ -246,7 +278,7 @@ a { color: inherit; text-decoration: none; }
   transition: var(--motion-base) ease;
 }
 .round-link:hover,
-.round-link:focus-visible { border-color: var(--signal); background: var(--signal); color: var(--ink); transform: translateY(3px); }
+.round-link:focus-visible { border-color: var(--ember); background: var(--ember); color: var(--warm-white); transform: translateY(3px); }
 .orb {
   position: absolute;
   z-index: 1;
@@ -261,7 +293,7 @@ a { color: inherit; text-decoration: none; }
 .orb-ring {
   position: absolute;
   inset: 0;
-  border: 1px solid rgba(204, 255, 0, 0.5);
+  border: 1px solid rgba(224, 99, 42, 0.48);
   border-radius: 50%;
   animation: spin 22s linear infinite;
 }
@@ -272,16 +304,16 @@ a { color: inherit; text-decoration: none; }
   width: 13px;
   height: 13px;
   border-radius: 50%;
-  background: var(--signal);
-  box-shadow: 0 0 30px var(--signal);
+  background: var(--ember);
+  box-shadow: 0 0 30px rgba(224, 99, 42, 0.7);
   content: '';
 }
 .orb-core {
   width: 68%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle at 37% 31%, #727272 0, #2b2b2b 20%, #090909 68%);
-  box-shadow: inset -25px -25px 55px #000, 0 0 80px rgba(204, 255, 0, 0.07);
+  background: radial-gradient(circle at 37% 31%, #645148 0, #272326 22%, #080809 68%);
+  box-shadow: inset -25px -25px 55px #000, 0 0 80px rgba(224, 99, 42, 0.09);
 }
 .orb span {
   position: absolute;
@@ -300,17 +332,17 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.section-label span:first-child { color: #69655c; }
+.section-label span:first-child { color: var(--rock-gray); }
 .statement-copy { max-width: 1000px; }
 .eyebrow {
   margin: 0 0 26px;
   font-weight: 400;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 11px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -337,12 +369,12 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   gap: 9px;
   white-space: nowrap;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.pulse { width: 8px; height: 8px; border-radius: 50%; background: #6b8a00; box-shadow: 0 0 0 5px rgba(107, 138, 0, 0.13); }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--ember); box-shadow: 0 0 0 5px rgba(107, 138, 0, 0.13); }
 .section-label.light span:first-child { color: var(--signal); }
 
 .page-site-header {
@@ -355,7 +387,7 @@ a { color: inherit; text-decoration: none; }
   grid-template-columns: minmax(170px, 22vw) 1fr;
   align-items: end;
   padding: 90px 4vw 100px;
-  background: radial-gradient(circle at 80% 25%, rgba(204, 255, 0, 0.12), transparent 24%), var(--ink);
+  background: radial-gradient(circle at 80% 25%, rgba(224, 99, 42, 0.12), transparent 24%), var(--ink);
   color: #fff;
 }
 .notes-hero .eyebrow { color: rgba(255, 255, 255, 0.54); }
@@ -420,7 +452,7 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 11px;
   letter-spacing: 0.1em;
   list-style: none;
@@ -428,13 +460,13 @@ a { color: inherit; text-decoration: none; }
 }
 .notes-preface-details summary::-webkit-details-marker { display: none; }
 .notes-preface-details summary span:last-child {
-  color: #6b8a00;
+  color: var(--ember);
   font-size: 22px;
   transition: transform var(--motion-base) ease;
 }
 .notes-preface-details[open] summary span:last-child { transform: rotate(45deg); }
 .notes-preface-details summary:hover,
-.notes-preface-details summary:focus-visible { color: #536b00; }
+.notes-preface-details summary:focus-visible { color: var(--ember-hot); }
 .notes-preface-body { padding: 20px 0 72px; }
 .notes-preface-body section + section {
   margin-top: 64px;
@@ -479,7 +511,7 @@ a { color: inherit; text-decoration: none; }
   padding: 8px 13px;
   border: 1px solid rgba(21, 21, 21, 0.28);
   border-radius: 99px;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
 }
@@ -489,7 +521,7 @@ a { color: inherit; text-decoration: none; }
   background: var(--ink);
   color: #fff;
 }
-.notes-categories span { margin-left: 5px; color: #69655c; }
+.notes-categories span { margin-left: 5px; color: var(--rock-gray); }
 .notes-categories .is-active span { color: var(--signal); }
 .notes-years {
   display: flex;
@@ -500,24 +532,24 @@ a { color: inherit; text-decoration: none; }
 }
 .notes-years-label,
 .notes-year-heading {
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .notes-years-label {
   margin-right: 4px;
-  color: #69655c;
+  color: var(--rock-gray);
   font-size: 10px;
 }
 .notes-years a {
   border-bottom: 1px solid rgba(21, 21, 21, 0.28);
   padding-bottom: 2px;
   color: #4f4b44;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 11px;
 }
 .notes-years a:hover,
-.notes-years a:focus-visible { border-color: #6b8a00; color: #536b00; }
+.notes-years a:focus-visible { border-color: var(--ember); color: var(--ember-hot); }
 .notes-list { border-top: 1px solid rgba(21, 21, 21, 0.28); }
 .notes-year-group { scroll-margin-top: 24px; }
 .notes-year-heading {
@@ -527,7 +559,7 @@ a { color: inherit; text-decoration: none; }
   gap: 16px;
   padding: 17px 0 11px;
   border-bottom: 1px solid rgba(21, 21, 21, 0.18);
-  color: #69655c;
+  color: var(--rock-gray);
   font-size: 10px;
 }
 .notes-year-heading span:first-child { color: var(--ink); font-size: 21px; letter-spacing: -0.04em; }
@@ -562,24 +594,24 @@ a { color: inherit; text-decoration: none; }
 .post-layout aside,
 .post-origin span,
 .post-origin a {
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.11em;
   text-transform: uppercase;
 }
-.note-number { color: #69655c; }
+.note-number { color: var(--rock-gray); }
 .note-meta {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-.note-main time { color: #69655c; }
+.note-main time { color: var(--rock-gray); }
 .note-meta span {
   padding: 3px 7px;
   border: 1px solid rgba(21, 21, 21, 0.22);
   border-radius: 99px;
   color: #5f5b53;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
 }
@@ -604,85 +636,6 @@ a { color: inherit; text-decoration: none; }
 .note-arrow { font-size: 20px; transition: transform 180ms ease; }
 .note-row:hover .note-arrow,
 .note-row:focus-visible .note-arrow { transform: translate(3px, -3px); }
-
-.notes-reading-paths {
-  display: grid;
-  grid-template-columns: minmax(170px, 22vw) 1fr;
-  padding: 90px 4vw 120px;
-  border-top: 1px solid rgba(21, 21, 21, 0.18);
-}
-.notes-reading-paths-copy { max-width: 960px; }
-.notes-reading-paths-copy h2 {
-  margin: 0;
-  font-size: clamp(28px, 3.6vw, 46px);
-  font-weight: 520;
-  letter-spacing: -0.05em;
-}
-.notes-reading-paths-intro {
-  max-width: 640px;
-  margin: 16px 0 0;
-  color: #5d5a53;
-  font-size: 15px;
-  line-height: 1.8;
-}
-.notes-reading-paths-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 32px;
-  margin-top: 44px;
-}
-.notes-reading-path {
-  padding-top: 20px;
-  border-top: 1px solid rgba(21, 21, 21, 0.24);
-}
-.notes-reading-path h3 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 540;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-}
-.notes-reading-path-connection {
-  margin: 12px 0 0;
-  color: #5d5a53;
-  font-size: 14px;
-  line-height: 1.7;
-}
-.notes-reading-path ol {
-  display: grid;
-  gap: 10px;
-  margin: 20px 0 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: reading-path;
-}
-.notes-reading-path li {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px;
-  counter-increment: reading-path;
-  font-size: 14px;
-}
-.notes-reading-path li::before {
-  color: #6b8a00;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 11px;
-  content: counter(reading-path) '.';
-}
-.notes-reading-path a {
-  border-bottom: 1px solid rgba(21, 21, 21, 0.45);
-  padding-bottom: 1px;
-  color: var(--ink);
-}
-.notes-reading-path a:hover,
-.notes-reading-path a:focus-visible { border-color: #6b8a00; color: #536b00; }
-.notes-reading-path time {
-  color: #69655c;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 10px;
-  letter-spacing: 0.06em;
-}
 
 .post-article { background: var(--paper); }
 .post-heading {
@@ -729,7 +682,7 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   flex-direction: column;
   gap: 8px;
-  color: #69655c;
+  color: var(--rock-gray);
 }
 .post-layout aside strong {
   color: var(--ink);
@@ -750,11 +703,11 @@ a { color: inherit; text-decoration: none; }
   padding: 28px;
   border: 1px solid rgba(21, 21, 21, 0.25);
 }
-.post-origin > span { color: #69655c; }
+.post-origin > span { color: var(--rock-gray); }
 .post-origin p { margin: 16px 0 18px; color: #5d5a53; font-size: 14px; line-height: 1.7; }
 .post-origin a { display: inline-block; border-bottom: 1px solid var(--ink); padding-bottom: 3px; }
 .post-origin a:hover,
-.post-origin a:focus-visible { border-color: #6b8a00; color: #536b00; }
+.post-origin a:focus-visible { border-color: var(--ember); color: var(--ember-hot); }
 .post-analysis {
   margin-top: 24px;
   padding: 28px;
@@ -768,7 +721,7 @@ a { color: inherit; text-decoration: none; }
   gap: 12px;
   cursor: pointer;
   color: #59604c;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.11em;
   list-style: none;
@@ -776,7 +729,7 @@ a { color: inherit; text-decoration: none; }
 }
 .post-analysis summary::-webkit-details-marker { display: none; }
 .post-analysis summary span:last-child {
-  color: #6b8a00;
+  color: var(--ember);
   font-size: 18px;
   transition: transform var(--motion-base) ease;
 }
@@ -790,8 +743,8 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid rgba(21, 21, 21, 0.25);
 }
 .post-related > span {
-  color: #69655c;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -812,10 +765,10 @@ a { color: inherit; text-decoration: none; }
   font-size: 15px;
 }
 .post-related a:hover,
-.post-related a:focus-visible { border-color: #6b8a00; color: #536b00; }
+.post-related a:focus-visible { border-color: var(--ember); color: var(--ember-hot); }
 .post-related time {
-  color: #69655c;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
 }
@@ -823,21 +776,23 @@ footer {
   display: grid;
   /* 内容只有一行 15px 高的小字。190px 时上下各空 87px，132px 时各空 59px ——
      对一条收尾的通栏色块都太厚。80px 让上下各留约 32px，是这个字号该有的呼吸量。 */
-  min-height: 80px;
+  min-height: 168px;
   grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   padding: 0 4vw;
+  border-top: 1px solid var(--black-3);
   background: var(--footer);
-  color: var(--ink);
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--warm-gray);
+  font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.footer-mark .wordmark-dot { background: var(--ink); box-shadow: 0 0 0 4px rgba(21, 21, 21, 0.12); }
+.footer-mark { color: var(--warm-white); }
+.footer-mark .wordmark-dot { background: var(--ember); }
 footer p { margin: 0; }
-footer p:nth-child(2) { justify-self: center; }
-footer p:last-child { justify-self: end; }
+footer p:nth-child(2) { justify-self: center; color: var(--warm-white); }
+footer p:last-child { justify-self: end; color: var(--rock-gray); }
 
 @media (max-width: 760px) {
   .site-header {
@@ -861,10 +816,7 @@ footer p:last-child { justify-self: end; }
   .statement-meta { grid-template-columns: 1fr; gap: 30px; margin-top: 50px; }
   .notes-hero,
   .notes-preface,
-  .notes-index,
-  .notes-reading-paths { grid-template-columns: 1fr; padding-right: 20px; padding-left: 20px; }
-  .notes-reading-paths { gap: 24px; padding-top: 56px; padding-bottom: 72px; }
-  .notes-reading-paths-list { grid-template-columns: 1fr; gap: 28px; margin-top: 32px; }
+  .notes-index { grid-template-columns: 1fr; padding-right: 20px; padding-left: 20px; }
   .notes-hero { min-height: 600px; gap: 70px; padding-top: 72px; padding-bottom: 70px; }
   .notes-hero h1 { font-size: clamp(58px, 19vw, 88px); }
   .notes-intro { margin-top: 42px; }
@@ -963,7 +915,7 @@ footer p:last-child { justify-self: end; }
   grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
   padding: 72px 4vw 84px;
   background:
-    radial-gradient(circle at 78% 24%, rgba(204, 255, 0, 0.11), transparent 21%),
+    radial-gradient(circle at 78% 24%, rgba(224, 99, 42, 0.11), transparent 21%),
     var(--ink);
   color: #fff;
 }
@@ -997,7 +949,7 @@ footer p:last-child { justify-self: end; }
   margin-top: 52px;
   padding-top: 18px;
   border-top: 1px solid var(--rule-dark);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   text-transform: uppercase;
 }
 .lab-hero-meta dt {
@@ -1032,7 +984,7 @@ footer p:last-child { justify-self: end; }
   border-top: 1px solid rgba(255, 255, 255, 0.18);
   background: #08131d;
   color: rgba(255, 255, 255, 0.76);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -1076,7 +1028,7 @@ footer p:last-child { justify-self: end; }
   letter-spacing: -0.07em;
   line-height: 0.9;
 }
-.lab-section-heading h2 span { color: #6b8a00; }
+.lab-section-heading h2 span { color: var(--ember); }
 .lab-gallery { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0 2.4vw; margin-top: 92px; }
 .lab-study { grid-column: 1 / span 7; }
 .lab-study:nth-child(2) { grid-column: 9 / span 4; margin-top: 190px; }
@@ -1098,7 +1050,7 @@ footer p:last-child { justify-self: end; }
   padding: 7px 9px;
   background: var(--signal);
   color: var(--ink);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   font-weight: 650;
   letter-spacing: 0.1em;
@@ -1111,12 +1063,12 @@ footer p:last-child { justify-self: end; }
   border-top: 1px solid rgba(21, 21, 21, 0.82);
 }
 .lab-study-caption h3 { font-size: 18px; font-weight: 610; letter-spacing: -0.035em; }
-.lab-study-caption div > span { color: #69655c; font-size: 12px; }
+.lab-study-caption div > span { color: var(--rock-gray); font-size: 12px; }
 .lab-study-caption p { color: #5d5a53; font-size: 13px; line-height: 1.75; }
 .lab-study-caption code {
   grid-column: 1 / -1;
-  color: #69655c;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
   font-size: 8px;
   letter-spacing: 0.08em;
 }
@@ -1146,7 +1098,7 @@ footer p:last-child { justify-self: end; }
 }
 .lab-rank-number,
 .lab-rank-status {
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.11em;
 }
@@ -1252,8 +1204,10 @@ footer p:last-child { justify-self: end; }
   grid-template-columns: minmax(170px, 22vw) 1fr;
   /* 内容较紧凑，保持适中的区块内边距。 */
   padding: 84px 4vw;
-  background: var(--ink);
-  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(224, 99, 42, 0.06), transparent 36%),
+    var(--black);
+  color: var(--warm-white);
   /* 与上方深色 Hero 以细线分界。 */
   border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
@@ -1269,7 +1223,7 @@ footer p:last-child { justify-self: end; }
   flex: 0 0 auto;
   border-radius: 50%;
   background: var(--signal);
-  box-shadow: 0 0 0 5px rgba(204, 255, 0, 0.16);
+  box-shadow: 0 0 0 5px rgba(224, 99, 42, 0.16);
 }
 .readout-pulse.is-delayed { background: #ffd166; box-shadow: 0 0 0 5px rgba(255, 209, 102, 0.14); }
 .readout-pulse.is-failed { background: #ff8d85; box-shadow: 0 0 0 5px rgba(255, 141, 133, 0.14); }
@@ -1300,16 +1254,18 @@ footer p:last-child { justify-self: end; }
   padding: 24px 22px 26px;
   /* 0.40 而不是更低：描边就是定义卡片边界的那个东西，WCAG 1.4.11 对界面元素
      边界要求 ≥3:1。0.34 实测只有 2.81，0.40 是 3.42。 */
-  border: 1px solid rgba(204, 255, 0, 0.4);
-  /* 极淡的信号色底，让卡片从纯黑里浮起来一点，又不至于变成色块 */
-  background: rgba(204, 255, 0, 0.035);
+  border: 1px solid var(--black-3);
+  border-radius: 2px;
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
+  transition: border-color var(--motion-base) ease, transform var(--motion-base) ease;
 }
+.readout-cell:hover { border-color: rgba(224, 99, 42, 0.58); transform: translateY(-3px); }
 .readout-cell dt {
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.52);
+  color: var(--warm-gray);
 }
 .readout-cell dd {
   margin: 16px 0 0;
@@ -1317,7 +1273,7 @@ footer p:last-child { justify-self: end; }
   font-weight: 300;
   letter-spacing: -0.045em;
   line-height: 0.9;
-  color: var(--signal);
+  color: var(--ember);
   font-variant-numeric: tabular-nums;
 }
 .readout-unit {
@@ -1333,7 +1289,7 @@ footer p:last-child { justify-self: end; }
 .readout-breakdown { margin-top: 22px; }
 .readout-breakdown-label {
   margin: 0 0 14px;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.14em;
@@ -1346,7 +1302,7 @@ footer p:last-child { justify-self: end; }
   gap: 10px 28px;
   margin: 0;
   padding-top: 16px;
-  border-top: 1px solid rgba(204, 255, 0, 0.22);
+  border-top: 1px solid var(--black-4);
 }
 .readout-breakdown-item {
   display: flex;
@@ -1362,13 +1318,13 @@ footer p:last-child { justify-self: end; }
   font-size: 17px;
   font-weight: 400;
   letter-spacing: -0.02em;
-  color: var(--signal);
+  color: var(--ember);
   font-variant-numeric: tabular-nums;
 }
 
 .readout-sync {
   margin: 0;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1423,7 +1379,7 @@ summary:focus-visible {
   padding: 12px 18px;
   background: var(--signal);
   color: var(--ink);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 12px;
   letter-spacing: 0.08em;
   transform: translateY(-120%);
@@ -1460,8 +1416,8 @@ summary:focus-visible {
 .health-hero {
   min-height: 660px;
   background:
-    radial-gradient(circle at 76% 30%, rgba(204, 255, 0, 0.16), transparent 22%),
-    linear-gradient(132deg, #151515 0%, #1b1d18 54%, #111 100%);
+    radial-gradient(circle at 76% 30%, rgba(224, 99, 42, 0.16), transparent 22%),
+    linear-gradient(132deg, var(--black) 0%, var(--black-3) 54%, #111 100%);
 }
 .health-intro { max-width: 650px; }
 .health-hero-meta {
@@ -1470,8 +1426,8 @@ summary:focus-visible {
   gap: 16px 48px;
   margin: 42px 0 0;
   padding-top: 24px;
-  border-top: 1px solid rgba(204, 255, 0, 0.25);
-  font-family: var(--font-geist-mono), monospace;
+  border-top: 1px solid rgba(224, 99, 42, 0.25);
+  font-family: var(--font-mono), monospace;
   text-transform: uppercase;
 }
 .health-hero-meta div { min-width: 150px; }
@@ -1501,7 +1457,7 @@ summary:focus-visible {
 .health-local-nav a {
   padding: 14px 20px;
   color: rgba(255, 255, 255, 0.62);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.1em;
   text-decoration: none;
@@ -1510,7 +1466,7 @@ summary:focus-visible {
 .health-local-nav a:hover,
 .health-local-nav a:focus-visible {
   color: var(--signal);
-  background: rgba(204, 255, 0, 0.08);
+  background: rgba(224, 99, 42, 0.08);
 }
 #health-timeline,
 #health-snapshot,
@@ -1583,12 +1539,12 @@ summary:focus-visible {
 .health-year-value,
 .health-year-label,
 .health-note-grid article > span {
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.health-kpi dt { color: #69655c; }
+.health-kpi dt { color: var(--rock-gray); }
 .health-kpi dd {
   margin: 28px 0 0;
   color: var(--ink);
@@ -1600,7 +1556,7 @@ summary:focus-visible {
 }
 .health-kpi dd span {
   margin-left: 7px;
-  color: #69655c;
+  color: var(--rock-gray);
   font-size: 12px;
   font-weight: 450;
   letter-spacing: 0;
@@ -1624,8 +1580,8 @@ summary:focus-visible {
 .health-trend-card {
   min-width: 0;
   padding: 28px;
-  border: 1px solid rgba(204, 255, 0, 0.34);
-  background: rgba(204, 255, 0, 0.025);
+  border: 1px solid rgba(224, 99, 42, 0.34);
+  background: rgba(224, 99, 42, 0.025);
 }
 .health-trend-heading {
   display: flex;
@@ -1640,7 +1596,7 @@ summary:focus-visible {
 }
 .health-trend-heading > span {
   color: var(--signal);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
@@ -1701,8 +1657,8 @@ summary:focus-visible {
   background: var(--paper);
 }
 .health-supplement-role {
-  color: #6b8a00;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1730,8 +1686,8 @@ summary:focus-visible {
 }
 .health-supplement-heading > span {
   flex: 0 0 auto;
-  color: #6b8a00;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
   font-size: 11px;
   white-space: nowrap;
 }
@@ -1747,8 +1703,8 @@ summary:focus-visible {
   gap: 14px;
 }
 .health-supplement-details dt {
-  color: #6b8a00;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
   line-height: 1.7;
@@ -1763,7 +1719,7 @@ summary:focus-visible {
   display: block;
   margin-top: 7px;
   color: #827d72;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.02em;
   line-height: 1.5;
@@ -1772,7 +1728,7 @@ summary:focus-visible {
 .health-nutrition-amount {
   display: block;
   color: var(--ink);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 17px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -1781,7 +1737,7 @@ summary:focus-visible {
   display: block;
   margin-top: 4px;
   color: #827d72;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.02em;
   line-height: 1.5;
@@ -1830,8 +1786,8 @@ summary:focus-visible {
   display: flex;
   min-height: 402px;
   padding: 42px;
-  border: 1px solid #23251d;
-  background: #23251d;
+  border: 1px solid var(--black-3);
+  background: var(--black-3);
 }
 .health-life-heading {
   display: flex;
@@ -1847,8 +1803,8 @@ summary:focus-visible {
 }
 .health-smoking-grid dt,
 .health-smoking-source {
-  color: #6b8a00;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1880,7 +1836,7 @@ summary:focus-visible {
 .health-life-value-label {
   display: block;
   color: #bdcb79;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1905,7 +1861,7 @@ summary:focus-visible {
   gap: 6px;
   flex-wrap: wrap;
   color: #d1e262;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: clamp(24px, 2.8vw, 34px);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.05em;
@@ -1990,8 +1946,8 @@ summary.health-recovery-heading::after {
   align-self: center;
   flex: 0 0 auto;
   margin-left: 18px;
-  color: #6b8a00;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
   font-size: 11px;
   content: '查看 ▾';
 }
@@ -2001,8 +1957,8 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .health-recovery-heading > div > span,
 .health-recovery-time,
 .health-recovery-source {
-  color: #6b8a00;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -2019,7 +1975,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   margin-left: auto;
   padding-top: 2px;
   color: #827d72;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
   white-space: nowrap;
@@ -2044,8 +2000,8 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .health-recovery-table thead th {
   padding-top: 15px;
   padding-bottom: 12px;
-  color: #6b8a00;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -2065,7 +2021,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 }
 .health-recovery-table tbody td:nth-child(2) {
   color: var(--ink);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 17px;
   font-variant-numeric: tabular-nums;
   text-align: right;
@@ -2085,12 +2041,12 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   inset: 0 auto 0 0;
   display: block;
   width: var(--recovery-width, 0%);
-  background: #6b8a00;
+  background: var(--ember);
 }
 .health-recovery-meter.is-unavailable > span { display: none; }
 .health-recovery-table tbody td:last-child {
   padding-left: 30px;
-  color: #6b8a00;
+  color: var(--ember);
   font-size: 13px;
   line-height: 1.5;
 }
@@ -2099,7 +2055,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .health-recovery-table tbody td:last-child small {
   margin-top: 4px;
   color: #827d72;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.04em;
 }
@@ -2123,7 +2079,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 }
 .health-recovery-source a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .health-note-grid article { padding: 30px; background: var(--paper); }
-.health-note-grid article > span { color: #6b8a00; }
+.health-note-grid article > span { color: var(--ember); }
 .health-note-grid h3 {
   margin: 30px 0 16px;
   font-size: clamp(22px, 2.3vw, 32px);
@@ -2340,8 +2296,8 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   transform: translateY(-50%);
   border: 1px solid rgba(21, 21, 21, 0.24);
   background: #efede5;
-  color: #6b8a00;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.04em;
 }
@@ -2355,8 +2311,8 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   top: 50%;
   left: -56px;
   transform: translateY(-50%);
-  color: #69655c;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.06em;
 }
@@ -2383,7 +2339,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   align-items: end;
   gap: 24px;
 }
-.health-memorial-stack .health-life-value-label { color: #6b8a00; }
+.health-memorial-stack .health-life-value-label { color: var(--ember); }
 .health-memorial-stack .health-life-readout strong {
   color: var(--ink);
   font-size: clamp(28px, 2.9vw, 42px);
@@ -2391,17 +2347,17 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .health-memorial-stack .health-life-percent {
   width: auto;
   margin: 0;
-  color: #6b8a00;
+  color: var(--ember);
   font-size: clamp(24px, 2.4vw, 34px);
 }
-.health-memorial-stack .health-life-percent-note { color: #6b8a00; }
+.health-memorial-stack .health-life-percent-note { color: var(--ember); }
 .health-memorial-stack .health-life-track {
   height: 5px;
   margin-top: 24px;
   border: 0;
   background: rgba(107, 138, 0, 0.15);
 }
-.health-memorial-stack .health-life-track > span { background: #6b8a00; }
+.health-memorial-stack .health-life-track > span { background: var(--ember); }
 .health-memorial-stack .health-smoking-grid {
   grid-template-columns: minmax(230px, 1.35fr) minmax(190px, 0.72fr);
   align-items: end;
@@ -2596,7 +2552,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   grid-template-columns: minmax(170px, 22vw) 1fr;
   align-items: center;
   padding: 140px 4vw;
-  background: radial-gradient(circle at 78% 40%, rgba(204, 255, 0, 0.11), transparent 24%), var(--ink);
+  background: radial-gradient(circle at 78% 40%, rgba(224, 99, 42, 0.11), transparent 24%), var(--ink);
   color: #fff;
 }
 .status-hero .eyebrow { color: rgba(255, 255, 255, 0.54); }
@@ -2617,11 +2573,11 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .status-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
 .status-link {
   padding: 12px 18px;
-  border: 1px solid rgba(204, 255, 0, 0.58);
+  border: 1px solid rgba(224, 99, 42, 0.58);
   background: transparent;
   color: var(--signal);
   cursor: pointer;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 11px;
   line-height: 1.5;
   letter-spacing: 0.12em;
@@ -2632,7 +2588,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .status-digest {
   margin: 28px 0 0;
   color: rgba(255, 255, 255, 0.46);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.12em;
 }
@@ -2662,7 +2618,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   transition: transform var(--motion-base) ease;
 }
 .lab-ranking-item a:hover { transform: translateY(-4px); }
-.lab-ranking-item a:focus-visible { outline: 3px solid #6b8a00; outline-offset: 5px; }
+.lab-ranking-item a:focus-visible { outline: 3px solid var(--ember); outline-offset: 5px; }
 .lab-ranking-item img { width: 100%; height: auto; }
 
 @media (max-width: 760px) {
@@ -2686,7 +2642,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   overflow: hidden;
   background:
     linear-gradient(to bottom, transparent 42%, var(--ink) 100%),
-    radial-gradient(circle at 78% 25%, rgba(204, 255, 0, 0.17), transparent 25%),
+    radial-gradient(circle at 78% 25%, rgba(224, 99, 42, 0.17), transparent 25%),
     linear-gradient(115deg, #121212, #1b1b1b 54%, #0e0e0e);
   color: #fff;
 }
@@ -2722,7 +2678,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   justify-content: space-between;
   margin-top: 74px;
   color: rgba(255,255,255,.48);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -2754,12 +2710,12 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   border-top: 3px solid var(--ink);
   background: rgba(21,21,21,.045);
 }
-.mind-core-grid article:last-child { border-top-color: #6b8a00; background: #dfe4c8; }
+.mind-core-grid article:last-child { border-top-color: var(--ember); background: #dfe4c8; }
 .mind-card-index,
 .mind-subhead {
   display: block;
-  color: #69655c;
-  font-family: var(--font-geist-mono), monospace;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: .11em;
   text-transform: uppercase;
@@ -2804,7 +2760,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   padding: 10px 0;
   border-bottom: 1px solid rgba(255,255,255,.4);
   color: var(--signal);
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
 }
 .mind-search input { width: 100%; border: 0; outline: 0; background: transparent; color: #fff; font: inherit; font-size: 10px; letter-spacing: .08em; }
 .mind-search input::placeholder { color: rgba(255,255,255,.5); }
@@ -2822,13 +2778,13 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   text-align: left;
   transition: color var(--motion-base) ease, padding var(--motion-base) ease;
 }
-.mind-topic-nav button span { grid-row: span 2; color: rgba(255,255,255,.4); font-family: var(--font-geist-mono), monospace; font-size: 10px; }
+.mind-topic-nav button span { grid-row: span 2; color: rgba(255,255,255,.4); font-family: var(--font-mono), monospace; font-size: 10px; }
 .mind-topic-nav button strong { font-size: 15px; font-weight: 480; }
-.mind-topic-nav button em { color: rgba(255,255,255,.35); font-family: var(--font-geist-mono), monospace; font-size: 9px; font-style: normal; letter-spacing: .1em; }
+.mind-topic-nav button em { color: rgba(255,255,255,.35); font-family: var(--font-mono), monospace; font-size: 9px; font-style: normal; letter-spacing: .1em; }
 .mind-topic-nav button:hover,
 .mind-topic-nav button:focus-visible,
 .mind-topic-nav button.is-active { padding-left: 12px; color: #fff; }
-.mind-topic-nav button.is-active { background: rgba(204,255,0,.09); }
+.mind-topic-nav button.is-active { background: rgba(224, 99, 42,.09); }
 .mind-topic-nav button.is-active span,
 .mind-topic-nav button.is-active em { color: var(--signal); }
 .mind-empty { color: rgba(255,255,255,.55); font-size: 13px; line-height: 1.7; }
@@ -2837,7 +2793,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .mind-detail-warm { border-top-color: #aa7655; background: #e8ded2; }
 .mind-detail-violet { border-top-color: #9787a8; background: #e6e0e9; }
 .mind-detail-soft { border-top-color: #8c9479; background: #e4e6d9; }
-.mind-detail-topline { display: flex; justify-content: space-between; color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+.mind-detail-topline { display: flex; justify-content: space-between; color: var(--rock-gray); font-family: var(--font-mono), monospace; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
 .mind-detail h3 { max-width: 700px; margin: 68px 0 0; font-size: clamp(30px, 3.4vw, 52px); font-weight: 560; letter-spacing: -.06em; line-height: 1.06; }
 .mind-thesis { max-width: 650px; margin: 28px 0 0; font-size: 18px; line-height: 1.75; }
 .mind-detail-columns { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(210px, .85fr); gap: 38px; margin-top: 68px; padding-top: 19px; border-top: 1px solid rgba(21,21,21,.26); }
@@ -2845,7 +2801,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .mind-detail-columns li { margin-top: 15px; color: #514e47; font-size: 13px; line-height: 1.85; }
 .mind-detail-columns ul { margin: 0; padding: 0; list-style: none; }
 .mind-detail-columns li { position: relative; padding-left: 16px; }
-.mind-detail-columns li::before { position: absolute; left: 0; color: #6b8a00; content: '↗'; }
+.mind-detail-columns li::before { position: absolute; left: 0; color: var(--ember); content: '↗'; }
 .mind-practice { margin-top: 54px; padding: 20px 0 0 20px; border-left: 3px solid #8c9479; }
 .mind-practice p { max-width: 660px; margin: 11px 0 0; font-size: 16px; line-height: 1.8; }
 .mind-review { padding-top: 92px; background: var(--paper); }
@@ -2855,11 +2811,11 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .mind-review-card { display: flex; min-height: 170px; flex-direction: column; padding: 18px 20px; border: 1px solid rgba(21,21,21,.28); color: var(--ink); cursor: pointer; text-align: left; transition: background var(--motion-base) ease, transform var(--motion-base) ease; }
 .mind-review-card:hover,
 .mind-review-card:focus-visible { background: #e8e5db; transform: translateY(-3px); }
-.mind-review-card.is-open { border-color: #6b8a00; background: #dfe4c8; }
-.mind-review-number { color: #6b8a00; font-family: var(--font-geist-mono), monospace; font-size: 10px; }
+.mind-review-card.is-open { border-color: var(--ember); background: #dfe4c8; }
+.mind-review-number { color: var(--ember); font-family: var(--font-mono), monospace; font-size: 10px; }
 .mind-review-card strong { max-width: 360px; margin-top: 31px; font-size: 20px; font-weight: 520; letter-spacing: -.03em; line-height: 1.3; }
-.mind-review-answer { margin-top: auto; color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 10px; letter-spacing: .04em; line-height: 1.55; }
-.mind-review-card.is-open .mind-review-answer { color: #536b00; font-family: var(--font-geist-sans), sans-serif; font-size: 13px; letter-spacing: 0; }
+.mind-review-answer { margin-top: auto; color: var(--rock-gray); font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: .04em; line-height: 1.55; }
+.mind-review-card.is-open .mind-review-answer { color: var(--ember-hot); font-family: var(--font-body), sans-serif; font-size: 13px; letter-spacing: 0; }
 .mind-closing-note { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 30px; margin-top: 72px; padding-top: 22px; border-top: 1px solid rgba(21,21,21,.28); }
 .mind-closing-note p { max-width: 690px; margin: 0; font-size: 20px; line-height: 1.7; }
 
@@ -2900,51 +2856,51 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .knowledge-index-body { min-width: 0; }
 .knowledge-index-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; }
 .knowledge-index-heading h2 { max-width: 760px; font-size: clamp(32px, 4.5vw, 62px); font-weight: 520; letter-spacing: -.065em; line-height: 1.05; }
-.knowledge-index-heading .eyebrow { color: #69655c; }
-.knowledge-search { display: flex; width: 190px; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid rgba(21,21,21,.42); color: #6b8a00; font-family: var(--font-geist-mono), monospace; }
+.knowledge-index-heading .eyebrow { color: var(--rock-gray); }
+.knowledge-search { display: flex; width: 190px; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid rgba(21,21,21,.42); color: var(--ember); font-family: var(--font-mono), monospace; }
 .knowledge-search input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); font: inherit; font-size: 10px; letter-spacing: .08em; }
-.knowledge-search input::placeholder { color: #69655c; }
+.knowledge-search input::placeholder { color: var(--rock-gray); }
 .knowledge-categories { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 56px; }
-.knowledge-categories button { padding: 8px 13px; border: 1px solid rgba(21,21,21,.28); border-radius: 99px; color: var(--ink); cursor: pointer; font-family: var(--font-geist-mono), monospace; font-size: 10px; letter-spacing: .06em; }
+.knowledge-categories button { padding: 8px 13px; border: 1px solid rgba(21,21,21,.28); border-radius: 99px; color: var(--ink); cursor: pointer; font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: .06em; }
 .knowledge-categories button:hover,
 .knowledge-categories button:focus-visible,
 .knowledge-categories button.is-active { background: var(--ink); color: #fff; }
-.knowledge-categories button span { margin-left: 6px; color: #69655c; }
+.knowledge-categories button span { margin-left: 6px; color: var(--rock-gray); }
 .knowledge-categories button.is-active span { color: var(--signal); }
 .knowledge-library-layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(300px, .95fr); gap: 48px; margin-top: 42px; }
 .knowledge-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-content: start; }
 .knowledge-card { display: flex; min-height: 210px; flex-direction: column; padding: 18px 20px; border: 1px solid rgba(21,21,21,.25); color: var(--ink); cursor: pointer; text-align: left; transition: transform var(--motion-base) ease, background var(--motion-base) ease, border-color var(--motion-base) ease; }
 .knowledge-card:hover,
 .knowledge-card:focus-visible { transform: translateY(-3px); background: #e8e5db; }
-.knowledge-card.is-selected { border-color: #6b8a00; box-shadow: inset 0 3px #6b8a00; }
+.knowledge-card.is-selected { border-color: var(--ember); box-shadow: inset 0 3px var(--ember); }
 .knowledge-card-lime { background: #edf0df; }
 .knowledge-card-blue { background: #e4eceb; }
 .knowledge-card-warm { background: #e8ded2; }
 .knowledge-card-violet { background: #e6e0e9; }
 .knowledge-card-soft { background: #e4e6d9; }
 .knowledge-card-topline,
-.knowledge-detail-topline { display: flex; justify-content: space-between; color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+.knowledge-detail-topline { display: flex; justify-content: space-between; color: var(--rock-gray); font-family: var(--font-mono), monospace; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
 .knowledge-card strong { max-width: 360px; margin-top: 42px; font-size: 21px; font-weight: 520; letter-spacing: -.035em; line-height: 1.25; }
-.knowledge-card-source { margin-top: auto; color: #69655c; font-size: 11px; line-height: 1.55; }
+.knowledge-card-source { margin-top: auto; color: var(--rock-gray); font-size: 11px; line-height: 1.55; }
 .knowledge-detail { min-height: 490px; padding: 28px 30px 32px; border-top: 3px solid var(--signal); background: var(--ink); color: #fff; }
 .knowledge-detail-topline { color: rgba(255,255,255,.52); }
 .knowledge-detail-topline span:first-child { color: var(--signal); }
 .knowledge-detail h3 { max-width: 520px; margin: 70px 0 0; color: #fff; font-size: clamp(29px, 3.1vw, 48px); font-weight: 540; letter-spacing: -.06em; line-height: 1.08; }
 .knowledge-idea { max-width: 520px; margin: 26px 0 0; color: rgba(255,255,255,.7); font-size: 16px; line-height: 1.85; }
 .knowledge-takeaway { margin-top: 58px; padding: 18px 0 0 18px; border-left: 3px solid var(--signal); }
-.knowledge-subhead { display: block; color: var(--signal); font-family: var(--font-geist-mono), monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
+.knowledge-subhead { display: block; color: var(--signal); font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
 .knowledge-takeaway p { max-width: 540px; margin: 12px 0 0; color: #fff; font-size: 15px; line-height: 1.75; }
 .knowledge-source { margin-top: 48px; padding-top: 17px; border-top: 1px solid rgba(255,255,255,.23); }
 .knowledge-source .knowledge-subhead { color: rgba(255,255,255,.5); }
 .knowledge-source p { margin: 10px 0 0; color: rgba(255,255,255,.63); font-size: 12px; line-height: 1.65; }
-.knowledge-empty { grid-column: 1 / -1; color: #69655c; font-size: 14px; line-height: 1.7; }
-.knowledge-method { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 92px 4vw 120px; background: #24251f; color: #fff; }
+.knowledge-empty { grid-column: 1 / -1; color: var(--rock-gray); font-size: 14px; line-height: 1.7; }
+.knowledge-method { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 92px 4vw 120px; background: var(--black-3); color: #fff; }
 .knowledge-method .section-label span:first-child { color: var(--signal); }
 .knowledge-method h2 { max-width: 810px; font-size: clamp(31px, 4.5vw, 62px); font-weight: 520; letter-spacing: -.065em; line-height: 1.04; }
 .knowledge-method .eyebrow { color: rgba(255,255,255,.52); }
 .knowledge-method-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 70px; }
 .knowledge-method-grid > div { min-height: 160px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.3); }
-.knowledge-method-grid span { color: var(--signal); font-family: var(--font-geist-mono), monospace; font-size: 10px; }
+.knowledge-method-grid span { color: var(--signal); font-family: var(--font-mono), monospace; font-size: 10px; }
 .knowledge-method-grid p { margin: 44px 0 8px; font-size: 21px; letter-spacing: -.03em; }
 .knowledge-method-grid small { display: block; max-width: 220px; color: rgba(255,255,255,.57); font-size: 12px; line-height: 1.7; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
@@ -2970,13 +2926,44 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 }
 
 /* ── Learning：跨学科学习地图 ─────────────────────────────── */
-.home-learning { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 112px 4vw 124px; background: #e8e5db; }
+.home-learning {
+  display: grid;
+  grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
+  padding: 118px 4vw 132px;
+  border-top: 1px solid var(--black-3);
+  border-bottom: 1px solid var(--black-3);
+  background:
+    linear-gradient(135deg, rgba(224, 99, 42, 0.13), transparent 38%),
+    linear-gradient(315deg, rgba(74, 172, 184, 0.055), transparent 42%),
+    var(--black-2);
+  color: var(--warm-white);
+}
+.home-learning .section-label span:first-child { color: var(--ember); }
 .home-learning-body { min-width: 0; }
-.home-learning-body h2 { max-width: 1020px; font-size: clamp(42px, 6.6vw, 96px); font-weight: 520; letter-spacing: -.068em; line-height: 1.02; }
+.home-learning-body h2 { max-width: 1020px; font-size: clamp(42px, 6.6vw, 96px); font-weight: 600; letter-spacing: -.058em; line-height: 1.02; }
 .home-learning-bottom { display: grid; max-width: 760px; grid-template-columns: 1fr auto; align-items: end; gap: 52px; margin: 72px 0 0 auto; }
-.home-learning-bottom p { color: #5d5a53; font-size: 15px; line-height: 1.8; }
-.home-learning-bottom a { display: inline-flex; min-height: 48px; align-items: center; gap: 13px; padding: 0 18px; border: 1px solid var(--ink); background: var(--ink); color: #fff; font-family: var(--font-geist-mono), monospace; font-size: 11px; font-weight: 600; letter-spacing: .08em; white-space: nowrap; }
-.home-learning-bottom a span { color: var(--signal); font-size: 16px; transition: transform var(--motion-base) ease; }
+.home-learning-bottom p { color: var(--warm-gray); font-size: 15px; line-height: 1.8; }
+.home-learning-bottom a {
+  display: inline-flex;
+  min-height: 52px;
+  align-items: center;
+  gap: 13px;
+  padding: 0 24px;
+  border: 1px solid var(--ember);
+  background: var(--ember);
+  color: var(--warm-white);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 100%, 8px 100%);
+  font-family: var(--font-condensed);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background var(--motion-base) ease, transform var(--motion-base) ease;
+}
+.home-learning-bottom a:hover,
+.home-learning-bottom a:focus-visible { background: var(--ember-hot); transform: translateY(-2px); }
+.home-learning-bottom a span { color: currentColor; font-size: 16px; transition: transform var(--motion-base) ease; }
 .home-learning-bottom a:hover span,
 .home-learning-bottom a:focus-visible span { transform: translate(3px, -3px); }
 
@@ -2988,18 +2975,18 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
  * 旧版 min-height: 650px 在手机上意味着整屏都是标题，主 CTA 要滚一屏才看得到；
  * 现在高度由内容决定，移动端整块压在 480px 以内（见文件末尾的 760px 断点）。
  */
-.learning-hero { position: relative; display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); align-items: start; overflow: hidden; padding: 62px 4vw 54px; background: radial-gradient(circle at 78% 30%, rgba(204,255,0,.13), transparent 26%), #151515; color: #fff; }
+.learning-hero { position: relative; display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); align-items: start; overflow: hidden; padding: 62px 4vw 54px; background: radial-gradient(circle at 78% 30%, rgba(224, 99, 42,.13), transparent 26%), var(--black); color: #fff; }
 .learning-hero::before { position: absolute; inset: 0; opacity: .15; background-image: linear-gradient(rgba(255,255,255,.14) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.14) 1px, transparent 1px); background-size: 72px 72px; content: ''; mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent); }
 .learning-hero > * { position: relative; z-index: 1; }
 .learning-hero .eyebrow { margin-bottom: 18px; color: rgba(255,255,255,.54); }
 .learning-hero-body { min-width: 0; }
 .learning-hero h1 { max-width: 14ch; font-size: clamp(44px, 6.6vw, 92px); font-weight: 620; letter-spacing: -.072em; line-height: .92; }
 .learning-hero-intro { max-width: 560px; margin-top: 22px; color: var(--text-secondary); font-size: 16px; line-height: 1.8; }
-.learning-hero-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px; margin-top: 32px; color: rgba(255,255,255,.5); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .09em; text-transform: uppercase; }
+.learning-hero-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px; margin-top: 32px; color: rgba(255,255,255,.5); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .09em; text-transform: uppercase; }
 
 /* 首屏主 CTA：固定指向哲学地图，文案是静态的。 */
 .learning-resume { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 28px; }
-.learning-resume-cta { display: inline-flex; min-height: 50px; align-items: center; gap: 14px; padding: 0 22px; border: 1px solid var(--signal); background: var(--signal); color: var(--ink); font-family: var(--font-geist-mono), monospace; font-size: 13px; font-weight: 600; letter-spacing: .08em; }
+.learning-resume-cta { display: inline-flex; min-height: 50px; align-items: center; gap: 14px; padding: 0 22px; border: 1px solid var(--signal); background: var(--signal); color: var(--ink); font-family: var(--font-mono), monospace; font-size: 13px; font-weight: 600; letter-spacing: .08em; }
 .learning-resume-cta span:last-child { font-size: 16px; transition: transform var(--motion-base) ease; }
 .learning-resume-cta:hover span:last-child,
 .learning-resume-cta:focus-visible span:last-child { transform: translate(3px, -3px); }
@@ -3008,14 +2995,14 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .learning-questions,
 .learning-traditions { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 88px 4vw 100px; }
 .learning-questions { background: var(--paper); }
-.learning-traditions { background: #24251f; color: #fff; }
+.learning-traditions { background: var(--black-3); color: #fff; }
 .learning-traditions .eyebrow { color: rgba(255,255,255,.5); }
 .learning-section-body { min-width: 0; }
 .learning-section-body > h2 { max-width: 900px; font-size: clamp(34px, 4.4vw, 62px); font-weight: 520; letter-spacing: -.06em; line-height: 1.08; }
 .learning-section-lede { max-width: 660px; margin-top: 20px; color: #5d5a53; font-size: 15px; line-height: 1.85; }
 .learning-traditions .learning-section-lede { color: rgba(255,255,255,.62); }
 .learning-section-actions { margin-top: 22px; }
-.learning-inline-link { display: inline-flex; min-height: 44px; align-items: center; gap: 9px; padding: 0 16px; border: 1px solid var(--ink); font-family: var(--font-geist-mono), monospace; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; transition: background var(--motion-base) ease, color var(--motion-base) ease; }
+.learning-inline-link { display: inline-flex; min-height: 44px; align-items: center; gap: 9px; padding: 0 16px; border: 1px solid var(--ink); font-family: var(--font-mono), monospace; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; transition: background var(--motion-base) ease, color var(--motion-base) ease; }
 .learning-inline-link:hover,
 .learning-inline-link:focus-visible { background: var(--ink); color: #fff; }
 
@@ -3026,14 +3013,14 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .learning-question-group-head h3 { font-size: 21px; font-weight: 560; letter-spacing: -.035em; line-height: 1.25; }
 .learning-question-domain-link { border-bottom: 1px solid transparent; }
 .learning-question-domain-link:hover { border-bottom-color: var(--ink); }
-.learning-question-count { flex: 0 0 auto; color: #69655c; font-size: 12px; letter-spacing: .02em; }
+.learning-question-count { flex: 0 0 auto; color: var(--rock-gray); font-size: 12px; letter-spacing: .02em; }
 .learning-question-group-summary { margin-top: 10px; color: #5d5a53; font-size: 13px; line-height: 1.75; }
 .learning-question-list { margin-top: 14px; }
 .learning-question-list li + li { border-top: 1px solid rgba(21,21,21,.15); }
 .learning-question-link { display: grid; min-height: 58px; grid-template-columns: 28px minmax(0, 1fr); align-items: baseline; gap: 12px; padding: 13px 0; }
 .learning-question-link:focus-visible { outline-offset: -2px; }
 .learning-question-link:hover .learning-question-title { text-decoration: underline; text-underline-offset: 4px; }
-.learning-question-index { color: #8a867c; font-family: var(--font-geist-mono), monospace; font-size: 12px; }
+.learning-question-index { color: #8a867c; font-family: var(--font-mono), monospace; font-size: 12px; }
 .learning-question-title { font-size: 16px; font-weight: 460; letter-spacing: -.012em; line-height: 1.45; }
 
 .learning-tradition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px; margin-top: 44px; }
@@ -3051,27 +3038,27 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .learning-method-body h2 { font-size: clamp(34px, 4.6vw, 68px); font-weight: 520; letter-spacing: -.062em; line-height: 1.06; }
 .learning-loop { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px; margin-top: 58px; }
 .learning-loop li { padding-top: 17px; border-top: 2px solid rgba(255,255,255,.7); }
-.learning-loop li > span { display: block; margin-bottom: 34px; color: var(--signal); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .1em; }
+.learning-loop li > span { display: block; margin-bottom: 34px; color: var(--signal); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .1em; }
 .learning-loop strong { display: block; font-size: 20px; font-weight: 520; }
 .learning-loop p { margin-top: 10px; color: rgba(255,255,255,.56); font-size: 13px; line-height: 1.7; }
 
 /* 三个规划中的学科：从占满一屏的卡片改成一条紧凑路线图。 */
-.learning-roadmap-heading { margin-top: 66px; color: rgba(255,255,255,.7); font-family: var(--font-geist-mono), monospace; font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
+.learning-roadmap-heading { margin-top: 66px; color: rgba(255,255,255,.7); font-family: var(--font-mono), monospace; font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
 .learning-roadmap { margin-top: 14px; border-top: 1px solid rgba(255,255,255,.26); }
 .learning-roadmap li { display: grid; grid-template-columns: 30px minmax(0, 150px) minmax(0, 1fr) auto; align-items: baseline; gap: 8px 18px; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,.14); }
-.learning-roadmap-index { color: var(--signal); font-family: var(--font-geist-mono), monospace; font-size: 12px; }
+.learning-roadmap-index { color: var(--signal); font-family: var(--font-mono), monospace; font-size: 12px; }
 .learning-roadmap-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; font-size: 17px; letter-spacing: -.02em; }
-.learning-roadmap-code { color: rgba(255,255,255,.42); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .08em; }
+.learning-roadmap-code { color: rgba(255,255,255,.42); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .08em; }
 .learning-roadmap-note { color: rgba(255,255,255,.58); font-size: 13px; line-height: 1.6; }
-.learning-roadmap-state { color: rgba(204,255,0,.78); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .1em; }
+.learning-roadmap-state { color: rgba(224, 99, 42,.78); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .1em; }
 
 /* ── Learning：哲学节点页 ─────────────────────────────────── */
 .philosophy-page { background: var(--paper); }
-.philosophy-hero { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); align-items: start; padding: 58px 4vw 56px; background: #151515; color: #fff; }
+.philosophy-hero { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); align-items: start; padding: 58px 4vw 56px; background: var(--black); color: #fff; }
 .philosophy-hero-body { min-width: 0; max-width: 900px; }
 .philosophy-hero .eyebrow { margin-bottom: 14px; color: rgba(255,255,255,.54); }
 .philosophy-hero h1 { font-size: clamp(31px, 4.4vw, 60px); font-weight: 560; letter-spacing: -.05em; line-height: 1.08; }
-.philosophy-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 22px; color: rgba(255,255,255,.52); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .06em; }
+.philosophy-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 22px; color: rgba(255,255,255,.52); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .06em; }
 .philosophy-breadcrumb-item { display: inline-flex; align-items: center; gap: 8px; }
 .philosophy-breadcrumb a { border-bottom: 1px solid transparent; }
 .philosophy-breadcrumb a:hover { color: var(--signal); border-bottom-color: currentColor; }
@@ -3086,55 +3073,55 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .philosophy-lede { max-width: 700px; margin-top: 18px; color: #5d5a53; font-size: 15px; line-height: 1.85; }
 .philosophy-body-main > .philosophy-block:first-child { margin-top: 26px; }
 .philosophy-block { margin-top: 48px; }
-.philosophy-block-title { padding-top: 12px; border-top: 2px solid var(--ink); font-family: var(--font-geist-mono), monospace; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.philosophy-block-title { padding-top: 12px; border-top: 2px solid var(--ink); font-family: var(--font-mono), monospace; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
 .philosophy-notes { margin-top: 18px; }
 .philosophy-notes li { padding: 2px 0 2px 16px; border-left: 2px solid rgba(21,21,21,.24); color: #4a463f; font-size: 14px; line-height: 1.85; }
 .philosophy-notes li + li { margin-top: 14px; }
 .philosophy-positions { display: grid; gap: 18px; margin-top: 20px; }
 .philosophy-positions li { padding: 20px; background: #e8e5db; }
-.philosophy-position-index { color: #4c6600; font-family: var(--font-geist-mono), monospace; font-size: 12px; letter-spacing: .1em; }
+.philosophy-position-index { color: #c85422; font-family: var(--font-mono), monospace; font-size: 12px; letter-spacing: .1em; }
 .philosophy-position-name { margin-top: 10px; font-size: 20px; font-weight: 560; letter-spacing: -.035em; line-height: 1.3; }
 .philosophy-position-text { margin-top: 10px; color: #3f3c35; font-size: 15px; line-height: 1.85; }
 .philosophy-position-objection { margin-top: 14px; padding-top: 13px; border-top: 1px solid rgba(21,21,21,.17); color: #5d5a53; font-size: 14px; line-height: 1.8; }
-.philosophy-tag { display: inline-block; margin-right: 10px; padding: 3px 8px; background: var(--ink); color: var(--signal); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .08em; }
+.philosophy-tag { display: inline-block; margin-right: 10px; padding: 3px 8px; background: var(--ink); color: var(--signal); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .08em; }
 .philosophy-paragraph { margin-top: 18px; color: #3f3c35; font-size: 15px; line-height: 1.9; }
 .philosophy-example { margin-top: 18px; padding: 18px 20px; border-left: 3px solid var(--ink); background: #e8e5db; color: #3f3c35; font-size: 15px; line-height: 1.9; }
 .philosophy-related { margin-top: 16px; }
 .philosophy-related li a { display: grid; min-height: 52px; grid-template-columns: minmax(72px, auto) minmax(0, 1fr); align-items: baseline; gap: 14px; padding: 13px 0; border-top: 1px solid rgba(21,21,21,.16); }
 .philosophy-related li a:focus-visible { outline-offset: -2px; }
-.philosophy-related-type { color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .06em; }
+.philosophy-related-type { color: var(--rock-gray); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .06em; }
 .philosophy-related-title { font-size: 16px; line-height: 1.45; }
 .philosophy-related li a:hover .philosophy-related-title { text-decoration: underline; text-underline-offset: 4px; }
 .philosophy-sources { margin-top: 16px; }
 .philosophy-sources li { border-top: 1px solid rgba(21,21,21,.16); }
-.philosophy-sources li a { display: block; padding: 14px 0; color: #4c6600; font-size: 14px; line-height: 1.6; }
+.philosophy-sources li a { display: block; padding: 14px 0; color: #c85422; font-size: 14px; line-height: 1.6; }
 .philosophy-sources li a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .philosophy-children { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 30px; margin-top: 20px; }
 .philosophy-children li { min-width: 0; padding-top: 14px; border-top: 1px solid rgba(21,21,21,.22); }
-.philosophy-children-type { color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .08em; }
+.philosophy-children-type { color: var(--rock-gray); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .08em; }
 .philosophy-children-title { margin-top: 8px; font-size: 19px; font-weight: 540; letter-spacing: -.035em; line-height: 1.3; }
-.philosophy-children-title a:hover { color: #4c6600; }
+.philosophy-children-title a:hover { color: #c85422; }
 .philosophy-children-summary { margin-top: 9px; color: #5d5a53; font-size: 13px; line-height: 1.75; }
 
 .philosophy-tradition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px; margin-top: 40px; }
 .philosophy-tradition { min-width: 0; padding-top: 14px; border-top: 2px solid var(--ink); }
 .philosophy-tradition h3 { font-size: 19px; font-weight: 560; letter-spacing: -.035em; line-height: 1.3; }
-.philosophy-tradition h3 a:hover { color: #4c6600; }
+.philosophy-tradition h3 a:hover { color: #c85422; }
 .philosophy-tradition > p { margin-top: 10px; color: #5d5a53; font-size: 13px; line-height: 1.75; }
 .philosophy-tradition ul { margin-top: 14px; }
 .philosophy-tradition li a { display: grid; gap: 4px; padding: 12px 0; border-top: 1px solid rgba(21,21,21,.14); font-size: 14px; line-height: 1.45; }
-.philosophy-tradition li a:hover { color: #4c6600; }
-.philosophy-thread-type { color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .06em; }
+.philosophy-tradition li a:hover { color: #c85422; }
+.philosophy-thread-type { color: var(--rock-gray); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .06em; }
 
 .philosophy-pager { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; border-top: 1px solid rgba(21,21,21,.2); background: rgba(21,21,21,.2); }
 .philosophy-pager-slot { background: var(--paper); }
 .philosophy-pager-link { display: flex; min-height: 104px; flex-direction: column; justify-content: center; gap: 10px; padding: 24px 4vw; background: var(--paper); }
-.philosophy-pager-link > span { color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .1em; }
+.philosophy-pager-link > span { color: var(--rock-gray); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .1em; }
 .philosophy-pager-link strong { font-size: 19px; font-weight: 520; letter-spacing: -.035em; line-height: 1.3; }
 .philosophy-pager-link:hover strong { text-decoration: underline; text-underline-offset: 4px; }
 .philosophy-pager-next { align-items: flex-end; text-align: right; }
-.philosophy-legacy-note { padding: 28px 4vw 64px; background: var(--paper); color: #69655c; font-size: 13px; line-height: 1.85; }
-.philosophy-legacy-note a { color: #4c6600; border-bottom: 1px solid currentColor; }
+.philosophy-legacy-note { padding: 28px 4vw 64px; background: var(--paper); color: var(--rock-gray); font-size: 13px; line-height: 1.85; }
+.philosophy-legacy-note a { color: #c85422; border-bottom: 1px solid currentColor; }
 
 /* 深色分区里的焦点环换成信号色，深色描边在深色底上看不见。 */
 .learning-hero a:focus-visible,
@@ -3208,4 +3195,390 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .philosophy-pager-link { min-height: 88px; padding: 20px; }
   .philosophy-pager-next { align-items: flex-start; text-align: left; }
   .philosophy-legacy-note { padding: 24px 20px 52px; }
+}
+
+/* ── Ember editorial theme ────────────────────────────────────
+   全站共享 Bear Grylls 官网启发的视觉语法：近黑底、余烬橙、窄体展示字、
+   极细分隔线与斜切操作按钮。 */
+.notes-hero,
+.health-hero,
+.mind-hero,
+.learning-hero,
+.status-hero {
+  background:
+    radial-gradient(circle at 78% 28%, rgba(224, 99, 42, 0.13), transparent 24%),
+    radial-gradient(circle at 94% 8%, rgba(74, 172, 184, 0.05), transparent 24%),
+    linear-gradient(135deg, var(--black-3), var(--black-2) 48%, var(--black));
+  color: var(--warm-white);
+}
+
+.notes-hero h1,
+.mind-hero h1,
+.learning-hero h1,
+.status-hero h1,
+.lab-hero-copy h1,
+.lab-rankings-hero h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.018em;
+}
+
+.eyebrow,
+.section-label,
+.hero-kicker,
+.edition {
+  font-family: var(--font-mono);
+  letter-spacing: 0.14em;
+}
+
+.notes-categories a,
+.note-meta span,
+.knowledge-categories button {
+  border-radius: 2px;
+}
+
+.learning-resume-cta,
+.learning-inline-link,
+.status-link {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 100%, 8px 100%);
+  font-family: var(--font-condensed);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.learning-resume-cta {
+  border-color: var(--ember);
+  background: var(--ember);
+  color: var(--warm-white);
+  transition: background var(--motion-base) ease, transform var(--motion-base) ease;
+}
+.learning-resume-cta:hover,
+.learning-resume-cta:focus-visible {
+  background: var(--ember-hot);
+  transform: translateY(-2px);
+}
+
+.note-row:hover,
+.note-row:focus-visible { background: rgba(224, 99, 42, 0.055); }
+.note-arrow { color: var(--ember); }
+
+.learning-traditions,
+.learning-method,
+.knowledge-method {
+  background: var(--black-3);
+  color: var(--warm-white);
+}
+
+@media (max-width: 760px) {
+  .site-header { padding-right: 20px; padding-left: 20px; }
+  .site-header .wordmark { font-size: 20px; }
+  .hero { min-height: 760px; }
+  .hero h1 { font-size: clamp(64px, 22vw, 96px); letter-spacing: 0.01em; line-height: 0.84; }
+  .hero-bottom { gap: 20px; }
+  .hero-bottom p { font-size: 14px; line-height: 1.75; }
+  footer { min-height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-primary-action,
+  .home-learning-bottom a,
+  .readout-cell,
+  .learning-resume-cta { transition: none; }
+}
+
+/* ── Full dark surface pass ──────────────────────────────────
+   Content pages use alternating charcoal planes instead of paper panels. */
+:focus-visible { outline-color: var(--ember); }
+
+.notes-page,
+.post-article,
+.health-page,
+.mind-page,
+.learning-page,
+.philosophy-page {
+  background: var(--black);
+  color: var(--warm-white);
+}
+
+.notes-preface,
+.health-snapshot,
+.health-nutrition,
+.health-notes,
+.health-smoking-section,
+.mind-overview,
+.mind-review,
+.knowledge-index,
+.learning-questions,
+.philosophy-section,
+.philosophy-legacy-note {
+  background:
+    radial-gradient(circle at 92% 12%, rgba(224, 99, 42, 0.045), transparent 28%),
+    var(--black-2);
+  color: var(--warm-white);
+}
+
+.notes-index,
+.post-layout,
+.health-trends,
+.knowledge-detail,
+.philosophy-pager {
+  background: var(--black);
+  color: var(--warm-white);
+}
+
+.notes-preface,
+.notes-index,
+.post-layout,
+.health-snapshot,
+.health-trends,
+.health-nutrition,
+.health-notes,
+.health-smoking-section,
+.mind-overview,
+.mind-review,
+.knowledge-index,
+.learning-questions,
+.philosophy-section,
+.philosophy-pager,
+.philosophy-legacy-note {
+  border-color: var(--black-4);
+}
+
+.notes-preface-emphasis,
+.notes-year-heading span:first-child,
+.note-main h2,
+.post-layout aside strong,
+.post-related a,
+.health-kpi dd,
+.health-nutrition-amount,
+.health-smoking-grid dd,
+.health-recovery-heading h3,
+.health-recovery-table tbody th,
+.health-recovery-table tbody td:nth-child(2),
+.health-memorial-stack .health-life-card h2,
+.health-memorial-stack .health-smoking-card h2,
+.health-life-readout strong,
+.mind-core-grid h2,
+.mind-detail h2,
+.mind-review-card h2,
+.knowledge-search input,
+.knowledge-categories button,
+.knowledge-card,
+.learning-question-group h3,
+.learning-question-list strong,
+.philosophy-block h2,
+.philosophy-position-text,
+.philosophy-pager-link,
+.philosophy-pager-slot {
+  color: var(--warm-white);
+}
+
+.notes-preface-summary,
+.notes-preface-lead p,
+.notes-preface-body p,
+.notes-preface-body li,
+.notes-year-count,
+.notes-years a,
+.note-main p,
+.note-time,
+.post-meta,
+.post-origin p,
+.post-analysis p,
+.post-related p,
+.post-body > p,
+.health-section-lede,
+.health-kpi dt,
+.health-supplement-card p,
+.health-nutrition-footnote,
+.health-note-grid p,
+.health-recovery-note,
+.health-memorial-stack .health-smoking-card > p,
+.mind-core-grid p,
+.mind-detail p,
+.mind-detail li,
+.mind-review-intro,
+.mind-review-card p,
+.knowledge-card p,
+.knowledge-card-source,
+.learning-section-lede,
+.learning-question-list span,
+.philosophy-summary,
+.philosophy-question,
+.philosophy-body,
+.philosophy-position-note,
+.philosophy-example p,
+.philosophy-pager-label,
+.philosophy-legacy-note p {
+  color: var(--warm-gray);
+}
+
+.post-body > p:first-child,
+.philosophy-definition,
+.learning-question-list a:hover strong,
+.learning-question-list a:focus-visible strong {
+  color: var(--warm-white);
+}
+
+.health-kpi,
+.health-supplement-card,
+.health-smoking-card,
+.health-recovery,
+.health-note-grid article,
+.mind-core-grid article,
+.mind-detail,
+.mind-detail.mind-detail-blue,
+.mind-detail.mind-detail-warm,
+.mind-detail.mind-detail-violet,
+.mind-detail.mind-detail-soft,
+.mind-review-card,
+.knowledge-card,
+.knowledge-card.knowledge-card-green,
+.knowledge-card.knowledge-card-blue,
+.knowledge-card.knowledge-card-warm,
+.knowledge-card.knowledge-card-violet,
+.knowledge-card.knowledge-card-neutral,
+.philosophy-positions li,
+.philosophy-example,
+.post-origin,
+.post-analysis,
+.post-related,
+.philosophy-pager-slot,
+.philosophy-pager-link {
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
+  border-color: var(--black-4);
+  color: var(--warm-white);
+}
+
+.health-page { --health-accent-text: var(--ember); }
+
+.health-memorial-stack,
+.health-memorial-stack .health-life-card,
+.health-memorial-stack .health-smoking-card,
+.health-memorial-stack .health-life-readout {
+  background: transparent;
+  border-color: var(--black-4);
+  color: var(--warm-white);
+}
+
+.health-memorial-stack::before { background: var(--black-4); }
+.health-memorial-stack .health-life-card::before,
+.health-memorial-stack .health-smoking-card::before {
+  background: var(--black-2);
+  border-color: var(--ember);
+}
+.health-memorial-stack .health-smoking-card::before { border-color: var(--rock-gray); }
+
+.health-recovery-table thead th,
+.health-recovery-table tbody th,
+.health-recovery-table td,
+.health-recovery-table tr,
+.health-kpi,
+.health-supplement-card,
+.health-smoking-card,
+.health-note-grid article,
+.mind-core-grid article,
+.mind-review-card,
+.knowledge-card,
+.notes-years li,
+.note-row,
+.post-origin,
+.post-analysis,
+.post-related,
+.learning-question-group,
+.learning-question-list li,
+.philosophy-block,
+.philosophy-positions li,
+.philosophy-pager-link,
+.philosophy-pager-slot {
+  border-color: var(--black-4);
+}
+
+.notes-categories a,
+.knowledge-categories button {
+  border-color: var(--rock-gray);
+  color: var(--warm-gray);
+}
+
+.notes-categories a:hover,
+.notes-categories a:focus-visible,
+.notes-categories a.active,
+.knowledge-categories button:hover,
+.knowledge-categories button:focus-visible,
+.knowledge-categories button.active {
+  border-color: var(--ember);
+  background: var(--ember);
+  color: var(--warm-white);
+}
+
+.knowledge-categories button.active .knowledge-category-count,
+.knowledge-categories button:hover .knowledge-category-count,
+.knowledge-categories button:focus-visible .knowledge-category-count {
+  color: var(--warm-white);
+}
+
+.notes-years a:hover,
+.notes-years a:focus-visible,
+.note-row:hover,
+.note-row:focus-visible,
+.mind-review-card:hover,
+.mind-review-card[open],
+.knowledge-card:hover,
+.knowledge-card:focus-visible {
+  background: rgba(224, 99, 42, 0.07);
+}
+
+.knowledge-search input {
+  border-color: var(--black-4);
+  background: var(--black-3);
+}
+.knowledge-search input::placeholder { color: var(--rock-gray); }
+
+.learning-question-group {
+  border-top-color: var(--black-4);
+}
+.learning-question-list a { color: var(--warm-white); }
+.learning-question-list a:hover,
+.learning-question-list a:focus-visible {
+  background: rgba(224, 99, 42, 0.07);
+}
+.learning-question-index { color: var(--ember); }
+.learning-inline-link {
+  border-color: var(--rock-gray);
+  color: var(--warm-white);
+}
+.learning-inline-link:hover,
+.learning-inline-link:focus-visible {
+  border-color: var(--ember);
+  background: var(--ember);
+}
+
+.philosophy-tag {
+  background: var(--ember);
+  color: var(--warm-white);
+}
+.philosophy-example { border-left-color: var(--ember); }
+.philosophy-pager-link:hover,
+.philosophy-pager-link:focus-visible {
+  border-color: var(--ember);
+  background: rgba(224, 99, 42, 0.08);
+}
+
+/* Specificity repairs found during visual/contrast review. */
+.notes-preface .notes-preface-emphasis {
+  border-left-color: var(--ember);
+  color: var(--warm-white) !important;
+}
+.health-memorial-stack .health-life-readout strong { color: var(--warm-white); }
+.health-kpi .health-kpi-value { color: var(--warm-white); }
+.health-kpi .health-kpi-unit { color: var(--rock-gray); }
+.health-memorial-stack > .health-recovery::before {
+  background: var(--black-2);
+  border-color: var(--ember);
+}
+.mind-core-grid article:last-child {
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
+}
+.philosophy-notes li {
+  border-left-color: var(--black-4);
+  color: var(--warm-gray);
 }

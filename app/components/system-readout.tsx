@@ -191,6 +191,7 @@ export async function SystemReadout() {
   // 又保证对端出错或被改时，最坏情况也只是显示一个错的短词 —— 而不可能
   // 把一段正文塞进首页。count 同样逐个过 num()，取不到的那一项直接剔除。
   const byCategory = (Array.isArray(stats.kinds) ? stats.kinds : [])
+    .filter((kind) => kind?.key !== 'GAME' && kind?.label !== '游戏')
     .slice(0, MAX_KINDS)
     .map((kind) => ({
       label: typeof kind?.label === 'string' ? kind.label.trim() : '',
