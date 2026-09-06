@@ -18,16 +18,17 @@ function getReadout(snapshot: HealthLifeProgressSnapshot, nowMilliseconds: numbe
 }
 
 function formatLifeDuration(elapsedMilliseconds: number) {
-  const totalMinutes = Math.max(0, Math.floor(elapsedMilliseconds / 60_000));
-  const minutesPerYear = REFERENCE_YEAR_DAYS * 24 * 60;
-  const years = Math.floor(totalMinutes / minutesPerYear);
-  const remainderAfterYears = totalMinutes - Math.floor(years * minutesPerYear);
-  const days = Math.floor(remainderAfterYears / (24 * 60));
-  const hours = Math.floor((remainderAfterYears % (24 * 60)) / 60);
-  const minutes = remainderAfterYears % 60;
+  const totalSeconds = Math.max(0, Math.floor(elapsedMilliseconds / 1_000));
+  const secondsPerYear = REFERENCE_YEAR_DAYS * 24 * 60 * 60;
+  const years = Math.floor(totalSeconds / secondsPerYear);
+  const remainderAfterYears = totalSeconds - Math.floor(years * secondsPerYear);
+  const days = Math.floor(remainderAfterYears / (24 * 60 * 60));
+  const hours = Math.floor((remainderAfterYears % (24 * 60 * 60)) / (60 * 60));
+  const minutes = Math.floor((remainderAfterYears % (60 * 60)) / 60);
+  const seconds = remainderAfterYears % 60;
   const pad = (value: number) => value.toString().padStart(2, '0');
 
-  return `${years}年${days}天${pad(hours)}小时${pad(minutes)}分`;
+  return `${years}年${days}天${pad(hours)}小时${pad(minutes)}分${pad(seconds)}秒`;
 }
 
 export function LifeProgress({ snapshot }: { snapshot: HealthLifeProgressSnapshot }) {
@@ -36,7 +37,7 @@ export function LifeProgress({ snapshot }: { snapshot: HealthLifeProgressSnapsho
   useEffect(() => {
     const update = () => setNowMilliseconds(Date.now());
     update();
-    const timer = window.setInterval(update, 60_000);
+    const timer = window.setInterval(update, 1_000);
     return () => window.clearInterval(timer);
   }, []);
 
