@@ -51,7 +51,7 @@ export default function LearningPage() {
             <p className="eyebrow">Current map / 当前学习地图</p>
             <h2 id="learning-shelf-heading">从哲学开始，学习如何提出一个值得追下去的问题。</h2>
 
-            <Link className="learning-feature" href="/learning/philosophy-tree.html#pt-node=pt-overview">
+            <Link className="learning-feature" href="/learning/philosophy-tree#pt-node=pt-overview">
               <div className="learning-feature-topline" lang="en">
                 <span>001 / PHILOSOPHY</span>
                 <span>40 NODES · 17 CORE QUESTIONS</span>

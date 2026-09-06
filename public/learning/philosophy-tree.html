@@ -6,10 +6,10 @@
   <meta name="description" content="面向普通读者的哲学体系树：以核心问题组织，并用传统地图交叉索引。">
   <meta property="og:title" content="哲学体系树 — KILLUA.WIN">
   <meta property="og:description" content="从存在、知识、行动与共同生活的核心问题出发，探索哲学的不同回答。">
-  <meta property="og:url" content="https://www.killua.win/learning/philosophy-tree.html">
+  <meta property="og:url" content="https://www.killua.win/learning/philosophy-tree">
   <meta property="og:image" content="https://www.killua.win/og.png">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://www.killua.win/learning/philosophy-tree.html">
+  <link rel="canonical" href="https://www.killua.win/learning/philosophy-tree">
   <title>哲学体系树 — KILLUA.WIN</title>
   <style>
     /* 所有可嵌入样式均限定在 .pt-root；宿主页面无需重置其全局样式。 */
@@ -154,6 +154,91 @@
       .pt-sequence-button.is-next { text-align: left; }
     }
     @media (prefers-reduced-motion: no-preference) { .pt-detail, .pt-tree-button, .pt-button { transition: background-color .14s ease, border-color .14s ease; } }
+
+    /* 与 KILLUA.WIN 统一的深色学习工作台。 */
+    body.pt-standalone { background: #151515; }
+    .pt-root {
+      color: #fff;
+      background:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+        #151515;
+      background-size: 72px 72px;
+    }
+    .pt-shell { padding-top: 0; }
+    .pt-masthead { padding: 92px 0 70px; border-bottom-color: rgba(255,255,255,.22); }
+    .pt-masthead::after { right: 3%; bottom: -70px; color: rgba(204,255,0,.055); font-size: min(31vw, 400px); }
+    .pt-kicker { color: var(--pt-signal); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
+    .pt-title { max-width: 1050px; color: #fff; font-size: clamp(55px, 8vw, 122px); line-height: .88; }
+    .pt-deck { max-width: 730px; margin-top: 30px; color: rgba(255,255,255,.62); line-height: 1.85; }
+    .pt-atlas-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(240px, 1.4fr); border-bottom: 1px solid rgba(255,255,255,.22); }
+    .pt-atlas-stat { min-height: 112px; display: flex; flex-direction: column; justify-content: space-between; padding: 19px 20px 18px 0; border-right: 1px solid rgba(255,255,255,.18); }
+    .pt-atlas-stat + .pt-atlas-stat { padding-left: 20px; }
+    .pt-atlas-stat strong { color: var(--pt-signal); font-size: 27px; font-weight: 480; letter-spacing: -.04em; }
+    .pt-atlas-stat span { color: rgba(255,255,255,.45); font: 9px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .pt-atlas-guide { display: flex; align-items: center; padding: 20px 0 20px 24px; color: rgba(255,255,255,.58); font-size: 12px; line-height: 1.75; }
+    .pt-atlas-guide strong { margin-right: 8px; color: #fff; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+    .pt-toolbar { position: sticky; z-index: 12; top: 0; padding: 16px 0; border-bottom-color: rgba(255,255,255,.22); background: rgba(21,21,21,.95); backdrop-filter: blur(14px); }
+    .pt-button { border-color: rgba(255,255,255,.3); color: #fff; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .06em; }
+    .pt-button:hover { border-color: var(--pt-signal); background: var(--pt-signal); color: var(--pt-ink); }
+    .pt-progress { color: rgba(255,255,255,.56); }
+    .pt-progress-track { background: rgba(255,255,255,.18); }
+    .pt-progress-bar { background: var(--pt-signal); }
+    .pt-search { border-color: rgba(255,255,255,.32); color: #fff; background: rgba(255,255,255,.06); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+    .pt-search::placeholder { color: rgba(255,255,255,.45); }
+    .pt-search-clear { color: var(--pt-signal); }
+    .pt-layout { gap: clamp(30px, 4vw, 64px); padding-top: 52px; }
+    .pt-sidebar { color: #fff; }
+    .pt-directory-title, .pt-search-status { color: rgba(255,255,255,.5); }
+    .pt-directory-title { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; }
+    .pt-tree, .pt-tree-list .pt-tree-list { border-color: rgba(255,255,255,.2); }
+    .pt-toggle { color: rgba(255,255,255,.45); }
+    .pt-tree-button { color: rgba(255,255,255,.72); }
+    .pt-tree-button:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .pt-tree-button[aria-current="true"] { color: var(--pt-ink); background: var(--pt-signal); box-shadow: none; }
+    .pt-tree-button.pt-tree-type-section { color: #fff; }
+    .pt-tree-button.pt-tree-type-tradition { color: rgba(255,255,255,.66); }
+    .pt-tree-button.pt-search-hit::after { color: var(--pt-signal); }
+    .pt-search-result { width: 100%; border: 0; padding: 6px 0; color: rgba(255,255,255,.72); background: transparent; cursor: pointer; text-align: left; font-size: 11px; }
+    .pt-search-result:hover { color: var(--pt-signal); }
+    .pt-detail { border: 0; border-top: 4px solid var(--pt-signal); color: var(--pt-ink); background: #edf0df; box-shadow: 0 24px 60px rgba(0,0,0,.25); }
+    .pt-breadcrumbs { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; letter-spacing: .06em; text-transform: uppercase; }
+    .pt-detail-type { color: #536b00; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; text-transform: uppercase; }
+    .pt-detail-count { color: #69655c; }
+    .pt-summary { max-width: 46em; font-size: clamp(17px, 1.5vw, 20px); }
+    .pt-detail-section h3 { font-size: 17px; font-weight: 560; }
+    .pt-position { background: rgba(255,255,255,.42); }
+    .pt-position h4 { color: var(--pt-ink); }
+    .pt-person { border-left-color: #6b8a00; }
+    .pt-related-link { border-color: rgba(21,21,21,.28); color: var(--pt-ink); background: transparent; }
+    .pt-related-link:hover { border-color: #6b8a00; background: #dfe4c8; }
+    .pt-source-link { color: #536b00; text-decoration-color: #8da550; }
+    .pt-learning-task { margin: 24px 0 0; padding: 18px 20px; border-left: 4px solid #6b8a00; background: #dfe4c8; }
+    .pt-learning-task strong { display: block; margin-bottom: 7px; color: #536b00; font: 700 9px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .pt-learning-task p { color: #3f4337; font-size: 14px; line-height: 1.75; }
+    .pt-site-footer { display: grid; min-height: 80px; grid-template-columns: 1fr 1fr 1fr; align-items: center; padding: 0 4vw; background: #aeb49a; color: #151515; font: 10px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .pt-site-footer .pt-wordmark-dot { background: #151515; box-shadow: 0 0 0 4px rgba(21,21,21,.12); }
+    .pt-site-footer p { margin: 0; }
+    .pt-site-footer p:nth-child(2) { justify-self: center; }
+    .pt-site-footer p:last-child { justify-self: end; }
+
+    @media (max-width: 760px) {
+      .pt-masthead { padding: 66px 0 50px; }
+      .pt-title { font-size: clamp(49px, 15vw, 76px); }
+      .pt-atlas-stats { grid-template-columns: repeat(3, 1fr); }
+      .pt-atlas-stat { min-height: 90px; padding: 14px 10px 14px 0; }
+      .pt-atlas-stat + .pt-atlas-stat { padding-left: 10px; }
+      .pt-atlas-stat strong { font-size: 22px; }
+      .pt-atlas-guide { grid-column: 1 / -1; padding: 16px 0; border-top: 1px solid rgba(255,255,255,.18); }
+      .pt-toolbar { top: 0; }
+      .pt-layout { padding-top: 24px; }
+      .pt-mobile-tabs { border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.08); }
+      .pt-tab { color: rgba(255,255,255,.55); }
+      .pt-tab[aria-selected="true"] { color: var(--pt-ink); background: var(--pt-signal); }
+      .pt-detail { background: #edf0df; }
+      .pt-site-footer { grid-template-columns: 1fr; gap: 13px; padding: 30px 20px; }
+      .pt-site-footer p:nth-child(2), .pt-site-footer p:last-child { justify-self: start; }
+    }
   </style>
 </head>
 <body class="pt-standalone">
@@ -181,6 +266,12 @@
         <h1 class="pt-title" id="pt-page-title">从问题开始的哲学体系树</h1>
         <p class="pt-deck">这不是一张“谁影响谁”的名单，而是一张用问题组织的学习地图：看不同传统如何提出、回答和争论相近的问题。</p>
       </header>
+      <section class="pt-atlas-stats" aria-label="哲学体系树概览">
+        <div class="pt-atlas-stat"><strong>40</strong><span>Total nodes / 节点</span></div>
+        <div class="pt-atlas-stat"><strong>17</strong><span>Core questions / 核心问题</span></div>
+        <div class="pt-atlas-stat"><strong>3</strong><span>Traditions / 传统路径</span></div>
+        <p class="pt-atlas-guide"><strong>How to read</strong>先在左侧选择问题，再比较立场、反对意见与生活案例；按 <kbd>/</kbd> 可直接搜索。</p>
+      </section>
       <div class="pt-toolbar" aria-label="哲学体系树工具">
         <button class="pt-button" type="button" data-pt-action="expand">展开全部</button>
         <button class="pt-button" type="button" data-pt-action="collapse">收起全部</button>
@@ -209,6 +300,11 @@
       </div>
     </div>
   </main>
+  <footer class="pt-site-footer">
+    <a class="pt-wordmark" href="/" aria-label="killua.win 首页"><span class="pt-wordmark-dot" aria-hidden="true"></span>KILLUA.WIN</a>
+    <p>Ideas need somewhere to land.</p>
+    <p>© 2026 / PERSONAL ARCHIVE</p>
+  </footer>
   <script>
   (() => {
     "use strict";
@@ -813,11 +909,18 @@
       const detailMeta = make("div", "pt-detail-meta");
       detailMeta.appendChild(make("p", "pt-detail-type", node.type));
       const coreIndex = coreNodes.findIndex((item) => item.id === node.id);
-      detailMeta.appendChild(make("span", "pt-detail-count", coreIndex >= 0 ? `Core question ${coreIndex + 1} / ${coreNodes.length}` : "Learning map"));
+      const readingMinutes = Math.max(2, Math.ceil(searchableText(node).length / 260));
+      detailMeta.appendChild(make("span", "pt-detail-count", coreIndex >= 0 ? `Core ${coreIndex + 1} / ${coreNodes.length} · ${readingMinutes} min` : `Learning map · ${readingMinutes} min`));
       detailHost.appendChild(detailMeta);
       detailHost.appendChild(make("h2", "", node.title));
       appendParagraph(detailHost, node.summary, "pt-summary");
       if (node.question) section(detailHost, "核心问题", (content) => appendParagraph(content, node.question));
+      if (node.question) {
+        const task = make("aside", "pt-learning-task");
+        task.appendChild(make("strong", "", "Study prompt / 学习任务"));
+        appendParagraph(task, "先用一句话写下你的直觉答案，再阅读下面的立场与反对意见。读完后，记录哪个理由最改变你的判断。", "");
+        detailHost.appendChild(task);
+      }
       (node.notes || []).forEach((note) => appendParagraph(detailHost, note, "pt-note"));
       if (node.positions && node.positions.length) {
         section(detailHost, "主要立场：理由与保留", (content) => {
