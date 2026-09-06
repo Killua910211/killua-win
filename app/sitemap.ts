@@ -30,12 +30,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
-    {
-      url: `${SITE.url}/knowledge`,
-      lastModified: new Date('2026-09-06T00:00:00+08:00'),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
   ];
 
   let posts;

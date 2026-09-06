@@ -1,6 +1,7 @@
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { buildMetadata } from '@/app/lib/metadata';
+import { KnowledgeLibrary } from '@/app/knowledge/knowledge-library';
 import { MindExplorer } from './mind-explorer';
 
 export const metadata = buildMetadata({
@@ -16,7 +17,7 @@ export default function MindPage() {
       <main id="main" className="mind-page">
         <section className="mind-hero">
           <div className="section-label light" lang="en">
-            <span>01 / 04</span>
+            <span>01 / 06</span>
             <span>Cognitive notebook</span>
           </div>
           <div>
@@ -39,6 +40,7 @@ export default function MindPage() {
         </section>
 
         <MindExplorer />
+        <KnowledgeLibrary />
       </main>
       <SiteFooter />
     </>

@@ -2694,42 +2694,6 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 }
 
 /* ── Knowledge：对话中的可复用知识点 ─────────────────────── */
-.knowledge-page { background: var(--paper); }
-.knowledge-hero {
-  position: relative;
-  display: grid;
-  min-height: 620px;
-  grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
-  align-content: end;
-  padding: 94px 4vw 48px;
-  overflow: hidden;
-  background:
-    linear-gradient(to bottom, transparent 42%, var(--ink) 100%),
-    radial-gradient(circle at 76% 28%, rgba(204, 255, 0, 0.16), transparent 25%),
-    linear-gradient(115deg, #121212, #1b1b1b 54%, #0e0e0e);
-  color: #fff;
-}
-.knowledge-hero::before {
-  position: absolute;
-  inset: 0;
-  opacity: .17;
-  background-image: linear-gradient(rgba(255,255,255,.13) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.13) 1px, transparent 1px);
-  background-size: 72px 72px;
-  content: '';
-  mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 85%, transparent);
-}
-.knowledge-hero > * { position: relative; z-index: 1; }
-.knowledge-hero h1 {
-  max-width: 980px;
-  margin: 0;
-  font-size: clamp(58px, 9vw, 138px);
-  font-weight: 600;
-  letter-spacing: -.08em;
-  line-height: .83;
-}
-.knowledge-hero .eyebrow { color: rgba(255,255,255,.54); }
-.knowledge-hero-intro { max-width: 590px; margin: 44px 0 0; color: rgba(255,255,255,.64); font-size: 15px; line-height: 1.9; }
-.knowledge-hero-foot { display: flex; grid-column: 2; justify-content: space-between; margin-top: 74px; color: rgba(255,255,255,.48); font-family: var(--font-geist-mono), monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
 .knowledge-index { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 94px 4vw 126px; }
 .knowledge-index-body { min-width: 0; }
 .knowledge-index-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; }
@@ -2786,11 +2750,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 @media (max-width: 760px) {
   .site-header nav { gap: 9px; }
   .site-header nav a { font-size: 12px; }
-  .knowledge-hero, .knowledge-index, .knowledge-method { grid-template-columns: 1fr; padding-right: 20px; padding-left: 20px; }
-  .knowledge-hero { min-height: 620px; gap: 50px; padding-top: 74px; padding-bottom: 32px; }
-  .knowledge-hero h1 { font-size: clamp(52px, 17vw, 84px); }
-  .knowledge-hero-intro { margin-top: 32px; font-size: 14px; }
-  .knowledge-hero-foot { grid-column: auto; flex-direction: column; gap: 10px; margin-top: 0; }
+  .knowledge-index, .knowledge-method { grid-template-columns: 1fr; padding-right: 20px; padding-left: 20px; }
   .knowledge-index, .knowledge-method { gap: 48px; padding-top: 66px; padding-bottom: 84px; }
   .knowledge-index-heading { align-items: start; flex-direction: column; }
   .knowledge-index-heading h2, .knowledge-method h2 { font-size: clamp(32px, 10.5vw, 49px); }
