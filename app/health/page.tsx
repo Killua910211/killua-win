@@ -28,6 +28,10 @@ export const metadata = buildMetadata({
   path: '/health',
 });
 
+// 首屏的两个计时器都以服务端当前时间为基准；不缓存页面，避免部署后旧读数
+// 停留在边缘缓存中，直到客户端接管才更新。
+export const revalidate = 0;
+
 function formatValue(value: number, precision: number) {
   return value.toLocaleString('zh-CN', {
     minimumFractionDigits: precision,
