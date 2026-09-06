@@ -256,6 +256,40 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
       { location: '概念｜受压迫经验', issue: '原文可能暗示经验天然拥有无误认识权威。', evidence: 'ID-3 §3 讨论内化压迫与立场理论的局限。', revision: '补入条件性、领域性和共同检验。' },
     ], remaining: ['残障哲学和非殖民传统的原典尚未逐篇核验，不能用本条替代。'], adjacentImpact: '与“知识从哪里来”“正义”互链时，应把认知伤害与资源／权利分配分别说明，再讨论交集。', nextPriority: '建立残障正义与殖民性知识生产的独立历史条目及来源账。' },
   },
+  'pt-mind-self': {
+    status: '核验正文｜自审完成',
+    scope: '本条比较心灵的本体论、人格跨时间的同一性与无我分析；不把临床诊断、法律身份或宗教实践当作同一个问题的现成答案。',
+    origin: [
+      { kind: '概括', text: '心灵问题从主观体验、思考与身体活动的关系产生；人格同一性则问人何时跨时间持续存在。两类问题常共用“自我”一词，却不必有同一答案。', sourceIds: ['MS-1', 'MS-2'] },
+      { kind: '概括', text: '印度佛教的无我分析并不把心灵简单删去，而是反对把心理和身体过程误认成一个独立、恒常的主宰。', sourceIds: ['MS-3'] },
+    ],
+    boundaries: [
+      { kind: '概括', text: '个人同一性、作为道德行动者的身份、作为活物的连续性和对自身的心理依恋是不同概念；“self”本身也可能指人格或不可变意识主体。', sourceIds: ['MS-2'] },
+      { kind: '解释性重构', text: '神经对应证实心理活动与身体深度相关，却没有单独决定应选择同一论、还原论还是功能主义；哲学问题在于何种解释算足够。' },
+    ],
+    objections: [
+      { kind: '概括', text: '二元论须说明异质实体如何交互；物理主义则须说明从相关到解释体验的推理。两边都不能把对方的问题重述一次就当作反驳。', sourceIds: ['MS-1'] },
+      { kind: '概括', text: '无我立场面对责任与再生等连续性难题；佛教理论在不同学派中对此有不同处理，不能用“佛教认为没有人”概括。', sourceIds: ['MS-3'] },
+    ],
+    confusions: [
+      { kind: '解释性重构', text: '“没有不变实体自我”不等于“没有人、经验或责任”。' },
+      { kind: '解释性重构', text: '心理连续性不是记忆完全保留；记忆常被拿来解释同一性，也会产生虚假记忆和循环问题。', sourceIds: ['MS-2'] },
+      { kind: '解释性重构', text: '二元论、心灵独立于身体和宗教灵魂观有重叠但不必完全同义。', sourceIds: ['MS-1'] },
+    ],
+    historicalContext: [
+      { nodeId: 'pt-western-modern', label: '近代：知识、科学与政治秩序', note: '笛卡尔、洛克与休谟的争论构成现代心灵与人格问题的重要语境。' },
+      { nodeId: 'pt-buddhist', label: '佛教哲学：苦、无我、缘起与认识', note: '无我必须在缘起、修行与不同部派／大乘论辩中理解。' },
+    ],
+    sources: [
+      { id: 'MS-1', title: 'SEP：Dualism', kind: '学术综述', url: 'https://plato.stanford.edu/entries/dualism/', locator: '§2 及心身问题各节', checked: true, supports: '二元论的历史范围、不同传统与交互难题。' },
+      { id: 'MS-2', title: 'SEP：Personal Identity', kind: '学术综述', url: 'https://plato.stanford.edu/entries/identity-personal/', locator: '导论与同一性问题各节', checked: true, supports: '人格同一性不是单一问题，以及 self 一词的歧义。' },
+      { id: 'MS-3', title: 'SEP：Mind in Indian Buddhist Philosophy', kind: '学术综述', url: 'https://plato.stanford.edu/archives/spr2017/entries/mind-indian-buddhism/', locator: '导论、§1.1、§5.6', checked: true, supports: '无我、心理—身体过程和解释分歧。' },
+    ],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
+      { location: '主要立场｜无我或非实体自我', issue: '原文可能被读成“佛教否认人格和责任”。', evidence: 'MS-3 区分对恒常自我的批判与心理—因果过程。', revision: '明确无我不是虚无论，并给出连续性难题。' },
+      { location: '人物与文本', issue: '原内容只有人物名单，缺少文本各自在争论中解决什么。', evidence: 'MS-1、MS-2、MS-3 的问题范围不同。', revision: '新增四个原典入口与各自的阅读问题。' },
+    ], remaining: ['尚未完成《相应部》与阿毗达磨中文译本的版本校勘。'], adjacentImpact: '“自由与责任”不得把人格同一性的一个理论当作其唯一前提；“佛教哲学”需保留学派差异。', nextPriority: '补写“存在与变化”及佛教历史条目的同级来源账。' },
+  },
   'pt-ai-future': {
     status: '核验正文｜自审完成',
     scope: '本条区分心灵哲学、道德地位与部署责任；不把现有系统直接诊断为有意识，也不把治理建议伪装成关于机器心灵的证明。',
