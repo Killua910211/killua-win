@@ -249,9 +249,7 @@ export type SmokingCessationRecord = {
   timeZone: string;
   smokingHistory: string;
   dailyCigarettes: string;
-  relapseStatus: string;
   source: string;
-  confirmation: string;
 };
 
 /**
@@ -264,9 +262,7 @@ export const HEALTH_SMOKING_RECORD: SmokingCessationRecord = {
   timeZone: '北京时间 (UTC+8)',
   smokingHistory: '约 20 年',
   dailyCigarettes: '20 支',
-  relapseStatus: '已确认没有吸烟',
   source: 'ChatGPT 历史用户自述 + 用户确认',
-  confirmation: '已确认',
 };
 
 export type HealthTrendPoint = {

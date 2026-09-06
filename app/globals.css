@@ -1521,16 +1521,13 @@ summary:focus-visible {
 .health-page .health-supplement-heading > span,
 .health-page .health-supplement-details dt,
 .health-page .health-note-grid article > span,
-.health-page .health-smoking-heading > div > span,
-.health-page .health-life-heading > div > span,
 .health-page .health-smoking-grid dt,
 .health-page .health-life-value-label,
 .health-page .health-life-percent,
-.health-page .health-smoking-status,
 .health-page .health-recovery-heading > div > span,
 .health-page .health-recovery-time,
 .health-page .health-recovery-source,
-.health-page .health-recovery-badge,
+.health-page .health-recovery-summary-meta,
 .health-page .health-recovery-table thead th,
 .health-page .health-recovery-table tbody td:last-child {
   color: var(--health-accent-text);
@@ -1617,29 +1614,6 @@ summary:focus-visible {
   display: inline-flex;
   align-items: baseline;
   white-space: nowrap;
-}
-.health-snapshot-window {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px 40px;
-  margin: 28px 0 0;
-  padding-top: 20px;
-  border-top: 1px solid rgba(21, 21, 21, 0.16);
-}
-.health-snapshot-window div { min-width: 120px; }
-.health-snapshot-window dt {
-  color: #69655c;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.health-snapshot-window dd {
-  margin: 7px 0 0;
-  color: var(--ink);
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 11px;
-  letter-spacing: 0.04em;
 }
 .health-trend-grid {
   display: grid;
@@ -1835,25 +1809,30 @@ summary:focus-visible {
 }
 .health-memorial-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+  gap: 16px;
   margin-top: 40px;
+}
+@media (max-width: 1500px) {
+  .health-memorial-grid { grid-template-columns: 1fr; }
 }
 .health-memorial-grid > .health-smoking-card,
 .health-memorial-grid > .health-life-card { margin-top: 0; }
 .health-smoking-card {
   margin-top: 0;
-  padding: 28px;
-  border: 1px solid rgba(21, 21, 21, 0.24);
-  background: #ebe8de;
+  min-height: 402px;
+  padding: 42px;
+  border: 1px solid rgba(21, 21, 21, 0.2);
+  background: #f4f2eb;
 }
 .health-life-card {
   margin-top: 0;
-  padding: 28px;
-  border: 1px solid rgba(21, 21, 21, 0.24);
-  background: #ebe8de;
+  display: flex;
+  min-height: 402px;
+  padding: 42px;
+  border: 1px solid #23251d;
+  background: #23251d;
 }
-.health-memorial-grid .health-smoking-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .health-life-heading {
   display: flex;
   align-items: flex-start;
@@ -1866,8 +1845,6 @@ summary:focus-visible {
   justify-content: space-between;
   gap: 24px;
 }
-.health-smoking-heading > div > span,
-.health-life-heading > div > span,
 .health-smoking-grid dt,
 .health-smoking-source {
   color: #6b8a00;
@@ -1879,22 +1856,30 @@ summary:focus-visible {
 .health-life-heading h2,
 .health-smoking-heading h2,
 .health-smoking-heading h3 {
-  margin: 20px 0 0;
-  font-size: clamp(30px, 4vw, 52px);
+  margin: 0;
+  font-size: clamp(30px, 2.7vw, 42px);
   font-weight: 520;
   letter-spacing: -0.055em;
   line-height: 1;
 }
-.health-life-progress { margin-top: 38px; }
-.health-life-readout {
+.health-life-heading h2 { color: #f4f2eb; }
+.health-life-progress {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 42px;
+}
+.health-life-readout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
   gap: 24px;
 }
 .health-life-value-label {
   display: block;
-  color: #6b8a00;
+  color: #bdcb79;
   font-family: var(--font-geist-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.12em;
@@ -1903,8 +1888,8 @@ summary:focus-visible {
 .health-life-readout strong {
   display: block;
   margin-top: 12px;
-  color: var(--ink);
-  font-size: clamp(28px, 4vw, 50px);
+  color: #f4f2eb;
+  font-size: clamp(30px, 3.25vw, 48px);
   font-weight: 420;
   letter-spacing: -0.055em;
   line-height: 1;
@@ -1913,55 +1898,46 @@ summary:focus-visible {
 }
 .health-life-percent {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: flex-end;
+  width: auto;
+  margin-top: 0;
   gap: 6px;
   flex-wrap: wrap;
-  color: #6b8a00;
+  color: #d1e262;
   font-family: var(--font-geist-mono), monospace;
-  font-size: clamp(20px, 3vw, 34px);
+  font-size: clamp(24px, 2.8vw, 34px);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.05em;
 }
 .health-life-percent-note {
-  color: #6b8a00;
+  color: #bdcb79;
   font-size: 11px;
   letter-spacing: 0;
   line-height: 1.4;
 }
 .health-life-track {
-  height: 10px;
-  margin-top: 28px;
+  height: 7px;
+  margin-top: 26px;
   overflow: hidden;
-  border: 1px solid rgba(107, 138, 0, 0.38);
-  background: rgba(107, 138, 0, 0.09);
+  border: 1px solid rgba(209, 226, 98, 0.42);
+  background: rgba(209, 226, 98, 0.12);
 }
 .health-life-track > span {
   display: block;
   width: var(--life-progress);
   height: 100%;
-  background: #6b8a00;
-}
-.health-smoking-status {
-  flex: 0 0 auto;
-  padding: 9px 12px;
-  border: 1px solid rgba(107, 138, 0, 0.4);
-  color: #6b8a00;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 10px;
-  letter-spacing: 0.06em;
+  background: #d1e262;
 }
 .health-smoking-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 24px;
-  margin: 38px 0 0;
-  padding-top: 24px;
-  border-top: 1px solid rgba(21, 21, 21, 0.18);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 54px 0 0;
 }
 .health-smoking-grid > div { min-width: 0; }
 .health-smoking-grid dd {
-  margin: 12px 0 0;
+  margin: 10px 0 0;
   color: var(--ink);
   font-size: clamp(20px, 2.2vw, 30px);
   font-weight: 420;
@@ -1973,27 +1949,31 @@ summary:focus-visible {
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
+  gap: 14px;
   min-width: 0;
-  padding-top: 24px;
-  border-top: 1px solid rgba(21, 21, 21, 0.18);
+  padding: 0 0 28px;
+  border-bottom: 1px solid rgba(21, 21, 21, 0.18);
 }
 .health-smoking-streak-value {
   max-width: 100%;
   overflow-wrap: anywhere;
-  font-size: clamp(28px, 4vw, 50px) !important;
+  font-size: clamp(32px, 3.4vw, 48px) !important;
   font-weight: 420;
   letter-spacing: -0.055em !important;
   line-height: 1 !important;
   text-align: left;
   font-variant-numeric: tabular-nums;
 }
+.health-smoking-grid > div:not(.health-smoking-streak) { padding-top: 24px; }
+.health-smoking-grid > div:nth-child(n + 4) { border-top: 1px solid rgba(21, 21, 21, 0.12); }
+.health-smoking-grid > div:nth-child(3),
+.health-smoking-grid > div:nth-child(5) { padding-left: 24px; }
 .health-smoking-source { margin: 20px 0 0; color: #827d72; letter-spacing: 0.04em; }
 .health-recovery {
-  margin-top: 18px;
-  padding: 32px;
-  border: 1px solid rgba(21, 21, 21, 0.24);
-  background: #e2dfd5;
+  margin-top: 16px;
+  padding: 30px 42px;
+  border: 1px solid rgba(89, 105, 32, 0.28);
+  background: #e0e4c8;
 }
 .health-recovery-heading {
   display: flex;
@@ -2009,11 +1989,11 @@ summary.health-recovery-heading::-webkit-details-marker { display: none; }
 summary.health-recovery-heading::after {
   align-self: center;
   flex: 0 0 auto;
-  margin-left: 8px;
+  margin-left: 18px;
   color: #6b8a00;
   font-family: var(--font-geist-mono), monospace;
   font-size: 11px;
-  content: '展开 ▾';
+  content: '查看 ▾';
 }
 details[open] > summary.health-recovery-heading::after { content: '收起 ▴'; }
 summary.health-recovery-heading:hover::after,
@@ -2028,21 +2008,21 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   text-transform: uppercase;
 }
 .health-recovery-heading h3 {
-  margin: 18px 0 0;
+  margin: 6px 0 0;
   color: var(--ink);
-  font-size: clamp(26px, 3vw, 40px);
+  font-size: clamp(26px, 2.5vw, 36px);
   font-weight: 520;
   letter-spacing: -0.055em;
   line-height: 1;
 }
-.health-recovery-badge {
-  flex: 0 0 auto;
-  padding: 9px 12px;
-  border: 1px solid rgba(107, 138, 0, 0.4);
-  color: #6b8a00;
+.health-recovery-summary-meta {
+  margin-left: auto;
+  padding-top: 2px;
+  color: #827d72;
   font-family: var(--font-geist-mono), monospace;
   font-size: 10px;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 .health-recovery-table-wrap {
   margin-top: 28px;
@@ -2189,9 +2169,8 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .health-trend-grid,
   .health-supplement-grid,
   .health-note-grid,
-  .health-smoking-card,
-  .health-life-card,
   .health-recovery { margin-top: 44px; }
+  .health-memorial-grid { margin-top: 44px; }
   .health-trend-card { padding: 24px 20px; }
   .health-supplement-grid { grid-template-columns: 1fr; }
   .health-supplement-card { min-height: 0; padding: 24px 20px; }
@@ -2200,11 +2179,23 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .health-life-card,
   .health-recovery { padding: 28px 24px; }
   .health-smoking-section .health-recovery {
-    margin-top: 32px;
+    margin-top: 1px;
     padding: 24px 20px;
   }
-  .health-life-readout strong { font-size: clamp(12px, 4.1vw, 28px); }
-  .health-smoking-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 18px; }
+  .health-life-card { min-height: 370px; }
+  .health-life-progress { margin-top: 48px; }
+  .health-life-readout {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 18px;
+  }
+  .health-life-readout strong {
+    font-size: clamp(12px, 4.1vw, 28px);
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+  .health-life-percent { justify-content: flex-end; }
+  .health-smoking-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; margin-top: 42px; }
   .health-smoking-streak { grid-template-columns: 1fr; gap: 12px; }
   .health-smoking-streak-value { font-size: clamp(12px, 4.1vw, 28px) !important; }
   .health-recovery-table thead th:first-child { width: 39%; }
@@ -2300,6 +2291,213 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   }
   .health-nutrition-coverage .health-recovery-table tbody td:last-child small { font-size: 9px; }
   .health-nutrition-upper-limit { font-size: 9px; }
+}
+
+/* Personal timeline — option B: editorial timeline rail */
+.health-memorial-stack {
+  position: relative;
+  margin-top: 40px;
+  padding-left: 108px;
+  border-top: 1px solid rgba(21, 21, 21, 0.72);
+  border-bottom: 1px solid rgba(21, 21, 21, 0.72);
+}
+.health-memorial-stack::before {
+  position: absolute;
+  top: 44px;
+  bottom: 44px;
+  left: 21px;
+  width: 1px;
+  background: rgba(21, 21, 21, 0.22);
+  content: '';
+}
+.health-memorial-stack .health-memorial-grid {
+  display: block;
+  margin: 0;
+}
+.health-memorial-stack .health-life-card,
+.health-memorial-stack .health-smoking-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(190px, 0.62fr) minmax(0, 1.7fr);
+  gap: 38px;
+  min-height: 0;
+  padding: 36px 0;
+  border: 0;
+  border-bottom: 1px solid rgba(21, 21, 21, 0.18);
+  background: transparent;
+}
+.health-memorial-stack .health-life-card::before,
+.health-memorial-stack .health-smoking-card::before,
+.health-memorial-stack > .health-recovery::before {
+  position: absolute;
+  top: 50%;
+  left: -108px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  transform: translateY(-50%);
+  border: 1px solid rgba(21, 21, 21, 0.24);
+  background: #efede5;
+  color: #6b8a00;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+.health-memorial-stack .health-life-card::before { content: '01'; }
+.health-memorial-stack .health-smoking-card::before { content: '02'; }
+.health-memorial-stack > .health-recovery::before { content: '03'; }
+.health-memorial-stack .health-life-card::after,
+.health-memorial-stack .health-smoking-card::after,
+.health-memorial-stack > .health-recovery::after {
+  position: absolute;
+  top: 50%;
+  left: -56px;
+  transform: translateY(-50%);
+  color: #69655c;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+}
+.health-memorial-stack .health-life-card::after { content: 'LIFE'; }
+.health-memorial-stack .health-smoking-card::after { content: 'QUIT'; }
+.health-memorial-stack > .health-recovery::after { content: 'RECOVERY'; }
+.health-memorial-stack .health-life-heading,
+.health-memorial-stack .health-smoking-heading {
+  display: block;
+}
+.health-memorial-stack .health-life-heading h2,
+.health-memorial-stack .health-smoking-heading h2 {
+  color: var(--ink);
+  font-size: clamp(30px, 2.7vw, 42px);
+}
+.health-memorial-stack .health-life-progress {
+  display: block;
+  width: auto;
+  margin: 0;
+}
+.health-memorial-stack .health-life-readout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 24px;
+}
+.health-memorial-stack .health-life-value-label { color: #6b8a00; }
+.health-memorial-stack .health-life-readout strong {
+  color: var(--ink);
+  font-size: clamp(28px, 2.9vw, 42px);
+}
+.health-memorial-stack .health-life-percent {
+  width: auto;
+  margin: 0;
+  color: #6b8a00;
+  font-size: clamp(24px, 2.4vw, 34px);
+}
+.health-memorial-stack .health-life-percent-note { color: #6b8a00; }
+.health-memorial-stack .health-life-track {
+  height: 5px;
+  margin-top: 24px;
+  border: 0;
+  background: rgba(107, 138, 0, 0.15);
+}
+.health-memorial-stack .health-life-track > span { background: #6b8a00; }
+.health-memorial-stack .health-smoking-grid {
+  grid-template-columns: minmax(230px, 1.35fr) minmax(190px, 0.72fr);
+  align-items: end;
+  gap: 20px;
+  margin: 0;
+}
+.health-memorial-stack .health-smoking-grid > div,
+.health-memorial-stack .health-smoking-grid > div:not(.health-smoking-streak),
+.health-memorial-stack .health-smoking-grid > div:nth-child(3),
+.health-memorial-stack .health-smoking-grid > div:nth-child(5) {
+  padding: 0;
+  border: 0;
+}
+.health-memorial-stack .health-smoking-streak {
+  display: block;
+  grid-column: auto;
+}
+.health-memorial-stack .health-smoking-streak-value {
+  margin-top: 10px;
+  font-size: clamp(26px, 2.5vw, 36px) !important;
+  line-height: 1.04 !important;
+}
+.health-memorial-stack .health-smoking-grid dd {
+  font-size: clamp(15px, 1.55vw, 21px);
+  line-height: 1.16;
+}
+.health-memorial-stack > .health-recovery {
+  position: relative;
+  margin: 0;
+  padding: 30px 0;
+  border: 0;
+  background: transparent;
+}
+.health-memorial-stack > .health-recovery .health-recovery-heading {
+  align-items: center;
+}
+.health-memorial-stack > .health-recovery .health-recovery-heading > div > span {
+  display: none;
+}
+.health-memorial-stack > .health-recovery .health-recovery-heading h3 {
+  margin: 0;
+  font-size: clamp(26px, 2.5vw, 36px);
+}
+
+@media (max-width: 1120px) {
+  .health-memorial-stack { padding-left: 88px; }
+  .health-memorial-stack .health-life-card,
+  .health-memorial-stack .health-smoking-card {
+    grid-template-columns: minmax(170px, 0.55fr) minmax(0, 1.6fr);
+    gap: 28px;
+  }
+  .health-memorial-stack .health-smoking-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 18px;
+  }
+  .health-memorial-stack .health-smoking-streak { grid-column: 1 / -1; }
+}
+
+@media (max-width: 760px) {
+  .health-memorial-stack {
+    margin-top: 40px;
+    padding-left: 0;
+  }
+  .health-memorial-stack::before,
+  .health-memorial-stack .health-life-card::before,
+  .health-memorial-stack .health-life-card::after,
+  .health-memorial-stack .health-smoking-card::before,
+  .health-memorial-stack .health-smoking-card::after,
+  .health-memorial-stack > .health-recovery::before,
+  .health-memorial-stack > .health-recovery::after {
+    display: none;
+  }
+  .health-memorial-stack .health-life-card,
+  .health-memorial-stack .health-smoking-card {
+    display: block;
+    padding: 30px 0;
+  }
+  .health-memorial-stack .health-life-progress,
+  .health-memorial-stack .health-smoking-grid { margin-top: 40px; }
+  .health-memorial-stack .health-life-readout {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .health-memorial-stack .health-life-readout strong {
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+  .health-memorial-stack .health-life-percent {
+    justify-content: flex-end;
+    width: 100%;
+  }
+  .health-memorial-stack > .health-recovery { padding: 26px 0; }
+}
+
+@media (max-width: 480px) {
+  .health-memorial-stack .health-smoking-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 760px) {

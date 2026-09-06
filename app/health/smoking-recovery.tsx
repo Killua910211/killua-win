@@ -49,7 +49,7 @@ export function SmokingRecoveryTimeline() {
           <span lang="en">03 / Smoking recovery</span>
           <h3 id="health-recovery-heading">戒烟后的身体变化</h3>
         </div>
-        <span className="health-recovery-badge">用户记录</span>
+        <span className="health-recovery-summary-meta">20 项变化</span>
       </summary>
       <div className="health-recovery-table-wrap">
         <table className="health-recovery-table health-smoking-recovery-table">

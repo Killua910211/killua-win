@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Health Timeline Concepts</title>
+  <style>
+    :root {
+      --paper: #f1efe7;
+      --surface: #e8e5da;
+      --surface-2: #f7f5ef;
+      --ink: #11120f;
+      --muted: #747168;
+      --line: rgba(17, 18, 15, .22);
+      --green: #667d10;
+      --soft-green: #e2e6cb;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, "PingFang SC", "Noto Sans CJK SC", sans-serif;
+    }
+    .concept {
+      min-height: 100vh;
+      padding: 34px 42px 42px;
+      display: none;
+      grid-template-rows: auto 1fr;
+      gap: 24px;
+      border-bottom: 1px solid var(--line);
+      scroll-margin-top: 0;
+    }
+    .concept:target { display: grid; }
+    body:not(:has(.concept:target)) #option-a { display: grid; }
+    .concept-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .concept-kicker,
+    .section-index,
+    dt,
+    .micro {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .concept-kicker { color: var(--green); }
+    .concept-head h1 { margin: 6px 0 0; font-size: 24px; font-weight: 560; letter-spacing: -.04em; }
+    .concept-head p { max-width: 480px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; text-align: right; }
+    .stage { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 30px; align-items: start; }
+    .stage > main { min-width: 0; }
+    .section-index { padding-top: 4px; color: var(--muted); line-height: 1.8; }
+    .section-index b { display: block; color: var(--ink); font-weight: 500; }
+    h2, h3, p, dl, dd { margin: 0; }
+    h2 { font-size: clamp(30px, 3vw, 48px); font-weight: 520; letter-spacing: -.055em; line-height: 1; }
+    h3 { font-size: 22px; font-weight: 540; letter-spacing: -.04em; }
+    dt { color: var(--green); }
+    dd { margin-top: 10px; font-variant-numeric: tabular-nums; }
+    .value { font-size: clamp(26px, 2.5vw, 40px); letter-spacing: -.055em; line-height: 1.04; white-space: nowrap; }
+    .percent { color: var(--green); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 30px; letter-spacing: -.05em; }
+    .percent small { font-size: 10px; letter-spacing: 0; }
+    .track { height: 5px; background: rgba(102, 125, 16, .14); }
+    .track span { display: block; width: 44.5%; height: 100%; background: var(--green); }
+    .recovery-title { font-size: 30px; }
+    .recovery-action { color: var(--green); font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+    /* A — editorial split */
+    .a-board {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: "life smoke" "recovery recovery";
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+    }
+    .a-life, .a-smoke { min-height: 430px; padding: 34px 38px; }
+    .a-life { grid-area: life; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--line); }
+    .a-smoke { grid-area: smoke; }
+    .a-readout { display: grid; gap: 22px; }
+    .a-percent { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; }
+    .a-smoke-main { margin-top: 74px; padding-bottom: 30px; border-bottom: 1px solid var(--line); }
+    .a-details { display: grid; grid-template-columns: 1fr 1fr; gap: 0 26px; }
+    .a-details > div { padding-top: 22px; }
+    .a-details > div:nth-child(n + 3) { border-top: 1px solid rgba(17, 18, 15, .12); }
+    .a-details dd { font-size: 22px; letter-spacing: -.035em; }
+    .a-recovery { grid-area: recovery; display: flex; align-items: center; justify-content: space-between; padding: 24px 38px; border-top: 1px solid var(--line); }
+    .a-recovery .micro { color: var(--green); margin-bottom: 7px; }
+
+    /* B — timeline rail */
+    .b-board { display: grid; grid-template-columns: 108px minmax(0, 1fr); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+    .b-rail { position: relative; padding: 30px 0; border-right: 1px solid var(--line); }
+    .b-rail::before { content: ""; position: absolute; top: 44px; bottom: 44px; left: 21px; width: 1px; background: var(--line); }
+    .rail-step { position: relative; display: grid; grid-template-columns: 44px 1fr; align-items: center; min-height: 124px; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); }
+    .rail-step b { position: relative; z-index: 1; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); background: var(--paper); color: var(--green); font-weight: 500; }
+    .b-content { padding: 18px 36px; }
+    .b-row { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 28px; min-height: 124px; padding: 26px 0; border-bottom: 1px solid var(--line); }
+    .b-row:last-child { border-bottom: 0; }
+    .b-life-data { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: end; }
+    .b-life-data .percent { justify-self: end; font-size: 26px; }
+    .b-smoke-data { display: grid; grid-template-columns: minmax(220px, 1.35fr) repeat(4, minmax(0, .7fr)); gap: 18px; align-items: end; }
+    .b-smoke-data .value { font-size: 28px; white-space: normal; }
+    .b-smoke-data dd:not(.value) { font-size: 15px; }
+    .b-recovery-data { display: flex; align-items: center; justify-content: space-between; }
+
+    /* C — asymmetric field */
+    .c-board { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(320px, .7fr); grid-template-rows: 1fr auto; min-height: 520px; background: var(--surface); }
+    .c-life { display: grid; grid-template-rows: auto 1fr auto; padding: 38px 44px; border-right: 1px solid var(--line); }
+    .c-life-center { align-self: center; }
+    .c-life-center .value { margin-top: 18px; font-size: clamp(36px, 4vw, 58px); }
+    .c-scale { display: grid; grid-template-columns: auto 1fr; gap: 32px; align-items: center; }
+    .c-smoke { padding: 38px 36px; background: var(--surface-2); }
+    .c-smoke-main { margin-top: 62px; }
+    .c-smoke-main .value { margin-top: 14px; font-size: 34px; white-space: normal; }
+    .c-details { margin-top: 38px; }
+    .c-details > div { display: flex; justify-content: space-between; gap: 20px; padding: 15px 0; border-top: 1px solid var(--line); }
+    .c-details dd { margin: 0; font-size: 18px; text-align: right; }
+    .c-recovery { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 28px; padding: 24px 44px; border-top: 1px solid var(--line); background: var(--soft-green); }
+
+    @media (max-width: 900px) {
+      .concept { padding: 24px 18px; }
+      .stage { grid-template-columns: 1fr; }
+      .a-board, .c-board { grid-template-columns: 1fr; }
+      .a-board { grid-template-areas: "life" "smoke" "recovery"; }
+      .a-life { border-right: 0; border-bottom: 1px solid var(--line); }
+      .c-life { border-right: 0; border-bottom: 1px solid var(--line); }
+      .c-recovery { grid-column: 1; }
+      .b-board { grid-template-columns: 1fr; }
+      .b-rail { display: none; }
+      .b-row { grid-template-columns: 1fr; }
+      .b-smoke-data { grid-template-columns: 1fr 1fr; }
+      .concept-head p { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <section class="concept" id="option-a">
+    <header class="concept-head"><div><span class="concept-kicker">方案 A / Linear editorial</span><h1>线性编辑版</h1></div><p>去掉卡片感，用一条结构线组织全部信息。克制、耐看，与整站现有的编辑设计最一致。</p></header>
+    <div class="stage">
+      <aside class="section-index"><span>01</span><b>PERSONAL TIMELINE</b></aside>
+      <main><p class="micro" style="margin-bottom:24px">Milestones / 长期变化</p><div class="a-board">
+        <article class="a-life"><h2>已存活时间</h2><div class="a-readout"><dl><dt>已存活</dt><dd class="value">35年207天06小时12分</dd></dl><div class="a-percent"><span class="percent">44.5% <small>/ 80 年展示刻度</small></span></div><div class="track"><span></span></div></div></article>
+        <article class="a-smoke"><h2>戒烟记录</h2><dl class="a-smoke-main"><dt>当前连续戒烟</dt><dd class="value">254天16小时12分47秒</dd></dl><dl class="a-details"><div><dt>最后一支烟</dt><dd>2025-12-26 01:30</dd></div><div><dt>时区</dt><dd>北京时间 (UTC+8)</dd></div><div><dt>吸烟史</dt><dd>约 20 年</dd></div><div><dt>戒烟前日均</dt><dd>20 支</dd></div></dl></article>
+        <section class="a-recovery"><div><p class="micro">03 / Smoking recovery</p><h3 class="recovery-title">戒烟后的身体变化</h3></div><span class="recovery-action">20 项变化　查看 ▾</span></section>
+      </div></main>
+    </div>
+  </section>
+
+  <section class="concept" id="option-b">
+    <header class="concept-head"><div><span class="concept-kicker">方案 B / Timeline rail</span><h1>纵向时间轴版</h1></div><p>把三个模块明确组织成一条生命时间线，结构感最强；适合持续增加里程碑内容。</p></header>
+    <div class="stage">
+      <aside class="section-index"><span>01</span><b>PERSONAL TIMELINE</b></aside>
+      <main><p class="micro" style="margin-bottom:24px">Milestones / 长期变化</p><div class="b-board">
+        <aside class="b-rail"><div class="rail-step"><b>01</b><span>LIFE</span></div><div class="rail-step"><b>02</b><span>QUIT</span></div><div class="rail-step"><b>03</b><span>RECOVERY</span></div></aside>
+        <div class="b-content">
+          <section class="b-row"><h2>已存活时间</h2><div class="b-life-data"><dl><dt>已存活</dt><dd class="value">35年207天06小时12分</dd></dl><span class="percent">44.5% <small>/ 80 年展示刻度</small></span><div class="track"><span></span></div></div></section>
+          <section class="b-row"><h2>戒烟记录</h2><dl class="b-smoke-data"><div><dt>当前连续戒烟</dt><dd class="value">254天16小时12分47秒</dd></div><div><dt>最后一支烟</dt><dd>2025-12-26 01:30</dd></div><div><dt>时区</dt><dd>北京时间 (UTC+8)</dd></div><div><dt>吸烟史</dt><dd>约 20 年</dd></div><div><dt>戒烟前日均</dt><dd>20 支</dd></div></dl></section>
+          <section class="b-row"><h2 class="recovery-title">戒烟后的身体变化</h2><div class="b-recovery-data"><span class="micro" style="color:var(--green)">20 项变化</span><span class="recovery-action">查看 ▾</span></div></section>
+        </div>
+      </div></main>
+    </div>
+  </section>
+
+  <section class="concept" id="option-c">
+    <header class="concept-head"><div><span class="concept-kicker">方案 C / Asymmetric field</span><h1>非对称杂志版</h1></div><p>用比例而不是色块制造重点：生命进度占据主场，戒烟数据成为右侧索引，视觉更大胆。</p></header>
+    <div class="stage">
+      <aside class="section-index"><span>01</span><b>PERSONAL TIMELINE</b></aside>
+      <main><p class="micro" style="margin-bottom:24px">Milestones / 长期变化</p><div class="c-board">
+        <article class="c-life"><h2>已存活时间</h2><div class="c-life-center"><dl><dt>已存活</dt><dd class="value">35年207天06小时12分</dd></dl></div><div class="c-scale"><span class="percent">44.5% <small>/ 80 年展示刻度</small></span><div class="track"><span></span></div></div></article>
+        <article class="c-smoke"><h2>戒烟记录</h2><dl class="c-smoke-main"><dt>当前连续戒烟</dt><dd class="value">254天16小时12分47秒</dd></dl><dl class="c-details"><div><dt>最后一支烟</dt><dd>2025-12-26 01:30</dd></div><div><dt>时区</dt><dd>北京时间 (UTC+8)</dd></div><div><dt>吸烟史</dt><dd>约 20 年</dd></div><div><dt>戒烟前日均</dt><dd>20 支</dd></div></dl></article>
+        <section class="c-recovery"><h3 class="recovery-title">戒烟后的身体变化</h3><span class="micro" style="color:var(--green)">20 项变化</span><span class="recovery-action">查看 ▾</span></section>
+      </div></main>
+    </div>
+  </section>
+</body>
+</html>
