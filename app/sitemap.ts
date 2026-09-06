@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { allNodePaths } from '@/app/learning/philosophy/tree';
 import { SITE } from '@/app/lib/metadata';
 import { groupByCategory, listPublishedPosts } from '@/app/lib/posts';
 
@@ -15,21 +16,25 @@ export const revalidate = 3600;
  * 一份不完整的地图远好过一份取不到的地图。
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const philosophyUpdatedAt = new Date('2026-09-06T00:00:00+08:00');
   const staticEntries: MetadataRoute.Sitemap = [
     { url: `${SITE.url}/`, changeFrequency: 'monthly', priority: 1 },
     { url: `${SITE.url}/notes`, changeFrequency: 'weekly', priority: 0.9 },
     {
       url: `${SITE.url}/learning`,
-      lastModified: new Date('2026-09-06T00:00:00+08:00'),
+      lastModified: philosophyUpdatedAt,
       changeFrequency: 'monthly',
       priority: 0.8,
     },
-    {
-      url: `${SITE.url}/learning/philosophy-tree`,
-      lastModified: new Date('2026-09-06T00:00:00+08:00'),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
+    // 40 个哲学节点：总览是 /learning/philosophy，其余各占一页。
+    // 旧的 /learning/philosophy-tree 仍然可访问，但它的 canonical 已经指向
+    // 新总览，所以不再出现在地图里，免得两套 URL 抢同一批内容。
+    ...allNodePaths().map((path, index) => ({
+      url: `${SITE.url}${path}`,
+      lastModified: philosophyUpdatedAt,
+      changeFrequency: 'monthly' as const,
+      priority: index === 0 ? 0.8 : 0.6,
+    })),
     {
       url: `${SITE.url}/health`,
       lastModified: new Date('2026-08-31T00:00:00+08:00'),

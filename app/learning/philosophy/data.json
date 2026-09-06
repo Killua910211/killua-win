@@ -1,0 +1,1366 @@
+{
+  "id": "pt-overview",
+  "title": "哲学体系树总览",
+  "type": "总览",
+  "summary": "哲学并非一套封闭的答案，而是对世界、知识、行动、理解和共同生活提出可讨论的问题，并要求理由。此图优先按问题组织；西方、中国与印度传统另设为平行的历史导航。",
+  "question": "我正在追问哪一类问题？一个回答凭什么有说服力？它又会改变我如何理解与行动？",
+  "notes": [
+    "教学简化：这里把学术分科与历史传统压缩成一张可学习的地图。现实中的边界并不整齐，例如佛教的无我同时牵涉存在、认识与修行，儒家的仁与礼同时牵涉伦理、政治和人的养成。",
+    "范围与取舍：本版以西方、中国、印度的主要哲学传统为重点，并以必要的方式提到其交汇；它并不试图穷尽伊斯兰、非洲、美洲原住民、日本、韩国或其他丰富传统。"
+  ],
+  "positions": [
+    {
+      "name": "把哲学看作问题训练",
+      "text": "先辨认问题、概念与论证，再比较答案。它适合初学者避免把“某位哲学家”误当作一个学科。",
+      "objection": "代价是会淡化哲学文本的历史语境与修行、教育、制度实践。"
+    },
+    {
+      "name": "把传统看作历史语境",
+      "text": "从文本、语言、制度、论辩与实践中理解思想，避免把不同传统翻译成同一套西方术语。",
+      "objection": "若只强调不可通约性，也会遮蔽不同传统之间能够彼此启发的问题。"
+    }
+  ],
+  "example": "看到“人应不应该为了多数人的利益牺牲少数人”时，不必先背人名。先分辨：这是伦理问题；它会与权利、正义、后果和人格尊严相连；再比较不同理由。",
+  "related": [
+    "pt-core",
+    "pt-traditions",
+    "pt-knowledge",
+    "pt-ethics"
+  ],
+  "sources": [
+    {
+      "label": "Stanford Encyclopedia of Philosophy：Philosophy（主题入口）",
+      "url": "https://plato.stanford.edu/contents.html"
+    },
+    {
+      "label": "Internet Encyclopedia of Philosophy：Philosophy（主题入口）",
+      "url": "https://iep.utm.edu/"
+    }
+  ],
+  "children": [
+    {
+      "id": "pt-core",
+      "title": "核心问题｜主学习路径",
+      "type": "目录分组",
+      "summary": "这是本页面的主树。分支按问题类型安排，而不是按国别、时代、流派或哲学家安排。节点详情中的“主要立场”才是可比较的答案。",
+      "notes": [
+        "分类提醒：形而上学、认识论、逻辑、伦理学、美学、政治哲学等是常用分科，不是天然且唯一的边界。"
+      ],
+      "children": [
+        {
+          "id": "pt-being",
+          "title": "1. 存在、世界与人",
+          "type": "问题领域",
+          "summary": "追问什么存在、世界如何变化，以及心灵、身体、人格与自由在世界中处于什么位置。",
+          "question": "世界最基本的结构是什么？人是其中怎样的存在者？",
+          "positions": [
+            {
+              "name": "实体取向",
+              "text": "倾向用相对持续的“东西”、性质、关系来说明变化。",
+              "objection": "难点在于：若一切靠实体说明，过程、关系和生成是否被低估？"
+            },
+            {
+              "name": "过程取向",
+              "text": "强调变化、事件、关系或生成比固定实体更基础。",
+              "objection": "难点在于：如何说明人格、对象或知识所需的稳定性？"
+            }
+          ],
+          "figures": [
+            "亚里士多德以实体、形式与因果解释自然；《庄子》以变化、视角与“化”挑战僵硬区分；印度诸传统则围绕我、因果与解脱发展出不同本体论。"
+          ],
+          "example": "同一条河流不断换水，它还是不是“同一条河”？这个直觉问题会引向同一性、变化与关系。",
+          "related": [
+            "pt-being-change",
+            "pt-mind-self",
+            "pt-freedom",
+            "pt-buddhist"
+          ],
+          "sources": [
+            {
+              "label": "SEP：Metaphysics",
+              "url": "https://plato.stanford.edu/entries/metaphysics/"
+            }
+          ],
+          "children": [
+            {
+              "id": "pt-being-change",
+              "title": "什么存在？变化与同一性如何可能？",
+              "type": "核心问题",
+              "summary": "本体论常问“有什么”；形而上学还问对象、性质、关系、时间、因果与可能性如何构成可理解的世界。",
+              "question": "变化中的事物，凭什么仍是同一个事物？世界的基本单位是实体、过程、关系，还是别的东西？",
+              "positions": [
+                {
+                  "name": "实体与属性",
+                  "text": "对象是承载属性并在变化中保持某种同一性的东西；亚里士多德的实体论是重要范例。",
+                  "objection": "批评者认为它容易把动态过程误作静态“东西”。"
+                },
+                {
+                  "name": "过程与关系",
+                  "text": "变化、事件和相互关系可以比孤立实体更基础；这类思路在多种传统中以不同方式出现。",
+                  "objection": "仍需说明：何以辨认一个人、一棵树或一个制度在时间中的连续性？"
+                },
+                {
+                  "name": "空性／缘起的分析路径",
+                  "text": "以佛教部分传统为例，事物依条件而起，不具独立、自性化的固定本质；这不等于简单说“一切不存在”。",
+                  "objection": "不同佛教学派对“空”“法”与真理层次的解释并不一致，不能把它压成单一的虚无论。"
+                }
+              ],
+              "figures": [
+                "亚里士多德：《形而上学》讨论实体；赫拉克利特常被用于引入变化问题，但其残篇解释有争议；龙树以缘起与空性展开论证，不能简化为“世界是幻觉”。"
+              ],
+              "example": "一家公司更换了全部员工、产品和办公地点，还是原来的公司吗？不同答案取决于你重视法律连续性、组织关系还是物质构成。",
+              "related": [
+                "pt-mind-self",
+                "pt-language-meaning",
+                "pt-buddhist"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Metaphysics",
+                  "url": "https://plato.stanford.edu/entries/metaphysics/"
+                },
+                {
+                  "label": "SEP：Nāgārjuna",
+                  "url": "https://plato.stanford.edu/entries/nagarjuna/"
+                }
+              ]
+            },
+            {
+              "id": "pt-mind-self",
+              "title": "心灵、身体与“我”",
+              "type": "核心问题",
+              "summary": "这一组问题讨论意识、体验、身体、人格连续性和自我。它不是心理学的替代品，而是追问概念和解释框架。",
+              "question": "意识能否完全由身体过程解释？“我”是持续的实体、心理连续性，还是可分析的过程？",
+              "positions": [
+                {
+                  "name": "心身二元论",
+                  "text": "心灵与身体是不同种类的存在；笛卡尔是近代最著名的代表之一。",
+                  "objection": "交互难题：若二者性质不同，心灵如何影响身体？"
+                },
+                {
+                  "name": "物理主义／自然主义",
+                  "text": "心灵依赖或最终可由物理过程说明；不同版本对“说明”要求强弱不同。",
+                  "objection": "即使找到神经对应，主观体验的“是什么感觉”是否已被解释？"
+                },
+                {
+                  "name": "无我或非实体自我",
+                  "text": "佛教许多传统分析身心过程而拒绝常一主宰的我；这不必否认日常人格、责任或记忆连续性。",
+                  "objection": "批评者追问：若无持续主体，责任、经验归属与解脱实践如何说明？"
+                }
+              ],
+              "figures": [
+                "笛卡尔以思维实体和广延实体区分身心；休谟把自我描述为知觉束；佛教阿毗达磨及后续传统围绕无我与心识提出多种分析。"
+              ],
+              "example": "失忆后的人是否仍应为过去的承诺负责？这会迫使我们区分生物身体、记忆、人格关系和法律身份。",
+              "related": [
+                "pt-being-change",
+                "pt-freedom",
+                "pt-buddhist",
+                "pt-knowledge-sources"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Dualism",
+                  "url": "https://plato.stanford.edu/entries/dualism/"
+                },
+                {
+                  "label": "SEP：Personal Identity",
+                  "url": "https://plato.stanford.edu/entries/identity-personal/"
+                },
+                {
+                  "label": "SEP：Mind in Indian Buddhist Philosophy",
+                  "url": "https://plato.stanford.edu/entries/mind-indian-buddhism/"
+                }
+              ]
+            },
+            {
+              "id": "pt-freedom",
+              "title": "因果、自由与责任",
+              "type": "核心问题",
+              "summary": "自由意志争论关心：若行为有原因、受性格与环境影响，我们还能否真正选择，并为选择负责？",
+              "question": "决定论若为真，自由是否可能？如果自由不是“无原因”，它还需要什么？",
+              "positions": [
+                {
+                  "name": "不相容论",
+                  "text": "认为决定论与真正的自由不能同时为真；不同版本或否认自由，或主张自由要求非决定性的行动来源。",
+                  "objection": "若行动由随机性而非原因产生，也未必更像“我在控制”。"
+                },
+                {
+                  "name": "相容论",
+                  "text": "认为自由可理解为按自己的理由、欲望或反思能力行动，而不必摆脱一切因果。",
+                  "objection": "批评者认为这可能只是把“自由”改名为未受外力强迫。"
+                },
+                {
+                  "name": "修养与条件取向",
+                  "text": "儒家、佛教等传统常更关心如何在习气、关系与因果条件中培养清明、仁爱或解脱，而非只问瞬间选择是否绝对自发。",
+                  "objection": "将其翻译成当代“自由意志”会遗漏其自身的伦理与修行目标。"
+                }
+              ],
+              "figures": [
+                "斯宾诺莎以必然性批评随意性的自由观；休谟为相容论传统提供重要论述；康德把自由与道德实践联系起来；中国与印度思想中的修养论不能直接等同于上述任一立场。"
+              ],
+              "example": "你在愤怒时发出伤人的消息：它由睡眠不足、过去经历和当下挑衅造成。理解原因会减轻、取消还是重构责任？",
+              "related": [
+                "pt-mind-self",
+                "pt-right-action",
+                "pt-law"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Free Will",
+                  "url": "https://plato.stanford.edu/entries/freewill/"
+                },
+                {
+                  "label": "SEP：Moral Responsibility",
+                  "url": "https://plato.stanford.edu/entries/moral-responsibility/"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pt-knowledge",
+          "title": "2. 知识、理由与语言",
+          "type": "问题领域",
+          "summary": "追问何为知识、证据如何支持信念、推理何以有效，以及语言如何承载或扭曲意义。",
+          "question": "我凭什么相信？理由和证据的边界在哪里？",
+          "positions": [
+            {
+              "name": "基础与连贯",
+              "text": "知识论既关心信念是否有可靠起点，也关心一组信念能否相互支持。",
+              "objection": "二者都必须回答：如何避免循环、武断或脱离世界？"
+            },
+            {
+              "name": "论证与语境",
+              "text": "逻辑可检验推理形式；但自然语言、证词、权力关系和实践语境也会影响何者被当作理由。",
+              "objection": "强调语境不等于任何说法都同样有根据。"
+            }
+          ],
+          "figures": [
+            "从柏拉图、洛克、休谟、康德到当代认识论，知识的来源、证成与怀疑持续被重写；因明与正理学也形成精细的认识工具分类和论辩传统。"
+          ],
+          "example": "一条健康资讯“看起来很专业”并不是证据本身。你还要问来源、方法、是否可重复、是否遗漏了反例。",
+          "related": [
+            "pt-knowledge-sources",
+            "pt-logic",
+            "pt-language-meaning",
+            "pt-nyaya"
+          ],
+          "sources": [
+            {
+              "label": "SEP：Epistemology",
+              "url": "https://plato.stanford.edu/entries/epistemology/"
+            },
+            {
+              "label": "SEP：Classical Logic",
+              "url": "https://plato.stanford.edu/entries/logic-classical/"
+            }
+          ],
+          "children": [
+            {
+              "id": "pt-knowledge-sources",
+              "title": "知识从哪里来，边界又在哪里？",
+              "type": "核心问题",
+              "summary": "经验、理性、记忆、他人证词与实践都是候选来源。问题不是把它们排成唯一高低，而是问各自何时可靠、如何被校正。",
+              "question": "感觉、推理、记忆和他人证词各能给我们什么？怀疑主义提出的挑战能否被回应？",
+              "positions": [
+                {
+                  "name": "经验主义",
+                  "text": "强调经验在知识形成中的基础作用；近代经验主义内部对心灵、因果和科学的看法也不同。",
+                  "objection": "纯靠经验如何说明数学、逻辑或普遍必然性？"
+                },
+                {
+                  "name": "理性主义",
+                  "text": "强调理性结构、先天概念或推演在知识中的重要性。",
+                  "objection": "这些结构如何与经验世界建立可靠联系？"
+                },
+                {
+                  "name": "批判与多源取向",
+                  "text": "承认经验与概念条件都不可少，并检验知识的适用范围；当代认识论还重视证词、社会位置与认知实践。",
+                  "objection": "“条件”本身如何被论证，仍会引发争论。"
+                }
+              ],
+              "figures": [
+                "洛克与休谟是经验主义的重要人物；笛卡尔与莱布尼茨常列入理性主义；康德试图重构经验与先天条件的关系。印度正理学（Nyāya）系统讨论知觉、推理、类比与证言等认识手段。"
+              ],
+              "example": "你从朋友口中得知某地停电。你并未亲见，却通常有理由暂时相信；但若消息涉及重大风险，就需要核对来源与独立证据。",
+              "related": [
+                "pt-logic",
+                "pt-nyaya",
+                "pt-mind-self",
+                "pt-language-meaning"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Epistemology",
+                  "url": "https://plato.stanford.edu/entries/epistemology/"
+                },
+                {
+                  "label": "SEP：Epistemology in Classical Indian Philosophy",
+                  "url": "https://plato.stanford.edu/entries/epistemology-india/"
+                }
+              ]
+            },
+            {
+              "id": "pt-logic",
+              "title": "什么是好推理与有效论证？",
+              "type": "核心问题",
+              "summary": "逻辑研究推理结构：若前提为真，结论是否必然或很可能成立。它能澄清论证，却不能替你保证前提真实或价值目标正确。",
+              "question": "演绎有效、归纳支持与最佳解释推断分别意味着什么？论证形式和前提内容怎样分工？",
+              "positions": [
+                {
+                  "name": "演绎有效性",
+                  "text": "在有效演绎中，不可能前提都真而结论假；它评估形式，不直接保证前提为真。",
+                  "objection": "生活中的多数判断不是纯演绎，不能只靠形式逻辑裁决。"
+                },
+                {
+                  "name": "归纳与概率",
+                  "text": "从样本、规律或统计证据支持结论，结论可被新证据修正。",
+                  "objection": "过去的规律为何能可靠延伸到未来，是经典的归纳问题。"
+                },
+                {
+                  "name": "解释性推断",
+                  "text": "比较哪种假设对现象给出更好的解释，在科学、历史和日常诊断中常见。",
+                  "objection": "何谓“更好解释”可能暗含简洁性、预测力或背景理论等可争议标准。"
+                }
+              ],
+              "figures": [
+                "亚里士多德的三段论奠定重要传统；弗雷格等推动现代形式逻辑；印度因明与正理学发展了关于推理、论题和谬误的复杂讨论。"
+              ],
+              "example": "“每次我带伞就下雨，所以带伞导致下雨”混淆了相关性与因果；逻辑训练能先让你看出其中缺失的前提。",
+              "related": [
+                "pt-knowledge-sources",
+                "pt-language-meaning",
+                "pt-nyaya"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Classical Logic",
+                  "url": "https://plato.stanford.edu/entries/logic-classical/"
+                },
+                {
+                  "label": "SEP：Argument and Argumentation",
+                  "url": "https://plato.stanford.edu/entries/argument/"
+                }
+              ]
+            },
+            {
+              "id": "pt-language-meaning",
+              "title": "语言如何承载意义与真理？",
+              "type": "核心问题",
+              "summary": "语言哲学讨论词语怎样指向世界、句子何以有意义、说话如何成为行动，以及表达框架如何影响可见的问题。",
+              "question": "意义来自对象、使用、说话者意图，还是社会实践？真理与语言的关系是什么？",
+              "positions": [
+                {
+                  "name": "指称与真值取向",
+                  "text": "分析词语或句子如何指向对象，并考察何时与事实相符。",
+                  "objection": "抽象词、虚构对象、隐喻和规范性语言往往不易按简单对应处理。"
+                },
+                {
+                  "name": "使用与实践取向",
+                  "text": "重视语言在具体生活形式、规则与交往中的使用。",
+                  "objection": "若过于强调使用，可能难以说明跨语境的批评、误用和真理要求。"
+                },
+                {
+                  "name": "解释与权力敏感取向",
+                  "text": "关注概念分类如何塑造可说、可见与被相信的事物，同时仍可要求论证与反思。",
+                  "objection": "不能由“语言影响我们”直接推出“没有独立事实”或“所有解释等价”。"
+                }
+              ],
+              "figures": [
+                "弗雷格、罗素、维特根斯坦、奥斯汀等各以不同方式影响语言哲学；中国名家关于名实的讨论、佛教关于概念分别的讨论，不能简单改写成现代语言哲学的前身。"
+              ],
+              "example": "把一个人称为“难民”“移民”或“非法者”，不仅传递信息，也会带来不同的联想与政策倾向；因此需要辨析词义、语境和事实。",
+              "related": [
+                "pt-logic",
+                "pt-interpretation",
+                "pt-legalism",
+                "pt-being-change"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Philosophy of Language",
+                  "url": "https://plato.stanford.edu/entries/philosophy-language/"
+                },
+                {
+                  "label": "SEP：Chinese Philosophy of Language",
+                  "url": "https://plato.stanford.edu/entries/chinese-phil-language/"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pt-ethics",
+          "title": "3. 行动、价值与伦理",
+          "type": "问题领域",
+          "summary": "伦理学不只问“哪些事被允许”，也问何为好生活、应培养何种品格、我们对他人负有什么责任。",
+          "question": "什么值得追求？面对冲突的价值，我们应怎样行动并说明理由？",
+          "positions": [
+            {
+              "name": "结果、规则与品格",
+              "text": "后果论、义务论与德性伦理是常见比较入口；它们在具体版本中都更复杂。",
+              "objection": "三分法便于学习，却不能装下所有伦理理论，也不宜把中国或印度传统硬归入其中。"
+            },
+            {
+              "name": "关系与实践",
+              "text": "许多伦理传统重视关系、照护、礼、修养、习惯与共同生活，而不只看孤立行动。",
+              "objection": "关系伦理也须回答：当关系本身不正义或压迫时，批评标准从何而来？"
+            }
+          ],
+          "figures": [
+            "亚里士多德以幸福与德性为中心；康德强调义务与人格；密尔发展功利主义；孟子、荀子、墨子、庄子及佛教传统各自提供不可互相替换的实践语言。"
+          ],
+          "example": "是否向同事指出他会造成损失的错误？答案会牵涉结果、诚实义务、友谊、角色责任与长期品格。",
+          "related": [
+            "pt-good-life",
+            "pt-right-action",
+            "pt-responsibility",
+            "pt-chinese"
+          ],
+          "sources": [
+            {
+              "label": "SEP：Normative Ethics",
+              "url": "https://plato.stanford.edu/entries/normative-ethics/"
+            },
+            {
+              "label": "SEP：Chinese Ethics",
+              "url": "https://plato.stanford.edu/entries/ethics-chinese/"
+            }
+          ],
+          "children": [
+            {
+              "id": "pt-good-life",
+              "title": "什么是值得过的生活？",
+              "type": "核心问题",
+              "summary": "“好生活”并不等同于短暂愉悦或社会成功。它可能被理解为幸福、德性、自治、关系圆满、解脱或减少痛苦。",
+              "question": "人生价值主要在快乐、成就、德性、关系、真实、自由，还是从苦与执著中解脱？",
+              "positions": [
+                {
+                  "name": "幸福与德性",
+                  "text": "亚里士多德式思路把繁荣生活与实践德性相连；快乐可重要，但并非唯一尺度。",
+                  "objection": "谁的“繁荣”和哪种德性被视为典范，常受社会地位与时代限制。"
+                },
+                {
+                  "name": "自主与真实",
+                  "text": "某些近现代思路强调由自己承担选择、形成生活计划，或忠实于不由他人代替的存在处境。",
+                  "objection": "若把自主理解为完全自足，容易忽视依赖、照护与结构性条件。"
+                },
+                {
+                  "name": "修身与解脱",
+                  "text": "儒家关注在关系与礼中成就人格；佛教常以苦、执取与解脱为中心。二者目标和概念不同，不能合并成一种“东方智慧”。",
+                  "objection": "这些传统在现代多元社会如何处理个人差异与制度正义，需要继续解释。"
+                }
+              ],
+              "figures": [
+                "亚里士多德：《尼各马可伦理学》；孔子、孟子讨论仁、礼与人格养成；佛陀传统以苦的止息和八正道为重要实践框架。"
+              ],
+              "example": "升职会带来收入，却减少陪伴家人的时间。若只用金钱衡量，你会遗漏关系、承诺、健康和长期自我塑造。",
+              "related": [
+                "pt-right-action",
+                "pt-confucian",
+                "pt-buddhist",
+                "pt-aesthetic-value"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Aristotle’s Ethics",
+                  "url": "https://plato.stanford.edu/entries/aristotle-ethics/"
+                },
+                {
+                  "label": "SEP：Confucius",
+                  "url": "https://plato.stanford.edu/entries/confucius/"
+                },
+                {
+                  "label": "SEP：Buddha",
+                  "url": "https://plato.stanford.edu/entries/buddha/"
+                }
+              ]
+            },
+            {
+              "id": "pt-right-action",
+              "title": "什么使行动成为对、错、善或恶？",
+              "type": "核心问题",
+              "summary": "规范伦理学比较行动原则。重要的是看每种理论重视什么、如何论证、遇到冲突怎么办，而非给人物贴单一标签。",
+              "question": "当后果、权利、承诺、角色与品格相冲突时，哪一种理由优先？",
+              "positions": [
+                {
+                  "name": "后果论",
+                  "text": "主要以行动带来的价值性结果来评估行动；功利主义是其中一支。",
+                  "objection": "如何衡量与比较不同人的福祉？是否会牺牲个人权利或特殊关系？"
+                },
+                {
+                  "name": "义务论",
+                  "text": "强调某些行动准则、权利或对人格的尊重不能仅被好结果抵消。",
+                  "objection": "义务冲突时如何排序？严格规则会否忽略具体伤害？"
+                },
+                {
+                  "name": "德性与照护取向",
+                  "text": "关注行动者的品格、实践智慧、关系与回应具体他人的能力。",
+                  "objection": "若缺乏明确规则，如何批评习俗性偏见或处理陌生人之间的正义？"
+                }
+              ],
+              "figures": [
+                "边沁和密尔是功利主义的重要作者；康德的道德哲学以义务与人格为核心；亚里士多德影响德性伦理；照护伦理由多位当代理论家发展，不应被还原为单一人物。"
+              ],
+              "example": "医院只有一台呼吸机，两位患者都需要：优先救治预后更好的人，还是先到者，还是最脆弱者？不同标准会给出不同理由。",
+              "related": [
+                "pt-good-life",
+                "pt-responsibility",
+                "pt-justice",
+                "pt-care"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Consequentialism",
+                  "url": "https://plato.stanford.edu/entries/consequentialism/"
+                },
+                {
+                  "label": "SEP：Kant’s Moral Philosophy",
+                  "url": "https://plato.stanford.edu/entries/kant-moral/"
+                },
+                {
+                  "label": "SEP：Virtue Ethics",
+                  "url": "https://plato.stanford.edu/entries/ethics-virtue/"
+                }
+              ]
+            },
+            {
+              "id": "pt-responsibility",
+              "title": "自由、责任与道德运气",
+              "type": "核心问题",
+              "summary": "责任判断不仅牵涉是否自愿，还牵涉知识、控制、意图、角色、伤害和不平等条件。",
+              "question": "人应只为能控制的事负责吗？无心之失、结构性伤害与集体行动又如何归责？",
+              "positions": [
+                {
+                  "name": "控制原则",
+                  "text": "认为道德责备应紧密依赖行动者能控制的因素。",
+                  "objection": "结果、成长环境和机会无处不影响行为，严格实行可能让责任判断过于狭窄。"
+                },
+                {
+                  "name": "结果与角色责任",
+                  "text": "认为职位、承诺和可预见风险会使人对未直接意图的后果也有责任。",
+                  "objection": "若范围无限扩张，责任会变成难以承担的普遍罪责。"
+                },
+                {
+                  "name": "修复与回应取向",
+                  "text": "把重点部分转向承认伤害、补救关系、改变制度和学习，而不只问应否惩罚。",
+                  "objection": "修复不能替代对严重侵害的保护、问责或正义程序。"
+                }
+              ],
+              "figures": [
+                "“道德运气”是当代伦理的重要议题；儒家修身传统强调习惯和关系中的责任；佛教业与意向的讨论也不能与现代法律归责直接画等号。"
+              ],
+              "example": "两名司机都疏忽看手机，一人没有出事，另一人撞伤行人。我们会不同看待他们，这暴露了结果与控制之间的张力。",
+              "related": [
+                "pt-freedom",
+                "pt-right-action",
+                "pt-law",
+                "pt-care"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Moral Responsibility",
+                  "url": "https://plato.stanford.edu/entries/moral-responsibility/"
+                },
+                {
+                  "label": "SEP：Moral Luck",
+                  "url": "https://plato.stanford.edu/entries/moral-luck/"
+                }
+              ]
+            },
+            {
+              "id": "pt-care",
+              "title": "关系、照护与依赖",
+              "type": "核心问题",
+              "summary": "照护伦理提醒我们，人并非总以完全独立的选择者身份行动：幼儿、病者、照护者与相互依赖的关系会改变何为责任与正义。",
+              "question": "面对具体而不对称的依赖关系，普遍规则、后果计算和德性判断怎样补充或修正彼此？",
+              "positions": [
+                {
+                  "name": "关系性自我",
+                  "text": "人的身份、需要与能力在关系中形成，因此伦理不应只把人设定为彼此孤立的权利主体。",
+                  "objection": "重视关系不能为家长制、性别分工或排斥陌生人提供借口。"
+                },
+                {
+                  "name": "回应需要的责任",
+                  "text": "重视注意、回应、承担与修复等照护实践中的品质。",
+                  "objection": "家庭或私人关系之外，资源和权力的制度性分配仍需要明确的正义原则。"
+                }
+              ],
+              "figures": [
+                "吉利根、内丁斯等推动了当代照护伦理讨论；与儒家关系伦理的比较可以启发思考，但二者的概念来源与问题意识并不相同。"
+              ],
+              "example": "照护年迈父母不只是一次性“做对一件事”，还涉及时间、情感、经济、其他家庭成员与公共支持系统的长期安排。",
+              "related": [
+                "pt-right-action",
+                "pt-responsibility",
+                "pt-justice",
+                "pt-confucian"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Feminist Ethics",
+                  "url": "https://plato.stanford.edu/entries/feminism-ethics/"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pt-aesthetics",
+          "title": "4. 美、艺术与理解",
+          "type": "问题领域",
+          "summary": "美学讨论审美经验、艺术作品与价值；解释学讨论我们如何理解文本、传统、他人与自身处境。",
+          "question": "审美判断是否能说明理由？理解是还原原意，还是在当下生成新的意义？",
+          "positions": [
+            {
+              "name": "形式、表达与制度",
+              "text": "艺术可从形式特征、情感表达、历史语境或艺术世界的制度实践等角度理解。",
+              "objection": "任一单一标准都可能排除某些媒介、社群或跨文化实践。"
+            },
+            {
+              "name": "理解的多层性",
+              "text": "文本意义可涉及作者、文本结构、读者和传统之间的关系。",
+              "objection": "承认多义不等于允许无证据的任意解读。"
+            }
+          ],
+          "figures": [
+            "柏拉图与亚里士多德曾围绕模仿和教育讨论诗艺；康德影响现代审美判断讨论；中国诗画论、印度美学理论有自己的概念谱系。"
+          ],
+          "example": "两人看同一部电影，一人被构图打动，另一人认为它歪曲历史。争论不只是“喜欢不喜欢”，还涉及形式、真诚、伦理与语境。",
+          "related": [
+            "pt-art",
+            "pt-aesthetic-value",
+            "pt-interpretation",
+            "pt-language-meaning"
+          ],
+          "sources": [
+            {
+              "label": "SEP：Aesthetic Judgment",
+              "url": "https://plato.stanford.edu/entries/aesthetic-judgment/"
+            }
+          ],
+          "children": [
+            {
+              "id": "pt-art",
+              "title": "什么是艺术？",
+              "type": "核心问题",
+              "summary": "艺术的定义长期存在分歧。与其寻找一次性终局定义，初学者可先比较它在不同场景中承担的模仿、表达、形式、仪式、批评或共同体功能。",
+              "question": "一件物品、行为或影像为什么会被理解为艺术？艺术是否必须美、表达情感或进入艺术制度？",
+              "positions": [
+                {
+                  "name": "再现／模仿取向",
+                  "text": "艺术与呈现世界、行动或人物有关。",
+                  "objection": "抽象艺术、音乐和观念艺术表明再现不是必要条件。"
+                },
+                {
+                  "name": "形式或表达取向",
+                  "text": "重视作品的形式组织或情感表达。",
+                  "objection": "形式何以有价值、作者是否真的表达了固定情感，仍须说明。"
+                },
+                {
+                  "name": "历史与制度取向",
+                  "text": "强调作品在艺术史、批评实践与“艺术世界”中的位置。",
+                  "objection": "可能显得排他：机构之外的民间、宗教或日常创作怎么办？"
+                }
+              ],
+              "figures": [
+                "柏拉图和亚里士多德对诗艺的讨论常作为起点；杜尚的现成品推动了20世纪定义争论；中国“诗书画”与印度表演艺术传统不应只按现代西方“艺术品”概念衡量。"
+              ],
+              "example": "把日常椅子放进美术馆，为什么可能成为作品？它迫使我们区分物件本身、展示语境、艺术史与观众的参与。",
+              "related": [
+                "pt-aesthetic-value",
+                "pt-interpretation",
+                "pt-language-meaning"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：The Definition of Art",
+                  "url": "https://plato.stanford.edu/entries/art-definition/"
+                }
+              ]
+            },
+            {
+              "id": "pt-aesthetic-value",
+              "title": "审美判断能否说明理由？",
+              "type": "核心问题",
+              "summary": "“我喜欢”是重要经验，但审美讨论进一步追问：能否说明作品为何值得反复观看、如何回应形式、语境、技艺与情感？",
+              "question": "审美判断是纯个人偏好，还是可以提出可被他人理解、质疑和修正的理由？",
+              "positions": [
+                {
+                  "name": "主观感受的优先性",
+                  "text": "审美体验离不开主体感受，不能完全化为客观测量。",
+                  "objection": "若只是偏好，批评、学习与共同讨论为何有意义？"
+                },
+                {
+                  "name": "可交流的判断",
+                  "text": "判断虽非科学定理，仍可诉诸注意、比较、描述和对作品细节的回应。",
+                  "objection": "不同文化、训练和利益会影响何者被视为“好理由”。"
+                },
+                {
+                  "name": "社会历史取向",
+                  "text": "艺术价值与经典地位也受制度、市场、殖民史和公共记忆影响。",
+                  "objection": "揭示权力机制不必然否认作品本身的形式或体验价值。"
+                }
+              ],
+              "figures": [
+                "康德对无利害的审美判断影响深远；休谟讨论趣味标准；当代美学也强调艺术制度与社会语境。"
+              ],
+              "example": "朋友说一幅画“好看”，你可以继续问：是色彩节奏、构图、材料、主题，还是它唤起的记忆？回答会让偏好变得可讨论。",
+              "related": [
+                "pt-art",
+                "pt-good-life",
+                "pt-interpretation"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Aesthetic Judgment",
+                  "url": "https://plato.stanford.edu/entries/aesthetic-judgment/"
+                },
+                {
+                  "label": "SEP：Hume’s Aesthetics",
+                  "url": "https://plato.stanford.edu/entries/hume-aesthetics/"
+                }
+              ]
+            },
+            {
+              "id": "pt-interpretation",
+              "title": "我们如何理解文本、传统与他人？",
+              "type": "核心问题",
+              "summary": "解释并非只把字典义换成白话，也不是任意投射。它常在文本线索、作者处境、读者问题和历史传统之间往返。",
+              "question": "理解的目标是复原作者意图、把握文本结构、回应当下问题，还是这些维度的审慎组合？",
+              "positions": [
+                {
+                  "name": "作者意图取向",
+                  "text": "把理解的重要目标视为把握作者在当时想表达什么。",
+                  "objection": "作者意图未必可得，且文本可能产生超出作者预期的意义。"
+                },
+                {
+                  "name": "文本与结构取向",
+                  "text": "重视文本可公开检验的语言、形式和内部关系。",
+                  "objection": "脱离语境可能把文本当成无历史的封闭对象。"
+                },
+                {
+                  "name": "解释学取向",
+                  "text": "认为理解者带着前见进入传统，并在对话中修正自身视野。",
+                  "objection": "必须防止“我的当下感受”压倒文本证据与历史中的不平等。"
+                }
+              ],
+              "figures": [
+                "施莱尔马赫、狄尔泰、海德格尔、伽达默尔等影响现代解释学；经典注疏是中国、印度及其他传统中重要的哲学实践，不能仅作二手附属。"
+              ],
+              "example": "读《论语》中的一句话，既要看词义和章句，也要问其在先秦语境中的位置，并反思它能否回应今天的教育或关系问题。",
+              "related": [
+                "pt-language-meaning",
+                "pt-confucian",
+                "pt-buddhist",
+                "pt-art"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Hermeneutics",
+                  "url": "https://plato.stanford.edu/entries/hermeneutics/"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pt-political",
+          "title": "5. 共同生活、权力与历史",
+          "type": "问题领域",
+          "summary": "政治与社会哲学讨论正当权力、法律、自由、平等、正义与公共生活，也关心历史和技术如何改变人的行动条件。",
+          "question": "我们为何应服从某种制度？它如何既保护人又可能支配人？",
+          "positions": [
+            {
+              "name": "正当性与程序",
+              "text": "权力需要可被说明的来源、限制和程序，例如同意、民主、法治或公共理性。",
+              "objection": "形式程序即使完备，也可能保存深层不平等。"
+            },
+            {
+              "name": "关系与社会塑造",
+              "text": "政治不是只靠个人选择；家庭、教育、经济、文化和技术塑造可行的选择。",
+              "objection": "强调结构不能让个人能动性或具体问责消失。"
+            }
+          ],
+          "figures": [
+            "从柏拉图、亚里士多德、霍布斯、洛克、卢梭到罗尔斯、阿伦特等，政治哲学有多条线索；儒家、墨家、法家围绕秩序、德、功利与法提出不同方案。"
+          ],
+          "example": "城市安装人脸识别系统：它可能提高便利和安全，也可能改变隐私、权力监督、偏见与人们在公共空间中的行为。",
+          "related": [
+            "pt-legitimacy",
+            "pt-justice",
+            "pt-law",
+            "pt-history-tech",
+            "pt-chinese"
+          ],
+          "sources": [
+            {
+              "label": "SEP：Political Philosophy",
+              "url": "https://plato.stanford.edu/entries/political-philosophy/"
+            }
+          ],
+          "children": [
+            {
+              "id": "pt-legitimacy",
+              "title": "何种权力与制度是正当的？",
+              "type": "核心问题",
+              "summary": "正当性不只是“权力是否有效”，而是问统治或公共权威有何理由要求人服从、参与或承担义务。",
+              "question": "政治义务从同意、公共利益、民主程序、共同体关系，还是避免更坏秩序中产生？",
+              "positions": [
+                {
+                  "name": "同意与社会契约",
+                  "text": "将政治权威与个人同意、可接受的合作条件或假想契约联系起来。",
+                  "objection": "现实中大多数人从未明确同意；假想同意是否只是理论家的设定？"
+                },
+                {
+                  "name": "共和与公共自我治理",
+                  "text": "强调公民不受任意支配、能参与公共决定与共同维护法律。",
+                  "objection": "参与要求高，且多数决仍可能压迫少数。"
+                },
+                {
+                  "name": "德治、礼与秩序的传统讨论",
+                  "text": "中国思想中，儒家重视德、礼、教化与角色责任；法家强调法、术、势。它们内部差异很大。",
+                  "objection": "把前者一概说成仁政、后者一概说成专制，会抹平文本、时代和制度条件。"
+                }
+              ],
+              "figures": [
+                "霍布斯、洛克、卢梭分别给出不同契约论；孟子讨论民心与政治责任；韩非的思想需放在战国政治语境中理解。"
+              ],
+              "example": "一项紧急防疫限制即使有效，也仍要问：谁作决定、期限多长、能否申诉、信息是否公开、负担是否公平。",
+              "related": [
+                "pt-justice",
+                "pt-law",
+                "pt-confucian",
+                "pt-legalism"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Political Obligation",
+                  "url": "https://plato.stanford.edu/entries/political-obligation/"
+                },
+                {
+                  "label": "SEP：Social Contract",
+                  "url": "https://plato.stanford.edu/entries/contractarianism/"
+                }
+              ]
+            },
+            {
+              "id": "pt-justice",
+              "title": "自由、平等与正义如何协调？",
+              "type": "核心问题",
+              "summary": "正义不仅是平均分配，也涉及权利、机会、承认、程序、历史伤害与不同能力、需要之间的关系。",
+              "question": "当资源有限时，平等、效率、需要、贡献、自由与补偿应如何权衡？",
+              "positions": [
+                {
+                  "name": "自由优先",
+                  "text": "强调基本自由、财产权或自我所有权，警惕以集体目标侵犯个人。",
+                  "objection": "形式自由在严重贫困或权力不均下可能难以实际行使。"
+                },
+                {
+                  "name": "平等主义与公平机会",
+                  "text": "重视减少任意出身造成的劣势，并讨论哪些不平等可以被正当化。",
+                  "objection": "平等应比较资源、福利、能力还是关系地位，结论会不同。"
+                },
+                {
+                  "name": "关系与承认取向",
+                  "text": "关注支配、羞辱、排斥以及人们能否以平等身份相互交往。",
+                  "objection": "它需要与税制、分配和具体制度设计相连接，才不止于价值宣示。"
+                }
+              ],
+              "figures": [
+                "罗尔斯、诺齐克、森、杨等给出有影响力但不同的正义框架；它们并不代表唯一的政治哲学问题设置。"
+              ],
+              "example": "学校只有有限奖学金：按成绩、家庭收入、地区机会、特殊需要或未来贡献分配，分别体现不同的正义直觉。",
+              "related": [
+                "pt-legitimacy",
+                "pt-right-action",
+                "pt-care",
+                "pt-history-tech"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Distributive Justice",
+                  "url": "https://plato.stanford.edu/entries/justice-distributive/"
+                },
+                {
+                  "label": "SEP：Equality",
+                  "url": "https://plato.stanford.edu/entries/equality/"
+                }
+              ]
+            },
+            {
+              "id": "pt-law",
+              "title": "法律、服从与公民抗命",
+              "type": "核心问题",
+              "summary": "法哲学讨论法律是什么、法律与道德怎样相关，以及面对不正义法律时服从、抗议和违抗的界限。",
+              "question": "一条由合格程序制定的法律会因不正义而失去法律性吗？何时可以或应当违抗？",
+              "positions": [
+                {
+                  "name": "法律实证主义",
+                  "text": "通常主张法律的存在与内容，在概念上不必取决于它是否道德上正当。",
+                  "objection": "批评者担心这会弱化对极端不正义法律的谴责；但实证主义者可在道德层面严厉批评它。"
+                },
+                {
+                  "name": "自然法取向",
+                  "text": "认为法律与道德理由之间有更紧密的概念或规范联系。",
+                  "objection": "何种道德真理足够基础、又如何避免把个人信念当作法律标准？"
+                },
+                {
+                  "name": "公民抗命与修复性视角",
+                  "text": "讨论公开、非暴力、承担后果的抗命条件，也关心法律对历史伤害和弱势群体的实际作用。",
+                  "objection": "抗命的边界、策略与风险无法只用抽象原则决定。"
+                }
+              ],
+              "figures": [
+                "哈特、富勒、德沃金等参与现代法哲学的重要争论；金关于公民抗命的论述常被讨论，但其历史语境不可省略。"
+              ],
+              "example": "若法律禁止某种和平抗议，参与者可能必须同时判断：法律效力、程序救济、公共沟通、风险和他人的安全。",
+              "related": [
+                "pt-legitimacy",
+                "pt-responsibility",
+                "pt-justice",
+                "pt-freedom"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Legal Positivism",
+                  "url": "https://plato.stanford.edu/entries/legal-positivism/"
+                },
+                {
+                  "label": "SEP：Civil Disobedience",
+                  "url": "https://plato.stanford.edu/entries/civil-disobedience/"
+                }
+              ]
+            },
+            {
+              "id": "pt-history-tech",
+              "title": "历史、文化与技术怎样塑造共同生活？",
+              "type": "核心问题",
+              "summary": "历史哲学与技术哲学提醒我们：制度和选择总在继承的语言、记忆、工具、劳动关系与权力结构中发生。",
+              "question": "历史是进步、循环、偶然事件的组合，还是多种叙述的竞争？技术是中性的工具，还是会重塑价值与行动？",
+              "positions": [
+                {
+                  "name": "进步与解放叙事",
+                  "text": "把历史理解为知识、自由或制度能力逐步扩展的过程。",
+                  "objection": "战争、殖民、生态危机与被排除者的经验会质疑线性进步故事。"
+                },
+                {
+                  "name": "谱系与权力分析",
+                  "text": "追问今天看似自然的概念、制度和主体如何被历史地生产出来。",
+                  "objection": "揭示来源不自动判定价值，也不能使真理问题消失。"
+                },
+                {
+                  "name": "技术中介取向",
+                  "text": "技术不只是被动工具：它改变注意力、责任分配、可见性和行动可能。",
+                  "objection": "不能因此把人和制度的选择全部归咎于技术。"
+                }
+              ],
+              "figures": [
+                "黑格尔、马克思、尼采、福柯等对历史的理解差异巨大；海德格尔、伊德等影响技术哲学讨论。"
+              ],
+              "example": "推荐算法并未强迫你看什么，却会筛选可见内容、奖励某些表达，并改变公共讨论的速度和情绪。",
+              "related": [
+                "pt-justice",
+                "pt-language-meaning",
+                "pt-interpretation",
+                "pt-legitimacy"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Philosophy of History",
+                  "url": "https://plato.stanford.edu/entries/history/"
+                },
+                {
+                  "label": "SEP：Philosophy of Technology",
+                  "url": "https://plato.stanford.edu/entries/technology/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pt-traditions",
+      "title": "传统地图｜平行历史导航",
+      "type": "目录分组",
+      "summary": "传统地图帮助你把问题放回文本、语言、制度与论辩史中。它不是给“西方／中国／印度”各分配一套固定性格，也不暗示它们互不相通。",
+      "notes": [
+        "历史分期是导航工具，不是普遍共识；时期之间有重叠、争论、跨地域传播和后世重构。"
+      ],
+      "related": [
+        "pt-core",
+        "pt-confucian",
+        "pt-buddhist",
+        "pt-nyaya"
+      ],
+      "children": [
+        {
+          "id": "pt-western",
+          "title": "西方哲学｜历史导航",
+          "type": "传统导航",
+          "summary": "此处以古希腊—罗马、拉丁中世纪、近代与近现代为粗略入口，并承认“西方哲学”内部包含多语言、多宗教和多地区传统。",
+          "notes": [
+            "范围提醒：中世纪哲学并非只等于拉丁基督教传统；阿拉伯语与犹太哲学对欧洲思想史有重要影响，本版只作有限提示。"
+          ],
+          "children": [
+            {
+              "id": "pt-western-ancient",
+              "title": "古典与希腊化时期",
+              "type": "历史时段",
+              "summary": "从前苏格拉底到柏拉图、亚里士多德，再到斯多亚、伊壁鸠鲁、怀疑主义等。常见问题包括自然、知识、德性、幸福和城邦。",
+              "figures": [
+                "苏格拉底、柏拉图、亚里士多德、伊壁鸠鲁、芝诺等是不同线索的代表，不构成单一路线。"
+              ],
+              "example": "若从“怎样活得好”进入，可对照亚里士多德的德性、伊壁鸠鲁对宁静的追求与斯多亚对可控之事的区分。",
+              "related": [
+                "pt-good-life",
+                "pt-logic",
+                "pt-being-change"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Ancient Greek and Roman Philosophy",
+                  "url": "https://plato.stanford.edu/entries/ancient-greek-roman/"
+                }
+              ]
+            },
+            {
+              "id": "pt-western-medieval",
+              "title": "中世纪与跨文化传译",
+              "type": "历史时段",
+              "summary": "哲学在宗教、法学、医学和古典文本注释的语境中发展；希腊著作经叙利亚语、阿拉伯语、拉丁语等多重传译与再解释。",
+              "figures": [
+                "奥古斯丁、阿维森纳、迈蒙尼德、阿奎那等所处语言与宗教语境不同，不能统称为一种神学哲学。"
+              ],
+              "example": "“理性能够认识什么、启示又是什么”会把知识论、形而上学和宗教实践连在一起。",
+              "related": [
+                "pt-knowledge-sources",
+                "pt-being-change",
+                "pt-interpretation"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Medieval Philosophy",
+                  "url": "https://plato.stanford.edu/entries/medieval-philosophy/"
+                }
+              ]
+            },
+            {
+              "id": "pt-western-modern",
+              "title": "近代：知识、科学与政治秩序",
+              "type": "历史时段",
+              "summary": "17—18世纪常围绕科学革命、心身、知识来源、自然法和政治权威展开，但“理性主义／经验主义”的教材分法本身也有局限。",
+              "figures": [
+                "笛卡尔、斯宾诺莎、洛克、休谟、康德、卢梭等围绕不同问题提出分歧答案。"
+              ],
+              "example": "从“我如何确信外部世界”可连到笛卡尔、休谟、康德；从“国家为何正当”可连到霍布斯、洛克、卢梭。",
+              "related": [
+                "pt-knowledge-sources",
+                "pt-mind-self",
+                "pt-legitimacy"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Rationalism vs. Empiricism",
+                  "url": "https://plato.stanford.edu/entries/rationalism-empiricism/"
+                }
+              ]
+            },
+            {
+              "id": "pt-western-contemporary",
+              "title": "19世纪至当代的多条线索",
+              "type": "历史时段",
+              "summary": "德国观念论、马克思主义、存在主义、现象学、分析哲学、实用主义、女性主义、后殖民哲学等彼此交叉、争论，也不断重读传统。",
+              "figures": [
+                "黑格尔、马克思、克尔凯郭尔、尼采、胡塞尔、维特根斯坦、杜威、波伏瓦等均不能由单一标签概括。"
+              ],
+              "example": "同一个“自由”问题，可以在存在主义中讨论选择，在马克思主义中讨论物质条件，在女性主义中讨论支配关系。",
+              "related": [
+                "pt-freedom",
+                "pt-history-tech",
+                "pt-care",
+                "pt-language-meaning"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Phenomenology",
+                  "url": "https://plato.stanford.edu/entries/phenomenology/"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pt-chinese",
+          "title": "中国哲学｜历史导航",
+          "type": "传统导航",
+          "summary": "中国哲学不只是“人生智慧”。经、史、礼、注疏、修身、政治与宗教实践共同构成其问题场域；“儒、道、墨、法”等标签内部也有差异。",
+          "children": [
+            {
+              "id": "pt-confucian",
+              "title": "先秦：儒家及其伦理—政治问题",
+              "type": "传统线索",
+              "summary": "儒家围绕仁、礼、孝、君子、学习与治理讨论如何养成人格及组织共同生活。孔子、孟子、荀子之间存在重要差异。",
+              "question": "德性如何在关系、礼仪、学习与制度中形成？",
+              "positions": [
+                {
+                  "name": "性善的修养线索",
+                  "text": "孟子以恻隐等“端”说明道德发展的可能性。",
+                  "objection": "如何解释恶行、习俗与制度造成的扭曲？"
+                },
+                {
+                  "name": "性恶与礼法化成线索",
+                  "text": "荀子强调欲望、学习、礼与制度的塑造作用。",
+                  "objection": "“性恶”在文本中的确切含义及其与道德能力的关系，学界有细致争论。"
+                }
+              ],
+              "figures": [
+                "孔子以《论语》所见的教学与修身为中心；孟子和荀子分别发展出不同的人性与养成论。"
+              ],
+              "example": "孩子学会在餐桌上照顾长辈，究竟是外在服从还是内在德性的开始？儒家会把习礼与成仁联系起来。",
+              "related": [
+                "pt-good-life",
+                "pt-legitimacy",
+                "pt-chinese",
+                "pt-interpretation"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Confucius",
+                  "url": "https://plato.stanford.edu/entries/confucius/"
+                },
+                {
+                  "label": "SEP：Chinese Ethics",
+                  "url": "https://plato.stanford.edu/entries/ethics-chinese/"
+                }
+              ]
+            },
+            {
+              "id": "pt-daoism",
+              "title": "先秦：道家与自然、行动问题",
+              "type": "传统线索",
+              "summary": "以《老子》《庄子》为中心的哲学道家讨论道、自然、无为、语言与视角。它们并不是一套固定的反理性或逃避社会主张。",
+              "question": "怎样在变化与复杂关系中行动，而不以僵硬的控制欲伤害自己和世界？",
+              "positions": [
+                {
+                  "name": "无为与顺应",
+                  "text": "“无为”通常不宜理解为不行动，而是避免强作、妄为并学习合宜回应。",
+                  "objection": "什么算“合宜”不能只凭主观舒服来判断。"
+                },
+                {
+                  "name": "视角反思",
+                  "text": "《庄子》常以寓言松动自以为绝对的分类和立场。",
+                  "objection": "松动成见不等于否定一切判断或责任。"
+                }
+              ],
+              "figures": [
+                "《老子》的成书、层累与解释史复杂；《庄子》是汇集文本，不能把全部篇章归为庄周个人的直接观点。"
+              ],
+              "example": "团队面对变化时不断增加控制表格，反而拖慢协作；“无为”可提醒我们问：是否在用不合时宜的强制替代判断？",
+              "related": [
+                "pt-being-change",
+                "pt-good-life",
+                "pt-language-meaning",
+                "pt-interpretation"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Daoism",
+                  "url": "https://plato.stanford.edu/entries/daoism/"
+                },
+                {
+                  "label": "SEP：Zhuangzi",
+                  "url": "https://plato.stanford.edu/entries/zhuangzi/"
+                }
+              ]
+            },
+            {
+              "id": "pt-legalism",
+              "title": "先秦：墨家、名家、法家等论辩线索",
+              "type": "传统线索",
+              "summary": "先秦并非只有儒道。墨家讨论兼爱、非攻、尚贤与论辩；名家讨论名实；法家关注法、术、势与秩序。它们之间及其文本内部都有张力。",
+              "figures": [
+                "墨子、惠施、公孙龙、商鞅、申不害、韩非等常被列举，但不应把后世分类当作他们之间唯一的实际关系。"
+              ],
+              "example": "“政策应优先照顾亲近者还是平等关怀所有人？”可进入墨家兼爱与儒家差等之爱的对照，但不能忽略各自论证。",
+              "related": [
+                "pt-right-action",
+                "pt-language-meaning",
+                "pt-legitimacy",
+                "pt-logic"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Mohism",
+                  "url": "https://plato.stanford.edu/entries/mohism/"
+                },
+                {
+                  "label": "SEP：Legalism in Chinese Philosophy",
+                  "url": "https://plato.stanford.edu/entries/chinese-legalism/"
+                }
+              ]
+            },
+            {
+              "id": "pt-chinese-later",
+              "title": "两汉至近现代：传承、佛教与重构",
+              "type": "历史时段",
+              "summary": "两汉经学、魏晋玄学、佛教中国化、宋明理学、清代考据及近现代转型，显示“中国哲学”在长期诠释、制度和跨文化接触中不断重构。",
+              "figures": [
+                "朱熹、王阳明等对儒家文本和修养做出不同阐释；中国佛教各宗派也有复杂哲学贡献。"
+              ],
+              "example": "同一句经典在不同时代被用来支持不同教育、政治或修身方案，说明传统不是不变答案库。",
+              "related": [
+                "pt-buddhist",
+                "pt-interpretation",
+                "pt-history-tech",
+                "pt-confucian"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Philosophy in Han Dynasty China",
+                  "url": "https://plato.stanford.edu/entries/han-dynasty/"
+                },
+                {
+                  "label": "SEP：Neo-Confucian Philosophy",
+                  "url": "https://plato.stanford.edu/entries/neo-confucianism/"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pt-indian",
+          "title": "印度哲学｜历史导航",
+          "type": "传统导航",
+          "summary": "“印度哲学”包含围绕吠陀权威的多种学派，以及佛教、耆那教、顺世论等不同传统；它们在认识论、语言、逻辑、本体论和解脱论上有长期论辩。",
+          "notes": [
+            "术语提醒：常见的“正统／非正统”是以是否承认吠陀权威为标准，并不等同于正确／错误或宗教／哲学的优劣评价。"
+          ],
+          "children": [
+            {
+              "id": "pt-indian-vedanta",
+              "title": "奥义书与吠檀多等传统",
+              "type": "传统线索",
+              "summary": "奥义书与后来的吠檀多围绕梵、我、世界、知识与解脱提出多种理论。不同吠檀多分支对其关系的解释显著不同。",
+              "figures": [
+                "商羯罗与不二论联系紧密；罗摩努阇等代表不同的吠檀多解释。不要把“印度思想”一概归为不二论。"
+              ],
+              "example": "“个人自我与终极实在是否相同”既像本体论问题，也与解脱实践和经文解释相连。",
+              "related": [
+                "pt-being-change",
+                "pt-mind-self",
+                "pt-knowledge-sources"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Śaṅkara",
+                  "url": "https://plato.stanford.edu/entries/shankara/"
+                },
+                {
+                  "label": "SEP：Vedānta",
+                  "url": "https://iep.utm.edu/vedanta/"
+                }
+              ]
+            },
+            {
+              "id": "pt-buddhist",
+              "title": "佛教哲学：苦、无我、缘起与认识",
+              "type": "传统线索",
+              "summary": "佛教哲学以苦的止息为实践目标，同时发展出有关无我、因果、认识、语言和空性的多种精细理论；不同部派与大乘传统不可混为一谈。",
+              "question": "若执取一个常一的我会带来苦，那么经验、责任、因果与解脱应怎样理解？",
+              "positions": [
+                {
+                  "name": "早期无我分析",
+                  "text": "以五蕴等分析挑战常一主宰的自我观，并与业、修行相联系。",
+                  "objection": "不同文本层次与后世解释不应被倒灌为单一教义。"
+                },
+                {
+                  "name": "中观的空性论证",
+                  "text": "龙树等以缘起说明诸法无自性，常与二谛等框架一起讨论。",
+                  "objection": "空性不等于虚无；具体解释在不同中观传统中仍有争议。"
+                },
+                {
+                  "name": "瑜伽行等心识理论",
+                  "text": "围绕识、表象和认识经验形成复杂讨论，不能粗暴译成单纯“唯心主义”。",
+                  "objection": "用近代西方术语翻译时需要持续校正。"
+                }
+              ],
+              "figures": [
+                "历史上的佛陀是传统起点；龙树、无著、世亲等在不同哲学线索中具有重要地位。"
+              ],
+              "example": "当你把一次尴尬定义为“我就是失败者”，无我与缘起的分析会要求你把这个固定标签拆回条件、感受、记忆与反应。",
+              "related": [
+                "pt-mind-self",
+                "pt-being-change",
+                "pt-good-life",
+                "pt-chinese-later"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Buddha",
+                  "url": "https://plato.stanford.edu/entries/buddha/"
+                },
+                {
+                  "label": "SEP：Nāgārjuna",
+                  "url": "https://plato.stanford.edu/entries/nagarjuna/"
+                }
+              ]
+            },
+            {
+              "id": "pt-nyaya",
+              "title": "正理、胜论及认识—论辩传统",
+              "type": "传统线索",
+              "summary": "正理学（Nyāya）发展认识手段、推理、辩论与谬误理论；胜论与之有长期关联。它们说明印度哲学并非只讨论内在体验或宗教信念。",
+              "figures": [
+                "Gautama、Vātsyāyana、Udayana、Gaṅgeśa等在正理传统中重要；年代与作者归属需依具体文本谨慎处理。"
+              ],
+              "example": "要证明远处有火，看到烟只是开始：烟与火的遍在关系、反例和观察条件都需要论证。",
+              "related": [
+                "pt-logic",
+                "pt-knowledge-sources",
+                "pt-being-change"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Epistemology in Classical Indian Philosophy",
+                  "url": "https://plato.stanford.edu/entries/epistemology-india/"
+                },
+                {
+                  "label": "SEP：Analytic Philosophy in Early Modern India",
+                  "url": "https://plato.stanford.edu/entries/early-modern-india/"
+                }
+              ]
+            },
+            {
+              "id": "pt-jain-carvaka",
+              "title": "耆那教、顺世论与多元论辩",
+              "type": "传统线索",
+              "summary": "耆那教以非暴力、业与多面性（anekāntavāda）著称；顺世论／Cārvāka的材料主要经对手转述保存，重构时尤其需要谨慎。",
+              "figures": [
+                "耆那教的马哈维拉是重要历史人物；关于顺世论具体观点的可靠性受材料保存方式限制。"
+              ],
+              "example": "同一事件可从多个条件与立场描述，是否意味着所有判断同样正确？耆那的多面性并不自动导向这种相对主义。",
+              "related": [
+                "pt-right-action",
+                "pt-logic",
+                "pt-being-change"
+              ],
+              "sources": [
+                {
+                  "label": "SEP：Jain Philosophy",
+                  "url": "https://plato.stanford.edu/entries/jainism/"
+                },
+                {
+                  "label": "SEP：Naturalism in Classical Indian Philosophy",
+                  "url": "https://plato.stanford.edu/entries/naturalism-india/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -2,79 +2,138 @@ import Link from 'next/link';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { buildMetadata } from '@/app/lib/metadata';
+import {
+  CoreQuestionChecklist,
+  PhilosophyResume,
+  type ChecklistGroup,
+} from './philosophy/reading-state';
+import {
+  coreQuestionIds,
+  coreQuestions,
+  isCoreQuestion,
+  nodeHref,
+  philosophyNodes,
+  questionDomains,
+  traditions,
+} from './philosophy/tree';
 
 export const metadata = buildMetadata({
-  title: 'Learn',
-  description: '按问题组织的个人学习空间：从哲学开始，逐步建立跨学科的知识地图。',
+  title: '学习空间｜哲学与跨学科问题地图',
+  description:
+    '按问题组织的个人学习工作台：17 个哲学核心问题、三条平行的传统导航，以及记录到哪一步的阅读进度。',
   path: '/learning',
 });
 
-const futureSubjects = [
+const roadmap = [
   ['02', 'PSYCHOLOGY', '心理学', '理解心智、行为与关系'],
   ['03', 'HISTORY', '历史', '在时间与因果中理解世界'],
   ['04', 'SCIENCE', '科学', '从证据、模型与实验出发'],
 ] as const;
+
+const questionGroups: ChecklistGroup[] = questionDomains.map((domain) => ({
+  id: domain.id,
+  title: domain.title,
+  href: nodeHref(domain),
+  summary: domain.summary,
+  questions: (domain.children ?? []).filter(isCoreQuestion).map((question) => ({
+    id: question.id,
+    title: question.title,
+    href: nodeHref(question),
+  })),
+}));
+
+const resumeQuestions = coreQuestions.map((question) => ({
+  id: question.id,
+  title: question.title,
+  href: nodeHref(question),
+}));
 
 export default function LearningPage() {
   return (
     <>
       <SiteHeader current="learning" />
       <main id="main" className="learning-page">
-        <section className="learning-hero">
+        {/*
+          Hero 现在是工作台的顶栏，不是海报：移动端整块压到 480px 以内，
+          主 CTA 直接出现在首屏，进度由客户端读旧的 localStorage 键补上。
+        */}
+        <section className="learning-hero" aria-labelledby="learning-title">
           <div className="section-label light" lang="en">
             <span>01 / 04</span>
-            <span>Learning atlas</span>
+            <span>Learning desk</span>
           </div>
-          <div>
+          <div className="learning-hero-body">
             <p className="eyebrow">Learn / 学习空间</p>
-            <h1 lang="en">
-              FIND THE
-              <br />
-              <span className="outline">QUESTION.</span>
+            <h1 id="learning-title" lang="en">
+              FIND THE <span className="outline">QUESTION.</span>
             </h1>
             <p className="learning-hero-intro">
-              不把知识堆成收藏夹。先定位问题，再比较立场，最后把不同学科连接成自己的世界。
+              先定位问题，再比较立场。哲学部分已经铺好 {philosophyNodes.length} 个节点、
+              {coreQuestions.length} 个核心问题。
             </p>
-          </div>
-          <div className="learning-hero-foot" lang="en">
-            <span>Subject 001 · Philosophy</span>
-            <span>Growing archive · 2026</span>
+            <PhilosophyResume
+              coreIds={coreQuestionIds}
+              questions={resumeQuestions}
+              overviewHref="/learning/philosophy"
+            />
+            <p className="learning-hero-foot" lang="en">
+              <span>Subject 001 · Philosophy · {philosophyNodes.length} nodes</span>
+              <span>Growing archive · 2026</span>
+            </p>
           </div>
         </section>
 
-        <section className="learning-shelf" aria-labelledby="learning-shelf-heading">
-          <div className="section-label">
+        <section className="learning-questions" aria-labelledby="learning-questions-heading">
+          <div className="section-label" lang="en">
             <span>02</span>
-            <span>Subject shelf</span>
+            <span>By question</span>
           </div>
-          <div className="learning-shelf-body">
-            <p className="eyebrow">Current map / 当前学习地图</p>
-            <h2 id="learning-shelf-heading">从哲学开始，学习如何提出一个值得追下去的问题。</h2>
+          <div className="learning-section-body">
+            <p className="eyebrow">Main path / 按问题</p>
+            <h2 id="learning-questions-heading">
+              {coreQuestions.length} 个核心问题，<br />每一个都可以单独读完。
+            </h2>
+            <p className="learning-section-lede">
+              这是主学习路径：按问题类型排列，而不是按国别、时代或哲学家。读过的会记在本地浏览器里，换设备不会同步。
+            </p>
+            <p className="learning-section-actions">
+              <Link className="learning-inline-link" href="/learning/philosophy">
+                哲学总览 <span aria-hidden="true">↗</span>
+              </Link>
+            </p>
+            <CoreQuestionChecklist coreIds={coreQuestionIds} groups={questionGroups} />
+          </div>
+        </section>
 
-            <Link className="learning-feature" href="/learning/philosophy-tree#pt-node=pt-overview">
-              <div className="learning-feature-topline" lang="en">
-                <span>001 / PHILOSOPHY</span>
-                <span>40 NODES · 17 CORE QUESTIONS</span>
-              </div>
-              <div className="learning-feature-main">
-                <div>
-                  <h3>从问题开始的<br />哲学体系树</h3>
-                  <p>从存在、知识、伦理、审美与政治五个问题域出发，横向比较西方、中国与印度传统。</p>
-                </div>
-                <span className="learning-feature-arrow" aria-hidden="true">↗</span>
-              </div>
-              <div className="learning-topic-list">
-                <span>存在与自我</span><span>知识与语言</span><span>行动与价值</span><span>共同生活</span>
-              </div>
-            </Link>
-
-            <div className="learning-future-grid" aria-label="计划中的学科">
-              {futureSubjects.map(([index, code, title, description]) => (
-                <article key={code}>
-                  <div lang="en"><span>{index}</span><span>{code}</span></div>
-                  <h3>{title}</h3>
-                  <p>{description}</p>
-                  <small>IN PLANNING</small>
+        <section className="learning-traditions" aria-labelledby="learning-traditions-heading">
+          <div className="section-label light" lang="en">
+            <span>03</span>
+            <span>By tradition</span>
+          </div>
+          <div className="learning-section-body">
+            <p className="eyebrow">Parallel history / 按传统</p>
+            <h2 id="learning-traditions-heading">
+              同一批问题，<br />在不同传统里怎么被追问。
+            </h2>
+            <p className="learning-section-lede">
+              传统地图是平行导航，不是另一条主线。它把问题放回文本、语言、制度与论辩史中。
+            </p>
+            <div className="learning-tradition-grid">
+              {traditions.map((tradition) => (
+                <article className="learning-tradition" key={tradition.id}>
+                  <h3>
+                    <Link href={nodeHref(tradition)}>
+                      {tradition.title} <span aria-hidden="true">↗</span>
+                    </Link>
+                  </h3>
+                  <p>{tradition.summary}</p>
+                  <ul>
+                    {(tradition.children ?? []).map((thread) => (
+                      <li key={thread.id}>
+                        <Link href={nodeHref(thread)}>{thread.title}</Link>
+                      </li>
+                    ))}
+                  </ul>
                 </article>
               ))}
             </div>
@@ -83,17 +142,54 @@ export default function LearningPage() {
 
         <section className="learning-method" aria-labelledby="learning-method-heading">
           <div className="section-label light" lang="en">
-            <span>03</span>
+            <span>04</span>
             <span>How to use</span>
           </div>
           <div className="learning-method-body">
             <p className="eyebrow">Learning loop / 学习循环</p>
-            <h2 id="learning-method-heading">不是先记住答案，<br />而是先看见问题。</h2>
-            <ol>
-              <li><span>01</span><strong>定位问题</strong><p>知道自己究竟在追问什么。</p></li>
-              <li><span>02</span><strong>比较立场</strong><p>同时看见理由、前提和反对意见。</p></li>
-              <li><span>03</span><strong>连接生活</strong><p>让抽象思想回应真实经验。</p></li>
+            <h2 id="learning-method-heading">
+              不是先记住答案，<br />而是先看见问题。
+            </h2>
+            <ol className="learning-loop">
+              <li>
+                <span lang="en">01</span>
+                <strong>定位问题</strong>
+                <p>知道自己究竟在追问什么。</p>
+              </li>
+              <li>
+                <span lang="en">02</span>
+                <strong>比较立场</strong>
+                <p>同时看见理由、前提和反对意见。</p>
+              </li>
+              <li>
+                <span lang="en">03</span>
+                <strong>连接生活</strong>
+                <p>让抽象思想回应真实经验。</p>
+              </li>
             </ol>
+
+            <h3 className="learning-roadmap-heading" id="learning-roadmap-heading">
+              之后的学科（规划中）
+            </h3>
+            <ul className="learning-roadmap" aria-labelledby="learning-roadmap-heading">
+              {roadmap.map(([index, code, title, description]) => (
+                <li key={code}>
+                  <span className="learning-roadmap-index" lang="en">
+                    {index}
+                  </span>
+                  <span className="learning-roadmap-title">
+                    {title}
+                    <span className="learning-roadmap-code" lang="en">
+                      {code}
+                    </span>
+                  </span>
+                  <span className="learning-roadmap-note">{description}</span>
+                  <span className="learning-roadmap-state" lang="en">
+                    IN PLANNING
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
       </main>

@@ -1,0 +1,160 @@
+import rawTree from './data.json';
+
+/**
+ * 哲学体系树的唯一结构化内容源。
+ *
+ * data.json 是从 public/learning/philosophy-tree.html 里那份内联数据机械
+ * 提取出来的：40 个节点、17 个核心问题，字段一一对应，没有增删。旧静态页
+ * 仍然保留作为 /learning/philosophy-tree 的兼容兜底，但新路由只读这一份。
+ */
+
+export type PhilosophySource = {
+  label: string;
+  url: string;
+};
+
+export type PhilosophyPosition = {
+  name: string;
+  text: string;
+  objection?: string;
+};
+
+export type PhilosophyNode = {
+  id: string;
+  title: string;
+  type: string;
+  summary: string;
+  question?: string;
+  notes?: string[];
+  positions?: PhilosophyPosition[];
+  figures?: string[];
+  example?: string;
+  related?: string[];
+  sources?: PhilosophySource[];
+  children?: PhilosophyNode[];
+};
+
+/** JSON 的推断类型是一棵字面量树，逐层断言没有意义，这里一次性收窄。 */
+export const philosophyTree = rawTree as unknown as PhilosophyNode;
+
+export const OVERVIEW_ID = philosophyTree.id;
+export const CORE_QUESTION_TYPE = '核心问题';
+export const PHILOSOPHY_BASE_PATH = '/learning/philosophy';
+
+const nodeById = new Map<string, PhilosophyNode>();
+const parentIdByNodeId = new Map<string, string>();
+const orderedNodes: PhilosophyNode[] = [];
+
+function indexNode(node: PhilosophyNode, parentId: string | null) {
+  if (nodeById.has(node.id)) {
+    throw new Error(`重复的哲学节点 ID：${node.id}`);
+  }
+  nodeById.set(node.id, node);
+  orderedNodes.push(node);
+  if (parentId) {
+    parentIdByNodeId.set(node.id, parentId);
+  }
+  for (const child of node.children ?? []) {
+    indexNode(child, node.id);
+  }
+}
+
+indexNode(philosophyTree, null);
+
+/** 深度优先的阅读顺序，也就是旧页面目录树从上到下的顺序。 */
+export const philosophyNodes: readonly PhilosophyNode[] = orderedNodes;
+
+/** URL 里不重复 `pt-` 前缀：pt-being-change → /learning/philosophy/being-change。 */
+export function nodeSlug(node: PhilosophyNode): string {
+  return node.id.replace(/^pt-/, '');
+}
+
+const nodeBySlug = new Map<string, PhilosophyNode>(
+  orderedNodes.map((node) => [nodeSlug(node), node] as const),
+);
+
+export function getNodeById(id: string): PhilosophyNode | undefined {
+  return nodeById.get(id);
+}
+
+export function getNodeBySlug(slug: string): PhilosophyNode | undefined {
+  return nodeBySlug.get(slug);
+}
+
+/** 总览节点住在 /learning/philosophy 本身，其余节点各有一页。 */
+export function nodeHref(node: PhilosophyNode): string {
+  return node.id === OVERVIEW_ID ? PHILOSOPHY_BASE_PATH : `${PHILOSOPHY_BASE_PATH}/${nodeSlug(node)}`;
+}
+
+export function nodeHrefById(id: string): string | undefined {
+  const node = nodeById.get(id);
+  return node ? nodeHref(node) : undefined;
+}
+
+/** 从总览到该节点的完整路径，用于面包屑。 */
+export function nodePath(id: string): PhilosophyNode[] {
+  const path: PhilosophyNode[] = [];
+  let current: string | undefined = id;
+  while (current) {
+    const node = nodeById.get(current);
+    if (!node) break;
+    path.unshift(node);
+    current = parentIdByNodeId.get(current);
+  }
+  return path;
+}
+
+export function parentOf(id: string): PhilosophyNode | undefined {
+  const parentId = parentIdByNodeId.get(id);
+  return parentId ? nodeById.get(parentId) : undefined;
+}
+
+/** 上一节点 / 下一节点，按阅读顺序连续导航。 */
+export function neighborsOf(id: string): {
+  previous?: PhilosophyNode;
+  next?: PhilosophyNode;
+} {
+  const index = orderedNodes.findIndex((node) => node.id === id);
+  if (index < 0) return {};
+  return {
+    previous: index > 0 ? orderedNodes[index - 1] : undefined,
+    next: index < orderedNodes.length - 1 ? orderedNodes[index + 1] : undefined,
+  };
+}
+
+export function isCoreQuestion(node: PhilosophyNode): boolean {
+  return node.type === CORE_QUESTION_TYPE;
+}
+
+/** 17 个核心问题，顺序即阅读顺序。 */
+export const coreQuestions: readonly PhilosophyNode[] = orderedNodes.filter(isCoreQuestion);
+export const coreQuestionIds: readonly string[] = coreQuestions.map((node) => node.id);
+
+const coreGroup = nodeById.get('pt-core');
+const traditionsGroup = nodeById.get('pt-traditions');
+
+if (!coreGroup || !traditionsGroup) {
+  throw new Error('哲学体系树缺少 pt-core 或 pt-traditions 分组');
+}
+
+/** 主学习路径的分组节点（“核心问题｜主学习路径”）。 */
+export const coreSection: PhilosophyNode = coreGroup;
+/** 平行历史导航的分组节点（“传统地图｜平行历史导航”）。 */
+export const traditionsSection: PhilosophyNode = traditionsGroup;
+
+/** 五个问题域，每个域下挂着它自己的核心问题。 */
+export const questionDomains: readonly PhilosophyNode[] = coreSection.children ?? [];
+/** 三条传统线索，每条下挂着历史时段或思想线索。 */
+export const traditions: readonly PhilosophyNode[] = traditionsSection.children ?? [];
+
+/** 供 sitemap 使用：所有节点对应的站内路径。 */
+export function allNodePaths(): string[] {
+  return orderedNodes.map((node) => nodeHref(node));
+}
+
+/** metadata 里的 description 不需要整段 summary，截到一句话左右。 */
+export function shortDescription(node: PhilosophyNode, limit = 150): string {
+  const text = node.question ? `${node.question} ${node.summary}` : node.summary;
+  if (text.length <= limit) return text;
+  return `${text.slice(0, limit - 1).trimEnd()}…`;
+}

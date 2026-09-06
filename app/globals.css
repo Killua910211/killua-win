@@ -922,9 +922,13 @@ footer p:last-child { justify-self: end; }
     column-gap: 8px;
     padding: 0 12px;
   }
-  .site-header nav { justify-self: end; gap: 9px; }
+  /*
+     nav 所在的列是 minmax(0, 1fr)，允许被压到比内容更窄；min-width: 0 加
+     nowrap 之后，四个导航项要么完整显示，要么整体让位，不会被切掉半个词。
+  */
+  .site-header nav { justify-self: end; gap: 9px; min-width: 0; flex-wrap: nowrap; }
   /* 14px + 0.08em 在这个宽度下会挤到溢出，收紧字号和字距保住不换行。 */
-  .site-header nav a { font-size: 13px; letter-spacing: 0.05em; }
+  .site-header nav a { font-size: 13px; letter-spacing: 0.05em; white-space: nowrap; }
   .header-actions { display: none; }
   .os-entry {
     padding: 7px 7px;
@@ -2779,72 +2783,241 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .home-learning-bottom a:focus-visible span { transform: translate(3px, -3px); }
 
 .learning-page { background: var(--paper); }
-.learning-hero { position: relative; display: grid; min-height: 650px; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); align-items: center; overflow: hidden; padding: 76px 4vw 62px; background: linear-gradient(to bottom, transparent 60%, var(--ink) 100%), radial-gradient(circle at 77% 42%, rgba(204,255,0,.12), transparent 23%), #151515; color: #fff; }
-.learning-hero::before { position: absolute; inset: 0; opacity: .17; background-image: linear-gradient(rgba(255,255,255,.14) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.14) 1px, transparent 1px); background-size: 72px 72px; content: ''; mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent); }
+
+/*
+ * Hero 是工作台的顶栏，不是海报。
+ *
+ * 旧版 min-height: 650px 在手机上意味着整屏都是标题，主 CTA 要滚一屏才看得到；
+ * 现在高度由内容决定，移动端整块压在 480px 以内（见文件末尾的 760px 断点）。
+ */
+.learning-hero { position: relative; display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); align-items: start; overflow: hidden; padding: 62px 4vw 54px; background: radial-gradient(circle at 78% 30%, rgba(204,255,0,.13), transparent 26%), #151515; color: #fff; }
+.learning-hero::before { position: absolute; inset: 0; opacity: .15; background-image: linear-gradient(rgba(255,255,255,.14) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.14) 1px, transparent 1px); background-size: 72px 72px; content: ''; mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent); }
 .learning-hero > * { position: relative; z-index: 1; }
-.learning-hero .eyebrow { color: rgba(255,255,255,.54); }
-.learning-hero h1 { font-size: clamp(62px, 9vw, 138px); font-weight: 620; letter-spacing: -.075em; line-height: .84; }
-.learning-hero-intro { max-width: 620px; margin-top: 50px; color: var(--text-secondary); font-size: 16px; line-height: 1.85; }
-.learning-hero-foot { grid-column: 2; display: flex; justify-content: space-between; align-self: end; margin-top: 56px; color: rgba(255,255,255,.43); font-family: var(--font-geist-mono), monospace; font-size: 9px; letter-spacing: .11em; text-transform: uppercase; }
+.learning-hero .eyebrow { margin-bottom: 18px; color: rgba(255,255,255,.54); }
+.learning-hero-body { min-width: 0; }
+.learning-hero h1 { max-width: 14ch; font-size: clamp(44px, 6.6vw, 92px); font-weight: 620; letter-spacing: -.072em; line-height: .92; }
+.learning-hero-intro { max-width: 560px; margin-top: 22px; color: var(--text-secondary); font-size: 16px; line-height: 1.8; }
+.learning-hero-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px; margin-top: 32px; color: rgba(255,255,255,.5); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .09em; text-transform: uppercase; }
 
-.learning-shelf { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 100px 4vw 126px; background: var(--paper); }
-.learning-shelf-body { min-width: 0; }
-.learning-shelf-body > h2 { max-width: 940px; font-size: clamp(38px, 5vw, 72px); font-weight: 520; letter-spacing: -.065em; line-height: 1.05; }
-.learning-feature { display: block; margin-top: 72px; padding: 26px 30px 28px; border-top: 4px solid var(--signal); background: var(--ink); color: #fff; transition: transform var(--motion-base) ease; }
-.learning-feature:hover,
-.learning-feature:focus-visible { transform: translateY(-4px); }
-.learning-feature-topline { display: flex; justify-content: space-between; color: rgba(255,255,255,.47); font-family: var(--font-geist-mono), monospace; font-size: 9px; letter-spacing: .1em; }
-.learning-feature-topline span:first-child { color: var(--signal); }
-.learning-feature-main { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 40px; margin-top: 78px; }
-.learning-feature-main h3 { font-size: clamp(36px, 5.2vw, 75px); font-weight: 540; letter-spacing: -.065em; line-height: 1.02; }
-.learning-feature-main p { max-width: 600px; margin-top: 24px; color: rgba(255,255,255,.62); font-size: 14px; line-height: 1.85; }
-.learning-feature-arrow { display: grid; width: 68px; height: 68px; place-items: center; border: 1px solid rgba(255,255,255,.32); border-radius: 50%; color: var(--signal); font-size: 24px; transition: background var(--motion-base) ease, color var(--motion-base) ease; }
-.learning-feature:hover .learning-feature-arrow,
-.learning-feature:focus-visible .learning-feature-arrow { background: var(--signal); color: var(--ink); }
-.learning-topic-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 62px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.2); }
-.learning-topic-list span { padding: 6px 10px; border: 1px solid rgba(255,255,255,.23); border-radius: 999px; color: rgba(255,255,255,.68); font-family: var(--font-geist-mono), monospace; font-size: 9px; letter-spacing: .05em; }
-.learning-future-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin-top: 22px; background: rgba(21,21,21,.23); border: 1px solid rgba(21,21,21,.23); }
-.learning-future-grid article { min-height: 230px; display: flex; flex-direction: column; padding: 22px; background: #e8e5db; }
-.learning-future-grid article > div { display: flex; justify-content: space-between; color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 9px; letter-spacing: .1em; }
-.learning-future-grid h3 { margin-top: 52px; font-size: 25px; font-weight: 520; letter-spacing: -.04em; }
-.learning-future-grid p { margin-top: 10px; color: #5d5a53; font-size: 12px; line-height: 1.7; }
-.learning-future-grid small { margin-top: auto; color: #6b8a00; font-family: var(--font-geist-mono), monospace; font-size: 9px; letter-spacing: .1em; }
+/* 首屏主 CTA + 进度。文案由客户端按 localStorage 里的历史决定。 */
+.learning-resume { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 28px; }
+.learning-resume-cta { display: inline-flex; min-height: 50px; align-items: center; gap: 14px; padding: 0 22px; border: 1px solid var(--signal); background: var(--signal); color: var(--ink); font-family: var(--font-geist-mono), monospace; font-size: 13px; font-weight: 600; letter-spacing: .08em; }
+.learning-resume-cta span:last-child { font-size: 16px; transition: transform var(--motion-base) ease; }
+.learning-resume-cta:hover span:last-child,
+.learning-resume-cta:focus-visible span:last-child { transform: translate(3px, -3px); }
+.learning-resume-hint { max-width: 520px; color: rgba(255,255,255,.62); font-size: 13px; line-height: 1.7; }
+.learning-progress { width: min(430px, 100%); margin-top: 6px; }
+.learning-progress-label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 14px; color: rgba(255,255,255,.68); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .09em; text-transform: uppercase; }
+.learning-progress-track { display: block; height: 3px; margin-top: 9px; background: rgba(255,255,255,.22); }
+.learning-progress-bar { display: block; width: var(--pt-progress, 0%); height: 100%; background: var(--signal); transition: width var(--motion-base) ease; }
 
-.learning-method { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 104px 4vw 120px; background: var(--ink); color: #fff; }
+.learning-questions,
+.learning-traditions { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 88px 4vw 100px; }
+.learning-questions { background: var(--paper); }
+.learning-traditions { background: #24251f; color: #fff; }
+.learning-traditions .eyebrow { color: rgba(255,255,255,.5); }
+.learning-section-body { min-width: 0; }
+.learning-section-body > h2 { max-width: 900px; font-size: clamp(34px, 4.4vw, 62px); font-weight: 520; letter-spacing: -.06em; line-height: 1.08; }
+.learning-section-lede { max-width: 660px; margin-top: 20px; color: #5d5a53; font-size: 15px; line-height: 1.85; }
+.learning-traditions .learning-section-lede { color: rgba(255,255,255,.62); }
+.learning-section-actions { margin-top: 22px; }
+.learning-inline-link { display: inline-flex; min-height: 44px; align-items: center; gap: 9px; padding: 0 16px; border: 1px solid var(--ink); font-family: var(--font-geist-mono), monospace; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; transition: background var(--motion-base) ease, color var(--motion-base) ease; }
+.learning-inline-link:hover,
+.learning-inline-link:focus-visible { background: var(--ink); color: #fff; }
+
+/* 五个问题域 × 17 个核心问题：真实链接 + 已读状态。 */
+.learning-question-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 40px; margin-top: 46px; }
+.learning-question-group { min-width: 0; padding-top: 15px; border-top: 2px solid var(--ink); }
+.learning-question-group-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.learning-question-group-head h3 { font-size: 21px; font-weight: 560; letter-spacing: -.035em; line-height: 1.25; }
+.learning-question-domain-link { border-bottom: 1px solid transparent; }
+.learning-question-domain-link:hover { border-bottom-color: var(--ink); }
+.learning-question-count { flex: 0 0 auto; color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 12px; letter-spacing: .06em; }
+.learning-question-group-summary { margin-top: 10px; color: #5d5a53; font-size: 13px; line-height: 1.75; }
+.learning-question-list { margin-top: 14px; }
+.learning-question-list li + li { border-top: 1px solid rgba(21,21,21,.15); }
+.learning-question-link { display: grid; min-height: 58px; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: baseline; gap: 12px; padding: 13px 0; }
+.learning-question-link:focus-visible { outline-offset: -2px; }
+.learning-question-link:hover .learning-question-title { text-decoration: underline; text-underline-offset: 4px; }
+.learning-question-index { color: #8a867c; font-family: var(--font-geist-mono), monospace; font-size: 12px; }
+.learning-question-title { font-size: 16px; font-weight: 460; letter-spacing: -.012em; line-height: 1.45; }
+.learning-question-state { flex: 0 0 auto; color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 12px; letter-spacing: .06em; }
+.learning-question-list li[data-read='true'] .learning-question-state { color: #4c6600; }
+.learning-question-list li[data-read='true'] .learning-question-index { color: #4c6600; }
+
+.learning-tradition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px; margin-top: 44px; }
+.learning-tradition { min-width: 0; padding-top: 15px; border-top: 1px solid rgba(255,255,255,.4); }
+.learning-tradition h3 { font-size: 20px; font-weight: 540; letter-spacing: -.035em; line-height: 1.3; }
+.learning-tradition h3 a:hover { color: var(--signal); }
+.learning-tradition > p { margin-top: 11px; color: rgba(255,255,255,.6); font-size: 13px; line-height: 1.75; }
+.learning-tradition ul { margin-top: 16px; }
+.learning-tradition li a { display: block; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.87); font-size: 14px; line-height: 1.5; }
+.learning-tradition li a:hover { color: var(--signal); }
+
+.learning-method { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 92px 4vw 110px; background: var(--ink); color: #fff; }
 .learning-method-body { min-width: 0; }
 .learning-method-body .eyebrow { color: rgba(255,255,255,.5); }
-.learning-method-body h2 { font-size: clamp(39px, 5.6vw, 82px); font-weight: 520; letter-spacing: -.066em; line-height: 1.04; }
-.learning-method ol { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 36px; margin-top: 72px; }
-.learning-method li { padding-top: 18px; border-top: 2px solid rgba(255,255,255,.7); }
-.learning-method li > span { display: block; margin-bottom: 40px; color: var(--signal); font-family: var(--font-geist-mono), monospace; font-size: 10px; }
-.learning-method strong { display: block; font-size: 20px; font-weight: 520; }
-.learning-method li p { margin-top: 10px; color: rgba(255,255,255,.54); font-size: 13px; line-height: 1.7; }
+.learning-method-body h2 { font-size: clamp(34px, 4.6vw, 68px); font-weight: 520; letter-spacing: -.062em; line-height: 1.06; }
+.learning-loop { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px; margin-top: 58px; }
+.learning-loop li { padding-top: 17px; border-top: 2px solid rgba(255,255,255,.7); }
+.learning-loop li > span { display: block; margin-bottom: 34px; color: var(--signal); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .1em; }
+.learning-loop strong { display: block; font-size: 20px; font-weight: 520; }
+.learning-loop p { margin-top: 10px; color: rgba(255,255,255,.56); font-size: 13px; line-height: 1.7; }
+
+/* 三个规划中的学科：从占满一屏的卡片改成一条紧凑路线图。 */
+.learning-roadmap-heading { margin-top: 66px; color: rgba(255,255,255,.7); font-family: var(--font-geist-mono), monospace; font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
+.learning-roadmap { margin-top: 14px; border-top: 1px solid rgba(255,255,255,.26); }
+.learning-roadmap li { display: grid; grid-template-columns: 30px minmax(0, 150px) minmax(0, 1fr) auto; align-items: baseline; gap: 8px 18px; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,.14); }
+.learning-roadmap-index { color: var(--signal); font-family: var(--font-geist-mono), monospace; font-size: 12px; }
+.learning-roadmap-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; font-size: 17px; letter-spacing: -.02em; }
+.learning-roadmap-code { color: rgba(255,255,255,.42); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .08em; }
+.learning-roadmap-note { color: rgba(255,255,255,.58); font-size: 13px; line-height: 1.6; }
+.learning-roadmap-state { color: rgba(204,255,0,.78); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .1em; }
+
+/* ── Learning：哲学节点页 ─────────────────────────────────── */
+.philosophy-page { background: var(--paper); }
+.philosophy-hero { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); align-items: start; padding: 58px 4vw 56px; background: #151515; color: #fff; }
+.philosophy-hero-body { min-width: 0; max-width: 900px; }
+.philosophy-hero .eyebrow { margin-bottom: 14px; color: rgba(255,255,255,.54); }
+.philosophy-hero h1 { font-size: clamp(31px, 4.4vw, 60px); font-weight: 560; letter-spacing: -.05em; line-height: 1.08; }
+.philosophy-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 22px; color: rgba(255,255,255,.52); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .06em; }
+.philosophy-breadcrumb-item { display: inline-flex; align-items: center; gap: 8px; }
+.philosophy-breadcrumb a { border-bottom: 1px solid transparent; }
+.philosophy-breadcrumb a:hover { color: var(--signal); border-bottom-color: currentColor; }
+.philosophy-breadcrumb [aria-current='page'] { color: rgba(255,255,255,.85); }
+.philosophy-question { max-width: 720px; margin-top: 22px; padding-left: 16px; border-left: 2px solid var(--signal); font-size: 17px; line-height: 1.75; }
+.philosophy-summary { max-width: 720px; margin-top: 20px; color: var(--text-secondary); font-size: 15px; line-height: 1.9; }
+.philosophy-hero .learning-progress { margin-top: 30px; }
+
+.philosophy-section { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 74px 4vw 80px; background: var(--paper); }
+.philosophy-section + .philosophy-section { border-top: 1px solid rgba(21,21,21,.16); }
+.philosophy-section-body { min-width: 0; max-width: 880px; }
+.philosophy-section-heading { font-size: clamp(28px, 3.6vw, 46px); font-weight: 520; letter-spacing: -.05em; line-height: 1.12; }
+.philosophy-lede { max-width: 700px; margin-top: 18px; color: #5d5a53; font-size: 15px; line-height: 1.85; }
+.philosophy-body-main > .philosophy-block:first-child { margin-top: 26px; }
+.philosophy-block { margin-top: 48px; }
+.philosophy-block-title { padding-top: 12px; border-top: 2px solid var(--ink); font-family: var(--font-geist-mono), monospace; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.philosophy-notes { margin-top: 18px; }
+.philosophy-notes li { padding: 2px 0 2px 16px; border-left: 2px solid rgba(21,21,21,.24); color: #4a463f; font-size: 14px; line-height: 1.85; }
+.philosophy-notes li + li { margin-top: 14px; }
+.philosophy-positions { display: grid; gap: 18px; margin-top: 20px; }
+.philosophy-positions li { padding: 20px; background: #e8e5db; }
+.philosophy-position-index { color: #4c6600; font-family: var(--font-geist-mono), monospace; font-size: 12px; letter-spacing: .1em; }
+.philosophy-position-name { margin-top: 10px; font-size: 20px; font-weight: 560; letter-spacing: -.035em; line-height: 1.3; }
+.philosophy-position-text { margin-top: 10px; color: #3f3c35; font-size: 15px; line-height: 1.85; }
+.philosophy-position-objection { margin-top: 14px; padding-top: 13px; border-top: 1px solid rgba(21,21,21,.17); color: #5d5a53; font-size: 14px; line-height: 1.8; }
+.philosophy-tag { display: inline-block; margin-right: 10px; padding: 3px 8px; background: var(--ink); color: var(--signal); font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .08em; }
+.philosophy-paragraph { margin-top: 18px; color: #3f3c35; font-size: 15px; line-height: 1.9; }
+.philosophy-example { margin-top: 18px; padding: 18px 20px; border-left: 3px solid var(--ink); background: #e8e5db; color: #3f3c35; font-size: 15px; line-height: 1.9; }
+.philosophy-related { margin-top: 16px; }
+.philosophy-related li a { display: grid; min-height: 52px; grid-template-columns: minmax(72px, auto) minmax(0, 1fr); align-items: baseline; gap: 14px; padding: 13px 0; border-top: 1px solid rgba(21,21,21,.16); }
+.philosophy-related li a:focus-visible { outline-offset: -2px; }
+.philosophy-related-type { color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .06em; }
+.philosophy-related-title { font-size: 16px; line-height: 1.45; }
+.philosophy-related li a:hover .philosophy-related-title { text-decoration: underline; text-underline-offset: 4px; }
+.philosophy-sources { margin-top: 16px; }
+.philosophy-sources li { border-top: 1px solid rgba(21,21,21,.16); }
+.philosophy-sources li a { display: block; padding: 14px 0; color: #4c6600; font-size: 14px; line-height: 1.6; }
+.philosophy-sources li a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.philosophy-children { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 30px; margin-top: 20px; }
+.philosophy-children li { min-width: 0; padding-top: 14px; border-top: 1px solid rgba(21,21,21,.22); }
+.philosophy-children-type { color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .08em; }
+.philosophy-children-title { margin-top: 8px; font-size: 19px; font-weight: 540; letter-spacing: -.035em; line-height: 1.3; }
+.philosophy-children-title a:hover { color: #4c6600; }
+.philosophy-children-summary { margin-top: 9px; color: #5d5a53; font-size: 13px; line-height: 1.75; }
+
+.philosophy-tradition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px; margin-top: 40px; }
+.philosophy-tradition { min-width: 0; padding-top: 14px; border-top: 2px solid var(--ink); }
+.philosophy-tradition h3 { font-size: 19px; font-weight: 560; letter-spacing: -.035em; line-height: 1.3; }
+.philosophy-tradition h3 a:hover { color: #4c6600; }
+.philosophy-tradition > p { margin-top: 10px; color: #5d5a53; font-size: 13px; line-height: 1.75; }
+.philosophy-tradition ul { margin-top: 14px; }
+.philosophy-tradition li a { display: grid; gap: 4px; padding: 12px 0; border-top: 1px solid rgba(21,21,21,.14); font-size: 14px; line-height: 1.45; }
+.philosophy-tradition li a:hover { color: #4c6600; }
+.philosophy-thread-type { color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .06em; }
+
+.philosophy-pager { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; border-top: 1px solid rgba(21,21,21,.2); background: rgba(21,21,21,.2); }
+.philosophy-pager-slot { background: var(--paper); }
+.philosophy-pager-link { display: flex; min-height: 104px; flex-direction: column; justify-content: center; gap: 10px; padding: 24px 4vw; background: var(--paper); }
+.philosophy-pager-link > span { color: #69655c; font-family: var(--font-geist-mono), monospace; font-size: 11px; letter-spacing: .1em; }
+.philosophy-pager-link strong { font-size: 19px; font-weight: 520; letter-spacing: -.035em; line-height: 1.3; }
+.philosophy-pager-link:hover strong { text-decoration: underline; text-underline-offset: 4px; }
+.philosophy-pager-next { align-items: flex-end; text-align: right; }
+.philosophy-legacy-note { padding: 28px 4vw 64px; background: var(--paper); color: #69655c; font-size: 13px; line-height: 1.85; }
+.philosophy-legacy-note a { color: #4c6600; border-bottom: 1px solid currentColor; }
+
+/* 深色分区里的焦点环换成信号色，深色描边在深色底上看不见。 */
+.learning-hero a:focus-visible,
+.learning-traditions a:focus-visible,
+.learning-method a:focus-visible,
+.philosophy-hero a:focus-visible { outline-color: var(--signal); }
+
+@media (max-width: 980px) {
+  .learning-question-groups { grid-template-columns: 1fr; }
+  .learning-tradition-grid,
+  .philosophy-tradition-grid { grid-template-columns: 1fr; }
+  .philosophy-children { grid-template-columns: 1fr; }
+  /* 窄一点的屏幕把说明折到第二行，位置全部写死，避免自动流把状态挤走。 */
+  .learning-roadmap li { grid-template-columns: 30px minmax(0, 1fr) auto; }
+  .learning-roadmap-index { grid-column: 1; grid-row: 1; }
+  .learning-roadmap-title { grid-column: 2; grid-row: 1; }
+  .learning-roadmap-state { grid-column: 3; grid-row: 1; }
+  .learning-roadmap-note { grid-column: 2 / -1; grid-row: 2; }
+}
 
 @media (max-width: 760px) {
   .home-learning,
   .learning-hero,
-  .learning-shelf,
-  .learning-method { grid-template-columns: 1fr; padding-right: 20px; padding-left: 20px; }
+  .learning-questions,
+  .learning-traditions,
+  .learning-method,
+  .philosophy-hero,
+  .philosophy-section { grid-template-columns: 1fr; padding-right: 20px; padding-left: 20px; }
   .home-learning { gap: 50px; padding-top: 74px; padding-bottom: 82px; }
   .home-learning-body h2 { font-size: clamp(38px, 12vw, 56px); }
   .home-learning-bottom { grid-template-columns: 1fr; gap: 26px; margin-top: 48px; }
   .home-learning-bottom a { width: max-content; }
-  .learning-hero { min-height: 650px; gap: 54px; padding-top: 68px; padding-bottom: 32px; }
-  .learning-hero h1 { font-size: clamp(55px, 18vw, 86px); }
-  .learning-hero-intro { margin-top: 38px; font-size: 14px; }
-  .learning-hero-foot { grid-column: auto; flex-direction: column; gap: 9px; margin-top: 0; }
-  .learning-shelf { gap: 48px; padding-top: 68px; padding-bottom: 82px; }
-  .learning-shelf-body > h2 { font-size: clamp(35px, 10.5vw, 50px); }
-  .learning-feature { margin-top: 48px; padding: 20px; }
-  .learning-feature-topline { align-items: flex-start; flex-direction: column; gap: 6px; }
-  .learning-feature-main { grid-template-columns: 1fr; margin-top: 54px; }
-  .learning-feature-main h3 { font-size: clamp(34px, 11vw, 49px); }
-  .learning-feature-arrow { width: 54px; height: 54px; }
-  .learning-topic-list { margin-top: 44px; }
-  .learning-future-grid { grid-template-columns: 1fr; }
-  .learning-future-grid article { min-height: 190px; }
-  .learning-method { gap: 48px; padding-top: 74px; padding-bottom: 84px; }
-  .learning-method-body h2 { font-size: clamp(38px, 11vw, 54px); }
-  .learning-method ol { grid-template-columns: 1fr; gap: 28px; margin-top: 56px; }
-  .learning-method li > span { margin-bottom: 20px; }
+
+  /*
+    紧凑 Hero：分区标签压成一行，标题、正文、CTA、进度和页脚小字加起来
+    落在 480px 以内，主 CTA 不用滚动就能看到。
+  */
+  .learning-hero { gap: 16px; padding-top: 36px; padding-bottom: 30px; }
+  .learning-hero > .section-label { flex-direction: row; gap: 12px; }
+  .learning-hero .eyebrow { margin-bottom: 13px; }
+  .learning-hero h1 { max-width: none; font-size: clamp(34px, 10vw, 44px); line-height: .98; }
+  .learning-hero-intro { margin-top: 15px; font-size: 14px; line-height: 1.7; }
+  .learning-resume { margin-top: 20px; gap: 9px; }
+  .learning-resume-cta { min-height: 48px; font-size: 12px; }
+  .learning-progress { margin-top: 2px; }
+  .learning-progress-track { margin-top: 7px; }
+  .learning-hero-foot { margin-top: 18px; }
+
+  .learning-questions,
+  .learning-traditions { gap: 28px; padding-top: 60px; padding-bottom: 72px; }
+  .learning-section-body > h2 { font-size: clamp(30px, 9.5vw, 44px); }
+  .learning-question-groups { gap: 30px; margin-top: 34px; }
+  .learning-tradition-grid { gap: 26px; margin-top: 34px; }
+  .learning-method { gap: 28px; padding-top: 66px; padding-bottom: 78px; }
+  .learning-method-body h2 { font-size: clamp(30px, 9.5vw, 46px); }
+  .learning-loop { grid-template-columns: 1fr; gap: 26px; margin-top: 44px; }
+  .learning-loop li > span { margin-bottom: 18px; }
+  .learning-roadmap-heading { margin-top: 48px; }
+  .learning-roadmap li { grid-template-columns: 30px minmax(0, 1fr); gap: 6px 14px; }
+  .learning-roadmap-note { grid-column: 2; grid-row: 2; }
+  .learning-roadmap-state { grid-column: 2; grid-row: 3; justify-self: start; }
+
+  .philosophy-hero { gap: 20px; padding-top: 40px; padding-bottom: 42px; }
+  .philosophy-hero > .section-label { flex-direction: row; gap: 12px; }
+  .philosophy-hero h1 { font-size: clamp(27px, 8vw, 38px); }
+  .philosophy-question { margin-top: 18px; font-size: 15px; }
+  .philosophy-summary { margin-top: 16px; font-size: 14px; line-height: 1.85; }
+  .philosophy-section { gap: 26px; padding-top: 56px; padding-bottom: 62px; }
+  .philosophy-section-heading { font-size: clamp(26px, 8.5vw, 38px); }
+  .philosophy-block { margin-top: 38px; }
+  .philosophy-positions li { padding: 17px; }
+  .philosophy-pager { grid-template-columns: 1fr; }
+  .philosophy-pager-link { min-height: 88px; padding: 20px; }
+  .philosophy-pager-next { align-items: flex-start; text-align: left; }
+  .philosophy-legacy-note { padding: 24px 20px 52px; }
 }

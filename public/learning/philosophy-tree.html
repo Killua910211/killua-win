@@ -9,7 +9,12 @@
   <meta property="og:url" content="https://www.killua.win/learning/philosophy-tree">
   <meta property="og:image" content="https://www.killua.win/og.png">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://www.killua.win/learning/philosophy-tree">
+  <!--
+    这一页现在是兼容兜底：旧链接和 #pt-node= 锚点继续可用，但正式内容已经
+    搬到 /learning/philosophy（每个节点一页）。canonical 指向新版，避免两套
+    URL 互相抢同一批内容的排名。
+  -->
+  <link rel="canonical" href="https://www.killua.win/learning/philosophy">
   <title>哲学体系树 — KILLUA.WIN</title>
   <style>
     /* 所有可嵌入样式均限定在 .pt-root；宿主页面无需重置其全局样式。 */
@@ -28,6 +33,13 @@
     .pt-header-actions { display: flex; align-items: center; justify-self: end; gap: 18px; }
     .pt-os-entry { display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border: 1px solid rgba(204,255,0,.58); color: #ccff00; text-decoration: none; }
     .pt-os-entry:hover, .pt-os-entry:focus-visible { background: #ccff00; color: #151515; }
+    /* 兼容横幅只属于独立页面这一层外壳，嵌入宿主页面时不会跟着走。 */
+    body.pt-standalone .pt-legacy-banner {
+      margin: 0; padding: 13px 4vw; border-bottom: 1px solid rgba(21,21,21,.18); background: #e8e5db;
+      color: #4a463f; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 1.7;
+    }
+    body.pt-standalone .pt-legacy-banner a { color: #536b00; font-weight: 600; }
+    body.pt-standalone .pt-legacy-banner code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
     .pt-root {
       --pt-paper: #f2f0e8;
       --pt-ink: #151515;
@@ -258,6 +270,9 @@
       <a class="pt-os-entry" href="https://os.killua.win/today" target="_blank" rel="noreferrer">KILLUA OS ↗</a>
     </div>
   </header>
+  <p class="pt-legacy-banner">
+    这是旧版单页导航，保留下来让旧链接（含 <code>#pt-node=</code> 锚点）继续有效。新版按节点分页：<a href="/learning/philosophy">/learning/philosophy</a>
+  </p>
   <!-- 嵌入宿主页面时，保留本根元素、样式与脚本即可；可删除 body.pt-standalone 的外观规则。 -->
   <main class="pt-root" id="pt-philosophy-tree" aria-labelledby="pt-page-title">
     <div class="pt-shell">
