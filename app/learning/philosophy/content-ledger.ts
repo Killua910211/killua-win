@@ -50,6 +50,73 @@ export type CoreEntryLedger = {
 };
 
 export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
+  'pt-being-change': {
+    status: '核验正文｜自审完成',
+    scope: '本条比较“什么存在”“一个东西如何在变化中仍是它自己”“何为基本存在者”三组问题；不把日常分类、物理学模型与形而上学本体论混作彼此的直接结论。',
+    origin: [
+      { kind: '概括', text: '我们既说河流在流动、身体在代谢，又说“还是同一条河”“还是同一个人”。变化似乎要求前后不同，同一性似乎要求同一；如何同时成立，促成了持续、部分与整体、属性与实体的形而上学分析。', sourceIds: ['BEC-1'] },
+      { kind: '解释性重构', text: '问题还会在“何者算最基本”处出现：桌子、生命体、事件、性质、关系或过程，是否都以同一方式存在？此处的“基本”不是指日常更重要，而是问其他事物在解释上依赖什么。' },
+    ],
+    boundaries: [
+      { kind: '概括', text: '数值同一性问甲是否就是乙；质的相似只问两者像不像。忒修斯之船的困难在于：逐块替换后的船与由旧料重组的船，谁同原船数值同一？', sourceIds: ['BEC-2'] },
+      { kind: '概括', text: '“空”在龙树语境中不是说一切都不存在，而是拒绝把事物理解为具有独立、不依条件的自性；缘起与空性须一起读。它不能直接替换为西方“没有实体”的任一理论。', sourceIds: ['BEC-3'] },
+    ],
+    objections: [
+      { kind: '概括', text: '把持续物理解为“在每一时刻完整存在”的立场，要解释一个完全存在的物体怎样拥有不同时刻的相反性质；把它理解为由时间部分组成的立场，则要解释我们为何经验为同一对象，以及阶段与整体怎样构成关系。两种方案各有代价，不能由“常识”一语裁决。', sourceIds: ['BEC-1'] },
+      { kind: '概括', text: '对自性批判的一项反对是：若任何东西都无自性，因果、语言和解脱似乎也无从成立。中观回应通常不是另立隐藏实体，而是在二谛或约定层次上说明依条件的因果和言说如何仍可运作；不同中观解释并不一致。', sourceIds: ['BEC-3'] },
+    ],
+    confusions: [
+      { kind: '解释性重构', text: '“同一”不等于“毫无变化”；一个对象可因持续的组织、关系或过程而同一，却不保有每一部分和性质。' },
+      { kind: '解释性重构', text: '“空”不等于“虚无”或“什么说法都对”；它首先针对以独立自性解释事物的方式。', sourceIds: ['BEC-3'] },
+      { kind: '解释性重构', text: '本体论的“存在”不等于“肉眼可见”：数字、制度、事件与理论实体的存在方式是仍待论证的问题。' },
+    ],
+    historicalContext: [
+      { nodeId: 'pt-western-ancient', label: '古典与希腊化时期', note: '从巴门尼德、赫拉克利特到亚里士多德，变化与实体已形成不同问题线。' },
+      { nodeId: 'pt-buddhist', label: '佛教哲学：苦、无我、缘起与认识', note: '缘起、无我与空性必须放在具体论证和修行目标中，不可只译为抽象本体论。' },
+    ],
+    sources: [
+      { id: 'BEC-1', title: 'SEP：Metaphysics', kind: '学术综述', url: 'https://plato.stanford.edu/entries/metaphysics/', locator: '导论、持续与部分相关章节', checked: true, supports: '形而上学中存在、基本性与持续问题的范围。' },
+      { id: 'BEC-2', title: 'SEP：Identity Over Time', kind: '学术综述', url: 'https://plato.stanford.edu/entries/identity-time/', locator: '导论、§1–§3', checked: true, supports: '数值同一性、质的相似和持续理论的基本分歧。' },
+      { id: 'BEC-3', title: 'SEP：Nāgārjuna', kind: '学术综述', url: 'https://plato.stanford.edu/entries/nagarjuna/', locator: '导论、§2–§3', checked: true, supports: '自性、缘起、空性与虚无论误读的区分。' },
+    ],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
+      { location: '案例推演｜忒修斯之船', issue: '原内容把案例写成可凭直觉选出唯一答案的谜题。', evidence: 'BEC-2 将替换、重组和持续理论分别展开。', revision: '改为区分数值同一性、相似和不同理论的代价。' },
+      { location: '跨传统连接｜空性', issue: '原文易把空性译为“万物虚幻”。', evidence: 'BEC-3 将自性批判与缘起、二谛问题相连。', revision: '加入自性边界及对虚无论异议的回应。' },
+    ], remaining: ['尚未逐段校勘《中论》中文译本与二谛术语；相关原典只作为后续精读任务。'], adjacentImpact: '与“心灵、身体与我”互链时，不能把人格同一性的答案预设成一般对象持续的唯一答案。', nextPriority: '为古典与佛教历史页补入原典版本、传承与解释史。' },
+  },
+  'pt-knowledge-sources': {
+    status: '核验正文｜自审完成',
+    scope: '本条讨论信念何以正当、知识如何取得及其限度；不把“知识”简化为考试信息，也不预设经验、推理、证言和修行实践在所有传统中有同一地位。',
+    origin: [
+      { kind: '概括', text: '我们会发现自己相信某事，却仍要问：它是真的、理由足够，还是只是碰巧猜对？感知、记忆、内省、推理和他人证言都能带来信念，也都可能出错；认识论因此既问来源，也问纠错与边界。', sourceIds: ['KNO-1'] },
+      { kind: '概括', text: '古典印度认识论以 pramāṇa（有效认识手段）为组织线索，围绕知觉、推理与证言等来源展开分歧。不同学派所承认的来源及其条件不同，不能把它们粗译为西方经验主义／理性主义。', sourceIds: ['KNO-2'] },
+    ],
+    boundaries: [
+      { kind: '概括', text: '“有真信念”不等于“有知识”：盖梯尔式案例提示，一个信念可以有看似好理由却因运气而真。此后理论会讨论可靠过程、反事实安全性、认知能力或社会实践等补充条件。', sourceIds: ['KNO-1'] },
+      { kind: '解释性重构', text: '证言不是“未经验证的传闻”的同义词。依赖专家、历史档案和他人报告是认识生活的常态；关键是来源能力、利益冲突、传递链和可纠错机制，而不是要求每个人亲自重做一切证据。' },
+    ],
+    objections: [
+      { kind: '概括', text: '经验主义若把一切知识压到感觉输入，会难以说明逻辑、数学、概念和证言的作用；理性主义若把可靠性主要交给先天结构，又须解释它如何接触具体世界。较成熟的理论通常承认多种来源，却要说明它们冲突时的权重。', sourceIds: ['KNO-1'] },
+      { kind: '概括', text: '把证言列为独立认识手段会面临“为什么不都还原为个人推理”的质疑；印度传统的争论正要求说明说话者可靠性、语句理解与缺席对象的知识如何成立，而不是只给权威贴标签。', sourceIds: ['KNO-2'] },
+    ],
+    confusions: [
+      { kind: '解释性重构', text: '怀疑论不是“什么都不知道”的口头姿态；它要求指出何种理由不能排除错误、幻觉或运气。' },
+      { kind: '解释性重构', text: '证据不是孤立数据点，而是与测量、背景假设、推理和可追问来源共同构成。' },
+      { kind: '解释性重构', text: '“相信专家”并非放弃批判；应从可解释性、独立核查、专业共同体和利益结构评价证言。' },
+    ],
+    historicalContext: [
+      { nodeId: 'pt-western-modern', label: '近代：知识、科学与政治秩序', note: '理性主义／经验主义是重要教学线索，但不能覆盖全部近代认识论。' },
+      { nodeId: 'pt-nyaya', label: '正理、胜论及认识—论辩传统', note: '从 pramāṇa、推理和证言的细致分歧进入印度认识论。' },
+    ],
+    sources: [
+      { id: 'KNO-1', title: 'SEP：Epistemology', kind: '学术综述', url: 'https://plato.stanford.edu/entries/epistemology/', locator: '导论、§1–§3', checked: true, supports: '知识、正当性、怀疑论以及感知、记忆、推理、证言等认识来源。' },
+      { id: 'KNO-2', title: 'SEP：Epistemology in Classical Indian Philosophy', kind: '学术综述', url: 'https://plato.stanford.edu/entries/epistemology-india/', locator: '导论、§1–§2', checked: true, supports: 'pramāṇa、知觉、推理、证言与学派间的差异。' },
+    ],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
+      { location: '主要立场｜经验与理性', issue: '原文把它们写成穷尽的二选一。', evidence: 'KNO-1 将证言、记忆、内省和推理也列为认识论问题。', revision: '改为多来源结构，并提出冲突权重问题。' },
+      { location: '传统连接｜印度哲学', issue: '原文只把正理作为“印度的逻辑”。', evidence: 'KNO-2 以 pramāṇa 组织知觉、推理和证言的争论。', revision: '新增认识手段、证言与不可直接翻译的边界。' },
+    ], remaining: ['尚未完成中文 pramāṇa 译名和正理原典版本的对勘。'], adjacentImpact: '与“科学与实在”连接时，不能把科学证据降为单一感官经验；与“身份与压迫”连接时，应另说明证言不公与一般证言理论的关系。', nextPriority: '补写正理历史线索的阅读路径，并校对中文原典选本。' },
+  },
   'pt-religion-reason': {
     status: '核验正文｜自审完成',
     scope:
