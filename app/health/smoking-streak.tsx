@@ -90,7 +90,9 @@ function formatDuration(startMilliseconds: number, nowMilliseconds: number) {
   const seconds = remainingSeconds % 60;
   const pad = (value: number) => value.toString().padStart(2, '0');
 
-  return `${years}年${months}月${days}天${pad(hours)}小时${pad(minutes)}分${pad(seconds)}秒`;
+  const yearsLabel = years > 0 ? `${years}年` : '';
+
+  return `${yearsLabel}${months}月${days}天${pad(hours)}小时${pad(minutes)}分${pad(seconds)}秒`;
 }
 
 export function SmokingStreak({
