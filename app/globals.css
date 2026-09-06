@@ -4041,7 +4041,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 
 /* ── Mobile navigation and touch targets ────────────────────── */
 .mobile-nav-toggle,
-.mobile-nav {
+.site-header .mobile-nav {
   display: none;
 }
 
