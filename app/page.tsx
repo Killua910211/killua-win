@@ -43,7 +43,7 @@ export default function Home() {
 
           <div className="hero-bottom">
             <div className="hero-intro">
-              <p>写下长期思考，记录身体的变化，也整理我正在使用的 AI 开发流程。</p>
+              <p>写下长期思考，记录身体的变化，也整理我和 AI 一起思考的过程。</p>
               <Link className="hero-primary-action" href="/notes#reading-paths">
                 阅读精选 <span aria-hidden="true">↗</span>
               </Link>
