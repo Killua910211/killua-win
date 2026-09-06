@@ -141,10 +141,6 @@ export default async function PhilosophyNodePage({ params }: NodePageProps) {
           )}
         </nav>
 
-        <p className="philosophy-legacy-note">
-          回到 <Link href="/learning/philosophy">哲学总览</Link>，或使用旧版单页导航{' '}
-          <a href="/learning/philosophy-tree">/learning/philosophy-tree</a>。
-        </p>
       </main>
 
       <SiteFooter />
