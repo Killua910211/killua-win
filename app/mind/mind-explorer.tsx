@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import styles from './mind-explorer.module.css';
 
 type Topic = {
   id: string;
@@ -12,7 +13,6 @@ type Topic = {
   detail: string;
   signals: string[];
   practice: string;
-  color: string;
 };
 
 const topics: Topic[] = [
@@ -26,7 +26,6 @@ const topics: Topic[] = [
     detail: '这套机制在工作、健康管理和风险决策里是优势；但爱情、亲密关系、孤独与意义没有稳定的最优解。当同一套系统被带进这些领域，标准会变成挑剔，分析会变成过度审视，寻找答案也可能变成迟迟不开始经历。',
     signals: ['发现问题 → 分析 → 建模 → 比较 → 找最优解 → 执行', '面对关系时，会本能地寻找风险、变量和确定答案', '最难接受的不是负面结论，而是没有逻辑的评价'],
     practice: '遇到无法优化的问题，先问：「我现在需要的是更多信息，还是一次真实经历？」',
-    color: 'lime',
   },
   {
     id: 'sensitivity',
@@ -38,7 +37,6 @@ const topics: Topic[] = [
     detail: '你对别人态度的变化、关系里的距离感、身体细微变化、审美差异和话里的潜台词有较高感知力。元认知让你能准确描述发生了什么，但「理解情绪」不等于「消化情绪」——知道原因，不代表状态已经改变。',
     signals: ['直接、冷静的表达，常常是保护层而不是低敏感', '会追问「为什么会这样」「属于什么阶段」「我会不会崩溃」', '分析很清楚时，情绪仍可能没有被真正安放'],
     practice: '先给情绪一个名字，再决定要不要解释它；允许「我现在就是难受」成为完整的信息。',
-    color: 'blue',
   },
   {
     id: 'relationships',
@@ -50,7 +48,6 @@ const topics: Topic[] = [
     detail: '你希望对方有智力、表达、人格、审美和自己的世界，同时情绪不能太麻烦，还要能理解你的复杂性。这里有一个关系悖论：你在筛选别人，别人也在筛选你；你期待别人进入内在世界，但别人首先接触到的可能是理性、判断力、标准和距离感。',
     signals: ['普通社交满足度偏低，深层连接需求偏高', '容易觉得「很难遇到真正能交流的人」', '更容易展现判断力，而不是展现需要、脆弱和邀请'],
     practice: '在评估对方之前，主动暴露一点真实的需要：让关系有机会从「筛选」进入「互相靠近」。',
-    color: 'warm',
   },
   {
     id: 'meaning',
@@ -62,7 +59,6 @@ const topics: Topic[] = [
     detail: '你已经比较擅长解决工作、团队、钱、身体、消费、技术和风险问题。这些是生存与控制问题。于是问题从「我怎么才能过得更好？」升级为「什么才算过得好？」这不一定是出了问题，也可能是人生课题进入了下一层。',
     signals: ['赚钱、能力、职位、消费和证明自己的奖励越来越不够用', '外部生活可以正常运转，内部却出现「也就这样」', '对爱情、婚姻、孤独、哲学和意义的兴趣变强'],
     practice: '不要急着为意义找一个漂亮答案；先建立值得重复的投入、连接和经历。',
-    color: 'violet',
   },
   {
     id: 'curiosity',
@@ -74,7 +70,6 @@ const topics: Topic[] = [
     detail: '从技术、健康、运动、营养、摄影到宇宙、哲学、爱情与日本社会，看似分散的兴趣说明你仍然在向世界伸出触角。你不是看透人生以后觉得无聊，而是正在经历驱动力换挡：旧的方式不够用了，新的方式正在形成。',
     signals: ['愿意持续追问，并且接受不舒服但有逻辑的结论', '能跨越具体问题，观察自己的长期模式', '现实能力、执行力、自省能力和好奇心构成了不错的基础盘'],
     practice: '把好奇心从「理解更多」带到「参与更多」：每周安排一件不以优化和产出为目的的事。',
-    color: 'soft',
   },
 ];
 
@@ -92,7 +87,6 @@ function titleWithProtectedPhrase(text: string, phrase: string) {
 
 export function MindExplorer() {
   const [activeId, setActiveId] = useState('control');
-  const [revealed, setRevealed] = useState<number[]>([]);
   const [query, setQuery] = useState('');
 
   const activeTopic = topics.find((topic) => topic.id === activeId) ?? topics[0];
@@ -101,10 +95,6 @@ export function MindExplorer() {
     if (!normalized) return topics;
     return topics.filter((topic) => `${topic.label} ${topic.title} ${topic.detail} ${topic.short}`.toLowerCase().includes(normalized));
   }, [query]);
-
-  function toggleReview(index: number) {
-    setRevealed((current) => current.includes(index) ? current.filter((item) => item !== index) : [...current, index]);
-  }
 
   return (
     <>
@@ -118,7 +108,7 @@ export function MindExplorer() {
           <h2 id="mind-overview-heading">
             不是「问题很多」，而是<span className="type-keep">两道核心课题</span>在不同场景里的投影。
           </h2>
-          <div className="mind-core-grid">
+          <div className={`mind-core-grid ${styles.coreGrid}`}>
             <article>
               <span className="mind-card-index">01 / CONTROL</span>
               <h3>把不可控的部分，重新交还给生活。</h3>
@@ -163,7 +153,7 @@ export function MindExplorer() {
               {filteredTopics.length === 0 ? <p className="mind-empty">没有匹配的主题。</p> : null}
             </nav>
 
-            <article className={`mind-detail mind-detail-${activeTopic.color}`}>
+            <article className={`mind-detail ${styles.detail}`}>
               <div className="mind-detail-topline">
                 <span>{activeTopic.short}</span>
                 <span>Observation / 观察</span>
@@ -198,19 +188,16 @@ export function MindExplorer() {
         </div>
         <div className="mind-review-body">
           <p className="eyebrow">Recall / 主动回忆</p>
-          <h2 id="mind-review-heading">先自己回答，再打开当时的结论。</h2>
-          <p className="mind-review-intro">把复习从重新阅读，变成一次小型的自我提问。答案来自这次对话的压缩整理。</p>
-          <div className="mind-review-grid">
-            {reviewCards.map((card, index) => {
-              const isOpen = revealed.includes(index);
-              return (
-                <button className={`mind-review-card ${isOpen ? 'is-open' : ''}`} key={card.prompt} onClick={() => toggleReview(index)} type="button" aria-expanded={isOpen}>
-                  <span className="mind-review-number">{String(index + 1).padStart(2, '0')}</span>
-                  <strong>{card.prompt}</strong>
-                  <span className="mind-review-answer">{isOpen ? card.answer : '点击揭示结论 ↗'}</span>
-                </button>
-              );
-            })}
+          <h2 id="mind-review-heading">先自己回答，再回看当时的结论。</h2>
+          <p className="mind-review-intro">把复习从重新阅读，变成一次小型的自我提问。结论直接保留在卡片里，随时可以对照。</p>
+          <div className={`mind-review-grid ${styles.reviewGrid}`}>
+            {reviewCards.map((card, index) => (
+              <article className={`mind-review-card ${styles.reviewCard}`} key={card.prompt}>
+                <span className="mind-review-number">{String(index + 1).padStart(2, '0')}</span>
+                <strong>{card.prompt}</strong>
+                <p className="mind-review-answer">{card.answer}</p>
+              </article>
+            ))}
           </div>
           <div className="mind-closing-note">
             <span className="mind-card-index">ONE SENTENCE</span>

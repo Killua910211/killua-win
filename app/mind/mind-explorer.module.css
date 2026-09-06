@@ -1,0 +1,90 @@
+/*
+ * Mind 的内容由问题和文字层级组织，而不是用色块提示“哪一项更重要”。
+ * 这些局部样式覆盖了早期的卡片皮肤，避免影响其他页面仍需保留的组件。
+ */
+.coreGrid {
+  gap: 0;
+  border-top: 1px solid var(--black-4);
+  border-bottom: 1px solid var(--black-4);
+}
+
+.coreGrid > article,
+.coreGrid > article:last-child {
+  min-height: 0;
+  padding: 28px 0 32px;
+  border: 0;
+  border-bottom: 1px solid var(--black-4);
+  background: transparent;
+  box-shadow: none;
+}
+
+.coreGrid > article:last-child {
+  padding-left: 32px;
+  border-bottom: 0;
+  border-left: 1px solid var(--black-4);
+}
+
+.detail {
+  min-height: 0;
+  padding: 28px 0 42px;
+  border: 0;
+  border-top: 1px solid var(--black-4);
+  border-bottom: 1px solid var(--black-4);
+  background: transparent;
+  box-shadow: none;
+}
+
+.reviewGrid {
+  gap: 0;
+  border-top: 1px solid var(--black-4);
+  border-bottom: 1px solid var(--black-4);
+}
+
+.reviewCard,
+.reviewCard:hover,
+.reviewCard:focus-visible {
+  min-height: 0;
+  padding: 27px 0 30px;
+  border: 0;
+  border-bottom: 1px solid var(--black-4);
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.reviewCard:nth-child(even) {
+  padding-left: 32px;
+  border-left: 1px solid var(--black-4);
+}
+
+.reviewCard:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.reviewCard :global(strong) {
+  margin-top: 17px;
+}
+
+.reviewCard :global(.mind-review-answer) {
+  margin-top: 17px;
+}
+
+@media (max-width: 760px) {
+  .coreGrid > article:last-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .reviewCard:nth-child(even) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .reviewCard:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--black-4);
+  }
+
+  .reviewCard:last-child {
+    border-bottom: 0;
+  }
+}
