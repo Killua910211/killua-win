@@ -4721,7 +4721,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   background: linear-gradient(90deg, transparent, rgba(224, 99, 42, 0.075), transparent);
   filter: blur(8px);
   transform: skewX(-14deg);
-  animation: hero-scan-diagonal 18s ease-in-out infinite;
+  animation: hero-scan-diagonal 43s ease-in-out -2s infinite;
 }
 .hero-scan--horizontal {
   top: -16%;
@@ -4730,7 +4730,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   height: 18%;
   background: linear-gradient(180deg, transparent, rgba(224, 99, 42, 0.055), transparent);
   filter: blur(7px);
-  animation: hero-scan-horizontal 16s ease-in-out 2s infinite;
+  animation: hero-scan-horizontal 53s ease-in-out 8s infinite;
 }
 .hero-scan--vertical {
   top: -18%;
@@ -4739,7 +4739,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   height: 136%;
   background: linear-gradient(90deg, transparent, rgba(242, 237, 232, 0.04), transparent);
   filter: blur(5px);
-  animation: hero-scan-vertical 21s ease-in-out 4s infinite;
+  animation: hero-scan-vertical 47s ease-in-out 18s infinite;
 }
 .hero-scan--grid {
   top: 10%;
@@ -4751,7 +4751,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
     linear-gradient(90deg, rgba(224, 99, 42, 0.048) 1px, transparent 1px);
   background-size: 30px 30px;
   mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
-  animation: hero-scan-grid 19s ease-in-out 1s infinite;
+  animation: hero-scan-grid 61s ease-in-out 29s infinite;
 }
 .hero-scan--radial {
   top: 14%;
@@ -4761,7 +4761,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   border: 1px solid rgba(224, 99, 42, 0.07);
   border-radius: 50%;
   box-shadow: 0 0 0 16px rgba(224, 99, 42, 0.018), 0 0 0 42px rgba(224, 99, 42, 0.012);
-  animation: hero-scan-radial 17s ease-in-out 5s infinite;
+  animation: hero-scan-radial 71s ease-in-out 41s infinite;
 }
 .home-hero-effects .hero-scan--diagonal {
   top: -25%;
@@ -4770,7 +4770,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   height: 150%;
   background: linear-gradient(90deg, transparent, rgba(224, 99, 42, 0.13), transparent);
   filter: blur(6px);
-  animation: hero-scan-diagonal-home 12s ease-in-out infinite;
+  animation: hero-scan-diagonal-home 37s ease-in-out -5s infinite;
 }
 .home-hero-effects .hero-scan--grid {
   left: 30%;
@@ -4877,34 +4877,34 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   48% { opacity: 0.68; transform: translate(-50%, -50%) scale(1.07); }
 }
 @keyframes hero-scan-diagonal {
-  0%, 18% { opacity: 0; transform: translateX(0) skewX(-14deg); }
-  30% { opacity: 1; }
-  68%, 100% { opacity: 0; transform: translateX(1000%) skewX(-14deg); }
+  0%, 12% { opacity: 0; transform: translateX(0) skewX(-14deg); }
+  16% { opacity: 0.72; }
+  24%, 100% { opacity: 0; transform: translateX(1000%) skewX(-14deg); }
 }
 @keyframes hero-scan-diagonal-home {
-  0%, 14% { opacity: 0; transform: translateX(0) skewX(-14deg); }
-  25% { opacity: 1; }
-  66%, 100% { opacity: 0; transform: translateX(860%) skewX(-14deg); }
+  0%, 12% { opacity: 0; transform: translateX(0) skewX(-14deg); }
+  16% { opacity: 0.82; }
+  24%, 100% { opacity: 0; transform: translateX(860%) skewX(-14deg); }
 }
 @keyframes hero-scan-horizontal {
-  0%, 16% { opacity: 0; transform: translateY(0); }
-  29% { opacity: 1; }
-  69%, 100% { opacity: 0; transform: translateY(720%); }
+  0%, 11% { opacity: 0; transform: translateY(0); }
+  15% { opacity: 0.68; }
+  23%, 100% { opacity: 0; transform: translateY(720%); }
 }
 @keyframes hero-scan-vertical {
-  0%, 18% { opacity: 0; transform: translateX(0); }
-  32% { opacity: 1; }
-  70%, 100% { opacity: 0; transform: translateX(260%); }
+  0%, 10% { opacity: 0; transform: translateX(0); }
+  14% { opacity: 0.54; }
+  22%, 100% { opacity: 0; transform: translateX(260%); }
 }
 @keyframes hero-scan-grid {
-  0%, 20% { opacity: 0; transform: translateX(-8%); background-position: 0 0; }
-  35% { opacity: 0.85; }
-  72%, 100% { opacity: 0; transform: translateX(12%); background-position: 30px 30px; }
+  0%, 13% { opacity: 0; transform: translateX(-8%); background-position: 0 0; }
+  18% { opacity: 0.7; }
+  28%, 100% { opacity: 0; transform: translateX(12%); background-position: 30px 30px; }
 }
 @keyframes hero-scan-radial {
-  0%, 24% { opacity: 0; transform: scale(0.78); }
-  44% { opacity: 0.85; }
-  76%, 100% { opacity: 0; transform: scale(1.16); }
+  0%, 14% { opacity: 0; transform: scale(0.78); }
+  20% { opacity: 0.65; }
+  31%, 100% { opacity: 0; transform: scale(1.16); }
 }
 @keyframes home-dust-one {
   0%, 100% { opacity: 0.3; transform: translate3d(-1.4%, 1%, 0); }
