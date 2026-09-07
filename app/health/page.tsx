@@ -51,8 +51,8 @@ export default function HealthPage() {
 
       <main id="main" className="health-page">
         <PageHero
-          description={<>记录活动、睡眠、恢复与体能的长期变化。<br />从日常读数里，看见身体的节奏。</>}
-          eyebrow="Apple Health / Public view"
+          description="记录活动、睡眠、恢复与体能的长期变化。从日常读数里，看见身体的节奏。"
+          eyebrow="Apple Health / 公开视图"
           label="Health readout"
           number="01"
           title={<>BODY,<br />IN <span className="outline">MOTION.</span></>}

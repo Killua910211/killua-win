@@ -4540,6 +4540,9 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   --hero-label-column: 180px;
   --hero-title-size: clamp(72px, 6.1vw, 88px);
   --hero-copy-width: 620px;
+  /* Hero 的正文从固定轨道开始；内容多寡不会再把标题整体向上或向下推。 */
+  --hero-content-top: clamp(78px, 10.2vh, 108px);
+  --hero-content-bottom: 34px;
   --hero-surface: #111114;
   --hero-rule: rgba(242, 237, 232, 0.14);
 }
@@ -4683,18 +4686,35 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   display: grid;
   min-height: var(--hero-height);
   grid-template-columns: var(--hero-label-column) minmax(0, 1fr);
-  align-items: center;
-  gap: 0 28px;
+  align-items: stretch;
+  gap: 0;
 }
 
 .page-hero__grid--with-decoration {
   grid-template-columns: var(--hero-label-column) minmax(0, 1fr) minmax(180px, 0.62fr);
 }
 
-.page-hero__label { align-self: center; color: rgba(242, 237, 232, 0.72); }
+.page-hero__label {
+  align-self: start;
+  padding-top: var(--hero-content-top);
+  color: rgba(242, 237, 232, 0.72);
+}
 .page-hero__label span:first-child { color: var(--ember); }
-.page-hero__body { max-width: 760px; min-width: 0; }
-.page-hero__eyebrow { margin-bottom: 16px; color: rgba(242, 237, 232, 0.56); }
+.page-hero__body {
+  display: flex;
+  min-width: 0;
+  max-width: 760px;
+  flex-direction: column;
+  align-self: stretch;
+  padding: var(--hero-content-top) 0 var(--hero-content-bottom);
+}
+.page-hero__eyebrow {
+  min-height: 17px;
+  margin: 0 0 16px;
+  color: rgba(242, 237, 232, 0.56);
+  font-size: 11px;
+  line-height: 17px;
+}
 .page-hero h1 {
   max-width: 10.8ch;
   color: var(--warm-white);
@@ -4704,9 +4724,10 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   letter-spacing: -0.07em;
   line-height: 0.86;
 }
-.page-hero--home h1 { max-width: 9.5ch; font-size: clamp(80px, 6.7vw, 96px); }
+.page-hero--home h1 { max-width: 9.5ch; font-size: clamp(80px, 6.4vw, 92px); }
 .page-hero__description {
   max-width: var(--hero-copy-width);
+  min-height: 56px;
   margin-top: 22px;
   color: rgba(242, 237, 232, 0.68);
   font-size: 17px;
@@ -4749,7 +4770,13 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 }
 .page-hero__secondary-action:hover,
 .page-hero__secondary-action:focus-visible { border-color: var(--ember); color: var(--ember); }
-.page-hero__footer { margin-top: 20px; }
+.page-hero__footer {
+  display: flex;
+  min-height: 48px;
+  align-items: flex-end;
+  margin-top: auto;
+}
+.page-hero__footer--empty { pointer-events: none; }
 .page-hero__decoration { position: relative; min-height: 100%; }
 .page-hero--home { --pointer-x: 76%; --pointer-y: 42%; }
 .page-hero--home .page-hero__label,
@@ -5002,13 +5029,19 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   63% { opacity: 0.18; transform: translate3d(-1.8%, 1.9%, 0); }
   84% { opacity: 0.31; transform: translate3d(1.3%, -0.3%, 0); }
 }
-.page-hero .health-hero-meta { gap: 14px 34px; margin-top: 0; padding-top: 18px; }
+.page-hero .health-hero-meta { gap: 14px 34px; margin-top: 0; padding-top: 0; }
 .page-hero .health-hero-meta div { min-width: 132px; }
 .page-hero .mind-hero-foot,
 .page-hero .learning-hero-foot { margin-top: 0; }
 .page-hero .mind-hero-foot { display: flex; justify-content: space-between; gap: 16px; color: rgba(242, 237, 232, 0.48); font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
 .page-hero .learning-hero-foot { display: flex; justify-content: space-between; gap: 12px 24px; color: rgba(242, 237, 232, 0.48); font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
-.page-hero .learning-resume { gap: 10px; margin-top: 0; }
+.page-hero .learning-resume {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  margin-top: 0;
+}
 .page-hero .learning-resume-hint { max-width: 520px; color: rgba(242, 237, 232, 0.58); font-size: 13px; line-height: 1.65; }
 
 .section-local-nav {
@@ -5033,6 +5066,8 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
     --page-gutter: 20px;
     --hero-label-column: 0px;
     --hero-title-size: clamp(38px, 10.5vw, 44px);
+    --hero-content-top: 0px;
+    --hero-content-bottom: 0px;
   }
   .content-container { width: min(calc(100% - 40px), var(--content-max)); }
   .site-header { height: var(--header-height); }
@@ -5044,8 +5079,16 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .site-header .mobile-nav { padding-top: calc(var(--header-height) + 32px); }
   /* 内容较长时 Hero 会自然增高；其余情况下三个区域正好占满首屏。 */
   .page-hero { min-height: var(--hero-height); }
-  .page-hero__grid { min-height: var(--hero-height); grid-template-columns: 1fr; gap: 18px; padding: 46px 0 42px; }
-  .page-hero__label { align-self: auto; flex-direction: row; gap: 10px; }
+  .page-hero__grid {
+    min-height: var(--hero-height);
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-content: start;
+    gap: 12px;
+    padding: 42px 0 32px;
+  }
+  .page-hero__label { align-self: auto; padding-top: 0; flex-direction: row; gap: 10px; }
+  .page-hero__body { min-height: 0; padding: 0; }
   .page-hero h1,
   .page-hero--home h1 {
     max-width: 10ch;
@@ -5053,9 +5096,9 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
     letter-spacing: -0.06em;
     line-height: 0.94;
   }
-  .page-hero__description { margin-top: 18px; font-size: 16px; }
+  .page-hero__description { min-height: 0; margin-top: 18px; font-size: 16px; }
   .page-hero__action { margin-top: 20px; }
-  .page-hero__footer { margin-top: 18px; }
+  .page-hero__footer { min-height: 28px; margin-top: auto; }
   .page-hero__decoration { display: none; }
   .page-hero--home .page-hero__decoration { display: block; }
   .page-hero--home .home-hero-aura { width: 120vw; opacity: 0.42; }
@@ -5092,7 +5135,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .philosophy-hero,
   .philosophy-section {
     grid-template-columns: var(--hero-label-column) minmax(0, 1fr);
-    column-gap: 28px;
+    column-gap: 0;
     padding-right: var(--page-gutter);
     padding-left: var(--page-gutter);
   }
@@ -5100,6 +5143,15 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .page-hero__grid--with-decoration {
     grid-template-columns: var(--hero-label-column) minmax(0, 1fr) minmax(180px, 0.62fr);
   }
+}
+
+/* 顶层分区序号使用同一组橙色强调色，避免深色模块退回绿色或灰色。 */
+.section-label span:first-child,
+.section-label.light span:first-child,
+.page-hero__label span:first-child,
+.mind-workspace .section-label span:first-child,
+.knowledge-method .section-label span:first-child {
+  color: var(--ember);
 }
 
 @media (prefers-reduced-motion: reduce) {

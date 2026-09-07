@@ -84,7 +84,9 @@ export function PageHero({
           <h1 id={titleId}>{title}</h1>
           <div className="page-hero__description">{description}</div>
           {action ? <div className="page-hero__action">{action}</div> : null}
-          {footer ? <div className="page-hero__footer">{footer}</div> : null}
+          <div className={`page-hero__footer${footer ? '' : ' page-hero__footer--empty'}`} aria-hidden={footer ? undefined : true}>
+            {footer}
+          </div>
         </div>
         {!isHome && decoration ? <div className="page-hero__decoration" aria-hidden="true">{decoration}</div> : null}
       </ContentContainer>

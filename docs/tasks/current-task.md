@@ -26,6 +26,12 @@
 - 测试环境已发布：`https://killua-win.farhangisahel9.chatgpt.site`。
 - 未跟踪的 `hero-typography-review.html` 未修改、未纳入本次提交。
 
+## 补充调整
+
+- 首屏与后续模块恢复到原有无额外列间距的左对齐轨道，首屏正文向左回移 `28px`。
+- 所有顶层分区序号统一使用 `--ember` 橙色，包括深色分区。
+- 补充调整后的 `pnpm lint`、`pnpm typecheck` 和 `pnpm build` 均通过。
+
 ---
 
 # 历史任务：项目上下文与规则结构化

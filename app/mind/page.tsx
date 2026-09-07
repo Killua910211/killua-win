@@ -18,7 +18,7 @@ export default function MindPage() {
       <SiteHeader current="mind" />
       <main id="main" className="mind-page">
         <PageHero
-          description={<>把一次关于「我是什么样的人」的对话，整理成可回看的认知地图。<br />这里记录的是观察与假设，不是诊断，也不是给自己贴标签。</>}
+          description="把一次关于「我是什么样的人」的对话，整理成可回看的认知地图。这里记录的是观察与假设，不是诊断，也不是给自己贴标签。"
           eyebrow="Mind / 心理认知"
           label="Cognitive notebook"
           number="01"
