@@ -146,6 +146,7 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
 ```ts
 {
   days: number; records: number;
+  pendingReviews: number; openTasks: number; watchlistItems: number;
   lastSync: string;                    // yyyy-MM-dd
 
   // 可选。缺失或为空时，首页的「Archive composition」整块不渲染，其余读数照常。
@@ -153,6 +154,9 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
   kinds?: { key: RecordKind; label: RecordKindLabel; count: number }[];
 }
 ```
+
+`pendingReviews`、`openTasks` 与 `watchlistItems` 分别只传待审核、未完成、待看事项的
+数量；不传标题、备注、状态详情或任何正文。因此首页能保留四张摘要卡，而不会暴露私人内容。
 
 **标签由 OS 给、不在官网本地维护映射**，是那边有意的设计：将来新增一个分类，
 这一行自动多出一项，不用记得回来补一份映射（漏了就会显示成 `PODCAST`）。

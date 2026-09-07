@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
-import { SectionNav } from '@/app/components/section-nav';
 import { PageHero } from '@/app/components/page-hero';
 import { SystemReadout } from '@/app/components/system-readout';
 import { buildMetadata, SITE } from '@/app/lib/metadata';
@@ -32,7 +31,16 @@ export default function Home() {
 
       <main id="main">
         <PageHero
-          decoration={<div className="orb"><div className="orb-ring" /><div className="orb-core" /><span>K</span></div>}
+          decoration={
+            <div className="home-hero-effects">
+              <span className="home-hero-aura" />
+              <span className="home-hero-orbit-bloom" />
+              <span className="home-hero-scan" />
+              <span className="home-hero-dust home-hero-dust-one" />
+              <span className="home-hero-dust home-hero-dust-two" />
+              <div className="orb"><div className="orb-ring" /><div className="orb-core" /><span>K</span></div>
+            </div>
+          }
           description="写下长期思考，记录身体的变化，也整理我和 AI 一起思考的过程。"
           eyebrow="Personal space / 上海"
           id="top"
@@ -44,36 +52,10 @@ export default function Home() {
           action={
             <>
               <Link className="page-hero__primary-action" href="/notes#archive">阅读精选 <span aria-hidden="true">↗</span></Link>
-              <a className="page-hero__secondary-action" href="#learning">浏览学习地图 <span aria-hidden="true">↓</span></a>
+              <Link className="page-hero__secondary-action" href="/learning">进入学习空间 <span aria-hidden="true">↗</span></Link>
             </>
           }
         />
-
-        <SectionNav
-          label="首页分区"
-          items={[
-            { href: '#top', label: '开场' },
-            { href: '#learning', label: '学习地图' },
-            { href: '#system', label: '系统读数' },
-          ]}
-        />
-
-        <section className="home-learning" id="learning" aria-labelledby="home-learning-heading">
-          <div className="section-label">
-            <span>01</span>
-            <span>Learning atlas</span>
-          </div>
-          <div className="home-learning-body">
-            <p className="eyebrow">New section / 学习空间</p>
-            <h2 id="home-learning-heading">知识不是一排书名，<br />而是一组彼此相连的问题。</h2>
-            <div className="home-learning-bottom">
-              <p>从哲学体系树开始，把不同学科整理成可以探索、比较和持续生长的个人地图。</p>
-              <Link href="/learning">
-                进入学习空间 <span aria-hidden="true">↗</span>
-              </Link>
-            </div>
-          </div>
-        </section>
 
         {/*
           SystemReadout 要跨站取 os.killua.win 的数字。Suspense 边界让首页

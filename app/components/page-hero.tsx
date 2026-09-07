@@ -1,4 +1,6 @@
-import type { ReactNode } from 'react';
+'use client';
+
+import type { PointerEvent, ReactNode } from 'react';
 import { ContentContainer } from './content-container';
 
 type PageHeroProps = {
@@ -15,6 +17,14 @@ type PageHeroProps = {
   variant?: 'home' | 'default';
 };
 
+function updateHomePointer(event: PointerEvent<HTMLElement>) {
+  if (event.pointerType === 'touch' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const bounds = event.currentTarget.getBoundingClientRect();
+  event.currentTarget.style.setProperty('--pointer-x', `${((event.clientX - bounds.left) / bounds.width) * 100}%`);
+  event.currentTarget.style.setProperty('--pointer-y', `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
+}
+
 /** 顶层栏目共享的首屏骨架；栏目只提供自己的内容与可选装饰。 */
 export function PageHero({
   action,
@@ -30,7 +40,12 @@ export function PageHero({
   variant = 'default',
 }: PageHeroProps) {
   return (
-    <section className={`page-hero page-hero--${variant}`} id={id} aria-labelledby={titleId}>
+    <section
+      className={`page-hero page-hero--${variant}`}
+      id={id}
+      aria-labelledby={titleId}
+      onPointerMove={variant === 'home' ? updateHomePointer : undefined}
+    >
       <ContentContainer className="page-hero__grid">
         <div className="section-label page-hero__label" lang="en">
           <span>{number}</span>

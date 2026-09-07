@@ -1,6 +1,9 @@
 type PublicStats = {
   days?: unknown;
   records?: unknown;
+  pendingReviews?: unknown;
+  openTasks?: unknown;
+  watchlistItems?: unknown;
   lastSync?: unknown;
   /**
    * 记录按种类拆开，自带中文标签，数组顺序即展示顺序。
@@ -139,7 +142,9 @@ export async function SystemReadout() {
 
   const days = num(stats.days);
 
-  const records = num(stats.records);
+  const pendingReviews = num(stats.pendingReviews);
+  const openTasks = num(stats.openTasks);
+  const watchlistItems = num(stats.watchlistItems);
 
   const rows: { label: string; value: string; unit?: string }[] = [
     {
@@ -147,13 +152,15 @@ export async function SystemReadout() {
       value: displayCount(days),
       ...(days !== null ? { unit: '天' } : {}),
     },
-    { label: '已归档', value: displayCount(records) },
+    { label: '待审核', value: displayCount(pendingReviews) },
+    { label: '待完成', value: displayCount(openTasks) },
+    { label: '待看', value: displayCount(watchlistItems) },
   ];
 
   // 只信对端此刻给的字符串；取不到就明说「未知」，绝不用本地当前时间
   // 顶替 —— 那会把一次失败的同步伪装成刚刚成功过。
   const lastSync = getLastSync(stats.lastSync);
-  const hasData = [days, records].some((value) => value !== null);
+  const hasData = [days, pendingReviews, openTasks, watchlistItems].some((value) => value !== null);
   const readoutState = getReadoutState({ loaded: result.ok, hasData, lastSync });
 
   // 标签来自对端，所以给它划一个运行期边界：非空、不超过 MAX_LABEL_LENGTH
@@ -187,7 +194,7 @@ export async function SystemReadout() {
         <p className="readout-lede">
           一个用来记录发生、找回信息、完成事情的个人系统。
           <br />
-          公开区只展示脱敏汇总，不展示任何记录、任务或待看内容。
+          公开区只展示脱敏汇总，不展示任何记录、待审核、任务或待看内容。
         </p>
 
         <dl className="readout-grid">

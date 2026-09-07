@@ -1222,8 +1222,8 @@ footer p:last-child { justify-self: end; color: var(--rock-gray); }
 .readout-grid {
   display: grid;
   /*
-    卡片各自带边框、彼此留间距，不再共享格线。即使只保留两张脱敏摘要卡，
-    auto-fit 也会让它们在桌面端自然平分宽度、在窄屏端保持可读。
+    卡片各自带边框、彼此留间距，不再共享格线。四张脱敏摘要卡在桌面端自然
+    均分宽度、在窄屏端保持可读。
   */
   /* 150 而不是 168：375px 宽的手机上可用宽度约 338px，能稳定放下两张卡片。 */
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -1462,7 +1462,6 @@ summary:focus-visible {
 #health-nutrition,
 #health-notes,
 #top,
-#learning,
 #system,
 #notes-top,
 #preface,
@@ -2809,14 +2808,10 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .mind-review-body { min-width: 0; }
 .mind-review-intro { max-width: 520px; margin: 20px 0 0; color: #5d5a53; font-size: 15px; line-height: 1.8; }
 .mind-review-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 56px; }
-.mind-review-card { display: flex; min-height: 170px; flex-direction: column; padding: 18px 20px; border: 1px solid rgba(21,21,21,.28); color: var(--ink); cursor: pointer; text-align: left; transition: background var(--motion-base) ease, transform var(--motion-base) ease; }
-.mind-review-card:hover,
-.mind-review-card:focus-visible { background: #e8e5db; transform: translateY(-3px); }
-.mind-review-card.is-open { border-color: var(--ember); background: #dfe4c8; }
+.mind-review-card { display: flex; min-height: 170px; flex-direction: column; padding: 18px 20px; border: 1px solid rgba(21,21,21,.28); color: var(--ink); text-align: left; }
 .mind-review-number { color: var(--ember); font-family: var(--font-mono), monospace; font-size: 10px; }
 .mind-review-card strong { max-width: 360px; margin-top: 31px; font-size: 20px; font-weight: 520; letter-spacing: -.03em; line-height: 1.3; }
-.mind-review-answer { margin-top: auto; color: var(--rock-gray); font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: .04em; line-height: 1.55; }
-.mind-review-card.is-open .mind-review-answer { color: var(--ember-hot); font-family: var(--font-body), sans-serif; font-size: 13px; letter-spacing: 0; }
+.mind-review-answer { margin-top: auto; color: var(--warm-gray); font-size: 14px; line-height: 1.65; }
 .mind-closing-note { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 30px; margin-top: 72px; padding-top: 22px; border-top: 1px solid rgba(21,21,21,.28); }
 .mind-closing-note p { max-width: 690px; margin: 0; font-size: 20px; line-height: 1.7; }
 
@@ -2925,48 +2920,6 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .knowledge-method-grid > div { min-height: 0; }
   .knowledge-method-grid p { margin-top: 24px; }
 }
-
-/* ── Learning：跨学科学习地图 ─────────────────────────────── */
-.home-learning {
-  display: grid;
-  grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
-  padding: 118px 4vw 132px;
-  border-top: 1px solid var(--black-3);
-  border-bottom: 1px solid var(--black-3);
-  background:
-    linear-gradient(135deg, rgba(224, 99, 42, 0.13), transparent 38%),
-    linear-gradient(315deg, rgba(74, 172, 184, 0.055), transparent 42%),
-    var(--black-2);
-  color: var(--warm-white);
-}
-.home-learning .section-label span:first-child { color: var(--ember); }
-.home-learning-body { min-width: 0; }
-.home-learning-body h2 { max-width: 1020px; font-size: clamp(42px, 6.6vw, 96px); font-weight: 600; letter-spacing: -.058em; line-height: 1.02; }
-.home-learning-bottom { display: grid; max-width: 760px; grid-template-columns: 1fr auto; align-items: end; gap: 52px; margin: 72px 0 0 auto; }
-.home-learning-bottom p { color: var(--warm-gray); font-size: 15px; line-height: 1.8; }
-.home-learning-bottom a {
-  display: inline-flex;
-  min-height: 52px;
-  align-items: center;
-  gap: 13px;
-  padding: 0 24px;
-  border: 1px solid var(--ember);
-  background: var(--ember);
-  color: var(--ink);
-  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 100%, 8px 100%);
-  font-family: var(--font-condensed);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: background var(--motion-base) ease, transform var(--motion-base) ease;
-}
-.home-learning-bottom a:hover,
-.home-learning-bottom a:focus-visible { background: var(--ember-hot); transform: translateY(-2px); }
-.home-learning-bottom a span { color: currentColor; font-size: 16px; transition: transform var(--motion-base) ease; }
-.home-learning-bottom a:hover span,
-.home-learning-bottom a:focus-visible span { transform: translate(3px, -3px); }
 
 .learning-page { background: var(--paper); }
 
@@ -3144,18 +3097,12 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 }
 
 @media (max-width: 760px) {
-  .home-learning,
   .learning-hero,
   .learning-questions,
   .learning-traditions,
   .learning-method,
   .philosophy-hero,
   .philosophy-section { grid-template-columns: 1fr; padding-right: 20px; padding-left: 20px; }
-  .home-learning { gap: 50px; padding-top: 74px; padding-bottom: 82px; }
-  .home-learning-body h2 { font-size: clamp(38px, 12vw, 56px); }
-  .home-learning-bottom { grid-template-columns: 1fr; gap: 26px; margin-top: 48px; }
-  .home-learning-bottom a { width: max-content; }
-
   /*
     紧凑 Hero：分区标签压成一行，标题、正文、CTA 和页脚小字加起来落在
     480px 以内，主 CTA 不用滚动就能看到。
@@ -3282,7 +3229,6 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-primary-action,
-  .home-learning-bottom a,
   .readout-cell,
   .learning-resume-cta { transition: none; }
 }
@@ -3519,8 +3465,6 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .notes-years a:focus-visible,
 .note-row:hover,
 .note-row:focus-visible,
-.mind-review-card:hover,
-.mind-review-card[open],
 .knowledge-card:hover,
 .knowledge-card:focus-visible {
   background: rgba(224, 99, 42, 0.07);
@@ -3603,7 +3547,6 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .knowledge-card strong,
 .knowledge-detail h3,
 .knowledge-method h2,
-.home-learning-body h2,
 .learning-section-body > h2,
 .learning-question-group h3,
 .learning-question-title,
@@ -4519,6 +4462,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   --page-gutter: max(32px, calc((100vw - var(--content-max)) / 2));
   /* 首屏由 Header + Hero + 分区导航共同组成，Hero 吃掉中间的剩余视口。 */
   --hero-height: calc(100svh - var(--header-height) - var(--section-nav-height));
+  --home-hero-height: calc(100svh - var(--header-height));
   --hero-label-column: 180px;
   --hero-title-size: clamp(72px, 6.1vw, 88px);
   --hero-copy-width: 620px;
@@ -4636,10 +4580,13 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   background: var(--first-surface);
   color: var(--warm-white);
 }
+.page-hero.page-hero--home,
+.page-hero--home .page-hero__grid { min-height: var(--home-hero-height); }
 
 @supports (height: 100dvh) {
   :root {
     --hero-height: calc(100dvh - var(--header-height) - var(--section-nav-height));
+    --home-hero-height: calc(100dvh - var(--header-height));
   }
 }
 
@@ -4726,8 +4673,74 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .page-hero__secondary-action:focus-visible { border-color: var(--ember); color: var(--ember); }
 .page-hero__footer { margin-top: 20px; }
 .page-hero__decoration { position: relative; min-height: 100%; }
-.page-hero--home .orb { top: 50%; right: 0; width: min(24vw, 310px); transform: translateY(-50%); }
-.page-hero--home .orb-ring { animation: none; }
+.page-hero--home { --pointer-x: 76%; --pointer-y: 42%; }
+.page-hero--home .page-hero__label,
+.page-hero--home .page-hero__body { position: relative; z-index: 2; }
+.page-hero--home .page-hero__decoration { position: absolute; inset: 0; min-height: 0; pointer-events: none; }
+.home-hero-effects { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.home-hero-aura {
+  position: absolute;
+  top: var(--pointer-y);
+  left: var(--pointer-x);
+  width: min(52vw, 660px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224, 99, 42, 0.16), rgba(224, 99, 42, 0.045) 36%, transparent 69%);
+  content: '';
+  opacity: 0.72;
+  transform: translate(-50%, -50%);
+  transition: top 120ms linear, left 120ms linear;
+}
+.home-hero-orbit-bloom {
+  position: absolute;
+  top: 50%;
+  right: -7%;
+  width: min(44vw, 560px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224, 99, 42, 0.11), transparent 68%);
+  content: '';
+  opacity: 0.58;
+  transform: translateY(-50%);
+  animation: home-orbit-bloom 9s ease-in-out infinite;
+}
+.home-hero-scan {
+  position: absolute;
+  top: -25%;
+  left: -18%;
+  width: 14%;
+  height: 150%;
+  background: linear-gradient(90deg, transparent, rgba(224, 99, 42, 0.13), transparent);
+  filter: blur(6px);
+  content: '';
+  opacity: 0;
+  transform: skewX(-14deg);
+  animation: home-grid-scan 12s ease-in-out infinite;
+}
+.home-hero-dust { position: absolute; inset: 0; opacity: 0.38; content: ''; }
+.home-hero-dust-one {
+  background-image: radial-gradient(circle, rgba(242, 237, 232, 0.56) 0 1px, transparent 1.5px);
+  background-size: 144px 144px;
+  animation: home-dust-one 26s linear infinite;
+}
+.home-hero-dust-two {
+  background-image: radial-gradient(circle, rgba(224, 99, 42, 0.58) 0 1px, transparent 1.6px);
+  background-position: 62px 91px;
+  background-size: 218px 218px;
+  opacity: 0.28;
+  animation: home-dust-two 34s linear infinite;
+}
+.page-hero--home .orb { top: 50%; right: clamp(0px, 2vw, 32px); width: min(24vw, 310px); transform: translateY(-50%); }
+.page-hero--home .orb-ring { animation: home-orbit 18s linear infinite; }
+@keyframes home-orbit { to { transform: rotate(360deg); } }
+@keyframes home-orbit-bloom { 50% { opacity: 0.84; transform: translateY(-50%) scale(1.1); } }
+@keyframes home-grid-scan {
+  0%, 14% { opacity: 0; transform: translateX(0) skewX(-14deg); }
+  25% { opacity: 1; }
+  66%, 100% { opacity: 0; transform: translateX(860%) skewX(-14deg); }
+}
+@keyframes home-dust-one { to { background-position: 144px 288px; } }
+@keyframes home-dust-two { to { background-position: 280px 436px; } }
 .page-hero .health-hero-meta { gap: 14px 34px; margin-top: 0; padding-top: 18px; }
 .page-hero .health-hero-meta div { min-width: 132px; }
 .page-hero .mind-hero-foot,
@@ -4748,7 +4761,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .section-local-nav a:hover,
 .section-local-nav a:focus-visible { color: var(--signal); }
 #health-timeline, #health-snapshot, #health-trends, #health-nutrition, #health-notes,
-#top, #learning, #system, #notes-top, #preface, #archive,
+#top, #system, #notes-top, #preface, #archive,
 #mind-overview, #mind-workspace, #mind-review, #mind-library,
 #learning-questions, #learning-traditions, #learning-method { scroll-margin-top: calc(var(--header-height) + 60px); }
 
@@ -4783,6 +4796,10 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .page-hero__action { margin-top: 20px; }
   .page-hero__footer { margin-top: 18px; }
   .page-hero__decoration { display: none; }
+  .page-hero--home .page-hero__decoration { display: block; }
+  .page-hero--home .home-hero-aura { width: 120vw; opacity: 0.42; }
+  .page-hero--home .home-hero-orbit-bloom { width: 90vw; right: -38vw; opacity: 0.38; }
+  .page-hero--home .orb { top: 32%; right: -14vw; width: 58vw; opacity: 0.55; }
   .page-hero .mind-hero-foot,
   .page-hero .learning-hero-foot { flex-wrap: wrap; }
   .section-local-nav { top: var(--header-height); padding-right: var(--page-gutter); padding-left: var(--page-gutter); }
@@ -4792,4 +4809,9 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .page-hero__primary-action,
   .learning-resume-cta,
   .page-hero__secondary-action { transition: none; }
+  .page-hero--home .orb-ring,
+  .home-hero-orbit-bloom,
+  .home-hero-scan,
+  .home-hero-dust { animation: none; }
+  .home-hero-aura { transition: none; }
 }
