@@ -4,7 +4,7 @@
 
 正式网站：<https://www.killua.win> ｜ 订阅：<https://www.killua.win/feed.xml>
 
-项目上下文：见 [`PROJECT_CONTEXT.md`](./PROJECT_CONTEXT.md)。其中记录任务台账、关键决策、证据索引和部署环境约定。
+项目上下文入口：见 [`AGENTS.md`](./AGENTS.md)；当前任务、架构和长期决策分别见 [`docs/tasks/current-task.md`](./docs/tasks/current-task.md)、[`docs/architecture.md`](./docs/architecture.md) 和 [`docs/decisions/`](./docs/decisions/)。
 
 ---
 
