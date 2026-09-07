@@ -88,10 +88,12 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
     sources: [
       { id: 'FRE-1', title: 'SEP：Free Will', kind: '学术综述', url: 'https://plato.stanford.edu/entries/freewill/', locator: '导论、§1–§3，尤其 §2.1–§2.5', checked: true, supports: '控制、另作可能、源头性、相容／不相容论与责任的联系。' },
       { id: 'FRE-2', title: 'SEP：Moral Responsibility', kind: '学术综述', url: 'https://plato.stanford.edu/entries/moral-responsibility/', locator: '§1，尤其关于决定论、后果论证与相容论的段落', checked: true, supports: '决定论的界定、后果论证及相容论对控制的回应。' },
+      { id: 'FRE-3', title: 'SEP：Zhu Xi', kind: '学术综述', url: 'https://plato.stanford.edu/entries/zhu-xi/', locator: '§1、§3–§4', checked: true, supports: '朱熹的经典解释、格物、修养与实践问题；仅支持与自由意志问题的谨慎并置。' },
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '主要立场｜相容论', issue: '原内容把相容论缩为“想做什么就做什么”。', evidence: 'FRE-1、FRE-2 都将理由响应、源头性和责任类型列为未决争论。', revision: '改为控制条件的竞争性说明，并加入胁迫与理由的区分。' },
       { location: '案例推演｜愤怒消息', issue: '原案例暗示理解原因只会削弱责任。', evidence: 'FRE-1 区分自由与不同责任实践。', revision: '改问不同回应的依据，避免把解释与免责等同。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原书单把休谟、康德、范·因瓦根与修养传统排成同一类“自由定义”。', evidence: 'FRE-1、FRE-2 分别给出相容、控制与后果论证的争点；FRE-3 将朱熹放在经释、修养和实践脉络。', revision: '新增四个比较单元，分别说明它们怎样处理深夜信息案例，以及不能从并置推出的结论。' },
     ], remaining: ['尚未逐一核验中文译本中“自由意志”“自发”“自主”等术语的使用差异。'], adjacentImpact: '“责任”页不得从决定论直接推出废除一切归责；“儒家”页不得用当代自由意志标签覆盖修养语境。', nextPriority: '补写道德运气、刑罚正当性与中国、印度自由问题的独立来源账。' },
   },
   'pt-logic': {
@@ -122,10 +124,14 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
     sources: [
       { id: 'LOG-1', title: 'SEP：Classical Logic', kind: '学术综述', url: 'https://plato.stanford.edu/entries/logic-classical/', locator: '导论、§2–§6', checked: true, supports: '论证、有效性、推导、语义、健全性／完备性和“唯一正确逻辑”问题。' },
       { id: 'LOG-2', title: 'SEP：Fallacies', kind: '学术综述', url: 'https://plato.stanford.edu/entries/fallacies/', locator: '导论、§1、§3–§4', checked: true, supports: '非形式谬误的语境性、似是而非条件及分类争议。' },
+      { id: 'LOG-3', title: 'SEP：Aristotle’s Logic', kind: '学术综述', url: 'https://plato.stanford.edu/entries/aristotle-logic/', locator: '导论、§2–§5', checked: true, supports: '亚里士多德逻辑作品、推论、前提／结论、三段论、归纳与历史范围。' },
+      { id: 'LOG-4', title: 'SEP：Gottlob Frege', kind: '学术综述', url: 'https://plato.stanford.edu/entries/frege/', locator: '导论、§1–§3', checked: true, supports: '《概念文字》、函数—论元与量词逻辑在现代逻辑和语言哲学中的位置。' },
+      { id: 'LOG-5', title: 'SEP：Epistemology in Classical Indian Philosophy', kind: '学术综述', url: 'https://plato.stanford.edu/entries/epistemology-india/', locator: '导论、§1、§5', checked: true, supports: 'pramāṇa、推理、似是理由及正理等传统的认识—论辩语境。' },
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '主要立场｜演绎有效性', issue: '原文将有效性说成“结论为真”。', evidence: 'LOG-1 将有效性界定为没有前提全真而结论假的解释。', revision: '增加有效／健全、前提／形式的分工。' },
       { location: '案例推演｜带伞下雨', issue: '原例只贴“相关不等于因果”标签。', evidence: 'LOG-2 要求重建论证与其失败条件。', revision: '要求列出混杂变量、反事实和替代解释，而非背诵谬误名。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原书单没有说明三段论、量词形式、归纳怀疑与正理论辩是在处理不同的推理任务。', evidence: 'LOG-3 区分推论与归纳，LOG-4 说明现代形式工具的变化，LOG-5 将正理放进 pramāṇa 与似是理由的争论。', revision: '新增四个比较单元，并把“带伞”案例拆为形式、因果支持和反例排除。' },
     ], remaining: ['归纳、贝叶斯和因果推断尚未建立各自独立的原典阅读卡。'], adjacentImpact: '“语言意义”页须提醒论证可因歧义失效；“正理”页不能被降格为欧洲逻辑的附录。', nextPriority: '补写归纳、因果与解释推断，并对接正理、墨辩的原典材料。' },
   },
   'pt-language-meaning': {
@@ -157,10 +163,14 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
       { id: 'LAN-1', title: 'SEP：Word Meaning', kind: '学术综述', url: 'https://plato.stanford.edu/entries/word-meaning/', locator: '导论、§1、§3', checked: true, supports: '词义、组合性、外在主义／内在主义和语境主义的不同问题。' },
       { id: 'LAN-2', title: 'SEP：Truth', kind: '学术综述', url: 'https://plato.stanford.edu/entries/truth/', locator: '§1、§6', checked: true, supports: '真理承担者和真理—语言关系。' },
       { id: 'LAN-3', title: 'SEP：Logic and Language in Early Chinese Philosophy', kind: '学术综述', url: 'https://plato.stanford.edu/entries/chinese-logic-language/', locator: '导论、§2', checked: true, supports: '名、正名的实践／规范维度及其非纯描述性功能。' },
+      { id: 'LAN-4', title: 'SEP：Gottlob Frege', kind: '学术综述', url: 'https://plato.stanford.edu/entries/frege/', locator: '§3，尤其 1891–1892 语言哲学论文', checked: true, supports: '弗雷格的涵义／指称与语义、认知价值问题。' },
+      { id: 'LAN-5', title: 'SEP：Ludwig Wittgenstein', kind: '学术综述', url: 'https://plato.stanford.edu/entries/wittgenstein/', locator: '§2–§3，尤其《哲学研究》相关段落', checked: true, supports: '维特根斯坦由形式逻辑转向日常语言、规则与哲学方法的两期发展。' },
+      { id: 'LAN-6', title: 'SEP：John Langshaw Austin', kind: '学术综述', url: 'https://plato.stanford.edu/entries/austin-jl/', locator: '§2、§4', checked: true, supports: '奥斯汀对普通语言、真值／准确性标准及言语行为问题的分析。' },
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '主要立场｜使用与实践', issue: '原内容把“使用”写成只要大家同意就正确。', evidence: 'LAN-1 区分词义、语境和多种理论；LAN-2 保留真理问题。', revision: '加入误用、批评与真理要求的难题。' },
       { location: '跨传统连接｜名实', issue: '原文把名实当作现代语言哲学的提前版本。', evidence: 'LAN-3 将其放入行动、秩序与早期中国论辩。', revision: '改为并置问题，并提示翻译与历史边界。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原书单只列人物，无法看出语义、使用、言语行为与名实是不同层次。', evidence: 'LAN-4 处理涵义／指称，LAN-5 处理规则与实践，LAN-6 处理言语的行动条件，LAN-3 处理早期中国名实语境。', revision: '新增四个比较单元，并要求在政策称呼案例中分开指称、使用、资格与制度后果。' },
     ], remaining: ['尚未逐节核验《论语》《墨经》《荀子·正名》的中文校勘版本。'], adjacentImpact: '“解释”页须区分文本意义与作者意图；“身份与压迫”页应说明命名的制度后果而非只作修辞批评。', nextPriority: '补写言语行为、翻译和中国名实论辩的原典阅读路径。' },
   },
   'pt-western-modern': {
@@ -374,10 +384,12 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
     sources: [
       { id: 'KNO-1', title: 'SEP：Epistemology', kind: '学术综述', url: 'https://plato.stanford.edu/entries/epistemology/', locator: '导论、§1–§3', checked: true, supports: '知识、正当性、怀疑论以及感知、记忆、推理、证言等认识来源。' },
       { id: 'KNO-2', title: 'SEP：Epistemology in Classical Indian Philosophy', kind: '学术综述', url: 'https://plato.stanford.edu/entries/epistemology-india/', locator: '导论、§1–§2', checked: true, supports: 'pramāṇa、知觉、推理、证言与学派间的差异。' },
+      { id: 'KNO-3', title: 'Edmund L. Gettier, Is Justified True Belief Knowledge?', kind: '原典', url: 'https://www.ditext.com/gettier/gettier.html', locator: '全文；Case I、Case II（在线转录）', checked: true, supports: '正当真信念三条件的反例，以及真、相信、正当化仍可能只是偶然相接。' },
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '主要立场｜经验与理性', issue: '原文把它们写成穷尽的二选一。', evidence: 'KNO-1 将证言、记忆、内省和推理也列为认识论问题。', revision: '改为多来源结构，并提出冲突权重问题。' },
       { location: '传统连接｜印度哲学', issue: '原文只把正理作为“印度的逻辑”。', evidence: 'KNO-2 以 pramāṇa 组织知觉、推理和证言的争论。', revision: '新增认识手段、证言与不可直接翻译的边界。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原书单没有区分确定性诉求、归纳问题、认识手段和认知运气。', evidence: 'KNO-1 区分知识、正当化和多种来源；KNO-2 将正理放入 pramāṇa 的竞争理论；KNO-3 给出正当真信念不足的两个反例。', revision: '新增四个比较单元，逐一套用到公共卫生转述链，并明确盖梯尔未提供公认的最终定义。' },
     ], remaining: ['尚未完成中文 pramāṇa 译名和正理原典版本的对勘。'], adjacentImpact: '与“科学与实在”连接时，不能把科学证据降为单一感官经验；与“身份与压迫”连接时，应另说明证言不公与一般证言理论的关系。', nextPriority: '补写正理历史线索的阅读路径，并校对中文原典选本。' },
   },
   'pt-religion-reason': {
@@ -438,12 +450,14 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
       { id: 'REL-1', title: 'SEP：Natural Theology and Natural Religion', kind: '学术综述', url: 'https://plato.stanford.edu/entries/natural-theology/', locator: '导论、§3.3', checked: true, supports: '自然神学与启示神学的边界，以及不同传统内部的差异。' },
       { id: 'REL-2', title: 'SEP：The Problem of Evil', kind: '学术综述', url: 'https://plato.stanford.edu/entries/evil/', locator: '导论、§2–§4、§6', checked: true, supports: '逻辑／证据版本、辩护／神义论区别及宗教经验的可反驳性。' },
       { id: 'REL-3', title: 'David Hume, Dialogues Concerning Natural Religion', kind: '原典', url: 'https://www.gutenberg.org/cache/epub/4583/pg4583-images.html', locator: 'Part II–V, X–XI', checked: true, supports: '设计论证、恶与神属性的对话式争论；不把某位人物与休谟直接等同。' },
+      { id: 'REL-4', title: 'SEP：al-Ghazali', kind: '学术综述', url: 'https://plato.stanford.edu/entries/al-ghazali/', locator: '导论、§3、§7', checked: true, supports: '安萨里对哲学论证的复杂批评、对逻辑与部分哲学资源的吸收，以及因果讨论的历史语境。' },
     ],
     review: {
       mode: '自审（尚未独立复审）', checkedOn: '2026-09-07',
       findings: [
         { location: '主要立场｜自然神学与证据主义', issue: '原文把“自然神学”误写成只从自然科学出发。', evidence: 'REL-1 导论将其范围扩展到理性、感知与内省。', revision: '在定义与边界中改为“通常认知能力”，并与启示神学区分。' },
         { location: '案例推演｜灾难之后', issue: '原案例把恶的问题处理为单一反驳。', evidence: 'REL-2 区分演绎与证据性论证，以及辩护与神义论。', revision: '改以两种论证强度和不同回应的代价提问。' },
+        { location: '新增｜哲学家怎样改写这个问题', issue: '原书单只列思想家，混淆了概念论证、宇宙论证、对话式批评和伊斯兰神学内部的证明标准争议。', evidence: 'REL-1 定位安瑟伦、阿奎那及自然神学谱系；REL-3 的角色对话限制对休谟的归因；REL-4 显示安萨里不是简单反理性的形象。', revision: '新增四个比较单元，分别写明其论证对象、灾难案例中的用途和不能推出的结论。' },
       ],
       remaining: ['尚未逐版本核对阿奎那、安萨里中文译本；原典卡片只作为阅读入口。'],
       adjacentImpact: '与“知识从哪里来”相连时，须保留宗教经验的认识论问题；不得把它直接归为非理性。',
@@ -478,10 +492,12 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
       { id: 'DEA-1', title: 'Epicurus, Letter to Menoeceus', kind: '原典', url: 'https://classics.mit.edu/Epicurus/menoec.html', locator: '死亡与感觉的段落（英译 Robert Drew Hicks）', checked: true, supports: '伊壁鸠鲁将善恶与感觉相连、反对以死亡为害的论证入口。' },
       { id: 'DEA-2', title: 'SEP：Death', kind: '学术综述', url: 'https://plato.stanford.edu/entries/death/', locator: '§3.1–§3.2、导论', checked: true, supports: '伊壁鸠鲁论证、剥夺论、时间与对称性异议。' },
       { id: 'DEA-3', title: 'SEP：The Meaning of Life', kind: '学术综述', url: 'https://plato.stanford.edu/entries/life-meaning/', locator: '§3.2', checked: true, supports: '客观主义与沃尔夫的主观吸引／客观值得混合观点。' },
+      { id: 'DEA-4', title: 'SEP：Albert Camus', kind: '学术综述', url: 'https://plato.stanford.edu/entries/camus/', locator: '导论、§2–§3', checked: true, supports: '《西西弗神话》的荒诞问题、加缪与系统哲学／存在主义的关系边界。' },
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '先把问题拆开｜首段', issue: '原文把意义、死亡之害与荒诞并列但未说明它们的逻辑关系。', evidence: 'DEA-2 与 DEA-3 分别讨论不同问题。', revision: '新增问题起点，明确三种问题不能相互替代。' },
       { location: '人物与原典｜伊壁鸠鲁／内格尔', issue: '原卡片容易让读者以为二人只是在表达不同感受。', evidence: 'DEA-2 §3.1–§3.2 展示的是感觉论与比较性损失的论证分歧。', revision: '在定义、反对与回应中呈现前提与对称性难题。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原书单没有说明伊壁鸠鲁、内格尔、加缪与沃尔夫分别处理死亡之害、荒诞或意义的哪一个问题。', evidence: 'DEA-1 的感觉论证、DEA-2 的剥夺论争议、DEA-3 的主观／客观价值争议、DEA-4 的荒诞问题属于不同层次。', revision: '新增四个比较单元，逐一写明问题重述、案例用途和不可推出的结论。' },
     ], remaining: ['尚未核对加缪中文译本及“荒诞”术语的版本差异。'], adjacentImpact: '与“什么是值得过的生活”互链时，应注明意义不等同于幸福或德性。', nextPriority: '补充儒家、佛教和非洲哲学关于死亡与关系的原典阅读路径。' },
   },
   'pt-science-reality': {
@@ -516,6 +532,7 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '主要立场｜历史与实践取向', issue: '原异议可能被读成“社会条件＝事实任意”。', evidence: 'SCI-3 讨论范式转变；SCI-1 的争论仍以经验成功为约束。', revision: '加入不推出相对主义的限制。' },
       { location: '案例推演｜流行病模型', issue: '原案例没有区分预测、解释与干预。', evidence: 'SCI-2 对解释的不同模型显示这些并非同一评价维度。', revision: '将三种成就分开，要求标出适用范围。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原书目没有使波普尔、库恩、范弗拉森与卡特赖特在模型案例中真正相遇。', evidence: 'SCI-1 涉及理论成功、实在论与经验充分性；SCI-2 区分解释与模型用途；SCI-3 为库恩的实践—历史问题提供原典入口。', revision: '新增四个比较单元，分别交代反驳风险、范式实践、经验充分性和理想化的适用范围。' },
     ], remaining: ['科学解释条目的章节定位已核对目录，尚未完成其全部原典书目比对。'], adjacentImpact: '与“知识从哪里来”相连时，要把“证据”保留为实践、模型和推理的组合，而非裸数据。', nextPriority: '补充贝叶斯、机制解释与非西方科学史的独立阅读路径。' },
   },
   'pt-environment-animals': {
@@ -546,10 +563,12 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
       { id: 'ENV-1', title: 'SEP：Environmental Ethics', kind: '学术综述', url: 'https://plato.stanford.edu/entries/ethics-environmental/', locator: '导论、§4 的个体／整体讨论', checked: true, supports: '人类中心主义挑战、个体伦理与生态整体的冲突。' },
       { id: 'ENV-2', title: 'SEP：The Moral Status of Animals', kind: '学术综述', url: 'https://plato.stanford.edu/entries/moral-animal/', locator: '§1.5、§2', checked: true, supports: '道德可考虑性、感受能力／行动能力与权衡问题。' },
       { id: 'ENV-3', title: 'Peter Singer, All Animals Are Equal', kind: '原典', url: 'https://digitalcommons.brockport.edu/cgi/viewcontent.cgi?article=1179&context=phil_ex', locator: '1974 年文首的平等考虑论证', checked: true, supports: '以利益与痛苦为中心的动物解放论证入口。' },
+      { id: 'ENV-4', title: 'SEP：Feminist Environmental Philosophy', kind: '学术综述', url: 'https://plato.stanford.edu/entries/feminism-environmental/', locator: '§2–§3.6，特别是知识与劳动的讨论', checked: true, supports: '女性主义环境哲学的多条路线、反二元论、地方知识与性别化环境负担。' },
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '主要立场｜生态中心与关系伦理', issue: '原文把整体价值写得像能自动压过个体。', evidence: 'ENV-1 明确记录个体动物与生态完整性会冲突。', revision: '增加冲突不是口号可解决、必须交代权衡规则。' },
       { location: '人物与原典｜辛格', issue: '原文把辛格、雷根、利奥波德列在一起但没有显示对象差异。', evidence: 'ENV-1/ENV-2 分别讨论个体与生态整体。', revision: '将三条路线的价值承载者和难题显式列出。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原文本没有呈现辛格、雷根、利奥波德与普拉姆伍德的分歧会如何改变同一个生态修复决策。', evidence: 'ENV-2 区分道德可考虑性和权衡；ENV-1 处理环境伦理的整体性与政治维度；ENV-4 追问性别、劳动与知识。', revision: '新增四个比较单元，分别标出价值承载者、岛屿案例用途与不得省略的冲突。' },
     ], remaining: ['原住民哲学的具体材料尚未独立核验，不能在此以泛称代表。'], adjacentImpact: '与“正义”“照护”互链时，须把环境负担的分配与对非人者的直接义务区分开。', nextPriority: '选择一项气候正义与一项土地关系原典，另建不被动物伦理吞没的扩展条目。' },
   },
   'pt-identity-oppression': {
@@ -580,10 +599,13 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
       { id: 'ID-1', title: 'Kimberlé Crenshaw, Demarginalizing the Intersection of Race and Sex', kind: '原典', url: 'https://chicagounbound.uchicago.edu/uclf/vol1989/iss1/8/', locator: '1989 年《University of Chicago Legal Forum》Article 8', checked: true, supports: '交叉性在反歧视法、女性主义与反种族主义政治中的问题起点。' },
       { id: 'ID-2', title: 'Miranda Fricker, Epistemic Injustice', kind: '原典', url: 'https://academic.oup.com/book/32817', locator: '导论；第 1、7 章书目说明', checked: true, supports: '证言不公与解释不公的原始区分及其术语范围。' },
       { id: 'ID-3', title: 'SEP：Feminist Social Epistemology', kind: '学术综述', url: 'https://plato.stanford.edu/entries/feminist-social-epistemology/', locator: '§3、§4.1', checked: true, supports: '立场理论的争议、社会位置的条件性与认识不公的讨论。' },
+      { id: 'ID-4', title: 'SEP：Simone de Beauvoir', kind: '学术综述', url: 'https://plato.stanford.edu/entries/beauvoir/', locator: '§7，特别是 Woman as Other 与处境分析', checked: true, supports: '《第二性》对他者、具身处境、父权支配及其分析范围的讨论。' },
+      { id: 'ID-5', title: 'SEP：W. E. B. Du Bois', kind: '学术综述', url: 'https://plato.stanford.edu/entries/dubois/', locator: '§2.1.2', checked: true, supports: '双重意识作为被种族化者的社会性、主观经验，而非抽象的双身份比喻。' },
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '主要立场｜交叉性取向', issue: '原文把交叉性写成多个维度的简单相加。', evidence: 'ID-1 的问题是单轴制度框架造成的边缘化。', revision: '改为要求交代相互作用的制度机制。' },
       { location: '概念｜受压迫经验', issue: '原文可能暗示经验天然拥有无误认识权威。', evidence: 'ID-3 §3 讨论内化压迫与立场理论的局限。', revision: '补入条件性、领域性和共同检验。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原书单让波伏瓦、杜波依斯、克伦肖与弗里克成为可替换的身份理论标签。', evidence: 'ID-4 处理“他者”与具身处境；ID-5 处理特定历史中的双重意识；ID-1 处理单轴制度框架；ID-2/ID-3 处理认识伤害。', revision: '新增四个比较单元，连到听证会案例，同时保留历史范围、证据要求和非本质化限制。' },
     ], remaining: ['残障哲学和非殖民传统的原典尚未逐篇核验，不能用本条替代。'], adjacentImpact: '与“知识从哪里来”“正义”互链时，应把认知伤害与资源／权利分配分别说明，再讨论交集。', nextPriority: '建立残障正义与殖民性知识生产的独立历史条目及来源账。' },
   },
   'pt-mind-self': {
@@ -618,6 +640,7 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '主要立场｜无我或非实体自我', issue: '原文可能被读成“佛教否认人格和责任”。', evidence: 'MS-3 区分对恒常自我的批判与心理—因果过程。', revision: '明确无我不是虚无论，并给出连续性难题。' },
       { location: '人物与文本', issue: '原内容只有人物名单，缺少文本各自在争论中解决什么。', evidence: 'MS-1、MS-2、MS-3 的问题范围不同。', revision: '新增四个原典入口与各自的阅读问题。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原书单把笛卡尔、洛克、休谟与早期佛教都压成“自我观点”。', evidence: 'MS-1 处理心身不同属性及交互难题，MS-2 区分人格持续的多种候选，MS-3 将无我放进五蕴、无常与解脱的争论。', revision: '新增四个比较单元，以失忆承诺为共同压力测试，同时保留不可直接等同的界限。' },
     ], remaining: ['尚未完成《相应部》与阿毗达磨中文译本的版本校勘。'], adjacentImpact: '“自由与责任”不得把人格同一性的一个理论当作其唯一前提；“佛教哲学”需保留学派差异。', nextPriority: '补写“存在与变化”及佛教历史条目的同级来源账。' },
   },
   'pt-ai-future': {

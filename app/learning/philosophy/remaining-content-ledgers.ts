@@ -54,8 +54,8 @@ export const remainingEntryLedgers: Record<string, CoreEntryLedger> = {
     objections: [{ kind: '概括', text: '意图取向被质疑无法处理意图证据缺失和文本后续意义；历史／视域取向则被质疑相对主义。回应不是任选一边，而是公开任务、语境证据、替代解释和可反驳后果。', sourceIds: ['INT-1'] }],
     confusions: [{ kind: '解释性重构', text: '解释有历史性不等于事实与文本证据无约束；解释循环是校正程序，不是任意循环。' }, { kind: '解释性重构', text: '批判性重读不必等于否认原文说了什么；可先准确说明，再评价其局限与后果。' }],
     historicalContext: [{ nodeId: 'pt-chinese-later', label: '两汉至近现代：传承、佛教与重构', note: '经典、注释、翻译与制度共同塑造“传统”的可理解性。' }, { nodeId: 'pt-language-meaning', label: '语言如何承载意义与真理？', note: '语义、语境与言语行为提供解释的部分限制。' }],
-    sources: [source('INT-1', 'SEP：Hermeneutics', 'https://plato.stanford.edu/entries/hermeneutics/', '导论、§1–§4', '解释的对象、有效性、历史性及其同语言、历史、艺术和实践的关系。')],
-    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [{ location: '文本解释', issue: '原文把作者意图当作唯一终点。', evidence: 'INT-1 将解释放进历史、语言和实践的多重问题。', revision: '分开意图、接受史和当前规范使用。' }], remaining: ['中西经典诠释原典和翻译理论需逐文本核验。'], adjacentImpact: '“法律”“宗教与理性”页面应表明其解释权问题。', nextPriority: '补充翻译、证词和殖民档案的解释伦理。' },
+    sources: [source('INT-1', 'SEP：Hermeneutics', 'https://plato.stanford.edu/entries/hermeneutics/', '导论、§1–§4', '解释的对象、有效性、历史性及其同语言、历史、艺术和实践的关系。'), source('INT-2', 'SEP：Zhu Xi', 'https://plato.stanford.edu/entries/zhu-xi/', '§1、§3–§4；与王阳明的后续争论', '朱熹的经典注释、格物、修养实践与王阳明的不同解释；不将其预设为欧洲解释学。')],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [{ location: '文本解释', issue: '原文把作者意图当作唯一终点。', evidence: 'INT-1 将解释放进历史、语言和实践的多重问题。', revision: '分开意图、接受史和当前规范使用。' }, { location: '新增｜哲学家怎样改写这个问题', issue: '原书单没有显示施莱尔马赫、狄尔泰、伽达默尔和朱熹分别在解决何种解释难题。', evidence: 'INT-1 区分语法／心理理解、历史人文科学、解释循环与视域；INT-2 核对朱熹的注释、格物与修养语境以及与王阳明的分歧。', revision: '新增四个比较单元、课堂案例用途及反投射边界。' }], remaining: ['中西经典诠释原典和翻译理论需逐文本核验。'], adjacentImpact: '“法律”“宗教与理性”页面应表明其解释权问题；“审美价值”应将评价理由同对作品的解释任务分开。', nextPriority: '补充翻译、证词和殖民档案的解释伦理。' },
   },
   'pt-legitimacy': {
     status: '核验正文｜自审完成',
@@ -98,8 +98,8 @@ export const remainingEntryLedgers: Record<string, CoreEntryLedger> = {
     objections: [{ kind: '概括', text: '工具主义会把责任只推给使用者；决定论会抹去设计与政治选择；纯社会建构论则可能低估材料、成本和工程约束。较好的解释追踪技术构件、组织、法律、市场和使用者之间的可改变联系。', sourceIds: ['TEC-1'] }],
     confusions: [{ kind: '解释性重构', text: '技术具有政治后果不等于技术本身有道德意图；责任仍要沿设计、采购、部署和监管链追踪。' }, { kind: '解释性重构', text: '效率不是中性结论：它总以某些目标、时间、成本和被忽略的损失为尺度。' }],
     historicalContext: [{ nodeId: 'pt-ai-future', label: '人工智能能否行动、负责或拥有道德地位？', note: 'AI 治理需放回更宽的技术、劳动和制度史。' }, { nodeId: 'pt-environment-animals', label: '道德共同体应包括动物与自然吗？', note: '技术风险和基础设施改变环境责任与代际问题。' }],
-    sources: [source('TEC-1', 'SEP：Philosophy of Technology', 'https://plato.stanford.edu/entries/technology/', '导论、§1–§3.2', '技术哲学的不同取向、设计、风险、责任、权力和正义。')],
-    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [{ location: '主要立场｜技术决定论', issue: '原文把技术影响社会写成技术决定一切。', evidence: 'TEC-1 区分技术自身、设计实践和社会政治面向。', revision: '改为可追溯的社会技术链。' }], remaining: ['中国技术史、殖民基础设施与劳动史的专门资料待补。'], adjacentImpact: 'AI、环境和正义页应写明技术治理涉及产权、劳动和申诉机制。', nextPriority: '补写平台、监控与基础设施正义。' },
+    sources: [source('TEC-1', 'SEP：Philosophy of Technology', 'https://plato.stanford.edu/entries/technology/', '导论、§1–§3.2、§6.2', '技术哲学的不同取向、设计、风险、责任、权力和正义；海德格尔、温纳和哈拉维的争论位置。'), source('TEC-2', 'SEP：Mohism', 'https://plato.stanford.edu/entries/mohism/', '§2.1、§3.1 的 fa、工匠、经验依据与利', '墨家以工匠标准说明 fa，考察标准的经验根据、用途与社会利益；不等同现代技术哲学。')],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [{ location: '主要立场｜技术决定论', issue: '原文把技术影响社会写成技术决定一切。', evidence: 'TEC-1 区分技术自身、设计实践和社会政治面向。', revision: '改为可追溯的社会技术链。' }, { location: '新增｜哲学家怎样改写这个问题', issue: '原书单没有解释为何海德格尔、温纳、哈拉维和墨家的材料能共同用于人脸识别案例。', evidence: 'TEC-1 分别定位框架、人工物的政治性、情境化知识与民主参与；TEC-2 核对 fa、工匠和利的历史语境。', revision: '新增四个比较单元，分开宏观揭示、设计权力、边界政治和标准—公共后果，并标记不可直接等同。' }], remaining: ['中国技术史、殖民基础设施与劳动史的专门资料待补。'], adjacentImpact: 'AI、环境和正义页应写明技术治理涉及产权、劳动和申诉机制；“知识从哪里来”可衔接标准、证据和实践，但不能以效果直接证明真理。', nextPriority: '补写平台、监控与基础设施正义。' },
   },
   'pt-care': {
     status: '核验正文｜自审完成',
@@ -158,8 +158,12 @@ export const remainingEntryLedgers: Record<string, CoreEntryLedger> = {
       { nodeId: 'pt-interpretation', label: '我们如何理解文本、传统与他人？', note: '作品的意义、意图和接受史不能在定义问题中跳过。' },
       { nodeId: 'pt-history-tech', label: '历史、文化与技术怎样塑造共同生活？', note: '复制、平台与 AI 会重塑作者、媒介与制度。' },
     ],
-    sources: [source('ART-1', 'SEP：The Definition of Art', 'https://plato.stanford.edu/entries/art-definition/', '导论、§1–§5', '功能、程序、历史与反定义方案及其反对。')],
-    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [{ location: '概念｜艺术定义', issue: '原文只列形式、表达、制度三项，未说明为何竞争。', evidence: 'ART-1 区分功能、程序、历史与反定义目标。', revision: '补足分类对象和解释代价。' }, { location: '案例｜展厅椅子', issue: '原案例将制度说成任意许可。', evidence: 'ART-1 将制度理论置于历史关系和循环批评。', revision: '加入排除、开放与批评机制问题。' }], remaining: ['中国艺术史、工艺与仪式的原典／策展文献尚待独立核验。'], adjacentImpact: '“审美价值”不得把艺术类别当成价值保证。', nextPriority: '补写挪用、复制权与 AI 生成物的作者问题。' },
+    sources: [
+      source('ART-1', 'SEP：The Definition of Art', 'https://plato.stanford.edu/entries/art-definition/', '导论、§1–§5', '功能、程序、历史与反定义方案及其反对。'),
+      source('ART-2', 'Leo Tolstoy, What Is Art?', 'https://www.gutenberg.org/files/64908/64908-h/64908-h.htm', '第 V、X、XV 章及英译序言的 infection 讨论', '托尔斯泰把艺术理解为情感传达／感染，并以可理解性和道德—宗教判断批评精英艺术。'),
+      source('ART-3', 'SEP：Zhuangzi', 'https://plato.stanford.edu/entries/zhuangzi/', '§2、§4.8；庖丁、轮扁、乐师与技艺讨论', '《庄子》关于多种技艺、熟练、流畅和限度的解释资源；并非现代艺术定义。'),
+    ],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [{ location: '概念｜艺术定义', issue: '原文只列形式、表达、制度三项，未说明为何竞争。', evidence: 'ART-1 区分功能、程序、历史与反定义目标。', revision: '补足分类对象和解释代价。' }, { location: '案例｜展厅椅子', issue: '原案例将制度说成任意许可。', evidence: 'ART-1 将制度理论置于历史关系和循环批评。', revision: '加入排除、开放与批评机制问题。' }, { location: '新增｜哲学家怎样改写这个问题', issue: '原书单将托尔斯泰、丹托、迪基和《庄子》并列，却没有指出三者讨论的对象不同。', evidence: 'ART-2 是情感感染与艺术价值的强规范性主张；ART-1 区分制度／历史、功能与反定义；ART-3 讨论技艺与多种实践路径。', revision: '新增四个比较单元：将《庄子》明确标为可比的技艺资源而非现代艺术定义，并为每一路线写出椅子案例用途和限制。' }], remaining: ['中国艺术史、工艺与仪式的原典／策展文献尚待独立核验。'], adjacentImpact: '“审美价值”不得把艺术类别当成价值保证。', nextPriority: '补写挪用、复制权与 AI 生成物的作者问题。' },
   },
   'pt-aesthetic-value': {
     status: '核验正文｜自审完成',
@@ -186,8 +190,8 @@ export const remainingEntryLedgers: Record<string, CoreEntryLedger> = {
       { nodeId: 'pt-interpretation', label: '我们如何理解文本、传统与他人？', note: '理解背景和解释争议会改变可感知的特征。' },
       { nodeId: 'pt-african-method', label: '什么算作非洲哲学？', note: '谁拥有评价标准与何种表达能进入经典，都是审美／制度问题。' },
     ],
-    sources: [source('AES-1', 'SEP：Aesthetic Judgment', 'https://plato.stanford.edu/entries/aesthetic-judgment/', '导论及判断、理由与分歧相关章节', '品味判断、可交流性和审美理由。'), source('AES-2', 'SEP：The Concept of the Aesthetic', 'https://plato.stanford.edu/entries/aesthetic-concept/', '导论、§1–§3', '审美对象、判断、态度、经验和价值的多重用法及质疑。')],
-    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [{ location: '主要立场｜主观／客观', issue: '原文把争论写成“有无标准”的二选一。', evidence: 'AES-1、AES-2 显示理由、经验和概念本身均有多层。', revision: '改为可交流、可质疑但未必一致的评价。' }, { location: '公共雕塑案例', issue: '原例遗漏位置、历史与谁被影响。', evidence: 'AES-2 反对将审美价值同所有其他价值混同。', revision: '保留审美理由，同时要求说明公共和历史维度。' }], remaining: ['中国诗画论和残障审美研究尚待逐文本补入。'], adjacentImpact: '“艺术”与“公共正义”需保留价值类型的区分再讨论冲突。', nextPriority: '增加跨文化批评和公共空间审美的来源账。' },
+    sources: [source('AES-1', 'SEP：Aesthetic Judgment', 'https://plato.stanford.edu/entries/aesthetic-judgment/', '导论、§1、§3', '品味判断、主观性、规范性、休谟与康德的分歧。'), source('AES-2', 'SEP：The Concept of the Aesthetic', 'https://plato.stanford.edu/entries/aesthetic-concept/', '导论、§1–§3', '审美对象、判断、态度、经验和价值的多重用法及质疑。'), source('AES-3', 'SEP：Aesthetics in Chinese Philosophy: Painting and Calligraphy', 'https://plato.stanford.edu/archives/spr2026/entries/chinese-painting-calligraphy/', '导论、§1–§3', '中国书画理论的过程、意、笔触、传递与观者关系；不归约为单一“中国审美”。')],
+    review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [{ location: '主要立场｜主观／客观', issue: '原文把争论写成“有无标准”的二选一。', evidence: 'AES-1、AES-2 显示理由、经验和概念本身均有多层。', revision: '改为可交流、可质疑但未必一致的评价。' }, { location: '公共雕塑案例', issue: '原例遗漏位置、历史与谁被影响。', evidence: 'AES-2 反对将审美价值同所有其他价值混同。', revision: '保留审美理由，同时要求说明公共和历史维度。' }, { location: '新增｜哲学家怎样改写这个问题', issue: '原书单没有让休谟、康德、贝尔与中国书画论回答同一个公共审美案例。', evidence: 'AES-1 核对休谟的情感—标准张力与康德的主观普遍性；AES-2 记录形式与审美概念争议；AES-3 核对过程、笔触和传递关系。', revision: '新增四个比较单元，分别说明理由、可交流性、形式与过程，并明确跨传统不可直接等同。' }], remaining: ['中国诗画论和残障审美研究尚待逐文本补入。'], adjacentImpact: '“艺术”与“公共正义”需保留价值类型的区分再讨论冲突。', nextPriority: '增加跨文化批评和公共空间审美的来源账。' },
   },
   'pt-good-life': {
     status: '核验正文｜自审完成',
