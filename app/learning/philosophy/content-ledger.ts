@@ -307,7 +307,7 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
   },
   'pt-being-change': {
     status: '核验正文｜自审完成',
-    scope: '本条主线只讨论一个人工物在变化中为何仍可能是原来的对象：数值同一性、候选判断标准与跨时间持续。过程哲学、基本存在者与中观自性仅作进阶关联；不从本页直接推出人格同一性、物理学结论或跨传统理论等同。',
+    scope: '本条主线讨论一个人工物在变化中为何仍可能是原来的对象：数值同一性、候选判断标准、跨时间持续，以及不同哲学家如何改变这一问题的前提。过程哲学与中观自性作为可比较但不可等同的进阶关联；不从本页直接推出人格同一性、物理学结论或跨传统理论等同。',
     origin: [
       { kind: '概括', text: '跨时间同一性的问题从一个张力出现：对象真的变化时，前后状态有不同性质；但若完全不是同一个对象，又似乎没有任何对象经历变化。数值同一性与质的相同的区分使这个张力可被具体分析。', sourceIds: ['BEC-1'] },
       { kind: '原创例子', text: '本页以逐步维修、旧零件重组为自行车案例，循序比较材料、结构／功能和因果历史连续性；案例是教学性重构，不是哲学家的原话。' },
@@ -332,14 +332,20 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
     sources: [
       { id: 'BEC-1', title: 'SEP：Identity Over Time', kind: '学术综述', url: 'https://plato.stanford.edu/entries/identity-time/', locator: '导论、§2.1–§2.4、§4.3–§4.5', checked: true, supports: '数值／质的同一、变化难题、严格与宽松同一性、重组和四维主义。' },
       { id: 'BEC-2', title: 'SEP：Temporal Parts（2024 春季归档版）', kind: '学术综述', url: 'https://plato.stanford.edu/archives/spr2024/entries/temporal-parts/', locator: '导论、§1–§3', checked: true, supports: '耐存论、延存论／四维主义、时间部分及其与忒修斯之船问题的关系。' },
-      { id: 'BEC-3', title: 'SEP：Process Philosophy（2011 夏季归档版）', kind: '学术综述', url: 'https://plato.stanford.edu/archives/sum2011/entries/process-philosophy/', locator: '导论、§1–§2', checked: true, supports: '过程哲学关于过程、变化和解释优先性的范围，及其不同于单一持续理论的提问。' },
+      { id: 'BEC-3', title: 'SEP：Process Philosophy（2023 夏季归档版）', kind: '学术综述', url: 'https://plato.stanford.edu/archives/sum2023/entries/process-philosophy/', locator: '导论及关于怀特海“实际契机”的段落', checked: true, supports: '过程哲学关于过程、变化和解释优先性的范围，及怀特海以实际契机、关系与生成重排本体论基本单位的做法。' },
       { id: 'BEC-4', title: 'SEP：Nāgārjuna', kind: '学术综述', url: 'https://plato.stanford.edu/entries/nagarjuna/', locator: '§2、§3.1–§3.2、§3.5', checked: true, supports: '自性、空性、依赖与对虚无论误读的区分，以及《中论》的文本位置。' },
+      { id: 'BEC-5', title: 'SEP：Plato’s Middle Period Metaphysics and Epistemology', kind: '学术综述', url: 'https://plato.stanford.edu/entries/plato-metaphysics/', locator: '§1 “The Background to Plato’s Metaphysics”', checked: true, supports: '对巴门尼德“是／不是”与变化难题的后世转述，以及残存材料不足所造成的解释争议。' },
+      { id: 'BEC-6', title: 'SEP：Heraclitus', kind: '学术综述', url: 'https://plato.stanford.edu/entries/heraclitus/', locator: '§3.1 “Flux”、§3.2 “The Unity of Opposites”', checked: true, supports: '流变、对立面的关联、不同时间／方面的限定，以及“靠更替而持续”这一谨慎读法。' },
+      { id: 'BEC-7', title: 'SEP：Aristotle’s Metaphysics', kind: '学术综述', url: 'https://plato.stanford.edu/entries/aristotle-metaphysics/', locator: '§6 “Substance, Matter, and Subject”、§8 “Substances as Hylomorphic Compounds”', checked: true, supports: '作为变化主体的实体、质料与形式、偶性与实体性变化，以及相关解释争议。' },
+      { id: 'BEC-8', title: 'SEP：Locke on Personal Identity（兼论《人类理解论》II.xxvii）', kind: '学术综述', url: 'https://plato.stanford.edu/entries/locke-personal-identity/', locator: '§1，尤其 II.xxvii.1、.7–.9 的讨论', checked: true, supports: '先界定种类再问持续条件的原则，以及物质集合、生命体和人格不可共用一条同一性标准。' },
+      { id: 'BEC-9', title: '休谟《人性论》I.4.2（English Philosophical Texts Online）', kind: '原典', url: 'https://englishphilosophy.org/hume/thn/1/4/2', locator: 'I.4.2.29–.35、.44–.47', checked: true, supports: '休谟对持续存在、同一性与想象力如何连接相关经验序列的分析；不将其简化为任意命名论。' },
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '主文前半｜问题层级', issue: '原模板把存在论、对象持续、基本性和空性并列呈现，零基础读者难以知道先解决什么。', evidence: 'BEC-1、BEC-2 分别以同一性／持续问题组织讨论；BEC-3、BEC-4 的问题范围不同。', revision: '主文只围绕逐步替换与重组案例；过程哲学、基本性和中观移入默认折叠的进阶关联。' },
       { location: '候选标准与练习', issue: '旧页面给出结论与问题列表，却没有走完理由、反例、回应和剩余困难。', evidence: 'BEC-1 讨论重组、严格／宽松同一性；BEC-2 说明持续理论并非身份判准的同义替换。', revision: '补写材料、结构／功能、因果历史连续的推演，并给出两道含参考分析的迁移练习。' },
       { location: '进阶关联｜中观', issue: '将空性与西方持续理论放在同一立场列表，易被读成“万物不存在”或同义学说。', evidence: 'BEC-4 §2–§3 区分自性、空性和依赖；BEC-3 的问题是过程在本体论解释中的地位。', revision: '明确它们各自的问题对象、范围与不可直接等同的边界。' },
-    ], remaining: ['尚未逐段校勘《中论》汉译与相关注释传统；未核对过程哲学近年版条目的修订状态。本页不把这些材料当作原典释读或学界定论。'], adjacentImpact: '“心灵、身体与我”页仍须把人格同一性同一般对象持续分开；“佛教哲学”页须保留缘起、无我与空性的自身论证语境。', nextPriority: '在独立审查中逐段核对主文与 BEC-1／BEC-2 的对应，并补充《中论》可靠汉译版本与章段。' },
+      { location: '人物比较｜历史立场', issue: '页面只有理论名称，读者无法判断人物是在回答同一性准则、变化的可能性，还是本体论的基本单位。', evidence: 'BEC-5–BEC-9 分别将巴门尼德、赫拉克利特、亚里士多德、洛克与休谟放在不同问题中；BEC-3 的过程哲学与 BEC-4 的中观论证另有各自语境。', revision: '新增逐人比较：每项说明原问题、可怎样启发自行车案例，以及不能由此推出什么。' },
+    ], remaining: ['尚未逐段校勘《中论》汉译与相关注释传统；未逐章核对怀特海《过程与实在》的可靠中译本与二手研究分歧。本页不把这些材料当作原典释读或学界定论。'], adjacentImpact: '“心灵、身体与我”页仍须把人格同一性同一般对象持续分开；“佛教哲学”页须保留缘起、无我与空性的自身论证语境。', nextPriority: '在独立审查中逐段核对主文与 BEC-1／BEC-2 的对应，并补充《中论》可靠汉译版本与章段。' },
   },
   'pt-knowledge-sources': {
     status: '核验正文｜自审完成',

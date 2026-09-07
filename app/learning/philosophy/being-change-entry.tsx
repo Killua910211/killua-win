@@ -37,6 +37,7 @@ export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
       <nav className={styles.toc} aria-label="本文章节导航">
         <a href="#being-bicycle">从一辆自行车开始</a>
         <a href="#being-standards">判断标准为何冲突</a>
+        <a href="#being-voices">哲学家如何改写问题</a>
         <a href="#being-theories">对象怎样跨时间存在</a>
         <a href="#being-practice">迁移练习</a>
       </nav>
@@ -123,6 +124,74 @@ export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
             <Citation id="BEC-1" sources={sources} />
           </p>
         </div>
+      </section>
+
+      <section className="philosophy-block" id="being-voices" aria-labelledby="being-voices-title">
+        <h2 className="philosophy-block-title" id="being-voices-title">哲学家不是在给同一辆车投票：他们先改写了问题</h2>
+        <p className={styles.sectionIntro}>
+          下面的比较不是一张“谁支持甲车、谁支持乙车”的表。多数人物没有讨论过自行车；这里把他们的论证放在原来的问题中，再说明它会怎样改变我们分析替换与重组案例的方式。因而“可怎样借用”是解释性重构，不是替他们宣判。
+        </p>
+        <div className={styles.voices}>
+          <section>
+            <div className={styles.voiceLabel}>约前 5 世纪<br />巴门尼德</div>
+            <div>
+              <h3>若“变成不是它的东西”不可能，变化本身就成了难题</h3>
+              <p>在残存材料及其后世转述所呈现的论证中，巴门尼德把“是”与“不是”之间的张力推到极端：若变化意味着某物从“不是”变成“是”，或从“是”变成“不是”，那么变化似乎不可思议。因材料极少，究竟应把他读作只承认一个存在者，还是只承认一种“是”，仍有争议。</p>
+              <p><strong>对自行车案例的提醒：</strong>不要急着问哪辆“保持同一”；先看到这个日常问题预设了真实变化与持续能并存。巴门尼德并没有提供甲、乙二选一的判准，他让这个预设变成必须辩护的对象。<Citation id="BEC-5" sources={sources} /></p>
+            </div>
+          </section>
+          <section>
+            <div className={styles.voiceLabel}>约前 5 世纪<br />赫拉克利特</div>
+            <div>
+              <h3>有些东西恰恰靠更替才保持</h3>
+              <p>赫拉克利特常被压缩成“万物流变”，但关于河流与对立面的解释并不只有一种。较谨慎的读法指出：某些较高层次的持续，可能正依赖其组成材料不断周转；对立状态也不必被说成同一事物在同一时间、同一方面自相矛盾。</p>
+              <p><strong>对自行车案例的提醒：</strong>逐步更换零件不必自动消灭持续性；变化可以是持续的条件。不过，这只能说明“材料更替不必终止一切同一”，还不能决定旧零件重组后哪辆是原车。<Citation id="BEC-6" sources={sources} /></p>
+            </div>
+          </section>
+          <section>
+            <div className={styles.voiceLabel}>前 4 世纪<br />亚里士多德</div>
+            <div>
+              <h3>区分承受变化的主体，与使它成为这一类东西的形制</h3>
+              <p>亚里士多德以质料、形式及其复合来分析变化：一个主体可以在不同时间取得相反性质；但有些变化是实体性的生成或毁灭，而不只是同一对象的性质改变。形式并不只是外观形状，也与“它是什么”及功能解释相连。何者才算实体、质料与形式怎样定位，本身有复杂的解释争论。</p>
+              <p><strong>对自行车案例的提醒：</strong>它促使我们分开问：补漆、换链条是对一辆车的改变，还是已不再构成一辆车？材料堆重新按组织方式构成自行车，是否已产生另一件人工物？亚里士多德没有给现代人工物的重组案留下机械答案。<Citation id="BEC-7" sources={sources} /></p>
+            </div>
+          </section>
+          <section>
+            <div className={styles.voiceLabel}>17 世纪<br />洛克</div>
+            <div>
+              <h3>先问“这是什么种类的东西”，再问同一性条件</h3>
+              <p>洛克在《人类理解论》第二卷第 27 章中强调，不能用一种“同一实体”概括所有同一性。原子、物质集合、生命体和人有不同的持续条件：物质集合取决于组成粒子，生命体则涉及维持同一生命的组织；人格问题又另有其论证与规范关切。</p>
+              <p><strong>对自行车案例的提醒：</strong>“原材料还在”与“同一组织仍延续”本来就在回答不同种类问题。洛克没有明确给出“自行车”这类人工物的判准，但他的做法要求我们先说明所说的“车”是物质集合、功能性人工物，还是登记与使用中的物件。<Citation id="BEC-8" sources={sources} /></p>
+            </div>
+          </section>
+          <section>
+            <div className={styles.voiceLabel}>18 世纪<br />休谟</div>
+            <div>
+              <h3>严格同一感，可能来自心灵顺畅地连接一串相关对象</h3>
+              <p>休谟考察我们为何会把有间断、又有变化的经验当作同一对象的持续存在。他把这种归属与想象力在相似、连续和因果关联间的顺畅过渡联系起来，并以此质疑我们对严格、持续同一的日常把握。这里是在说明一种信念如何产生，而不只是提出新的材料标准。</p>
+              <p><strong>对自行车案例的提醒：</strong>车主沿着使用、损耗和维修记录把甲车叫作“同一辆”，可能有很强的认知与实践基础；这却未必已经证明世界中存在一条独立、严格的同一性事实。休谟的挑战不是“任意叫都行”，因为关联的类型与强弱仍需要说明。<Citation id="BEC-9" sources={sources} /></p>
+            </div>
+          </section>
+          <section>
+            <div className={styles.voiceLabel}>20 世纪<br />怀特海</div>
+            <div>
+              <h3>若过程而非持存实体更基本，应先解释稳定模式怎样形成</h3>
+              <p>怀特海的过程哲学不把持久实体当作最基本单位，而以事件性的“实际契机”及其关系、生成和模式为核心。这不只是说“事物会变化”，而是在本体论层面重新安排什么更基本；其具体体系也远比“万物都是过程”复杂。</p>
+              <p><strong>对自行车案例的提醒：</strong>问题可从“哪个不变的物承受变化”移为“什么样的组织、关系与实践模式足以构成持续的车”。这能启发历史连续性思路，却仍不能单独裁决旧零件重组的分叉案。<Citation id="BEC-3" sources={sources} /></p>
+            </div>
+          </section>
+          <section>
+            <div className={styles.voiceLabel}>约 2—3 世纪<br />龙树</div>
+            <div>
+              <h3>警惕把对象、性质和变化想成彼此独立、自己成立的东西</h3>
+              <p>龙树关于运动与变化的论证，针对的是事物具有不依条件、不可变的自性（svabhāva）的设想；其中会分析“动者”与“运动”等概念的相互依赖。中观并不因此滑向“什么都不存在”的虚无论，其目标也和西方对象持续理论不同。</p>
+              <p><strong>对自行车案例的提醒：</strong>它会追问：把“原车”当作一个独立不变的核心，是否已经误设了问题？零件、因果、命名和用途的依赖关系怎样参与构成？这是一种对自性预设的批评，不是耐存论、延存论或过程哲学的同义替代。<Citation id="BEC-4" sources={sources} /></p>
+            </div>
+          </section>
+        </div>
+        <p className={styles.comparisonNote}>
+          <strong>比较后的结论：</strong>人物之间真正不同的，往往不是“替换零件后算不算同一”这一票，而是他们认为要解释什么——变化为何可能、何种组织使对象成为这一类、同一性准则是否随种类而变、同一性感是否为一种心理建构，或独立自性这一预设是否成立。把这些层次拆开，才不会用一个名字替代一段论证。
+        </p>
       </section>
 
       <section className="philosophy-block" id="being-theories" aria-labelledby="being-theories-title">
