@@ -51,6 +51,14 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 - 构建期没有 D1；不要在 `generateStaticParams` 等构建阶段查询数据库。
 - Hero 的扫描层是低对比装饰，不应遮挡内容；当前包含斜向、横向、纵向、网格面和径向形式，并通过短窗口、错峰和不同周期控制重叠。
 
+## 验证与发布链路
+
+- GitHub CI 由 `.github/workflows/ci.yml` 在 `main` 的 push 和 pull request 上触发。
+- CI 当前执行 `pnpm install --frozen-lockfile`、`pnpm lint`、`pnpm exec tsc --noEmit` 和 `node scripts/replay-migrations.mjs`。
+- CI 当前不执行 `pnpm build`，也不负责 Site 测试环境或正式网站部署；构建和部署仍由协作流程按需执行。
+- 项目没有独立的测试目录；数据库结构和迁移内容的回放脚本是当前主要的自动化验证脚本。
+- 普通无数据库改动的正式发布使用 `pnpm deploy:only`；数据库结构或内容迁移才使用 `pnpm deploy`。
+
 ## 环境地图
 
 | 环境 | 地址 | 入口 | 用途 |

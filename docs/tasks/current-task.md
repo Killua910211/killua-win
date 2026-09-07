@@ -41,7 +41,15 @@ docs/
 - 公开数据边界：`app/components/system-readout.tsx`。
 - 视觉扫描实现：`app/components/page-hero.tsx`、`app/globals.css`。
 - 环境称呼规则：`.cursor/rules/deployment-environment-language.mdc`。
+- CI 与验证边界：`.github/workflows/ci.yml`、`package.json`、`scripts/replay-migrations.mjs`。
 - 本次文档变更验证：`git diff --check` 通过；本次没有业务代码变更，因此未重复运行构建或部署。
+
+## Review 结论
+
+- 项目已有清晰的 vinext/Workers/D1 运行骨架、模块级哲学知识库规则和 GitHub CI。
+- 之前的主要治理缺口是缺少根级工具入口、任务状态文件、架构文档和可追溯决策记录；本次已补齐。
+- 当前验证边界是：CI 覆盖静态检查和迁移回放，但不覆盖完整构建；没有自动部署工作流，正式网站发布需要显式执行并单独验证。
+- 当前没有发现需要立即修改的业务架构问题；后续优先维护 `current-task.md` 和新增长期决策，而不是继续堆叠总览文档。
 
 ## 结果
 
