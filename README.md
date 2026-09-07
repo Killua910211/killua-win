@@ -2,7 +2,9 @@
 
 个人写作站。把 2008—2025 年散落在 QQ 空间和微信公众号的 57 篇文字，收拢到自己的域名下。
 
-线上：<https://www.killua.win> ｜ 订阅：<https://www.killua.win/feed.xml>
+正式网站：<https://www.killua.win> ｜ 订阅：<https://www.killua.win/feed.xml>
+
+项目上下文：见 [`PROJECT_CONTEXT.md`](./PROJECT_CONTEXT.md)。其中记录任务台账、关键决策、证据索引和部署环境约定。
 
 ---
 
@@ -31,11 +33,11 @@ pnpm deploy           # build → 应用远程迁移 → wrangler deploy
 
 `pnpm deploy` 把三步串在一条命令里是**有意的**。pnpm 7+ 默认不执行 `pre`/`post` 脚本
 （`enable-pre-post-scripts` 默认 false），所以写成 `predeploy` 不会自动触发。
-先迁移后部署的顺序也是有意的：迁移都是增量加列，先加列再上引用新列的代码才不会有窗口期。
+先迁移后部署的顺序也是有意的：迁移都是增量加列，先加列再部署引用新列的代码才不会有窗口期。
 
 只想重新部署、不想动数据库时用 `pnpm deploy:only`。
 
-内容类迁移上线前先导一份生产库：
+内容类迁移部署到正式网站前先导一份生产库：
 
 ```bash
 pnpm exec wrangler d1 export killua-win-d1 --remote --output .wrangler/backups/pre-NNNN.sql
@@ -118,7 +120,7 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
 - **ISR 缓存默认是进程内的 `Map`**（`dist/shims/cache-handler.js:50`），
   在 Workers 上等于每个 colo 的 isolate 各存一份。够用，但不跨 isolate 共享。
 - **`/notes/[slug]` 不要加 `loading.tsx`。** 它会给整个 segment 套一层 Suspense，
-  响应变成流式，`notFound()` 之前 200 就已经提交，线上会返回软 404
+  响应变成流式，`notFound()` 之前 200 就已经提交，正式网站会返回软 404
   （本地 `wrangler dev` 不走流式路径，测不出来）。对照组：同样调用 `notFound()`
   但没有 `loading.tsx` 的 `/notes/category/[category]` 返回的就是正确的 404。
 - **`vinext start` 在本项目跑不起来** —— Node 的 ESM loader 解析不了 `cloudflare:workers`。
@@ -172,9 +174,8 @@ OS 把 `label` 的类型收成了从 `RECORD_KIND_LABEL` 推出的**字面量联
 各项 `count` 之和应当等于 `records`。官网不做这个断言 —— 对端算错了不该把首页
 拖垮 —— 但对不上就说明 OS 侧的分组漏了某一类。
 
-> 调试提示：这个 fetch 带 `next: { revalidate: 3600 }`。改完 OS 端点后，
-> 长时间运行的 `pnpm dev` 会继续用缓存里的旧响应，看起来像是没生效。
-> 重启 dev server，或者 `pnpm build` 后用 `pnpm preview` 验证。
+> 调试提示：这个 fetch 使用 `cache: 'no-store'`。改完 OS 端点后，
+> 首页不会复用旧的跨请求响应；如果仍看不到变化，先确认测试环境或正式网站部署的是最新构建。
 
 ## 重新生成 Workers 类型
 
