@@ -44,12 +44,20 @@ docs/
 - CI 与验证边界：`.github/workflows/ci.yml`、`package.json`、`scripts/replay-migrations.mjs`。
 - 本次文档变更验证：`git diff --check` 通过；本次没有业务代码变更，因此未重复运行构建或部署。
 
-## Review 结论
+## 项目体检与 Review 结论
 
 - 项目已有清晰的 vinext/Workers/D1 运行骨架、模块级哲学知识库规则和 GitHub CI。
 - 之前的主要治理缺口是缺少根级工具入口、任务状态文件、架构文档和可追溯决策记录；本次已补齐。
 - 当前验证边界是：CI 覆盖静态检查和迁移回放，但不覆盖完整构建；没有自动部署工作流，正式网站发布需要显式执行并单独验证。
 - 当前没有发现需要立即修改的业务架构问题；后续优先维护 `current-task.md` 和新增长期决策，而不是继续堆叠总览文档。
+
+### 体检模块：Health
+
+- 入口：`/health`，实现位于 `app/health/page.tsx`，数据和展示辅助函数主要位于 `app/lib/health.ts`。
+- 覆盖内容：个人时间线、已存活时间、戒烟记录、恢复时间线、七日均值、长期趋势、营养覆盖、补剂方案和数据观察。
+- 首屏设计：Health 使用共享 `PageHero` 和 `SectionNav`，其中时间线和导航优先进入首屏；服务端时间作为计时器首屏基准，避免客户端接管前出现不一致读数。
+- 当前证据：`HEALTH_COVERAGE_START`、`HEALTH_UPDATED_AT`、`HEALTH_WEEKLY_AVERAGES`、`HEALTH_TRENDS`、`HEALTH_NUTRITION_COVERAGE` 和 `HEALTH_SUPPLEMENTS` 均在页面中有明确消费位置。
+- 当前风险：没有独立的 Health 自动化测试目录；如果修改健康计算或时间边界，至少要运行类型检查、Lint、构建，并人工检查 `/health` 的桌面和移动端表现。
 
 ## 结果
 
