@@ -88,7 +88,7 @@ export default function HealthPage() {
 
         <section id="health-timeline" className="health-smoking-section" aria-label="个人时间线">
           <div className="section-label" lang="en">
-            <span>01</span>
+            <span>02</span>
             <span>Personal timeline</span>
           </div>
           <div className="health-section-body">
@@ -135,7 +135,7 @@ export default function HealthPage() {
 
         <section id="health-snapshot" className="health-snapshot" aria-labelledby="health-snapshot-heading">
           <div className="section-label" lang="en">
-            <span>02</span>
+            <span>03</span>
             <span>Seven-day averages</span>
           </div>
           <div className="health-section-body">
@@ -166,7 +166,7 @@ export default function HealthPage() {
 
         <section id="health-trends" className="health-trends" aria-labelledby="health-trends-heading">
           <div className="section-label light" lang="en">
-            <span>03</span>
+            <span>04</span>
             <span>Long view</span>
           </div>
           <div className="health-section-body">
@@ -229,7 +229,7 @@ export default function HealthPage() {
 
         <section id="health-nutrition" className="health-nutrition" aria-label="补剂方案与每日营养覆盖">
           <div className="section-label" lang="en">
-            <span>04</span>
+            <span>05</span>
             <span>Supplements</span>
           </div>
           <div className="health-section-body">
@@ -319,7 +319,7 @@ export default function HealthPage() {
 
         <section id="health-notes" className="health-notes" aria-labelledby="health-notes-heading">
           <div className="section-label" lang="en">
-            <span>05</span>
+            <span>06</span>
             <span>Data observations</span>
           </div>
           <div className="health-section-body">

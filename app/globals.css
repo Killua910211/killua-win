@@ -4682,9 +4682,13 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   z-index: 1;
   display: grid;
   min-height: var(--hero-height);
-  grid-template-columns: var(--hero-label-column) minmax(0, 1fr) minmax(180px, 0.62fr);
+  grid-template-columns: var(--hero-label-column) minmax(0, 1fr);
   align-items: center;
   gap: 0 28px;
+}
+
+.page-hero__grid--with-decoration {
+  grid-template-columns: var(--hero-label-column) minmax(0, 1fr) minmax(180px, 0.62fr);
 }
 
 .page-hero__label { align-self: center; color: rgba(242, 237, 232, 0.72); }
@@ -5062,6 +5066,40 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .page-hero .mind-hero-foot,
   .page-hero .learning-hero-foot { flex-wrap: wrap; }
   .section-local-nav { top: var(--header-height); padding-right: var(--page-gutter); padding-left: var(--page-gutter); }
+}
+
+/* ── Shared content rail ─────────────────────────────────────
+   首屏和其后的第一个内容模块共用同一条标签列、正文列和外侧边界。
+   这样栏目首屏不会因为单独使用 4vw / 22vw 而向另一条轨道偏移。 */
+@media (min-width: 761px) {
+  .readout,
+  .notes-hero,
+  .notes-preface,
+  .notes-index,
+  .health-snapshot,
+  .health-trends,
+  .health-nutrition,
+  .health-notes,
+  .health-smoking-section,
+  .mind-overview,
+  .mind-workspace,
+  .mind-review,
+  .knowledge-index,
+  .knowledge-method,
+  .learning-questions,
+  .learning-traditions,
+  .learning-method,
+  .philosophy-hero,
+  .philosophy-section {
+    grid-template-columns: var(--hero-label-column) minmax(0, 1fr);
+    column-gap: 28px;
+    padding-right: var(--page-gutter);
+    padding-left: var(--page-gutter);
+  }
+
+  .page-hero__grid--with-decoration {
+    grid-template-columns: var(--hero-label-column) minmax(0, 1fr) minmax(180px, 0.62fr);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

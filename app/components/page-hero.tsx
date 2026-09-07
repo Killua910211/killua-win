@@ -74,7 +74,7 @@ export function PageHero({
     >
       {isHome && decoration ? <div className="page-hero__decoration" aria-hidden="true">{decoration}</div> : null}
       {!isHome ? <AmbientHeroEffects /> : null}
-      <ContentContainer className="page-hero__grid">
+      <ContentContainer className={`page-hero__grid${!isHome && decoration ? ' page-hero__grid--with-decoration' : ''}`}>
         <div className="section-label page-hero__label" lang="en">
           <span>{number}</span>
           <span>{label}</span>
