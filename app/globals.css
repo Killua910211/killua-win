@@ -4676,7 +4676,119 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .page-hero--home { --pointer-x: 76%; --pointer-y: 42%; }
 .page-hero--home .page-hero__label,
 .page-hero--home .page-hero__body { position: relative; z-index: 2; }
-.page-hero--home .page-hero__decoration { position: absolute; inset: 0; min-height: 0; pointer-events: none; }
+.page-hero--home .page-hero__decoration {
+  position: absolute;
+  inset: 0;
+  /*
+    首页特效层是 Hero 的直接子节点，而文字仍落在公共内容容器内。
+    因此环境光、扫描线和粒子可以完整覆盖 viewport，不会在大屏两边断开。
+  */
+  min-height: 0;
+  pointer-events: none;
+}
+.page-hero--default .page-hero__label,
+.page-hero--default .page-hero__body { position: relative; z-index: 2; }
+.page-hero__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.page-hero__ambient-glow {
+  position: absolute;
+  top: 46%;
+  left: 70%;
+  width: min(46vw, 620px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224, 99, 42, 0.11), rgba(224, 99, 42, 0.025) 42%, transparent 70%);
+  opacity: 0.58;
+  transform: translate(-50%, -50%);
+  animation: page-hero-ambient-bloom 13s ease-in-out infinite;
+}
+.hero-scan {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+}
+.hero-scan--diagonal {
+  top: -30%;
+  left: -16%;
+  width: 11%;
+  height: 160%;
+  background: linear-gradient(90deg, transparent, rgba(224, 99, 42, 0.075), transparent);
+  filter: blur(8px);
+  transform: skewX(-14deg);
+  animation: hero-scan-diagonal 18s ease-in-out infinite;
+}
+.hero-scan--horizontal {
+  top: -16%;
+  left: -18%;
+  width: 136%;
+  height: 18%;
+  background: linear-gradient(180deg, transparent, rgba(224, 99, 42, 0.055), transparent);
+  filter: blur(7px);
+  animation: hero-scan-horizontal 16s ease-in-out 2s infinite;
+}
+.hero-scan--vertical {
+  top: -18%;
+  left: 55%;
+  width: 16%;
+  height: 136%;
+  background: linear-gradient(90deg, transparent, rgba(242, 237, 232, 0.04), transparent);
+  filter: blur(5px);
+  animation: hero-scan-vertical 21s ease-in-out 4s infinite;
+}
+.hero-scan--grid {
+  top: 10%;
+  left: 34%;
+  width: 62%;
+  height: 76%;
+  background-image:
+    linear-gradient(rgba(224, 99, 42, 0.048) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224, 99, 42, 0.048) 1px, transparent 1px);
+  background-size: 30px 30px;
+  mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+  animation: hero-scan-grid 19s ease-in-out 1s infinite;
+}
+.hero-scan--radial {
+  top: 14%;
+  left: 61%;
+  width: min(30vw, 380px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(224, 99, 42, 0.07);
+  border-radius: 50%;
+  box-shadow: 0 0 0 16px rgba(224, 99, 42, 0.018), 0 0 0 42px rgba(224, 99, 42, 0.012);
+  animation: hero-scan-radial 17s ease-in-out 5s infinite;
+}
+.home-hero-effects .hero-scan--diagonal {
+  top: -25%;
+  left: -18%;
+  width: 14%;
+  height: 150%;
+  background: linear-gradient(90deg, transparent, rgba(224, 99, 42, 0.13), transparent);
+  filter: blur(6px);
+  animation: hero-scan-diagonal-home 12s ease-in-out infinite;
+}
+.home-hero-effects .hero-scan--grid {
+  left: 30%;
+  width: 70%;
+  background-image:
+    linear-gradient(rgba(224, 99, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224, 99, 42, 0.04) 1px, transparent 1px);
+}
+.home-hero-effects .hero-scan--radial { left: 62%; }
+.page-hero--default .hero-scan,
+.home-hero-effects .hero-scan {
+  opacity: 0;
+}
+.page-hero--default .home-hero-dust { opacity: 0.7; }
+.notes-page .page-hero__ambient-glow { top: 38%; left: 72%; }
+.health-page .page-hero__ambient-glow { top: 54%; left: 76%; }
+.mind-page .page-hero__ambient-glow { top: 42%; left: 67%; }
+.learning-page .page-hero__ambient-glow { top: 48%; left: 74%; }
 .home-hero-effects { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .home-hero-aura {
   position: absolute;
@@ -4704,43 +4816,114 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   transform: translateY(-50%);
   animation: home-orbit-bloom 9s ease-in-out infinite;
 }
-.home-hero-scan {
+.home-hero-dust {
   position: absolute;
-  top: -25%;
-  left: -18%;
-  width: 14%;
-  height: 150%;
-  background: linear-gradient(90deg, transparent, rgba(224, 99, 42, 0.13), transparent);
-  filter: blur(6px);
+  inset: -3%;
+  background-repeat: no-repeat;
   content: '';
-  opacity: 0;
-  transform: skewX(-14deg);
-  animation: home-grid-scan 12s ease-in-out infinite;
+  pointer-events: none;
+  will-change: opacity, transform;
 }
-.home-hero-dust { position: absolute; inset: 0; opacity: 0.38; content: ''; }
 .home-hero-dust-one {
-  background-image: radial-gradient(circle, rgba(242, 237, 232, 0.56) 0 1px, transparent 1.5px);
-  background-size: 144px 144px;
-  animation: home-dust-one 26s linear infinite;
+  background-image:
+    radial-gradient(circle at 5% 17%, rgba(242, 237, 232, 0.56) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 13% 63%, rgba(242, 237, 232, 0.38) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 21% 31%, rgba(242, 237, 232, 0.46) 0 1.3px, transparent 2px),
+    radial-gradient(circle at 28% 84%, rgba(242, 237, 232, 0.32) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 37% 8%, rgba(242, 237, 232, 0.42) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 46% 53%, rgba(242, 237, 232, 0.6) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 52% 26%, rgba(242, 237, 232, 0.36) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 61% 78%, rgba(242, 237, 232, 0.46) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 69% 39%, rgba(242, 237, 232, 0.34) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 76% 12%, rgba(242, 237, 232, 0.54) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 82% 62%, rgba(242, 237, 232, 0.4) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 91% 30%, rgba(242, 237, 232, 0.48) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 96% 88%, rgba(242, 237, 232, 0.34) 0 1px, transparent 1.6px);
+  animation: home-dust-one 29s ease-in-out infinite;
 }
 .home-hero-dust-two {
-  background-image: radial-gradient(circle, rgba(224, 99, 42, 0.58) 0 1px, transparent 1.6px);
-  background-position: 62px 91px;
-  background-size: 218px 218px;
-  opacity: 0.28;
-  animation: home-dust-two 34s linear infinite;
+  background-image:
+    radial-gradient(circle at 9% 47%, rgba(224, 99, 42, 0.58) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 18% 12%, rgba(224, 99, 42, 0.42) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 31% 71%, rgba(224, 99, 42, 0.5) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 43% 36%, rgba(224, 99, 42, 0.34) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 56% 91%, rgba(224, 99, 42, 0.46) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 64% 18%, rgba(224, 99, 42, 0.5) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 73% 58%, rgba(224, 99, 42, 0.38) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 87% 7%, rgba(224, 99, 42, 0.52) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 94% 74%, rgba(224, 99, 42, 0.35) 0 1px, transparent 1.7px);
+  animation: home-dust-two 37s ease-in-out infinite;
 }
-.page-hero--home .orb { top: 50%; right: clamp(0px, 2vw, 32px); width: min(24vw, 310px); transform: translateY(-50%); }
+.home-hero-dust-three {
+  background-image:
+    radial-gradient(circle at 3% 76%, rgba(242, 237, 232, 0.28) 0 0.8px, transparent 1.4px),
+    radial-gradient(circle at 16% 38%, rgba(224, 99, 42, 0.3) 0 0.9px, transparent 1.5px),
+    radial-gradient(circle at 26% 5%, rgba(242, 237, 232, 0.34) 0 0.9px, transparent 1.5px),
+    radial-gradient(circle at 39% 67%, rgba(242, 237, 232, 0.3) 0 0.8px, transparent 1.4px),
+    radial-gradient(circle at 49% 20%, rgba(224, 99, 42, 0.27) 0 0.8px, transparent 1.4px),
+    radial-gradient(circle at 59% 46%, rgba(242, 237, 232, 0.34) 0 0.9px, transparent 1.5px),
+    radial-gradient(circle at 71% 93%, rgba(242, 237, 232, 0.28) 0 0.8px, transparent 1.4px),
+    radial-gradient(circle at 79% 28%, rgba(224, 99, 42, 0.28) 0 0.9px, transparent 1.5px),
+    radial-gradient(circle at 89% 51%, rgba(242, 237, 232, 0.32) 0 0.8px, transparent 1.4px),
+    radial-gradient(circle at 98% 15%, rgba(242, 237, 232, 0.28) 0 0.8px, transparent 1.4px);
+  animation: home-dust-three 43s ease-in-out infinite;
+}
+.page-hero--home .orb { top: 50%; right: clamp(140px, 13vw, 216px); width: min(24vw, 310px); transform: translateY(-50%); }
 .page-hero--home .orb-ring { animation: home-orbit 18s linear infinite; }
 @keyframes home-orbit { to { transform: rotate(360deg); } }
 @keyframes home-orbit-bloom { 50% { opacity: 0.84; transform: translateY(-50%) scale(1.1); } }
-@keyframes home-grid-scan {
+@keyframes page-hero-ambient-bloom {
+  0%, 100% { opacity: 0.36; transform: translate(-50%, -50%) scale(0.96); }
+  48% { opacity: 0.68; transform: translate(-50%, -50%) scale(1.07); }
+}
+@keyframes hero-scan-diagonal {
+  0%, 18% { opacity: 0; transform: translateX(0) skewX(-14deg); }
+  30% { opacity: 1; }
+  68%, 100% { opacity: 0; transform: translateX(1000%) skewX(-14deg); }
+}
+@keyframes hero-scan-diagonal-home {
   0%, 14% { opacity: 0; transform: translateX(0) skewX(-14deg); }
   25% { opacity: 1; }
   66%, 100% { opacity: 0; transform: translateX(860%) skewX(-14deg); }
 }
-@keyframes home-dust-one { to { background-position: 144px 288px; } }
-@keyframes home-dust-two { to { background-position: 280px 436px; } }
+@keyframes hero-scan-horizontal {
+  0%, 16% { opacity: 0; transform: translateY(0); }
+  29% { opacity: 1; }
+  69%, 100% { opacity: 0; transform: translateY(720%); }
+}
+@keyframes hero-scan-vertical {
+  0%, 18% { opacity: 0; transform: translateX(0); }
+  32% { opacity: 1; }
+  70%, 100% { opacity: 0; transform: translateX(260%); }
+}
+@keyframes hero-scan-grid {
+  0%, 20% { opacity: 0; transform: translateX(-8%); background-position: 0 0; }
+  35% { opacity: 0.85; }
+  72%, 100% { opacity: 0; transform: translateX(12%); background-position: 30px 30px; }
+}
+@keyframes hero-scan-radial {
+  0%, 24% { opacity: 0; transform: scale(0.78); }
+  44% { opacity: 0.85; }
+  76%, 100% { opacity: 0; transform: scale(1.16); }
+}
+@keyframes home-dust-one {
+  0%, 100% { opacity: 0.3; transform: translate3d(-1.4%, 1%, 0); }
+  19% { opacity: 0.52; transform: translate3d(1.1%, -0.8%, 0); }
+  47% { opacity: 0.24; transform: translate3d(2.3%, 1.4%, 0); }
+  72% { opacity: 0.45; transform: translate3d(-0.6%, -1.9%, 0); }
+}
+@keyframes home-dust-two {
+  0%, 100% { opacity: 0.26; transform: translate3d(1.8%, -1.1%, 0); }
+  22% { opacity: 0.48; transform: translate3d(-1.7%, 1.5%, 0); }
+  58% { opacity: 0.2; transform: translate3d(0.5%, 2.1%, 0); }
+  81% { opacity: 0.4; transform: translate3d(-2.4%, -0.5%, 0); }
+}
+@keyframes home-dust-three {
+  0%, 100% { opacity: 0.15; transform: translate3d(-0.4%, -1.5%, 0); }
+  31% { opacity: 0.36; transform: translate3d(2.2%, 0.8%, 0); }
+  63% { opacity: 0.18; transform: translate3d(-1.8%, 1.9%, 0); }
+  84% { opacity: 0.31; transform: translate3d(1.3%, -0.3%, 0); }
+}
 .page-hero .health-hero-meta { gap: 14px 34px; margin-top: 0; padding-top: 18px; }
 .page-hero .health-hero-meta div { min-width: 132px; }
 .page-hero .mind-hero-foot,
@@ -4800,6 +4983,8 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .page-hero--home .home-hero-aura { width: 120vw; opacity: 0.42; }
   .page-hero--home .home-hero-orbit-bloom { width: 90vw; right: -38vw; opacity: 0.38; }
   .page-hero--home .orb { top: 32%; right: -14vw; width: 58vw; opacity: 0.55; }
+  .page-hero__ambient-glow { left: 78%; width: 110vw; opacity: 0.36; }
+  .page-hero--default .home-hero-dust { opacity: 0.48; }
   .page-hero .mind-hero-foot,
   .page-hero .learning-hero-foot { flex-wrap: wrap; }
   .section-local-nav { top: var(--header-height); padding-right: var(--page-gutter); padding-left: var(--page-gutter); }
@@ -4811,7 +4996,8 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .page-hero__secondary-action { transition: none; }
   .page-hero--home .orb-ring,
   .home-hero-orbit-bloom,
-  .home-hero-scan,
-  .home-hero-dust { animation: none; }
+  .home-hero-dust,
+  .page-hero__ambient-glow,
+  .hero-scan { animation: none; }
   .home-hero-aura { transition: none; }
 }

@@ -25,6 +25,30 @@ function updateHomePointer(event: PointerEvent<HTMLElement>) {
   event.currentTarget.style.setProperty('--pointer-y', `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
 }
 
+function HeroScanLayers() {
+  return (
+    <>
+      <span className="hero-scan hero-scan--diagonal" />
+      <span className="hero-scan hero-scan--horizontal" />
+      <span className="hero-scan hero-scan--vertical" />
+      <span className="hero-scan hero-scan--grid" />
+      <span className="hero-scan hero-scan--radial" />
+    </>
+  );
+}
+
+function AmbientHeroEffects() {
+  return (
+    <div className="page-hero__ambient" aria-hidden="true">
+      <span className="page-hero__ambient-glow" />
+      <HeroScanLayers />
+      <span className="home-hero-dust home-hero-dust-one" />
+      <span className="home-hero-dust home-hero-dust-two" />
+      <span className="home-hero-dust home-hero-dust-three" />
+    </div>
+  );
+}
+
 /** 顶层栏目共享的首屏骨架；栏目只提供自己的内容与可选装饰。 */
 export function PageHero({
   action,
@@ -39,13 +63,17 @@ export function PageHero({
   titleId,
   variant = 'default',
 }: PageHeroProps) {
+  const isHome = variant === 'home';
+
   return (
     <section
       className={`page-hero page-hero--${variant}`}
       id={id}
       aria-labelledby={titleId}
-      onPointerMove={variant === 'home' ? updateHomePointer : undefined}
+      onPointerMove={isHome ? updateHomePointer : undefined}
     >
+      {isHome && decoration ? <div className="page-hero__decoration" aria-hidden="true">{decoration}</div> : null}
+      {!isHome ? <AmbientHeroEffects /> : null}
       <ContentContainer className="page-hero__grid">
         <div className="section-label page-hero__label" lang="en">
           <span>{number}</span>
@@ -58,7 +86,7 @@ export function PageHero({
           {action ? <div className="page-hero__action">{action}</div> : null}
           {footer ? <div className="page-hero__footer">{footer}</div> : null}
         </div>
-        <div className="page-hero__decoration" aria-hidden="true">{decoration}</div>
+        {!isHome && decoration ? <div className="page-hero__decoration" aria-hidden="true">{decoration}</div> : null}
       </ContentContainer>
     </section>
   );

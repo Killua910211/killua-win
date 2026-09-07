@@ -13,16 +13,14 @@ export const metadata = buildMetadata({
 });
 
 /**
- * 首页每小时重新生成一次。
+ * 首页不做整页 ISR。
  *
- * 之前没有任何缓存声明，而页面里既有一次 D1 计数又有一次跨站 fetch，
- * 每个请求都要重新付这两笔钱。注意 vinext 默认的 ISR 存储是进程内的 Map
- * （node_modules/vinext/dist/shims/cache-handler.js），在 Workers 上等于
- * 每个 colo 的 isolate 各存一份 —— 命中率不如 KV，但对这类内容变动极慢的
- * 页面已经足够。要做成跨 isolate 共享需要装 @vinext/cloudflare 并绑一个
- * KV namespace，见 README 的「以后可以做的事」。
+ * 这里包含跨站 OS 汇总；OS 的公开字段变更后，跨部署留存的一张首页缓存会让
+ * 用户继续看到旧卡片，即使 Worker 已经发布。保持动态渲染，确保发布一完成
+ * 首页的结构就随之切换。SystemReadout 本身有超时与 Suspense 边界，慢时不阻塞
+ * 其余首页内容。
  */
-export const revalidate = 3600;
+export const revalidate = 0;
 
 export default function Home() {
   return (
@@ -35,9 +33,14 @@ export default function Home() {
             <div className="home-hero-effects">
               <span className="home-hero-aura" />
               <span className="home-hero-orbit-bloom" />
-              <span className="home-hero-scan" />
+              <span className="hero-scan hero-scan--diagonal" />
+              <span className="hero-scan hero-scan--horizontal" />
+              <span className="hero-scan hero-scan--vertical" />
+              <span className="hero-scan hero-scan--grid" />
+              <span className="hero-scan hero-scan--radial" />
               <span className="home-hero-dust home-hero-dust-one" />
               <span className="home-hero-dust home-hero-dust-two" />
+              <span className="home-hero-dust home-hero-dust-three" />
               <div className="orb"><div className="orb-ring" /><div className="orb-core" /><span>K</span></div>
             </div>
           }

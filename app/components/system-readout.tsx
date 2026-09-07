@@ -50,7 +50,9 @@ type ReadoutState = 'normal' | 'delayed' | 'failed' | 'no-data' | 'unknown';
 async function fetchStats(): Promise<StatsLoadResult> {
   try {
     const res = await fetch('https://os.killua.win/api/public/stats', {
-      next: { revalidate: 3600 },
+      // OS 公开字段会随部署演进。首页已经关闭整页 ISR，这里也不复用旧的
+      // 数据缓存，避免新卡片短暂显示成「—」。
+      cache: 'no-store',
       signal: AbortSignal.timeout(1500),
     });
     if (!res.ok) return { ok: false };
