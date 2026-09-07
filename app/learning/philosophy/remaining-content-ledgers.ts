@@ -216,11 +216,16 @@ export const remainingEntryLedgers: Record<string, CoreEntryLedger> = {
     sources: [
       source('LIF-1', 'SEP：Well-Being', 'https://plato.stanford.edu/entries/well-being/', '导论、§1–§4', '福祉的“对人好”边界，以及享乐、欲望、客观清单理论。'),
       source('LIF-2', 'SEP：Value Theory', 'https://plato.stanford.edu/entries/value-theory/', '导论、§1–§2', '价值、福祉与其他评价性概念的区分。'),
+      source('LIF-3', 'SEP：Aristotle’s Ethics', 'https://plato.stanford.edu/entries/aristotle-ethics/', '§2，尤其“Human Good and the Function Argument”', 'eudaimonia、德性活动、完整人生与外在善的作用。'),
+      source('LIF-4', 'SEP：Epicurus', 'https://plato.stanford.edu/entries/epicurus/', '§4 “Psychology and Ethics”', '快乐、痛苦、审慎与伊壁鸠鲁伦理学的论证位置。'),
+      source('LIF-5', 'SEP：The Meaning of Life', 'https://plato.stanford.edu/entries/life-meaning/', '关于主观条件、客观价值与 Wolf 混合理论的章节', '人生意义与福祉、正确性的区分；沃尔夫“主观投入／客观值得”的混合路径。'),
+      source('LIF-6', 'SEP：Mencius', 'https://plato.stanford.edu/entries/mencius/', '§2 “The Virtues and Their Cultivation”', '仁义、端绪、养成、情感与政治判断的关联。'),
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '主要立场｜主观／客观幸福', issue: '原文将二者写作纯粹的感受与权威清单。', evidence: 'LIF-1 对三类理论分别提出自主、信息和价值的难题。', revision: '改为比较理论所解释的价值与代价。' },
       { location: '案例推演｜职业选择', issue: '原例将生活选择视作完全个人可控。', evidence: '福祉概念讨论必须区分好本身与获得它的社会条件。', revision: '加入劳动、照护和可选择性的问题。' },
-    ], remaining: ['残障正义、能力理论和儒家兴盛论的专门原典尚待逐本核验。'], adjacentImpact: '“正当行动”和“正义”不得把福祉假定为无争议的单一数量。', nextPriority: '补写能力、关系和结构不平等的阅读路径。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原人物卡只提示原典，未说明其原有问题如何进入福祉争论，也没有逐项来源指向。', evidence: 'LIF-3 至 LIF-6 分别核对亚里士多德的兴盛与外在善、伊壁鸠鲁伦理、沃尔夫对意义的混合论及孟子的德性养成。', revision: '新增“原问题—对本页的推进—不能直接推出”比较，并将人物卡与论证路径接入来源账。' },
+    ], remaining: ['残障正义、能力理论和儒家兴盛论的原典与当代争论仍待逐本核验。'], adjacentImpact: '“正当行动”不得把福祉假定为无争议单一数量；“照护”“正义”需把可选择性继续落实为制度问题。', nextPriority: '补写能力、残障、照护与结构不平等的来源账和跨页案例。' },
   },
   'pt-right-action': {
     status: '核验正文｜自审完成',
@@ -251,11 +256,16 @@ export const remainingEntryLedgers: Record<string, CoreEntryLedger> = {
       source('ACT-1', 'SEP：Consequentialism', 'https://plato.stanford.edu/entries/consequentialism/', '导论、§1–§3', '后果论的规范性依赖、价值问题和经典功利主义。'),
       source('ACT-2', 'SEP：Deontological Ethics', 'https://plato.stanford.edu/entries/ethics-deontological/', '导论、§1–§5', '义务论的选择评价、限制与后果不确定性。'),
       source('ACT-3', 'SEP：Virtue Ethics', 'https://plato.stanford.edu/entries/ethics-virtue/', '导论、§1–§3', '德性伦理同后果论、义务论的中心性差异和实践智慧。'),
+      source('ACT-4', 'SEP：Kant’s Moral Philosophy', 'https://plato.stanford.edu/entries/kant-moral/', '§6 “The Humanity Formula”', '人格／人性作为目的本身、不得仅作手段及其限度。'),
+      source('ACT-5', 'SEP：Mill’s Moral and Political Philosophy', 'https://plato.stanford.edu/entries/mill-moral-political/', '功利主义、高低快乐和自由相关章节', '密尔功利主义中的快乐、能力、自由与解释争议。'),
+      source('ACT-6', 'SEP：Aristotle’s Ethics', 'https://plato.stanford.edu/entries/aristotle-ethics/', '§4–§5，德性、实践智慧与中道相关段落', '习惯、实践智慧、情感和具体情境在行动判断中的作用。'),
+      source('ACT-7', 'SEP：Mohism', 'https://plato.stanford.edu/entries/mohism/', '导论、§1、§7', '墨家兼爱、利、非攻、标准与先秦政治—伦理语境。'),
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '主要立场｜三种伦理', issue: '原内容把三者误写为只关心后果、规则、人格。', evidence: 'ACT-3 指出每种可讨论三类因素，区别在基础性。', revision: '改为比较评价优先性和理论代价。' },
       { location: '案例推演｜两难', issue: '原例诱导读者以直觉选边。', evidence: 'ACT-1、ACT-2 的分歧要求明确价值、限制与不确定性。', revision: '加入谁承担风险和事后修复，而非宣告唯一答案。' },
-    ], remaining: ['墨家、儒家、佛教及当代关系伦理的原典对读尚未完成。'], adjacentImpact: '“正义”和“法律”页要保留行动评价与制度评价的区别。', nextPriority: '补入照护、动物与全球正义的交叉案例。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原人物卡止于“谁主张什么”，未交代康德、密尔、亚里士多德与墨家各自改变了哪种评价优先性。', evidence: 'ACT-1 至 ACT-7 核对后果依赖、选择限制、德性中心性、人格公式、密尔的功利解释与墨家的先秦语境。', revision: '新增四项可比较但不强行等同的分析；每项明确可如何用于案例及不能替人物推出的结论。' },
+    ], remaining: ['儒家、佛教及当代照护伦理的原典对读尚未完成；墨家与现代后果论的细部比较仍需逐段核验。'], adjacentImpact: '“正义”“法律”继续保留行动评价与制度评价的区别；“照护”页可承接关系与依赖的遗漏。', nextPriority: '补入照护、动物与全球正义的交叉案例，并逐文本扩展非西方原典路径。' },
   },
   'pt-responsibility': {
     status: '核验正文｜自审完成',
@@ -285,11 +295,13 @@ export const remainingEntryLedgers: Record<string, CoreEntryLedger> = {
     sources: [
       source('RES-1', 'SEP：Moral Responsibility', 'https://plato.stanford.edu/entries/moral-responsibility/', '导论、§2–§3.10', '责任能力、反应、认识条件、怀疑论与道德运气。'),
       source('RES-2', 'SEP：Moral Luck', 'https://plato.stanford.edu/entries/moral-luck/', '导论、§1–§3', '控制原则、不同道德评价对象和结果运气的冲突。'),
+      source('RES-3', 'SEP：Bernard Williams', 'https://plato.stanford.edu/entries/williams-bernard/', '§2–§3，尤其道德纯净与行动者悔恨相关段落', '威廉斯对系统道德、道德运气和行动者悔恨的批评性讨论。'),
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
       { location: '案例｜酒后驾驶', issue: '原内容只问成功与失败者谁更坏。', evidence: 'RES-2 区分对结果负责与责备程度。', revision: '拆分风险选择、实际伤害、赔偿与可责性。' },
       { location: '主要立场｜责任', issue: '原内容将责任等同报复性惩罚。', evidence: 'RES-1 区分可归属性、可回答性和可追究性。', revision: '增加说明、修复和前瞻性回应。' },
-    ], remaining: ['集体责任、修复性正义和中文伦理术语的专门资料尚待核验。'], adjacentImpact: '“法律”和“正当行动”页不得将道德可责性直接视为法律处罚的充分条件。', nextPriority: '补写制度责任和受害者承认的独立条目。' },
+      { location: '新增｜哲学家怎样改写这个问题', issue: '原人物卡没有说明“结果有差异”与“应受同等责备”可同时成立，也未区分道德运气与修复要求。', evidence: 'RES-1 核对责任面向与反应态度；RES-2 核对控制原则、结果运气和评价对象；RES-3 核对威廉斯对道德纯净与行动者悔恨的批评。', revision: '新增康德、内格尔、斯特劳森、威廉斯的比较，并在每项中分开可责、损害、修复与权力问题。' },
+    ], remaining: ['集体责任、修复性正义和中文伦理术语的专门资料尚待核验；威廉斯与内格尔的原文段落仍应纳入下一轮对读。'], adjacentImpact: '“法律”和“正当行动”不得将道德可责性直接视为法律处罚的充分条件；“自由”页需继续区分控制理论与责任实践。', nextPriority: '补写制度责任、受害者承认和修复性正义的独立来源账。' },
   },
   'pt-legalism': {
     status: '核验正文｜自审完成',

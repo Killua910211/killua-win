@@ -100,8 +100,8 @@ export function NodeBody({
     .filter((relatedNode): relatedNode is PhilosophyNode => Boolean(relatedNode));
   const sources = node.sources ?? [];
 
-  const sourceLinks = (paragraph: LedgerParagraph) =>
-    paragraph.sourceIds?.map((sourceId) => {
+  const citationLinks = (sourceIds?: string[]) =>
+    sourceIds?.map((sourceId) => {
       const source = ledger?.sources.find((item) => item.id === sourceId);
       if (!source) return null;
       return (
@@ -117,6 +117,14 @@ export function NodeBody({
         </a>
       );
     });
+
+  const sourceLinks = (paragraph: LedgerParagraph) => citationLinks(paragraph.sourceIds);
+
+  const claimSources = (sourceIds?: string[]) => {
+    const citations = citationLinks(sourceIds);
+    if (!citations?.length) return null;
+    return <span className="philosophy-claim-sources">核对来源 {citations}</span>;
+  };
 
   return (
     <div className="philosophy-body-main">
@@ -207,6 +215,7 @@ export function NodeBody({
                 </p>
                 <SubHeading className="philosophy-position-name">{position.name}</SubHeading>
                 <p className="philosophy-position-text">{position.text}</p>
+                {claimSources(guide?.positionSourceIds?.[index])}
                 {guide?.positionPaths[index] && (
                   <div className="philosophy-position-path">
                     <p>论证路径</p>
@@ -246,6 +255,38 @@ export function NodeBody({
         </section>
       )}
 
+      {guide?.philosopherViews && guide.philosopherViews.length > 0 && (
+        <section className="philosophy-block" aria-labelledby={`${node.id}-voices`}>
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-voices`}>
+            哲学家怎样改写这个问题
+          </BlockHeading>
+          <p className="philosophy-block-intro">
+            这些人物并非在为同一条现成结论投票。每一则先交代其原有论证的着力点，再说明它能怎样推进本页的问题；“不能直接推出”用来阻止跨时代、跨传统的快捷等同。
+          </p>
+          <div className="philosophy-voices">
+            {guide.philosopherViews.map((view) => (
+              <article key={`${view.philosopher}-${view.work}`}>
+                <p className="philosophy-voice-period">{view.period}</p>
+                <div>
+                  <h3>{view.philosopher}</h3>
+                  <p className="philosophy-voice-work">{view.work}</p>
+                  <p>{view.framing}</p>
+                  <p className="philosophy-voice-application">
+                    <span>对本页的推进</span>
+                    {view.application}
+                  </p>
+                  <p className="philosophy-voice-caution">
+                    <span>不能直接推出</span>
+                    {view.caution}
+                  </p>
+                  {claimSources(view.sourceIds)}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       {guide && (
         <section className="philosophy-block" aria-labelledby={`${node.id}-texts`}>
           <BlockHeading className="philosophy-block-title" id={`${node.id}-texts`}>
@@ -264,6 +305,7 @@ export function NodeBody({
                 <h3>{text.work}</h3>
                 <p className="philosophy-text-period">{text.period}</p>
                 <p className="philosophy-text-contribution">{text.contribution}</p>
+                {claimSources(text.sourceIds)}
                 <p className="philosophy-text-question">
                   <span>带着这个问题读</span>
                   {text.readingQuestion}

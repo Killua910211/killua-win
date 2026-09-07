@@ -11,12 +11,34 @@ export type StudyText = {
   period: string;
   contribution: string;
   readingQuestion: string;
+  /**
+   * 支持这张阅读卡中概括性说明的来源账编号。文本仍应回到原典阅读；
+   * 这里不把二手综述伪装成原文引句。
+   */
+  sourceIds?: string[];
+};
+
+export type StudyPhilosopherView = {
+  philosopher: string;
+  period: string;
+  work: string;
+  framing: string;
+  application: string;
+  caution: string;
+  sourceIds: string[];
 };
 
 export type StudyGuide = {
   orientation: string;
   concepts: StudyConcept[];
   positionPaths: string[][];
+  /** 与主要立场同序，对应论证路径所依据的来源账。 */
+  positionSourceIds?: string[][];
+  /**
+   * 不把人物当作立场标签：先说明其重写了什么问题，再说明可怎样用于本页，
+   * 并标明这种迁移不能替他得出的结论。
+   */
+  philosopherViews?: StudyPhilosopherView[];
   texts: StudyText[];
   caseStudy: {
     title: string;
