@@ -4700,6 +4700,12 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   color: rgba(242, 237, 232, 0.72);
 }
 .page-hero__label span:first-child { color: var(--ember); }
+
+@media (min-width: 761px) {
+  /* 首屏的编号标签整体向左收 100px，与指定的版式留白保持一致。 */
+  .page-hero__label { transform: translateX(-100px); }
+}
+
 .page-hero__body {
   display: flex;
   min-width: 0;
