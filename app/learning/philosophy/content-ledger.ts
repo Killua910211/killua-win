@@ -307,18 +307,18 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
   },
   'pt-being-change': {
     status: '核验正文｜自审完成',
-    scope: '本条比较“什么存在”“一个东西如何在变化中仍是它自己”“何为基本存在者”三组问题；不把日常分类、物理学模型与形而上学本体论混作彼此的直接结论。',
+    scope: '本条主线只讨论一个人工物在变化中为何仍可能是原来的对象：数值同一性、候选判断标准与跨时间持续。过程哲学、基本存在者与中观自性仅作进阶关联；不从本页直接推出人格同一性、物理学结论或跨传统理论等同。',
     origin: [
-      { kind: '概括', text: '我们既说河流在流动、身体在代谢，又说“还是同一条河”“还是同一个人”。变化似乎要求前后不同，同一性似乎要求同一；如何同时成立，促成了持续、部分与整体、属性与实体的形而上学分析。', sourceIds: ['BEC-1'] },
-      { kind: '解释性重构', text: '问题还会在“何者算最基本”处出现：桌子、生命体、事件、性质、关系或过程，是否都以同一方式存在？此处的“基本”不是指日常更重要，而是问其他事物在解释上依赖什么。' },
+      { kind: '概括', text: '跨时间同一性的问题从一个张力出现：对象真的变化时，前后状态有不同性质；但若完全不是同一个对象，又似乎没有任何对象经历变化。数值同一性与质的相同的区分使这个张力可被具体分析。', sourceIds: ['BEC-1'] },
+      { kind: '原创例子', text: '本页以逐步维修、旧零件重组为自行车案例，循序比较材料、结构／功能和因果历史连续性；案例是教学性重构，不是哲学家的原话。' },
     ],
     boundaries: [
-      { kind: '概括', text: '数值同一性问甲是否就是乙；质的相似只问两者像不像。忒修斯之船的困难在于：逐块替换后的船与由旧料重组的船，谁同原船数值同一？', sourceIds: ['BEC-2'] },
-      { kind: '概括', text: '“空”在龙树语境中不是说一切都不存在，而是拒绝把事物理解为具有独立、不依条件的自性；缘起与空性须一起读。它不能直接替换为西方“没有实体”的任一理论。', sourceIds: ['BEC-3'] },
+      { kind: '概括', text: '数值同一性问甲与乙是否为一个对象而非两个；质的相同或相似问两个对象共享哪些性质。改变后的同一对象可在不同时刻有不同性质。', sourceIds: ['BEC-1'] },
+      { kind: '概括', text: '耐存论与延存论／四维主义是在解释对象如何持续；它们不等于材料、结构或历史连续的候选判断标准，也不自动裁决忒修斯之船式案例。', sourceIds: ['BEC-2'] },
     ],
     objections: [
-      { kind: '概括', text: '把持续物理解为“在每一时刻完整存在”的立场，要解释一个完全存在的物体怎样拥有不同时刻的相反性质；把它理解为由时间部分组成的立场，则要解释我们为何经验为同一对象，以及阶段与整体怎样构成关系。两种方案各有代价，不能由“常识”一语裁决。', sourceIds: ['BEC-1'] },
-      { kind: '概括', text: '对自性批判的一项反对是：若任何东西都无自性，因果、语言和解脱似乎也无从成立。中观回应通常不是另立隐藏实体，而是在二谛或约定层次上说明依条件的因果和言说如何仍可运作；不同中观解释并不一致。', sourceIds: ['BEC-3'] },
+      { kind: '概括', text: '材料连续性说明了原料直觉，却要面对逐步替换的界线；结构与功能说明了维修后的可用性，却难以排除复制品；因果历史连续性可以区分复制与延续，却仍要处理拆解、停放和分叉。它们是竞争性理由，不是已获证明的唯一判准。', sourceIds: ['BEC-1'] },
+      { kind: '概括', text: '时间部分理论借不同时间部分解释对象怎样具有不同时间的性质；耐存论则把对象看作在每一存在时刻完整在场。双方都需要回应直觉、重合与变化的难题，且讨论中还存在混合或非标准立场。', sourceIds: ['BEC-2'] },
     ],
     confusions: [
       { kind: '解释性重构', text: '“同一”不等于“毫无变化”；一个对象可因持续的组织、关系或过程而同一，却不保有每一部分和性质。' },
@@ -330,14 +330,16 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
       { nodeId: 'pt-buddhist', label: '佛教哲学：苦、无我、缘起与认识', note: '缘起、无我与空性必须放在具体论证和修行目标中，不可只译为抽象本体论。' },
     ],
     sources: [
-      { id: 'BEC-1', title: 'SEP：Metaphysics', kind: '学术综述', url: 'https://plato.stanford.edu/entries/metaphysics/', locator: '导论、持续与部分相关章节', checked: true, supports: '形而上学中存在、基本性与持续问题的范围。' },
-      { id: 'BEC-2', title: 'SEP：Identity Over Time', kind: '学术综述', url: 'https://plato.stanford.edu/entries/identity-time/', locator: '导论、§1–§3', checked: true, supports: '数值同一性、质的相似和持续理论的基本分歧。' },
-      { id: 'BEC-3', title: 'SEP：Nāgārjuna', kind: '学术综述', url: 'https://plato.stanford.edu/entries/nagarjuna/', locator: '导论、§2–§3', checked: true, supports: '自性、缘起、空性与虚无论误读的区分。' },
+      { id: 'BEC-1', title: 'SEP：Identity Over Time', kind: '学术综述', url: 'https://plato.stanford.edu/entries/identity-time/', locator: '导论、§2.1–§2.4、§4.3–§4.5', checked: true, supports: '数值／质的同一、变化难题、严格与宽松同一性、重组和四维主义。' },
+      { id: 'BEC-2', title: 'SEP：Temporal Parts（2024 春季归档版）', kind: '学术综述', url: 'https://plato.stanford.edu/archives/spr2024/entries/temporal-parts/', locator: '导论、§1–§3', checked: true, supports: '耐存论、延存论／四维主义、时间部分及其与忒修斯之船问题的关系。' },
+      { id: 'BEC-3', title: 'SEP：Process Philosophy（2011 夏季归档版）', kind: '学术综述', url: 'https://plato.stanford.edu/archives/sum2011/entries/process-philosophy/', locator: '导论、§1–§2', checked: true, supports: '过程哲学关于过程、变化和解释优先性的范围，及其不同于单一持续理论的提问。' },
+      { id: 'BEC-4', title: 'SEP：Nāgārjuna', kind: '学术综述', url: 'https://plato.stanford.edu/entries/nagarjuna/', locator: '§2、§3.1–§3.2、§3.5', checked: true, supports: '自性、空性、依赖与对虚无论误读的区分，以及《中论》的文本位置。' },
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-07', findings: [
-      { location: '案例推演｜忒修斯之船', issue: '原内容把案例写成可凭直觉选出唯一答案的谜题。', evidence: 'BEC-2 将替换、重组和持续理论分别展开。', revision: '改为区分数值同一性、相似和不同理论的代价。' },
-      { location: '跨传统连接｜空性', issue: '原文易把空性译为“万物虚幻”。', evidence: 'BEC-3 将自性批判与缘起、二谛问题相连。', revision: '加入自性边界及对虚无论异议的回应。' },
-    ], remaining: ['尚未逐段校勘《中论》中文译本与二谛术语；相关原典只作为后续精读任务。'], adjacentImpact: '与“心灵、身体与我”互链时，不能把人格同一性的答案预设成一般对象持续的唯一答案。', nextPriority: '为古典与佛教历史页补入原典版本、传承与解释史。' },
+      { location: '主文前半｜问题层级', issue: '原模板把存在论、对象持续、基本性和空性并列呈现，零基础读者难以知道先解决什么。', evidence: 'BEC-1、BEC-2 分别以同一性／持续问题组织讨论；BEC-3、BEC-4 的问题范围不同。', revision: '主文只围绕逐步替换与重组案例；过程哲学、基本性和中观移入默认折叠的进阶关联。' },
+      { location: '候选标准与练习', issue: '旧页面给出结论与问题列表，却没有走完理由、反例、回应和剩余困难。', evidence: 'BEC-1 讨论重组、严格／宽松同一性；BEC-2 说明持续理论并非身份判准的同义替换。', revision: '补写材料、结构／功能、因果历史连续的推演，并给出两道含参考分析的迁移练习。' },
+      { location: '进阶关联｜中观', issue: '将空性与西方持续理论放在同一立场列表，易被读成“万物不存在”或同义学说。', evidence: 'BEC-4 §2–§3 区分自性、空性和依赖；BEC-3 的问题是过程在本体论解释中的地位。', revision: '明确它们各自的问题对象、范围与不可直接等同的边界。' },
+    ], remaining: ['尚未逐段校勘《中论》汉译与相关注释传统；未核对过程哲学近年版条目的修订状态。本页不把这些材料当作原典释读或学界定论。'], adjacentImpact: '“心灵、身体与我”页仍须把人格同一性同一般对象持续分开；“佛教哲学”页须保留缘起、无我与空性的自身论证语境。', nextPriority: '在独立审查中逐段核对主文与 BEC-1／BEC-2 的对应，并补充《中论》可靠汉译版本与章段。' },
   },
   'pt-knowledge-sources': {
     status: '核验正文｜自审完成',

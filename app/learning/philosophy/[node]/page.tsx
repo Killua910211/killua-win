@@ -74,6 +74,7 @@ export default async function PhilosophyNodePage({ params }: NodePageProps) {
       : node.type === '传统导航'
         ? '这条传统里的线索'
         : '下一层';
+  const displayTitle = node.id === 'pt-being-change' ? '零件都换过了，还是原来的那辆车吗？' : node.title;
 
   return (
     <>
@@ -101,7 +102,7 @@ export default async function PhilosophyNodePage({ params }: NodePageProps) {
                 </span>
               </nav>
               <p className="eyebrow">{node.type}</p>
-              <h1 id="philosophy-node-title">{node.title}</h1>
+              <h1 id="philosophy-node-title">{displayTitle}</h1>
               {node.question && <p className="philosophy-question">{node.question}</p>}
               <p className="philosophy-summary">{node.summary}</p>
             </div>

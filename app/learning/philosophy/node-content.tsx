@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getNodeById, nodeHref, type PhilosophyNode } from './tree';
 import { getStudyGuide } from './study-guides';
 import { getCoreEntryLedger, type LedgerParagraph } from './content-ledger';
+import { BeingChangeEntry } from './being-change-entry';
 
 type HeadingLevel = 'h2' | 'h3';
 
@@ -83,6 +84,10 @@ export function NodeBody({
   node: PhilosophyNode;
   headingLevel?: HeadingLevel;
 }) {
+  if (node.id === 'pt-being-change') {
+    return <BeingChangeEntry node={node} />;
+  }
+
   const BlockHeading = headingLevel;
   const SubHeading = headingLevel === 'h2' ? 'h3' : 'h4';
   const notes = node.notes ?? [];
