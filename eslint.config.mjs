@@ -14,6 +14,9 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     '.wrangler/**',
+    // 代理会在 .claude/worktrees/ 下建仓库的完整副本；那是另一个 checkout，
+    // 由它自己那边检查，不该让本仓库的 `eslint .` 把它整个扫一遍。
+    '.claude/**',
     'next-env.d.ts',
     'worker-configuration.d.ts',
   ]),

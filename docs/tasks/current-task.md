@@ -1,4 +1,52 @@
-# 当前任务：学习空间改为一门科目一个分区，并入 AI 编程工作流课程设计
+# 当前任务：撤下 AI 编程工作流，保留学习页与哲学页结构
+
+状态：已完成并发布正式网站（2026-09-09）。
+
+## 需求
+
+- 删除 AI 编程工作流相关的全部内容：路由、数据、样式、站点地图条目和文档描述。
+- 学习页与哲学页的结构保持当前样子，不回滚到改版前：学习页仍是「一门科目一个分区」，哲学仍是一节里含「按问题」「按传统」两块。
+
+## 验收
+
+- `/learning/ai-workflow` 不再存在于构建路由与 `sitemap.xml`。
+- `/learning` 变为 `01` 首屏 → `02` 哲学 → `03` 学习方法；哲学分区内容不变。
+- 仓库里没有 `workflow` 相关的死代码或死样式。
+- `pnpm check` 与 `pnpm build` 通过。
+
+## 本次改动
+
+1. 删除 `app/learning/ai-workflow/`（`curriculum.ts` 896 行、`page.tsx` 569 行）。
+2. `app/learning/subjects.ts`：移除 AI 编程工作流那一条。`liveSubjects` 变回 1 条，`methodSectionNumber` 自动从 `04` 回到 `03`，规划中的科目编号自动变为 02/03/04。
+3. `app/learning/page.tsx`：删掉 AI 编程工作流分区与对课程设计数据的全部引用，同步 metadata、首屏说明和学习循环那句话。
+4. `app/globals.css`：删除 `.workflow-*` 整块与学习页上的 `.learning-workflow-*` / `.learning-path-*`，以及尾部三个只服务于它的响应式块；保留 `.learning-subject-section`、`.learning-block-heading` / `.learning-block-lede`。文件从 5539 行回到 4650 行。
+5. `app/sitemap.ts`：移除 `/learning/ai-workflow` 条目。
+6. `eslint.config.mjs`：把 `.claude/**` 加进 `globalIgnores`。代理会在 `.claude/worktrees/` 下建仓库的完整副本，`eslint .` 会连那份 checkout 一起扫，撞上它的 `worker-configuration.d.ts` 报 9 个错——那是另一个 checkout，应由它自己那边检查。
+7. `docs/architecture.md`、`docs/decisions/0005-learning-subject-layer.md`：删掉路由条目，注明 AI 编程工作流已撤下；科目层这条长期决定本身与具体科目无关，予以保留。
+
+## 验证与证据
+
+- `pnpm check`：通过（ESLint、TypeScript、迁移回放 15 个迁移 / 58 篇文章）。
+- `pnpm build`：通过，构建路由表已无 `/learning/ai-workflow`。
+- `grep -c workflow app/globals.css` 为 0；`app/` 下无 `ai-workflow` 引用。
+- 本地实测（1440 / 375 两种视口）：`/learning` 分区为 `hero`、`learning-philosophy`、`learning-method`，编号 `01 / 02 / 03`；哲学 23 个核心问题、6 个问题域、5 条传统导航不变；规划中的科目 3 条、编号 02/03/04；无横向溢出、页内锚点全部命中、控制台无错误。
+- `/learning/ai-workflow` 本地与线上均返回 404。
+
+## 正式网站发布记录
+
+- Worker Version ID：`WILL_FILL`
+- 对应提交：`WILL_FILL`
+- 用 `pnpm deploy:only` 部署，纯前端改动，未触碰远程数据库。
+
+## 尚待处理
+
+- 本地 `main` 领先 `origin/main`，尚未推送到远程仓库。
+- `.claude/worktrees/angry-dewdney-26fb1d/` 是另一个会话的 worktree（分支 `claude/angry-dewdney-26fb1d`），本次没有动它。
+- 站点字体变量链在 `:root` 上就已失效（`--font-barlow` 等由 `next/font` 挂在 `<body>`，而 `--font-body` / `--font-mono` 定义在 `:root`），正式网站实测同样退回系统中文字体。这是既有问题，本次未改动。
+
+---
+
+# 历史任务：学习空间改为一门科目一个分区，并入 AI 编程工作流课程设计
 
 状态：已完成并发布正式网站（2026-09-08）。
 

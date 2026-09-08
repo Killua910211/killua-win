@@ -5,7 +5,6 @@ import { SectionNav } from '@/app/components/section-nav';
 import { PageHero } from '@/app/components/page-hero';
 import { buildMetadata } from '@/app/lib/metadata';
 import { CoreQuestionGroups, type QuestionGroup } from './philosophy/node-content';
-import { fastLaneSteps, principles, readingPaths, trackLabel } from './ai-workflow/curriculum';
 import {
   liveSubjects,
   methodSectionNumber,
@@ -25,8 +24,8 @@ import {
 } from './philosophy/tree';
 
 export const metadata = buildMetadata({
-  title: '学习空间｜哲学与 AI 编程工作流',
-  description: `按科目组织的个人学习工作台：哲学铺开了 ${coreQuestions.length} 个核心问题与 ${traditions.length} 条传统导航，AI 编程工作流是一份把「想法 → 交付」拆开的课程设计，之后还会加别的科目。`,
+  title: '学习空间｜哲学问题地图',
+  description: `按科目组织的个人学习工作台：哲学铺开了 ${questionDomains.length} 个问题域、${coreQuestions.length} 个核心问题与 ${traditions.length} 条传统导航，可以随时回来查；之后还会加别的科目。`,
   path: '/learning',
 });
 
@@ -54,7 +53,6 @@ function subjectSectionProps(id: string, label: string) {
 }
 
 const philosophy = subjectSectionProps('philosophy', 'Philosophy');
-const aiWorkflow = subjectSectionProps('ai-workflow', 'AI workflow');
 
 export default function LearningPage() {
   return (
@@ -64,8 +62,8 @@ export default function LearningPage() {
         <PageHero
           description={
             <>
-              先定位问题，再比较立场。现在铺开了 {liveSubjects.length} 门科目：哲学有 {philosophyNodes.length} 个节点、
-              {coreQuestions.length} 个核心问题，AI 编程工作流有一份完整的课程设计。
+              先定位问题，再比较立场。第一门铺开的科目是哲学：{philosophyNodes.length} 个节点、
+              {coreQuestions.length} 个核心问题，之后还会加别的科目。
             </>
           }
           eyebrow="Learn / 学习空间"
@@ -142,78 +140,6 @@ export default function LearningPage() {
           </div>
         </section>
 
-        {/* 科目 02 · AI 编程工作流。和哲学分区同一层。 */}
-        <section className={aiWorkflow.className} id={aiWorkflow.id} aria-labelledby={aiWorkflow.headingId}>
-          <div className="section-label light" lang="en">
-            <span>{aiWorkflow.number}</span>
-            <span>{aiWorkflow.label}</span>
-          </div>
-          <div className="learning-section-body">
-            <p className="eyebrow">Subject {subjectNumber('ai-workflow')} / AI 编程工作流</p>
-            <h2 id={aiWorkflow.headingId}>
-              把「想法 → 交付」拆开，<br />默认档位刻意做轻。
-            </h2>
-            <p className="learning-section-lede">
-              问题换成了「AI 已经能写代码，为什么还是交付不了」。断点有三个：输入没有闭合、责任没有划分、完成没有定义 —— 没有一个在提示词上。
-            </p>
-            <p className="learning-section-actions">
-              <Link className="learning-inline-link" href="/learning/ai-workflow">
-                课程设计总览 <span aria-hidden="true">↗</span>
-              </Link>
-            </p>
-
-            <h3 className="learning-block-heading" id="learning-workflow-principles">
-              三条原则 / Principles
-            </h3>
-            <p className="learning-block-lede">默认走轻的，升级靠触发器不靠自觉，流程预算不超过 20%。</p>
-            <ol className="learning-workflow-principles" aria-labelledby="learning-workflow-principles">
-              {principles.map((principle, index) => (
-                <li key={principle.id}>
-                  <span lang="en">{String(index + 1).padStart(2, '0')}</span>
-                  <strong>{principle.title}</strong>
-                  <p>{principle.lede}</p>
-                </li>
-              ))}
-            </ol>
-
-            <h3 className="learning-block-heading" id="learning-workflow-steps">
-              快车道五步 / Fast lane
-            </h3>
-            <p className="learning-block-lede">第一次约 10 分钟，熟练后 3 分钟，全程不产生任何流程文件。</p>
-            <ol className="learning-workflow-steps" aria-labelledby="learning-workflow-steps">
-              {fastLaneSteps.map((step) => (
-                <li key={step.no}>
-                  <span className="learning-workflow-step-index" lang="en" aria-hidden="true">
-                    {step.no}
-                  </span>
-                  <strong>{step.title}</strong>
-                  <span className="learning-workflow-step-cost">{step.cost}</span>
-                </li>
-              ))}
-            </ol>
-
-            <h3 className="learning-block-heading" id="learning-workflow-paths">
-              三条阅读路径 / Reading paths
-            </h3>
-            <p className="learning-block-lede">不要从头读到尾；先读能当天用上的那 8 章。</p>
-            <div className="learning-path-grid">
-              {readingPaths.map((path) => (
-                <article className={`learning-path${path.id === 'start' ? ' is-first' : ''}`} key={path.id}>
-                  <p className="learning-path-tag" lang="en">
-                    {trackLabel[path.track].en}
-                    <span lang="zh-CN"> / {trackLabel[path.track].zh}</span>
-                  </p>
-                  <p className="learning-path-scale">
-                    {path.scale}
-                    <span>{path.cost}</span>
-                  </p>
-                  <p className="learning-path-outcome">{path.outcome}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* 学习方法永远排在科目后面，编号随科目数量顺延。 */}
         <section className="learning-method" id="learning-method" aria-labelledby="learning-method-heading">
           <div className="section-label light" lang="en">
@@ -226,7 +152,7 @@ export default function LearningPage() {
               不是先记住答案，<br />而是先看见问题。
             </h2>
             <p className="learning-section-lede">
-              这条循环对每门科目都一样：哲学里是立场与理由，AI 编程工作流里是方案与证据。
+              这条循环对每门科目都一样：哲学里是立场与理由，换成别的科目也是同一套动作。
             </p>
             <ol className="learning-loop">
               <li>

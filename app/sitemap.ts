@@ -17,20 +17,12 @@ export const revalidate = 3600;
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const philosophyUpdatedAt = new Date('2026-09-06T00:00:00+08:00');
-  const aiWorkflowUpdatedAt = new Date('2026-09-08T00:00:00+08:00');
   const staticEntries: MetadataRoute.Sitemap = [
     { url: `${SITE.url}/`, changeFrequency: 'monthly', priority: 1 },
     { url: `${SITE.url}/notes`, changeFrequency: 'weekly', priority: 0.9 },
     {
       url: `${SITE.url}/learning`,
-      lastModified: aiWorkflowUpdatedAt,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    // 学习空间的第二条线：AI 编程工作流课程设计，单独一页。
-    {
-      url: `${SITE.url}/learning/ai-workflow`,
-      lastModified: aiWorkflowUpdatedAt,
+      lastModified: new Date('2026-09-09T00:00:00+08:00'),
       changeFrequency: 'monthly',
       priority: 0.8,
     },

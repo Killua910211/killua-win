@@ -1,9 +1,9 @@
 /**
  * 学习空间的科目清单。
  *
- * 哲学和 AI 编程工作流是并列的两门科目：在学习页上各占一个分区，各自有自己的
- * 路由，谁也不是谁的附录。后续新增科目就往这个数组里加一条，分区编号、分区导航
- * 和「规划中」列表都从这里推出来 —— 学习方法那一节会自动往后顺延。
+ * 每门已铺开的科目在学习页上占一个分区，并有自己的路由，科目之间平级。
+ * 后续新增科目就往这个数组里加一条，分区编号、分区导航和「规划中」列表都从这里
+ * 推出来 —— 学习方法那一节会自动往后顺延。
  *
  * 这里没有任何进度状态：status 说的是「这门科目铺开了没有」，不是「你学到哪了」。
  */
@@ -29,14 +29,6 @@ export const subjects: Subject[] = [
     note: '先定位问题，再比较立场',
     status: 'live',
     href: '/learning/philosophy',
-  },
-  {
-    id: 'ai-workflow',
-    code: 'AI WORKFLOW',
-    title: 'AI 编程工作流',
-    note: '把「想法 → 交付」拆开',
-    status: 'live',
-    href: '/learning/ai-workflow',
   },
   { id: 'psychology', code: 'PSYCHOLOGY', title: '心理学', note: '理解心智、行为与关系', status: 'planned' },
   { id: 'history', code: 'HISTORY', title: '历史', note: '在时间与因果中理解世界', status: 'planned' },
