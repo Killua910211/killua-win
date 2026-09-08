@@ -9,12 +9,10 @@ import { SmokingRecoveryTimeline } from './smoking-recovery';
 import {
   getHealthLifeProgressSnapshot,
   getHealthWeeklyAverageDisplay,
-  HEALTH_COVERAGE_START,
   HEALTH_NUTRITION_COVERAGE,
   HEALTH_SUPPLEMENTS,
   HEALTH_SMOKING_RECORD,
   HEALTH_TRENDS,
-  HEALTH_UPDATED_AT,
   HEALTH_WEEKLY_AVERAGES,
   getHealthNutritionReferenceLabel,
   getHealthNutritionReferenceStatus,
@@ -55,24 +53,8 @@ export default function HealthPage() {
           eyebrow="Apple Health / 公开视图"
           label="Health readout"
           number="01"
-          title={<>BODY,<br />IN <span className="outline">MOTION.</span></>}
+          title={<>BODY,<br />IN DAILY<br /><span className="outline">MOTION.</span></>}
           titleId="health-title"
-          footer={
-            <dl className="health-hero-meta" lang="en">
-              <div>
-                <dt>Coverage</dt>
-                <dd>{HEALTH_COVERAGE_START} — now</dd>
-              </div>
-              <div>
-                <dt>Signals</dt>
-                <dd>33 metrics</dd>
-              </div>
-              <div>
-                <dt>Updated</dt>
-                <dd>{HEALTH_UPDATED_AT}</dd>
-              </div>
-            </dl>
-          }
         />
 
         <SectionNav

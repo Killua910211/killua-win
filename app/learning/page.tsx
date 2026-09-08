@@ -43,32 +43,13 @@ export default function LearningPage() {
     <>
       <SiteHeader current="learning" />
       <main id="main" className="learning-page">
-        {/*
-          Hero 现在是工作台的顶栏，不是海报：移动端整块压到 480px 以内，
-          主 CTA 直接出现在首屏，且始终指向哲学地图——这里没有「上次读到哪」。
-        */}
         <PageHero
           description={<>先定位问题，再比较立场。哲学部分已经铺好 {philosophyNodes.length} 个节点、{coreQuestions.length} 个核心问题。</>}
           eyebrow="Learn / 学习空间"
           label="Learning desk"
           number="01"
-          title={<>FIND THE <span className="outline">QUESTION.</span></>}
+          title={<>FIND THE<br />RIGHT<br /><span className="outline">QUESTION.</span></>}
           titleId="learning-title"
-          action={
-            <div className="learning-resume">
-              <Link className="learning-resume-cta" href="/learning/philosophy">
-                <span>进入哲学地图</span>
-                <span aria-hidden="true">↗</span>
-              </Link>
-              <p className="learning-resume-hint">
-                {questionDomains.length} 个问题域 · 想到哪个问题就从哪个问题读起，随时可以回来重看。
-              </p>
-            </div>
-          }
-          footer={<p className="learning-hero-foot" lang="en">
-              <span>Subject 001 · Philosophy · {philosophyNodes.length} nodes</span>
-              <span>Growing archive · 2026</span>
-            </p>}
         />
 
         <SectionNav

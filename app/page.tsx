@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { Suspense } from 'react';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
@@ -27,7 +26,7 @@ export default function Home() {
     <>
       <SiteHeader current="home" />
 
-      <main id="main">
+      <main id="main" className="home-page">
         <PageHero
           decoration={
             <div className="home-hero-effects">
@@ -45,20 +44,16 @@ export default function Home() {
             </div>
           }
           description="写下长期思考，记录身体的变化，也整理我和 AI 一起思考的过程。"
-          eyebrow="Personal space / 上海"
+          eyebrow="PERSONAL SPACE / 东京"
           id="top"
-          label="Personal space"
+          label="Personal index"
           number="01"
-          title={<><span>A QUIET</span><br />PLACE FOR <span className="outline">LOUD</span> IDEAS.</>}
+          title={<><span>A QUIET</span><br />PLACE FOR<br /><span className="outline">LOUD</span> IDEAS.</>}
           titleId="home-title"
           variant="home"
-          action={
-            <>
-              <Link className="page-hero__primary-action" href="/notes#archive">阅读精选 <span aria-hidden="true">↗</span></Link>
-              <Link className="page-hero__secondary-action" href="/learning">进入学习空间 <span aria-hidden="true">↗</span></Link>
-            </>
-          }
         />
+
+        <div className="section-local-nav home-section-bar" aria-hidden="true" />
 
         {/*
           SystemReadout 要跨站取 os.killua.win 的数字。Suspense 边界让首页

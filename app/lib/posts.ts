@@ -21,7 +21,7 @@ export interface PostSummary {
   title: string;
   excerpt: string | null;
   /**
-   * 0001_initial.sql 把这一列建成了可空。目前 57 篇线上文章全都有值，
+   * 0001_initial.sql 把这一列建成了可空。目前 58 篇线上文章全都有值，
    * 但类型上必须诚实 —— 声明成 string 会让 `.slice(0, 4)` 这类调用
    * 在真出现 NULL 时直接 500，而不是在编译期被挡下来。
    */
@@ -122,7 +122,7 @@ export const listRecentPostsWithContent = cache(async (limit: number) => {
 });
 
 /**
- * 首页那个 "57 ESSAYS" 用。
+ * 首页那个 "58 ESSAYS" 用。
  *
  * 和其它查询不同，这里**吞掉**错误返回 null：首页原本不依赖数据库，
  * 不该因为把一个计数改成真实数据就多出一条能让整个首页 500 的路径。
@@ -149,7 +149,7 @@ export const countPublishedPosts = cache(async () => {
  *
  * 刻意在内存里做，而不是再发一条 GROUP BY：调用方（/notes、分类页、sitemap）
  * 本来就已经把这批 summary 全部查出来渲染了，多一条 SQL 只是多一次 D1 往返，
- * 而 D1 的延迟远大于遍历 57 行的成本。等文章数到几千篇、列表需要分页时，
+ * 而 D1 的延迟远大于遍历 58 行的成本。等文章数到几千篇、列表需要分页时，
  * 这个判断才需要反过来。
  */
 export function groupByCategory(posts: readonly PostSummary[]) {

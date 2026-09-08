@@ -79,9 +79,9 @@ export function NotesArchive({ posts, activeCategory, sectionNumber }: NotesArch
               {entries.map((post) => {
                 return (
                   /*
-                    prefetch={false}：这一页最多同时挂 57 个链接，默认的视口预取
+                    prefetch={false}：这一页最多同时挂 58 个链接，默认的视口预取
                     会在滚动时把每一篇文章页都完整渲染一遍（本项目没有 loading 骨架
-                    可供只取外壳），等于 57 次 Worker 调用 + 57 次 D1 查询 + 全文下载。
+                    可供只取外壳），等于 58 次 Worker 调用 + 58 次 D1 查询 + 全文下载。
                     列表页的点击率远低于 100%，这笔预取不划算。
                   */
                   <Link

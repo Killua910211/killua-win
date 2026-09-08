@@ -1,6 +1,6 @@
 # killua.win
 
-个人写作站。把 2008—2025 年散落在 QQ 空间和微信公众号的 57 篇文字，收拢到自己的域名下。
+个人写作站。把 2008—2025 年散落在 QQ 空间和微信公众号的 58 篇文字，收拢到自己的域名下。
 
 正式网站：<https://www.killua.win> ｜ 订阅：<https://www.killua.win/feed.xml>
 
@@ -45,7 +45,7 @@ pnpm exec wrangler d1 export killua-win-d1 --remote --output .wrangler/backups/p
 
 ## 发一篇新文章
 
-**不要手写 SQL 迁移。** 57 篇正文里 ASCII 单引号数恰好为 0 纯属运气 —— 写进一个 `don't` 就会炸库。
+**不要手写 SQL 迁移。** 58 篇正文里 ASCII 单引号数恰好为 0 纯属运气 —— 写进一个 `don't` 就会炸库。
 
 ```bash
 # 1. 写一个带 front-matter 的 Markdown

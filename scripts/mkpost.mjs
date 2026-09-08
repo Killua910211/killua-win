@@ -4,7 +4,7 @@
  *
  * 存在的唯一理由是 sqlQuote()：正文里出现一个 ASCII 单引号（don't、it's）
  * 就足以让手写的 INSERT 变成语法错误，或者更糟 —— 变成一条语义被改写、
- * 却仍然合法的 SQL。现有 57 篇正文里恰好一个都没有，纯属运气。
+ * 却仍然合法的 SQL。现有 58 篇正文里恰好一个都没有，纯属运气。
  * 所有进入 SQL 的值必须经过 sqlQuote，不留任何旁路。
  *
  * 用法：node scripts/mkpost.mjs <path-to-markdown>

@@ -4,11 +4,9 @@ import type { PointerEvent, ReactNode } from 'react';
 import { ContentContainer } from './content-container';
 
 type PageHeroProps = {
-  action?: ReactNode;
   decoration?: ReactNode;
   description: ReactNode;
   eyebrow: ReactNode;
-  footer?: ReactNode;
   id?: string;
   label: string;
   number: string;
@@ -51,11 +49,9 @@ function AmbientHeroEffects() {
 
 /** 顶层栏目共享的首屏骨架；栏目只提供自己的内容与可选装饰。 */
 export function PageHero({
-  action,
   decoration,
   description,
   eyebrow,
-  footer,
   id,
   label,
   number,
@@ -83,10 +79,6 @@ export function PageHero({
           <p className="eyebrow page-hero__eyebrow">{eyebrow}</p>
           <h1 id={titleId}>{title}</h1>
           <div className="page-hero__description">{description}</div>
-          {action ? <div className="page-hero__action">{action}</div> : null}
-          <div className={`page-hero__footer${footer ? '' : ' page-hero__footer--empty'}`} aria-hidden={footer ? undefined : true}>
-            {footer}
-          </div>
         </div>
         {!isHome && decoration ? <div className="page-hero__decoration" aria-hidden="true">{decoration}</div> : null}
       </ContentContainer>

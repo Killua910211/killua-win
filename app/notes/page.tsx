@@ -36,7 +36,7 @@ export default async function NotesPage() {
           id="notes-top"
           label="Writing archive"
           number="01"
-          title={<>OLD WORDS,<br />NEW <span className="outline">LIGHT.</span></>}
+          title={<>OLD WORDS,<br />IN A NEW<br /><span className="outline">LIGHT.</span></>}
           titleId="notes-title"
         />
 

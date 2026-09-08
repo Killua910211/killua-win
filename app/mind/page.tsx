@@ -18,13 +18,12 @@ export default function MindPage() {
       <SiteHeader current="mind" />
       <main id="main" className="mind-page">
         <PageHero
-          description="把一次关于「我是什么样的人」的对话，整理成可回看的认知地图。这里记录的是观察与假设，不是诊断，也不是给自己贴标签。"
+          description="整理关于「我是什么样的人」的对话，留下一张可回看的认知地图。"
           eyebrow="Mind / 心理认知"
           label="Cognitive notebook"
           number="01"
-          title={<>UNDERSTAND<br />THE <span className="outline">INNER</span> SYSTEM.</>}
+          title={<>UNDERSTAND<br />THE <span className="outline">INNER</span><br />SYSTEM.</>}
           titleId="mind-title"
-          footer={<div className="mind-hero-foot" lang="en"><span>Source / ChatGPT · 心理认知</span><span>Archive 001 · 2026.08</span></div>}
         />
         <SectionNav
           label="认知页分区"
