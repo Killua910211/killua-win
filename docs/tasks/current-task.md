@@ -40,9 +40,13 @@
 - 正式网站 `/learning` 复核：分区 `01` Learning desk、`02` Philosophy、`03` How to use；eyebrow「Subject 01 / 哲学」；两个分区面为 `#0e0e11` 与 `#080809`；页内导航只剩「哲学」「学习方法」；23 个核心问题、6 个问题域、5 条传统导航不变；规划中的科目为 02 心理学 / 03 历史 / 04 科学；无横向溢出、锚点全部命中、控制台无错误。
 - 发布后第一次取 `https://www.killua.win/learning` 命中了 Cloudflare 边缘缓存的旧版（仍显示 4 个分区），带查询串和直连 Worker 都是新版；数分钟后边缘缓存自行失效，再取即为新版。`sitemap.xml` 有 `revalidate = 3600`，同样在复核时已刷新。
 
+## 推送与 CI
+
+- `git push origin main`：`4ff4c00..e21d03e`，本地与 `origin/main` 已同步（`rev-list --left-right --count` 为 `0 0`）。
+- GitHub Actions CI（run 34261404877）：**success**，38 秒。CI 只跑 ESLint、TypeScript 与迁移回放，不发布任何环境。
+
 ## 尚待处理
 
-- 本地 `main` 领先 `origin/main`，尚未推送到远程仓库。
 - `.claude/worktrees/angry-dewdney-26fb1d/` 是另一个会话的 worktree（分支 `claude/angry-dewdney-26fb1d`），本次没有动它。
 - 站点字体变量链在 `:root` 上就已失效（`--font-barlow` 等由 `next/font` 挂在 `<body>`，而 `--font-body` / `--font-mono` 定义在 `:root`），正式网站实测同样退回系统中文字体。这是既有问题，本次未改动。
 
