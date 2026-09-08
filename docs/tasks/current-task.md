@@ -34,9 +34,11 @@
 
 ## 正式网站发布记录
 
-- Worker Version ID：`WILL_FILL`
-- 对应提交：`WILL_FILL`
+- Worker Version ID：`e2ae9304-77d7-4303-93d7-7b0ec91cae18`，对应提交 `cb9b966`。
 - 用 `pnpm deploy:only` 部署，纯前端改动，未触碰远程数据库。
+- 发布后实测：`/`、`/learning`、`/learning/philosophy`、`/notes`、`/health`、`/mind` 均 200；`/learning/ai-workflow` 返回 404；`sitemap.xml` 已无该条目。
+- 正式网站 `/learning` 复核：分区 `01` Learning desk、`02` Philosophy、`03` How to use；eyebrow「Subject 01 / 哲学」；两个分区面为 `#0e0e11` 与 `#080809`；页内导航只剩「哲学」「学习方法」；23 个核心问题、6 个问题域、5 条传统导航不变；规划中的科目为 02 心理学 / 03 历史 / 04 科学；无横向溢出、锚点全部命中、控制台无错误。
+- 发布后第一次取 `https://www.killua.win/learning` 命中了 Cloudflare 边缘缓存的旧版（仍显示 4 个分区），带查询串和直连 Worker 都是新版；数分钟后边缘缓存自行失效，再取即为新版。`sitemap.xml` 有 `revalidate = 3600`，同样在复核时已刷新。
 
 ## 尚待处理
 
