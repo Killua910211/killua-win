@@ -22,7 +22,7 @@ import { getRelatedPosts } from '@/app/lib/related-posts';
  * 静态化，只做运行期按需缓存 —— 对一个内容几乎不变的归档站，效果接近。
  *
  * 这一段**不要加 loading.tsx**。它会给整个 segment 套一层 Suspense，
- * 响应随之变成流式，200 在 notFound() 执行之前就已经提交 —— 线上实测
+ * 响应随之变成流式，200 在 notFound() 执行之前就已经提交 —— 正式网站实测
  * /notes/<不存在的 slug> 返回 200 而不是 404（没有 loading.tsx 的
  * /notes/category/<不存在> 同样调用 notFound()，返回的就是 404）。
  * 软 404 会被搜索引擎收录，代价远大于一块骨架屏。本地 wrangler dev

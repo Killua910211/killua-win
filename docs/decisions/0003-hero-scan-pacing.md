@@ -5,7 +5,7 @@
 
 ## 决定
 
-Hero 使用多种扫描形态，但每种只在短时间窗口出现，采用不同周期和起始相位；同时遵守 `prefers-reduced-motion`。
+共享 `PageHero` 使用五种低对比扫描形态，但每种只在短时间窗口出现，采用不同周期和起始相位；同时遵守 `prefers-reduced-motion`。首页可以叠加独有的轨道、光晕和尘埃装饰，但不改变文字层级。
 
 ## 原因
 
@@ -14,7 +14,8 @@ Hero 使用多种扫描形态，但每种只在短时间窗口出现，采用不
 ## 证据
 
 - `app/components/page-hero.tsx`：统一生成斜向、横向、纵向、网格面、径向五类扫描层。
-- `app/globals.css`：`.hero-scan--*`、`@keyframes hero-scan-*`、不同周期/延迟及减少动态效果规则。
+- `app/globals.css`：`.hero-scan--*`、`@keyframes hero-scan-*`、43/53/47/61/71 秒周期、不同起始延迟及减少动态效果规则。
+- `app/page.tsx`：首页保留单独的装饰层，但首屏内容仍由共享 `PageHero` 承载。
 
 ## 后果
 

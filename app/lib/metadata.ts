@@ -24,7 +24,7 @@ type PageMetadataInput = {
  *
  * 存在的理由：Next 的 metadata 合并语义是**同名 key 整体覆盖**，不是深合并。
  * 页面只要写了 `openGraph: { title }`，就会把 layout 里的 `images`、`locale`
- * 全部丢掉 —— 之前 57 篇文章的分享卡片就是这么集体失去 og:image 的。
+ * 全部丢掉 —— 之前文章的分享卡片就是这么集体失去 og:image 的。
  * 同理 twitter：只要 layout 声明过 twitter，openGraph → twitter 的自动回填
  * 就不再发生，页面不显式写就会一直显示站点标题。
  *

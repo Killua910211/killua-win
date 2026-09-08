@@ -162,7 +162,7 @@ try {
 
 /**
  * 下面两条 SQL 与 posts.ts 的 listPublishedPosts / getPublishedPost 同构：
- * 列清单直接来自那两个导出常量，所以这里不会和线上查询走偏。
+ * 列清单直接来自那两个导出常量，所以这里不会和运行时查询走偏。
  */
 const listSql = `SELECT ${summaryColumns.join(', ')} FROM posts WHERE status = 'published' ORDER BY published_at DESC`;
 const detailSql = `SELECT ${detailColumns.join(', ')} FROM posts WHERE slug = ? AND status = 'published' LIMIT 1`;
