@@ -35,12 +35,13 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 | `/notes/category/[category]` | 分类归档 | `app/notes/category/[category]/page.tsx` |
 | `/health` | 健康时间线、快照、趋势和补剂 | `app/health/`、`app/lib/health.ts` |
 | `/mind` | 认知地图与对话索引 | `app/mind/`、`app/knowledge/` |
-| `/learning` | 问题、传统和学习路径入口 | `app/learning/page.tsx` |
+| `/learning` | 科目清单与各科目分区（哲学、AI 编程工作流） | `app/learning/page.tsx`、`app/learning/subjects.ts` |
 | `/learning/philosophy` | 哲学问题地图 | `app/learning/philosophy/` |
+| `/learning/ai-workflow` | AI 编程工作流课程设计 | `app/learning/ai-workflow/` |
 | `/sitemap.xml`、`/robots.txt`、`/feed.xml` | 搜索索引与订阅 | `app/sitemap.ts`、`app/robots.ts`、`app/feed.xml/route.ts` |
 | `/api/database` | 数据库健康检查 | `app/api/database/route.ts` |
 
-当前没有 `/lab` 或 `/workflow` 应用路由；旧 Lab 图片、样式和旧 Health 设计档案已从当前工作树清理。`public/learning/philosophy-tree.html` 仍作为旧哲学入口的兼容静态文件保留，当前哲学页面的数据源是 `app/learning/philosophy/data.json`。
+学习空间按科目组织，一门科目一个顶层分区，学习方法排在所有科目之后：`app/learning/subjects.ts` 是科目清单的唯一来源，分区编号、分区锚点、深浅面交替和规划中的科目都从它推出，新增科目先改这份数据。当前没有 `/lab` 应用路由，AI 编程工作流挂在 `/learning/ai-workflow` 而不是顶层 `/workflow`；旧 Lab 图片、样式和旧 Health 设计档案已从当前工作树清理。`public/learning/philosophy-tree.html` 仍作为旧哲学入口的兼容静态文件保留，当前哲学页面的数据源是 `app/learning/philosophy/data.json`。
 
 ## 数据边界
 
@@ -76,4 +77,4 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 
 环境命名和交付措辞以 `.cursor/rules/deployment-environment-language.mdc` 为准。
 
-截至本次复核，已记录的正式网站发布版本是 Worker Version ID `17505b49-ea67-4420-b131-2074228659c8`；当前工作树中的后续未提交改动不属于该版本。
+最近一次正式网站发布是 Worker Version ID `17741be9-d6dd-4208-8efd-71781982026e`（2026-09-08，学习空间改为一门科目一个分区并上线 AI 编程工作流课程设计），使用 `pnpm deploy:only`，未触碰远程数据库。上一次记录的版本是 `17505b49-ea67-4420-b131-2074228659c8`。这次发布的是当时工作树的内容，改动本身尚未提交到 Git。

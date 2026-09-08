@@ -1164,8 +1164,8 @@ summary:focus-visible {
 #mind-workspace,
 #mind-review,
 #mind-library,
-#learning-questions,
-#learning-traditions,
+#learning-philosophy,
+#learning-ai-workflow,
 #learning-method { scroll-margin-top: 58px; }
 .health-page .health-supplement-role,
 .health-page .health-supplement-heading > span,
@@ -2532,15 +2532,15 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 
 .learning-page { background: var(--paper); }
 
-.learning-questions,
-.learning-traditions { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 88px 4vw 100px; }
-.learning-questions { background: var(--paper); }
-.learning-traditions { background: var(--black-3); color: #fff; }
-.learning-traditions .eyebrow { color: rgba(255,255,255,.5); }
+/* 每门科目在学习页上各占一个分区，深浅两种面交替；新增科目接着交替下去即可。 */
+.learning-subject-section { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 88px 4vw 100px; }
+.learning-subject-section--a { background: var(--paper); }
+.learning-subject-section--b { background: var(--black-3); color: #fff; }
+.learning-subject-section--b .eyebrow { color: rgba(255,255,255,.5); }
 .learning-section-body { min-width: 0; }
 .learning-section-body > h2 { max-width: 900px; font-size: clamp(34px, 4.4vw, 62px); font-weight: 520; letter-spacing: -.06em; line-height: 1.08; }
 .learning-section-lede { max-width: 660px; margin-top: 20px; color: #5d5a53; font-size: 15px; line-height: 1.85; }
-.learning-traditions .learning-section-lede { color: rgba(255,255,255,.62); }
+.learning-subject-section--b .learning-section-lede { color: rgba(255,255,255,.62); }
 .learning-section-actions { margin-top: 22px; }
 .learning-inline-link { display: inline-flex; min-height: 44px; align-items: center; gap: 9px; padding: 0 16px; border: 1px solid var(--ink); font-family: var(--font-mono), monospace; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; transition: background var(--motion-base) ease, color var(--motion-base) ease; }
 .learning-inline-link:hover,
@@ -2550,7 +2550,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .learning-question-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 40px; margin-top: 46px; }
 .learning-question-group { min-width: 0; padding-top: 15px; border-top: 2px solid var(--ink); }
 .learning-question-group-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
-.learning-question-group-head h3 { font-size: 21px; font-weight: 560; letter-spacing: -.035em; line-height: 1.25; }
+.learning-question-group-head :is(h3, h4) { font-size: 21px; font-weight: 560; letter-spacing: -.035em; line-height: 1.25; }
 .learning-question-domain-link { border-bottom: 1px solid transparent; }
 .learning-question-domain-link:hover { border-bottom-color: var(--ink); }
 .learning-question-count { flex: 0 0 auto; color: var(--rock-gray); font-size: 12px; letter-spacing: .02em; }
@@ -2565,8 +2565,8 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 
 .learning-tradition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px; margin-top: 44px; }
 .learning-tradition { min-width: 0; padding-top: 15px; border-top: 1px solid rgba(255,255,255,.4); }
-.learning-tradition h3 { font-size: 20px; font-weight: 540; letter-spacing: -.035em; line-height: 1.3; }
-.learning-tradition h3 a:hover { color: var(--signal); }
+.learning-tradition :is(h3, h4) { font-size: 20px; font-weight: 540; letter-spacing: -.035em; line-height: 1.3; }
+.learning-tradition :is(h3, h4) a:hover { color: var(--signal); }
 .learning-tradition > p { margin-top: 11px; color: rgba(255,255,255,.6); font-size: 13px; line-height: 1.75; }
 .learning-tradition ul { margin-top: 16px; }
 .learning-tradition li a { display: block; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.87); font-size: 14px; line-height: 1.5; }
@@ -2582,7 +2582,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .learning-loop strong { display: block; font-size: 20px; font-weight: 520; }
 .learning-loop p { margin-top: 10px; color: rgba(255,255,255,.56); font-size: 13px; line-height: 1.7; }
 
-/* 三个规划中的学科：从占满一屏的卡片改成一条紧凑路线图。 */
+/* 规划中的科目：一条紧凑路线图，排在学习循环后面。 */
 .learning-roadmap-heading { margin-top: 66px; color: rgba(255,255,255,.7); font-family: var(--font-mono), monospace; font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
 .learning-roadmap { margin-top: 14px; border-top: 1px solid rgba(255,255,255,.26); }
 .learning-roadmap li { display: grid; grid-template-columns: 30px minmax(0, 150px) minmax(0, 1fr) auto; align-items: baseline; gap: 8px 18px; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,.14); }
@@ -2591,6 +2591,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .learning-roadmap-code { color: rgba(255,255,255,.42); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .08em; }
 .learning-roadmap-note { color: rgba(255,255,255,.58); font-size: 13px; line-height: 1.6; }
 .learning-roadmap-state { color: rgba(224, 99, 42,.78); font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: .1em; }
+
 
 /* ── Learning：哲学节点页 ─────────────────────────────────── */
 .philosophy-page { background: var(--paper); }
@@ -2664,7 +2665,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .philosophy-legacy-note a { color: #c85422; border-bottom: 1px solid currentColor; }
 
 /* 深色分区里的焦点环换成信号色，深色描边在深色底上看不见。 */
-  .learning-traditions a:focus-visible,
+.learning-subject-section--b a:focus-visible,
 .learning-method a:focus-visible,
 .philosophy-hero a:focus-visible { outline-color: var(--signal); }
 
@@ -2682,13 +2683,11 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 }
 
 @media (max-width: 760px) {
-  .learning-questions,
-  .learning-traditions,
+  .learning-subject-section,
   .learning-method,
   .philosophy-hero,
   .philosophy-section { grid-template-columns: 1fr; padding-right: 20px; padding-left: 20px; }
-  .learning-questions,
-  .learning-traditions { gap: 28px; padding-top: 60px; padding-bottom: 72px; }
+  .learning-subject-section { gap: 28px; padding-top: 60px; padding-bottom: 72px; }
   .learning-section-body > h2 { font-size: clamp(30px, 9.5vw, 44px); }
   .learning-question-groups { gap: 30px; margin-top: 34px; }
   .learning-tradition-grid { gap: 26px; margin-top: 34px; }
@@ -2761,10 +2760,15 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .note-row:focus-visible { background: rgba(224, 99, 42, 0.055); }
 .note-arrow { color: var(--ember); }
 
-.learning-traditions,
-.learning-method,
+.learning-subject-section--b,
 .knowledge-method {
   background: var(--black-3);
+  color: var(--warm-white);
+}
+/* 学习方法排在所有科目之后，用最深的一层收尾：科目数量是奇是偶，
+   它都不会和上一节撞成同一个面。 */
+.learning-method {
+  background: var(--black);
   color: var(--warm-white);
 }
 
@@ -2806,7 +2810,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .mind-overview,
 .mind-review,
 .knowledge-index,
-.learning-questions,
+.learning-subject-section--a,
 .philosophy-section,
 .philosophy-legacy-note {
   background:
@@ -2835,7 +2839,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .mind-overview,
 .mind-review,
 .knowledge-index,
-.learning-questions,
+.learning-subject-section,
 .philosophy-section,
 .philosophy-pager,
 .philosophy-legacy-note {
@@ -2861,7 +2865,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .knowledge-search input,
 .knowledge-categories button,
 .knowledge-card,
-.learning-question-group h3,
+.learning-question-group :is(h3, h4),
 .learning-question-list strong,
 .philosophy-block h2,
 .philosophy-position-text,
@@ -3099,9 +3103,9 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .knowledge-detail h3,
 .knowledge-method h2,
 .learning-section-body > h2,
-.learning-question-group h3,
+.learning-question-group :is(h3, h4),
 .learning-question-title,
-.learning-tradition h3,
+.learning-tradition :is(h3, h4),
 .learning-method-body h2,
 .philosophy-hero h1,
 .philosophy-section-heading,
@@ -4511,7 +4515,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 #health-timeline, #health-snapshot, #health-trends, #health-nutrition, #health-notes,
 #top, #system, #notes-top, #preface, #archive,
 #mind-overview, #mind-workspace, #mind-review, #mind-library,
-#learning-questions, #learning-traditions, #learning-method { scroll-margin-top: calc(var(--header-height) + 60px); }
+#learning-philosophy, #learning-ai-workflow, #learning-method { scroll-margin-top: calc(var(--header-height) + 60px); }
 
 @media (max-width: 760px) {
   :root {
@@ -4576,8 +4580,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .mind-review,
   .knowledge-index,
   .knowledge-method,
-  .learning-questions,
-  .learning-traditions,
+  .learning-subject-section,
   .learning-method,
   .philosophy-hero,
   .philosophy-section {
@@ -4608,4 +4611,929 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .page-hero__ambient-glow,
   .hero-scan { animation: none; }
   .home-hero-aura { transition: none; }
+}
+
+/* ── AI 编程工作流：课程设计 ────────────────────────────────
+   与哲学地图并列的第二条学习线。沿用栏目页的标签列 / 正文列轨道、
+   等宽字体的编号与标签、以及交替的深色面，不引入新的颜色或圆角语言。 */
+.workflow-section {
+  display: grid;
+  grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
+  padding: 88px 4vw 100px;
+  border-top: 1px solid var(--black-4);
+  background: var(--black-2);
+  color: var(--warm-white);
+}
+.workflow-diagnosis,
+.workflow-fastlane,
+.workflow-syllabus {
+  background:
+    radial-gradient(circle at 92% 12%, rgba(224, 99, 42, 0.045), transparent 28%),
+    var(--black-2);
+}
+.workflow-paths,
+.workflow-ladder-section { background: var(--black-3); }
+.workflow-method { background: var(--black); }
+
+.workflow-section-body { min-width: 0; }
+.workflow-section .eyebrow { color: var(--rock-gray); }
+.workflow-section-body > h2 {
+  max-width: 900px;
+  font-size: clamp(34px, 4.4vw, 62px);
+  font-weight: 520;
+  letter-spacing: -0.06em;
+  line-height: 1.08;
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+.workflow-lede {
+  max-width: 660px;
+  margin-top: 20px;
+  color: var(--warm-gray);
+  font-size: 15px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+.workflow-lede--tight { margin-top: 14px; }
+.workflow-subheading {
+  margin-top: 72px;
+  color: var(--warm-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* 层级与路径标记：原设计用 emoji，这里改成站内统一的等宽小标签。 */
+/* 这里必须是 inline-block 而不是 inline-flex：标签内部是「Start / 上手」这种
+   中英混排，flex 会把英文和中文之间那个空格当成 flex item 间距吃掉。 */
+.workflow-tier,
+.workflow-track {
+  display: inline-block;
+  line-height: 1.5;
+  padding: 3px 8px;
+  border: 1px solid currentcolor;
+  border-radius: 2px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.workflow-tier--base { color: var(--ember); }
+.workflow-tier--optional { color: var(--warm-gray); }
+.workflow-tier--later { color: var(--rock-gray); }
+.workflow-track {
+  border-color: var(--black-4);
+  color: var(--rock-gray);
+  text-transform: uppercase;
+}
+
+/* 02 · 断点 ------------------------------------------------ */
+.workflow-chain {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 0;
+  margin-top: 44px;
+  border-top: 1px solid var(--black-4);
+  padding-top: 22px;
+}
+.workflow-chain li {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+.workflow-chain li + li::before {
+  align-self: center;
+  margin: 0 14px;
+  color: var(--rock-gray);
+  content: '→';
+}
+.workflow-chain-index {
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+}
+.workflow-chain-node {
+  color: var(--warm-gray);
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+.workflow-chain li:last-child .workflow-chain-node { color: var(--warm-white); }
+
+.workflow-breakpoints {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+.workflow-breakpoint {
+  min-width: 0;
+  padding-top: 16px;
+  border-top: 2px solid var(--black-4);
+}
+.workflow-breakpoint-index {
+  display: block;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.workflow-breakpoint h3 {
+  margin-top: 12px;
+  font-size: 21px;
+  font-weight: 560;
+  letter-spacing: -0.035em;
+  line-height: 1.25;
+}
+.workflow-breakpoint-symptom {
+  margin-top: 8px;
+  color: var(--warm-gray);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.workflow-breakpoint-meta { margin-top: 18px; }
+.workflow-breakpoint-meta > div { padding: 12px 0; border-top: 1px solid var(--black-4); }
+.workflow-breakpoint-meta dt {
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.workflow-breakpoint-meta dd {
+  margin-top: 7px;
+  color: var(--warm-white);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.workflow-principles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+.workflow-principles li {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--black-4);
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
+}
+.workflow-principle-index {
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.workflow-principles h4 {
+  margin-top: 14px;
+  font-size: 19px;
+  font-weight: 540;
+  letter-spacing: -0.03em;
+}
+.workflow-principle-lede { margin-top: 10px; font-size: 14px; line-height: 1.7; }
+.workflow-principle-body {
+  margin-top: 10px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+}
+.workflow-principle-rule {
+  margin-top: 16px;
+  padding-left: 14px;
+  border-left: 2px solid var(--ember);
+  color: var(--warm-white);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* 03 · 阅读路径 -------------------------------------------- */
+.workflow-path-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: 46px;
+}
+.workflow-path {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding-top: 16px;
+  border-top: 2px solid rgba(242, 237, 232, 0.4);
+}
+.workflow-path--start { border-top-color: var(--ember); }
+.workflow-path-tag {
+  color: var(--warm-white);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.workflow-path--start .workflow-path-tag { color: var(--ember); }
+.workflow-path-figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+.workflow-path-figures dt {
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.workflow-path-figures dd {
+  margin-top: 6px;
+  font-size: 17px;
+  font-weight: 520;
+  letter-spacing: -0.02em;
+}
+.workflow-path-outcome {
+  margin-top: 18px;
+  color: var(--warm-gray);
+  font-size: 14px;
+  line-height: 1.75;
+}
+.workflow-path-chapters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 18px;
+}
+.workflow-path-chapters li {
+  padding: 4px 8px;
+  border: 1px solid var(--black-4);
+  border-radius: 2px;
+  color: var(--warm-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+}
+.workflow-path--start .workflow-path-chapters li {
+  border-color: rgba(224, 99, 42, 0.4);
+  color: var(--warm-white);
+}
+.workflow-path-note {
+  margin-top: auto;
+  padding-top: 18px;
+  color: var(--rock-gray);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* 04 · 快车道 ---------------------------------------------- */
+.workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+.workflow-steps li {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding-top: 16px;
+  border-top: 2px solid var(--black-4);
+}
+.workflow-step-index {
+  display: block;
+  margin-bottom: 26px;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.workflow-steps h3 { font-size: 19px; font-weight: 540; letter-spacing: -0.03em; }
+.workflow-steps p {
+  margin-top: 10px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+}
+/* 选择器要带上 .workflow-steps：上面的 `.workflow-steps p` 比单个类名更具体，
+   否则 margin-top 和 color 都会被它压回去。 */
+.workflow-steps .workflow-step-cost {
+  /* 五张卡片高度不一，耗时统一贴到底边，读起来才是一行可比的数字。 */
+  margin-top: auto;
+  padding-top: 14px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.workflow-notused {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px 18px;
+  margin-top: 34px;
+  padding-top: 18px;
+  border-top: 1px solid var(--black-4);
+}
+.workflow-notused-label {
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.workflow-notused ul { display: flex; flex-wrap: wrap; gap: 8px; }
+.workflow-notused li {
+  padding: 4px 9px;
+  border: 1px solid var(--black-4);
+  border-radius: 2px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  text-decoration: line-through;
+  text-decoration-color: rgba(224, 99, 42, 0.55);
+}
+
+.workflow-escalation {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: 46px;
+}
+.workflow-escalation article {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--black-4);
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
+}
+.workflow-escalation h3 {
+  font-size: 19px;
+  font-weight: 540;
+  letter-spacing: -0.03em;
+}
+.workflow-triggers-lede,
+.workflow-budget-rule {
+  margin-top: 10px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+}
+.workflow-budget-rule { color: var(--warm-white); }
+.workflow-triggers ul { margin-top: 18px; }
+.workflow-triggers li {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid var(--black-4);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.workflow-triggers li::before {
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  content: '□';
+}
+.workflow-triggers-high {
+  margin-top: 18px;
+  padding-left: 14px;
+  border-left: 2px solid var(--rock-gray);
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.workflow-triggers-high span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.workflow-table-scroll { overflow-x: auto; margin-top: 22px; }
+.workflow-section table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.workflow-budget table { margin-top: 20px; }
+.workflow-section thead th {
+  padding: 0 14px 10px 0;
+  border-bottom: 1px solid var(--black-4);
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.workflow-section tbody th {
+  padding: 13px 14px 13px 0;
+  border-bottom: 1px solid var(--black-4);
+  color: var(--warm-white);
+  font-weight: 520;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+.workflow-section tbody td {
+  padding: 13px 14px 13px 0;
+  border-bottom: 1px solid var(--black-4);
+  color: var(--warm-gray);
+  line-height: 1.65;
+  vertical-align: top;
+}
+.workflow-section tbody tr:last-child th,
+.workflow-section tbody tr:last-child td { border-bottom: 0; }
+.workflow-lane-table th:first-child,
+.workflow-lane-table td:first-of-type { min-width: 120px; }
+.workflow-lane-table tbody td:first-of-type { color: var(--warm-white); }
+.workflow-evidence-table tbody th { color: var(--ember); }
+
+/* 05 · 能力地图 -------------------------------------------- */
+.workflow-ladder { margin-top: 48px; border-top: 1px solid rgba(242, 237, 232, 0.26); }
+.workflow-ladder li {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 24px;
+  padding: 26px 0;
+  border-bottom: 1px solid rgba(242, 237, 232, 0.14);
+}
+.workflow-ladder-level {
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+.workflow-ladder-body { min-width: 0; }
+.workflow-ladder h3 { font-size: 20px; font-weight: 540; letter-spacing: -0.03em; }
+.workflow-ladder-goal {
+  margin-top: 8px;
+  max-width: 640px;
+  color: var(--warm-gray);
+  font-size: 14px;
+  line-height: 1.75;
+}
+.workflow-ladder-exam {
+  margin-top: 14px;
+  max-width: 720px;
+  padding-left: 14px;
+  border-left: 2px solid var(--black-4);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.workflow-ladder-exam span,
+.workflow-chapter-signal span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.workflow-abilities { margin-top: 22px; border-top: 1px solid rgba(242, 237, 232, 0.26); }
+.workflow-abilities > li {
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(242, 237, 232, 0.14);
+}
+.workflow-ability-head {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) minmax(0, 220px);
+  align-items: baseline;
+  gap: 8px 20px;
+}
+.workflow-ability-index {
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+}
+.workflow-ability-head h4 {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.45;
+}
+.workflow-ability-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  justify-self: end;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-align: right;
+}
+.workflow-ability-check {
+  margin-top: 10px;
+  margin-left: 60px;
+  max-width: 760px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+/* 06 · 目录 ------------------------------------------------ */
+.workflow-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 26px;
+  margin-top: 34px;
+  padding: 16px 0;
+  border-top: 1px solid var(--black-4);
+  border-bottom: 1px solid var(--black-4);
+}
+.workflow-legend p {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--rock-gray);
+  font-size: 12px;
+}
+
+.workflow-layers { margin-top: 12px; }
+.workflow-layer { padding-top: 44px; }
+.workflow-layer-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--black-4);
+}
+.workflow-layer-index {
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+.workflow-layer-head h3 {
+  font-size: 24px;
+  font-weight: 540;
+  letter-spacing: -0.038em;
+}
+.workflow-layer-subtitle {
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.workflow-layer-count {
+  margin-left: auto;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+}
+.workflow-layer-lede {
+  margin-top: 14px;
+  max-width: 760px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.workflow-chapter {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) minmax(0, 200px);
+  align-items: start;
+  gap: 10px 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--black-4);
+}
+.workflow-chapter-no {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+}
+.workflow-chapter.is-key .workflow-chapter-no { color: var(--ember); }
+.workflow-chapter-key { color: var(--ember); font-size: 10px; }
+.workflow-chapter-body { min-width: 0; }
+.workflow-chapter h4 {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.45;
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+.workflow-chapter.is-key h4 { font-weight: 560; }
+.workflow-chapter-goal {
+  margin-top: 8px;
+  max-width: 720px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+.workflow-chapter-signal {
+  margin-top: 12px;
+  max-width: 640px;
+  padding-left: 14px;
+  border-left: 2px solid rgba(224, 99, 42, 0.45);
+  color: var(--warm-white);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.workflow-chapter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.workflow-appendices { margin-top: 22px; border-top: 1px solid var(--black-4); }
+.workflow-appendices > li {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 20px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--black-4);
+}
+.workflow-appendix-id {
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+.workflow-appendices h4 { font-size: 18px; font-weight: 540; letter-spacing: -0.03em; }
+.workflow-appendices p {
+  margin-top: 9px;
+  max-width: 780px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.8;
+}
+/* 同样要压过 `.workflow-appendices p` / `.workflow-footnotes p` 的元素选择器。 */
+.workflow-appendices .workflow-appendix-caveat,
+.workflow-footnotes .workflow-footnote-caveat {
+  margin-top: 12px;
+  padding-left: 14px;
+  border-left: 2px solid var(--black-4);
+  color: var(--rock-gray);
+  font-size: 12px;
+}
+
+/* 07 · 方法与证据 ------------------------------------------ */
+.workflow-differences {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px 40px;
+  margin-top: 46px;
+}
+.workflow-differences li {
+  min-width: 0;
+  padding-top: 16px;
+  border-top: 2px solid var(--black-4);
+}
+.workflow-difference-index {
+  display: block;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.workflow-differences h3 {
+  margin-top: 12px;
+  font-size: 20px;
+  font-weight: 540;
+  letter-spacing: -0.03em;
+}
+.workflow-differences p {
+  margin-top: 10px;
+  color: var(--warm-gray);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.workflow-footnotes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: 56px;
+}
+.workflow-footnotes article {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--black-4);
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
+}
+.workflow-footnotes h3 {
+  color: var(--warm-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.workflow-footnotes p {
+  margin-top: 12px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.8;
+}
+.workflow-footnotes strong {
+  margin-right: 8px;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-weight: 500;
+}
+.workflow-back { margin-top: 46px; }
+
+/* 学习页的科目分区 ----------------------------------------
+   哲学和 AI 编程工作流各占一个分区，共用 .learning-subject-section 的轨道与面。
+   分区内部再分块时用同一个小标题，两门科目看起来才是一层的。 */
+.learning-block-lede {
+  max-width: 660px;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+.learning-subject-section--a .learning-block-lede { color: var(--warm-gray); }
+.learning-subject-section--b .learning-block-lede { color: rgba(255, 255, 255, 0.62); }
+.learning-block-heading {
+  margin-top: 52px;
+  color: var(--warm-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.learning-workflow-principles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: 20px;
+}
+.learning-workflow-principles li {
+  min-width: 0;
+  padding-top: 15px;
+  border-top: 2px solid var(--black-4);
+}
+.learning-workflow-principles li > span {
+  display: block;
+  margin-bottom: 16px;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.learning-workflow-principles strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 540;
+  letter-spacing: -0.03em;
+}
+.learning-workflow-principles p {
+  margin-top: 9px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.learning-workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+.learning-workflow-steps li {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding-top: 14px;
+  border-top: 1px solid var(--black-4);
+}
+.learning-workflow-step-index {
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.learning-workflow-steps strong {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 520;
+  letter-spacing: -0.02em;
+}
+.learning-workflow-step-cost {
+  margin-top: auto;
+  padding-top: 12px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.learning-path-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: 20px;
+}
+.learning-path {
+  min-width: 0;
+  padding-top: 15px;
+  border-top: 2px solid var(--black-4);
+}
+.learning-path.is-first { border-top-color: var(--ember); }
+.learning-path-tag {
+  color: var(--warm-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.learning-path.is-first .learning-path-tag { color: var(--ember); }
+.learning-path-scale {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  margin-top: 12px;
+  font-size: 18px;
+  font-weight: 520;
+  letter-spacing: -0.02em;
+}
+.learning-path-scale span {
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+.learning-path-outcome {
+  margin-top: 10px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+#workflow-diagnosis,
+#workflow-paths,
+#workflow-fastlane,
+#workflow-ladder,
+#workflow-syllabus,
+#workflow-method,
+#learning-method { scroll-margin-top: calc(var(--header-height) + 60px); }
+
+@media (min-width: 761px) {
+  .workflow-section {
+    grid-template-columns: var(--hero-label-column) minmax(0, 1fr);
+    column-gap: 0;
+    padding-right: var(--page-gutter);
+    padding-left: var(--page-gutter);
+  }
+}
+
+@media (max-width: 1100px) {
+  .workflow-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .workflow-step-index { margin-bottom: 16px; }
+  .workflow-breakpoints,
+  .workflow-principles,
+  .workflow-path-grid { grid-template-columns: 1fr; }
+  .workflow-chapter { grid-template-columns: 62px minmax(0, 1fr); }
+  .workflow-chapter-tags { grid-column: 2; justify-content: flex-start; }
+  .workflow-ability-head { grid-template-columns: 40px minmax(0, 1fr); }
+  .workflow-ability-meta { justify-self: start; grid-column: 2; text-align: left; }
+  .learning-workflow-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .learning-workflow-principles,
+  .learning-path-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .workflow-section {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    /* 左右和其他栏目分区一样收到 20px；留在基础规则的 4vw 上会比邻居窄 5px，
+       科目行那对负外边距也会正好顶出 1px 横向溢出。 */
+    padding: 60px 20px 72px;
+  }
+  .workflow-section-body > h2 { font-size: clamp(30px, 9.5vw, 44px); }
+  .workflow-chain { gap: 8px 0; margin-top: 32px; }
+  .workflow-chain li + li::before { margin: 0 10px; }
+  .workflow-subheading { margin-top: 52px; }
+  .workflow-steps,
+  .workflow-escalation,
+  .workflow-differences,
+  .workflow-footnotes { grid-template-columns: 1fr; gap: 24px; }
+  .workflow-escalation article,
+  .workflow-principles li,
+  .workflow-footnotes article { padding: 20px; }
+  .workflow-ladder li { grid-template-columns: 1fr; gap: 10px; }
+  .workflow-ability-check { margin-left: 0; }
+  .workflow-chapter { grid-template-columns: 1fr; gap: 8px; }
+  .workflow-chapter-tags { grid-column: 1; }
+  .workflow-appendices > li { grid-template-columns: 1fr; gap: 10px; }
+  .learning-block-heading { margin-top: 40px; }
+  .learning-workflow-steps { grid-template-columns: 1fr; gap: 16px; }
 }
