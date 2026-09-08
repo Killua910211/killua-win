@@ -56,17 +56,19 @@
 - 用户明确要求部署到生产环境。按 AGENTS.md，视觉改动本应先经 Codex Sites 测试环境确认；测试环境属于 Codex Sites 项目（`.openai/hosting.json`），本次会话没有对应的部署工具，因此跳过该步并已向用户说明。
 - 发布前重跑 `pnpm check` 与 `pnpm build`，均通过。
 - 用 `pnpm deploy:only` 部署（不含 `pnpm migrate`）：本次是纯前端改动，没有新迁移，按长期规则不触碰远程数据库。
-- Worker Version ID：`17741be9-d6dd-4208-8efd-71781982026e`；上传 9 个新增/变更静态资源，Worker 启动时间 25ms。
+- 第一次发布（工作树状态）：Worker Version ID `17741be9-d6dd-4208-8efd-71781982026e`。
+- 改动提交为 `d6c8b63` 后从该提交重新构建并再次发布：**Worker Version ID `70b5ff22-d27a-423e-8fc5-e4dfaf025141`**，这是当前正式网站版本，内容与 `d6c8b63` 一一对应。
 - 发布后实测 `https://www.killua.win/`、`/learning`、`/learning/ai-workflow`、`/learning/philosophy`、`/notes` 均返回 HTTP 200。
 - 正式网站 `/learning` 复核：分区为 `01` 首屏、`02` Philosophy、`03` AI workflow、`04` How to use；eyebrow 为「Subject 01 / 哲学」「Subject 02 / AI 编程工作流」；三个分区的面依次 `#0e0e11`、`#1a1a1f`、`#080809`；23 个核心问题、5 条传统导航、3 条规划中科目；无横向溢出、控制台无错误。
 - 正式网站 `/learning/ai-workflow` 复核：6 个分区、57 章、29 章重点展开，页内锚点全部命中，无横向溢出、控制台无错误。
 - `https://www.killua.win/sitemap.xml` 已包含 `/learning/ai-workflow`。
+- 第二次发布后重新复核：`/`、`/learning`、`/learning/ai-workflow`、`/learning/philosophy`、`/notes`、`/health`、`/mind` 七条路径全部 HTTP 200；两页的分区、计数、锚点与控制台结果与第一次一致。
 
 ## 尚待处理
 
 - 浏览器面板在本次会话中处于隐藏状态，滚动后不绘制，所以本地只有「隐藏其他分区后置顶截图」的证据，没有真实滚动过程的视觉回归；正式网站的复核同样是 DOM 探测加首屏截图。
-- **本次改动尚未提交到 Git**：正式网站跑的是当时工作树的内容，`git status` 里仍有未提交文件。后续需要单独 review 并提交。
-- 工作树里还有一处不属于本次任务的改动：`app/icon.svg` 的圆点颜色从 `#ccff00` 改为 `#e0632a`，本次未改动它，但它随这次发布一起上线了。
+- 本地 `main` 领先 `origin/main`，`d6c8b63` 尚未推送到远程仓库；推送需要另行确认。
+- `app/icon.svg` 的圆点改色由用户自己提交为 `6b66bc1`，不在本次提交范围内。
 - 站点字体变量链在 `:root` 上就已失效（`--font-barlow` 等由 `next/font` 挂在 `<body>`，而 `--font-body` / `--font-mono` 定义在 `:root`），正式网站实测同样退回系统中文字体。这是既有问题，本次未改动，新样式沿用同一套变量。
 
 ---
