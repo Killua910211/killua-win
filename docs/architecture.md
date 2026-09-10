@@ -1,6 +1,6 @@
 # KILLUA.WIN 架构
 
-最后复核：2026-09-08。以下事实以当前工作树为准；工作树尚未提交的内容不等于正式网站已发布内容。
+最后复核：2026-09-11。以下事实以当前工作树为准；工作树尚未提交的内容不等于正式网站已发布内容。
 
 ## 产品边界
 
@@ -36,7 +36,10 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 | `/health` | 健康时间线、快照、趋势和补剂 | `app/health/`、`app/lib/health.ts` |
 | `/mind` | 认知地图与对话索引 | `app/mind/`、`app/knowledge/` |
 | `/learning` | 科目分区（当前只有哲学）与学习方法 | `app/learning/page.tsx`、`app/learning/subjects.ts` |
-| `/learning/philosophy` | 哲学问题地图 | `app/learning/philosophy/` |
+| `/learning/philosophy` | 哲学总览：三个学习入口、按问题、按传统 | `app/learning/philosophy/page.tsx` |
+| `/learning/philosophy/map` | 哲学知识地图：节点之间的语义关系 | `app/learning/philosophy/map/`、`map-view.tsx` |
+| `/learning/philosophy/path` | 推荐基础学习路径 | `app/learning/philosophy/path/`、`learning-path.ts` |
+| `/learning/philosophy/[node]` | 55 个知识节点各一页 | `app/learning/philosophy/[node]/` |
 | `/sitemap.xml`、`/robots.txt`、`/feed.xml` | 搜索索引与订阅 | `app/sitemap.ts`、`app/robots.ts`、`app/feed.xml/route.ts` |
 | `/api/database` | 数据库健康检查 | `app/api/database/route.ts` |
 
@@ -47,7 +50,12 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 - 文章正文的规范来源进入 `migrations/` 并回放到 D1；仓库不维护 Markdown 正文副本。`app/lib/static-posts.ts` 是由迁移生成的只读回退，不是第二套手工内容源。
 - 首页 OS 区只读公开数字、日期和受限短标签；`system-readout.tsx` 对运行期数据逐项校验，不渲染标题、备注或正文。
 - `/health` 的公开内容来自 `app/lib/health.ts` 中的快照数据和组件；计时器以服务端快照为首屏基准。
-- 哲学知识库的结构化数据来自 `data.json`：当前共 55 个节点，包括 23 个核心问题、6 个问题领域、5 个传统导航、7 个历史时段、10 个传统线索和 1 个方法论争论；正文来源状态和覆盖范围由 `KNOWLEDGE_BASE.md`、`content-ledger.ts`、`coverage.ts` 等文件共同约束，修改前必须读取局部 `AGENTS.md`。
+- 哲学知识库的结构化数据来自 `data.json`：当前共 55 个节点，包括 23 个核心问题、6 个问题领域、5 个传统导航、7 个历史时段、10 个传统线索和 1 个方法论争论。本轮不以增加节点为目标，节点数不变。
+- 哲学内容分成九层数据，新增主题通过加数据完成，不重写 UI：`data.json`（节点树与立场）、`content-ledger.ts` 与 `remaining-content-ledgers.ts`（研究层与来源账）、`study-guides.ts` 与 `remaining-study-guides.ts`（精读层）、`relations.ts`（语义关系与横向链条）、`concepts.ts`（跨条目概念，全站唯一定义）、`argument-maps.ts`（论证地图）、`thought-experiments.ts`（改变变量式思想实验）、`comparisons.ts`（跨传统可比问题）、`learning-path.ts`（推荐学习路径）。分工与硬约束写在 `KNOWLEDGE_BASE.md`，修改前必须先读局部 `AGENTS.md`。
+- 论证路径按立场名索引（`positionArguments`），不按数组下标；`study-guides.ts` 末尾有构建期校验，键名与 `data.json` 的 `position.name` 对不上直接抛错。旧的下标对齐结构曾把论证挂到错误的立场上。
+- 来源核验状态是 `'verified' | 'pending' | 'broken'` 三态（`LedgerSource.checked`），页面显示真实值。此前是字面量 `true` 加硬编码的「已核验」，无法表达待核验。
+- 哲学页的所有展开交互用原生 `<details>`，没有客户端组件；知识地图是服务端渲染的静态结构，不引入 Graph / Canvas 引擎。
+- 正文支持行内概念注解 `[[concept-id|显示文本]]`（解析在 `prose.tsx`）；id 在 `concepts.ts` 中不存在时构建期抛错。
 
 ## 关键运行约束
 

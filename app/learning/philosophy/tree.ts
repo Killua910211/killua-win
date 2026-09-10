@@ -16,6 +16,14 @@ export type PhilosophyPosition = {
   name: string;
   text: string;
   objection?: string;
+  /**
+   * 这个立场的支持者怎么回应上面那条反对。
+   *
+   * 以前没有这个字段，于是全库每个立场卡都停在「反对意见」那一行：读者看到
+   * 反驳，看不到回应，容易以为这个立场已经被驳倒。有反对就应该有回应；
+   * 确实没有有力回应时，宁可在 objection 里写清它为什么难答。
+   */
+  response?: string;
 };
 
 export type PhilosophyNode = {

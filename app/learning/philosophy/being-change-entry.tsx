@@ -26,6 +26,16 @@ function Citation({ id, sources }: CitationProps) {
  * 「存在与变化」是本知识库的入门样板。
  * 它有一条独立的教学主线，避免通用条目模板把来源状态、人物与跨传统材料
  * 插到读者尚未理解“同一辆车为何成问题”的位置。
+ *
+ * 两点分工要记住：
+ *   - 来源、核验状态与审查记录不在本组件里渲染。node-content.tsx 在本组件
+ *     之后统一渲染共享尾部，其中的 ResearchLayer 已经按 source.checked 的
+ *     真实值显示「已核验／待核验／链接失效」；本组件曾经自己再折一层，
+ *     把「已核验」硬编码在 JSX 里，那是同一页出现两份来源账的来源。
+ *     正文里的 [BEC-n] 角标仍直接指向来源本身，不需要先展开任何折叠区。
+ *   - 跨传统比较、历史线索、带着问题继续读也由共享尾部负责。这里只保留
+ *     这条手写主线真正需要的东西：案例、判准、论证走查、人物、持续理论
+ *     和原典阅读路径。
  */
 export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
   const ledger = getCoreEntryLedger(node.id);
@@ -37,12 +47,18 @@ export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
       <nav className={styles.toc} aria-label="本文章节导航">
         <a href="#being-bicycle">从一辆自行车开始</a>
         <a href="#being-standards">判断标准为何冲突</a>
+        <a href="#being-walkthrough">完整走一遍论证</a>
         <a href="#being-voices">哲学家如何改写问题</a>
         <a href="#being-theories">对象怎样跨时间存在</a>
+        <a href="#being-texts">从哪里读起</a>
         <a href="#being-practice">迁移练习</a>
       </nav>
 
-      <section className="philosophy-block" id="being-bicycle" aria-labelledby="being-bicycle-title">
+      <section
+        className={`philosophy-block ${styles.section}`}
+        id="being-bicycle"
+        aria-labelledby="being-bicycle-title"
+      >
         <h2 className="philosophy-block-title" id="being-bicycle-title">先从一辆不断维修的自行车开始</h2>
         <div className={styles.prose}>
           <p>
@@ -55,10 +71,14 @@ export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
             这个问题不该靠“我更喜欢哪一辆”的投票结束。我们通常愿意说，一辆修好的车还是原车；但原来的材料似乎又同原车有特殊联系。旧零件被重新组装后，两种直觉开始指向不同对象。于是，真正需要回答的不是“大家怎么叫它”，而是：变化中的对象凭什么仍是那个对象？
             <Citation id="BEC-1" sources={sources} />
           </p>
+          <p>
+            这不是一个专为教学发明的怪例。综述文献把“忒修斯之船”列为最著名的<strong>非对称分叉案例</strong>：一条船的木板被逐块换掉，得到一条外观与原船无法分辨、木板却全部不同的船（可称之为“替换船”）；换下的木板又被用来造出一条由且仅由原船木板构成的船（可称之为“重组船”）。两个候选各自凭一种<em>不同的</em>关系与原物相连，而两种关系本身都不是无理的——这才是难题的来源。
+            <Citation id="BEC-1" sources={sources} />
+          </p>
         </div>
       </section>
 
-      <section className="philosophy-block" aria-labelledby="being-distinction-title">
+      <section className={`philosophy-block ${styles.section}`} aria-labelledby="being-distinction-title">
         <h2 className="philosophy-block-title" id="being-distinction-title">先分清：很像，和就是同一个</h2>
         <div className={styles.prose}>
           <p>
@@ -81,17 +101,32 @@ export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
         </div>
       </section>
 
-      <section className="philosophy-block" id="being-standards" aria-labelledby="being-standards-title">
+      <section
+        className={`philosophy-block ${styles.section}`}
+        id="being-standards"
+        aria-labelledby="being-standards-title"
+      >
         <h2 className="philosophy-block-title" id="being-standards-title">三种有吸引力的判断标准，为什么会彼此冲突</h2>
         <p className={styles.sectionIntro}>
-          下列是整理直觉的候选标准，不是三大互斥学派，也不是已经证明的充分必要条件。它们回答的是“在什么根据下把前后当作同一辆车”，而非“对象以何种方式跨时间存在”。
+          下列是整理直觉的候选标准，不是三大互斥学派，也不是已经证明的充分必要条件。它们回答的是“在什么根据下把前后当作同一辆车”，而非“对象以何种方式跨时间存在”。三者都以最有力的版本出场：把任何一条写成一眼可破的粗糙说法，只会让后面的论证显得比它实际上更轻松。
         </p>
         <div className={styles.standards}>
           <section>
-            <h3>1. 原材料优先：原来的零件最要紧</h3>
-            <p>它的吸引力很直观：把一件文物、木船或自行车的原材料全部换掉，似乎失去了某种与原物的物理联系。按这个思路，乙车因由旧零件重组，比甲车更像原车。</p>
-            <p>困难随即出现。若“原材料必须一件不动”，那么第一次换掉一根断裂的辐条，原车就已经不在了；这和普通维修实践很不相称。若允许逐步替换，标准又要说明：为什么能换一件、十件，却在某一点忽然不再是原物？</p>
-            <p>支持者可回应：材料连续不必是全或无，可以是重要但可被维修历史补强的条件。代价是它不再给出一条机械界线，也可能在旧材料重组时与历史连续性发生冲突。</p>
+            <h3>1. 原材料优先：由原来那些部分构成</h3>
+            <p>
+              这条标准值得听的版本不是“一颗零件都不能换”。它主张的是：当最初的全部零件重新聚齐、装回原样时，乙车拥有一种别的候选拿不出的资格——它由且仅由原来那些部分构成。“替换”给出的是一辆无法分辨的车；“重组”给出的是<em>那些</em>部分本身。
+            </p>
+            <p>
+              支持者还可以指出，这条直觉在实践中有真实分量，不是感情用事：文物修复会区分原构件与后世补配；一幅画的原作与技术上再完美的复制品也不被当作同一件作品；争执“就是不是那一件”时，材料来源常被当作要查的证据之一。这些做法各有自己的目的，本页不把它们当作哲学结论；但它们至少表明，材料直觉不是等着被反例清扫的残余，它在很多场合正是被追问的那个东西。
+            </p>
+            <p>
+              还有更强的一步。有一种区分认为，我们说“修好的车还是原车”时，用的是<strong>宽松而通行</strong>的同一性；而由全部原零件重组的那一辆，恰恰因为共享了全部部分，才满足<strong>严格</strong>同一性的要求。若这个区分成立，那么让甲车胜出的判断才是悄悄放宽了“同一”，而材料优先并没有把标准定得过高。
+              <Citation id="BEC-1" sources={sources} />
+            </p>
+            <p>
+              它要付的代价也具体。第一，它必须说明一堆零件在被拆开、分散存放的那些年里，是否仍作为“同一堆物质”继续存在；综述文献明确把这一点列为棘手问题，而不是一个可以带过的技术细节。第二，逐件更换为什么不立刻终止同一性，强版本可以回答（被换下的零件并没有停止属于那一堆原材料，分歧只在旧料重新聚齐成一辆可骑的车之后才尖锐起来），但这个回答等于承认：真正做工的是“那些部分是否又聚在一起”，而不是“当前有多少原件在车上”。
+              <Citation id="BEC-1" sources={sources} />
+            </p>
           </section>
           <section>
             <h3>2. 结构与功能优先：能否仍以同一方式组织和使用</h3>
@@ -108,25 +143,66 @@ export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
         </div>
       </section>
 
-      <section className="philosophy-block" aria-labelledby="being-walkthrough-title">
-        <h2 className="philosophy-block-title" id="being-walkthrough-title">完整走一遍：两辆车不能同时严格是原车</h2>
+      <section
+        className={`philosophy-block ${styles.section}`}
+        id="being-walkthrough"
+        aria-labelledby="being-walkthrough-title"
+      >
+        <h2 className="philosophy-block-title" id="being-walkthrough-title">完整走一遍：反例究竟打在哪一步上</h2>
+        <p className={styles.sectionIntro}>
+          下面六步不是一条平铺的清单。每一步都标出它在论证里的身份：哪一步是可以被攻击的前提，哪一步只是从前提算出来的结论，反例又落在哪一步上。读完你应该能指着某一行说“问题出在这里”，而不是只记住一个结论。
+        </p>
         <ol className={styles.walkthrough}>
-          <li><strong>明确问题。</strong>我们暂时问严格的数值同一性，而不是维修单上该写哪辆、车主对哪辆有感情。</li>
-          <li><strong>提出标准。</strong>试着把“因果与历史连续”作为最重要的条件：对象的后来状态应由其先前状态在一条未被替代的历史中发展而来。</li>
-          <li><strong>得到判断。</strong>按这个条件，甲车最有资格：它是那段持续使用和逐步维修的延续；乙车与原车材料关系强，却是在另一段重组历史中出现。</li>
-          <li><strong>加入反例。</strong>乙车并非普通复制品，它用的正是原来的所有零件。这暴露出材料直觉并没有消失。</li>
-          <li><strong>尝试回应。</strong>历史连续说可以承认材料重要，却主张“材料被保存后另行组装”不足以接管先前那条使用历史。</li>
-          <li><strong>留下难题。</strong>这仍要解释拆解、停放、分叉等情况的阈值；而且若有人坚持材料优先，他会做出不同判断。分歧是可说清的前提差异，不是“随便选”。</li>
+          <li>
+            <p className={styles.stepRole}>第 1 步 · 界定问题</p>
+            <p>
+              <strong>我们暂时问严格的数值同一性</strong>，而不是维修单上该写哪辆、车主对哪辆有感情。这一步本身不裁决任何候选；它只是把「哪辆能算原车」和「我们习惯叫哪辆原车」分开。
+            </p>
+          </li>
+          <li>
+            <p className={styles.stepRole}>第 2 步 · 前提（论证真正的承重墙）</p>
+            <p>
+              <strong>把“因果与历史连续”当作决定性条件：</strong>对象的后来状态应由其先前状态在一条未被替代的历史中发展而来。注意这是一个<em>被提出</em>的前提，不是已获证明的定理——后面的反例正是打在这一步上。
+            </p>
+          </li>
+          <li>
+            <p className={styles.stepRole}>第 3 步 · 推论（只是从第 2 步算出来的）</p>
+            <p>
+              <strong>按这个条件，甲车最有资格：</strong>它是那段持续使用和逐步维修的延续；乙车与原车材料关系强，却是在另一段重组历史中出现。这一步没有独立的说服力：第 2 步若被推翻，它立刻跟着倒。
+            </p>
+          </li>
+          <li>
+            <p className={styles.stepRole}>第 4 步 · 反例 · 针对第 2 步</p>
+            <p>
+              <strong>乙车并非普通复制品，它用的正是原来的所有零件。</strong>反例不是说第 3 步算错了，而是否认第 2 步有资格独占“决定性”：如果“共享全部部分”也是一种与原物相连的方式，而且恰好是严格同一性通常要求的那种，那么把历史连续设为唯一决定条件就是未经辩护的。
+            </p>
+          </li>
+          <li>
+            <p className={styles.stepRole}>第 5 步 · 回应 · 守住第 2 步</p>
+            <p>
+              <strong>历史连续说可以承认材料重要，却主张“材料被保存后另行组装”不足以接管先前那条使用历史。</strong>这个回应有代价：它欠我们一个说明——为什么“接管历史”比“由那些部分构成”更有权决定同一性。只重申前提不算论证。
+            </p>
+          </li>
+          <li>
+            <p className={styles.stepRole}>第 6 步 · 剩余困难（本页不假装它已解决）</p>
+            <p>
+              第 2 步仍要解释拆解、长期停放、分叉的阈值；材料优先则要解释分散存放期间那堆物质是否继续存在。此外，文物保护、保险理赔和使用安全各有自己的关切，可能正当地采用不同判准——这本身是个待论证的主张，不能用来免除严格问题。分歧因此是可指认的<em>前提差异</em>，不是“随便选”。
+            </p>
+          </li>
         </ol>
         <div className={styles.prose}>
           <p>
-            无论最终选甲还是乙，通常的严格同一性理解都不允许直接说“两个彼此不同的对象都是同一辆原车”。如果甲就是原车，而乙也就是原车，那么甲和乙也应是同一个对象；但它们显然可以并排停放、分别被骑走。这正是旧零件重组让问题变尖锐的地方。日常语境中，我们也许会宽松地把两辆都叫“原车”；那是命名和目的的差异，不能替代前面的严格判断。
+            无论最终选甲还是乙，通常的严格同一性理解都不允许直接说“两个彼此不同的对象都是同一辆原车”。如果甲就是原车，而乙也就是原车，那么甲和乙也应是同一个对象；但它们显然可以并排停放、分别被骑走。同一性的传递性正是在这里被挤压：说两个候选都与原物同一，就与传递性冲突。日常语境中，我们也许会宽松地把两辆都叫“原车”；那是命名和目的的差异，不能替代前面的严格判断。
             <Citation id="BEC-1" sources={sources} />
           </p>
         </div>
       </section>
 
-      <section className="philosophy-block" id="being-voices" aria-labelledby="being-voices-title">
+      <section
+        className={`philosophy-block ${styles.section}`}
+        id="being-voices"
+        aria-labelledby="being-voices-title"
+      >
         <h2 className="philosophy-block-title" id="being-voices-title">哲学家不是在给同一辆车投票：他们先改写了问题</h2>
         <p className={styles.sectionIntro}>
           下面的比较不是一张“谁支持甲车、谁支持乙车”的表。多数人物没有讨论过自行车；这里把他们的论证放在原来的问题中，再说明它会怎样改变我们分析替换与重组案例的方式。因而“可怎样借用”是解释性重构，不是替他们宣判。
@@ -194,7 +270,11 @@ export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
         </p>
       </section>
 
-      <section className="philosophy-block" id="being-theories" aria-labelledby="being-theories-title">
+      <section
+        className={`philosophy-block ${styles.section}`}
+        id="being-theories"
+        aria-labelledby="being-theories-title"
+      >
         <h2 className="philosophy-block-title" id="being-theories-title">再问一层：对象是怎样跨时间存在的？</h2>
         <div className={styles.prose}>
           <p>
@@ -210,10 +290,25 @@ export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
           <section>
             <h3>对象具有不同的时间部分</h3>
             <p>另一种解释把一辆持续多年的车看作跨时间延展的整体：早期的车阶段带有旧链条，后期的车阶段带有新链条。就像道路在不同地点有不同路段，持续的对象在不同时间有不同的时间部分。这常被称为四维主义／延存论（perdurance）。</p>
-            <p>照片或电影帧只能帮助想象“不同时间的阶段”，不是对象本身的时间部分；它们是记录。该理论真正主张的是，对象自身以跨时部分构成整体。它也不自动告诉我们两辆车中哪辆是原车：那仍需要前面的同一性判断。
-              <Citation id="BEC-2" sources={sources} />
-            </p>
+            <p>照片或电影帧只能帮助想象“不同时间的阶段”，不是对象本身的时间部分；它们是记录。该理论真正主张的是，对象自身以跨时部分构成整体。</p>
           </section>
+        </div>
+        <div className={styles.prose}>
+          <p>
+            <strong>它对我们的案例做了什么：</strong>不只是换一种说法。前一节把两辆车挤到了传递性上——两个彼此不同的对象不能同时严格等于一个原物。时间部分理论正好在这里给出一个不同的分析：把候选看成跨时延展的整体，甲车与乙车就<em>可以共享较早的那些时间部分</em>。在旧零件还装在车上的那些年，两条“生涯”重合在同一处；此后它们分开，成为两个不同的跨时整体。共享一段部分并不要求它们彼此同一，就像两条路可以共用同一段路面而仍是两条路。
+          </p>
+          <p>
+            综述文献把这一步讲得更技术：借助无限制的融合原则，四维主义者可以说忒修斯之船的情形中存在一个<strong>Y 形分叉的对象</strong>，它能以不确定多种方式分解为四维的真部分，其中不确定多个都是船——例如“主干加替换分支”这条船，就以“只有主干”和“只有替换分支”两条船为它的真部分。
+            <Citation id="BEC-1" sources={sources} />
+          </p>
+          <p>
+            于是问题改变了形状：不再需要让两个不同对象都严格等于一个原物，而是要问“<strong>原车</strong>”这个词到头来指哪一个跨时整体。有一份关于时间部分的综述用的例子几乎就是本页的案例：把叔叔送的车和姑姑送的车各拆一半互换，事后两辆车各由两边的零件构成，“哪一辆是叔叔送的那辆”似乎没有事实可依。延存论者在那里承认好几个暂时重合的四维对象，并主张我们最初说“叔叔送的那辆车”时，究竟指的是其中哪一个，本来就没有定论。
+            <Citation id="BEC-2" sources={sources} />
+          </p>
+          <p>
+            <strong>它要付的代价：</strong>这一步把“两辆里哪辆是原车”换成了“我们的语言是否曾经确定过指哪一个”。有人会说这是解答，有人会说这是取消了问题——因为文物认定、保险理赔和当初那句承诺都需要一个确定的答案，而“本来就没有定论”不能直接交给它们。它也没有使前面的判断标准作废：要说清哪一条分支值得叫“原车”，仍要回到材料、结构或历史连续。
+            <Citation id="BEC-2" sources={sources} />
+          </p>
         </div>
       </section>
 
@@ -225,7 +320,7 @@ export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
             <Citation id="BEC-3" sources={sources} />
           </p>
           <p>
-            <strong>“什么存在”与“什么更基本”</strong>也不是同一问题。即使承认自行车存在，仍可问它是否依赖零件、因果关系、使用实践或更基本的物理事实；“依赖”不等于“不真实”或“不重要”。这些问题值得继续读，但不必抢在原车案例之前回答。
+            <strong>“什么存在”与“什么更基本”</strong>也不是同一问题。即使承认自行车存在，仍可问它是否依赖零件、因果关系、使用实践或更基本的物理事实。这类问题问的是<strong>解释依赖</strong>：某类事物是否要由更基本的事实来解释。说它有依赖，不等于说它不真实或不重要。这些问题值得继续读，但不必抢在原车案例之前回答。
           </p>
           <p>
             在<strong>龙树与中观</strong>的语境中，空性讨论的是事物是否有不依条件、由自身成立的自性（svabhāva）。这不等于“什么都不存在”，也不能直接归入西方的耐存论、延存论或过程哲学。有关自性、因果、概念依赖和解脱的论证有自己的目标与文本脉络；本页只把它作为相邻问题的入口。
@@ -237,7 +332,68 @@ export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
         </div>
       </details>
 
-      <section className="philosophy-block" id="being-practice" aria-labelledby="being-practice-title">
+      <section
+        className={`philosophy-block ${styles.section}`}
+        id="being-texts"
+        aria-labelledby="being-texts-title"
+      >
+        <h2 className="philosophy-block-title" id="being-texts-title">从哪里读起：四条原典路径</h2>
+        <p className={styles.sectionIntro}>
+          下面四条不是书目展示，也不是把作者名字当成立场标签。每一条只说明这部文本在争论中解决什么问题，以及带着哪个问题读能读出论证而不是结论。本页引用的定位限于二手综述中已核对到的范围；凡未逐段核对原文的地方，都写明界限，不用页码充数。
+        </p>
+        <ol className={styles.texts}>
+          <li>
+            <p className={styles.textMeta}>亚里士多德 · 前 4 世纪</p>
+            <h3>《形而上学》Ζ、Η 卷与 Θ 卷</h3>
+            <p>
+              质料与形式的区分先被用在一个时刻之内——一个个体在某一时间由什么构成、又如何被组织起来以履行其特有功能；随后这一区分被跨时间地使用，并连到潜能与实现的区分上，而后者是 Θ 卷的主题。这条路线要解释的是“变化而不虚无”如何可能。
+              <Citation id="BEC-7" sources={sources} />
+            </p>
+            <p className={styles.textQuestion}>
+              <span>带着这个问题读</span>潜能与实现是在解释变化，还是把变化换成了另一组词？
+            </p>
+          </li>
+          <li>
+            <p className={styles.textMeta}>洛克 · 1694 年第二版加入</p>
+            <h3>《人类理解论》第二卷第 27 章</h3>
+            <p>
+              这一章讨论同一与差异，是洛克在 1694 年第二版才加进《人类理解论》的。它的做法是先问“这是什么种类的东西”，再问它的持续条件：一堆物质、一棵树和一个人格并不共用一条标准。本页的甲车与乙车之争，有一半力量来自这个问题没有被先问清。
+              <Citation id="BEC-8" sources={sources} />
+            </p>
+            <p className={styles.textQuestion}>
+              <span>带着这个问题读</span>同一堆物质、同一棵树和同一个人格，为什么可能需要不同的持续条件？
+            </p>
+          </li>
+          <li>
+            <p className={styles.textMeta}>龙树 · 约 150—250 年</p>
+            <h3>《中论》</h3>
+            <p>
+              它的论证针对的是“事物有不依条件、由自身成立的自性”这一设想，并逐项检查因果、变化、人格同一与语言。综述文献专门有一节处理其中的变化论证。它不是在为甲车或乙车投票，而是在问：把“原车”设为一个独立自立的核心，这一步本身是否已经出错。本页只把它作为相邻问题的入口——尚未逐段校勘汉译本与注释传统，所以这里不给章颂编号。
+              <Citation id="BEC-4" sources={sources} />
+            </p>
+            <p className={styles.textQuestion}>
+              <span>带着这个问题读</span>批判自性为什么不等于说因果关系和日常对象都不存在？
+            </p>
+          </li>
+          <li>
+            <p className={styles.textMeta}>大卫·刘易斯 · 1986</p>
+            <h3>《论世界的复多性》（On the Plurality of Worlds）</h3>
+            <p>
+              综述文献在讲忒修斯之船的 Y 形分叉对象、以及“两个对象在某段时间共享时间部分”这种说法时，引的正是刘易斯与 Heller。想知道以时间部分理解持续的当代方案怎样系统展开，这是绕不开的一本。界限要说清：本页没有核对该书的具体章节与页码，上面那一步分叉分析以综述的转述为限。
+              <Citation id="BEC-1" sources={sources} />
+            </p>
+            <p className={styles.textQuestion}>
+              <span>带着这个问题读</span>把对象看成四维延展，是解释了变化，还是改换了我们原来要问的问题？
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section
+        className={`philosophy-block ${styles.section}`}
+        id="being-practice"
+        aria-labelledby="being-practice-title"
+      >
         <h2 className="philosophy-block-title" id="being-practice-title">迁移练习：换一个情境，也能看出推理在做什么</h2>
         <ol className={styles.exercises}>
           <li>
@@ -258,40 +414,9 @@ export function BeingChangeEntry({ node }: { node: PhilosophyNode }) {
           </li>
         </ol>
         <p className={styles.closing}>
-          现在你已经有了一套可迁移的方法：先指明讨论的对象；区分“像不像”与“是不是同一个”；说明自己采用的判断标准；再用替换、复制或分叉的反例检验它。答案仍可能有分歧，但分歧不再只是直觉对撞。
+          现在你已经有了一套可迁移的方法：先指明讨论的对象；区分“像不像”与“是不是同一个”；说明自己采用的判断标准，并指出它是论证里的哪一步；再用替换、复制或分叉的反例检验它，并说清反例打在哪一个前提上。答案仍可能有分歧，但分歧不再只是直觉对撞。
         </p>
       </section>
-
-      <details className={styles.evidence}>
-        <summary>来源、范围与本轮编辑记录</summary>
-        <div className={styles.evidenceBody}>
-          <p><strong>范围：</strong>{ledger.scope}</p>
-          <p><strong>状态：</strong>{ledger.status}；本页完成的是自审，不是独立同行评审。</p>
-          <ol className="philosophy-source-records">
-            {sources.map((source) => (
-              <li key={source.id}>
-                <p className="philosophy-source-id">{source.id} · {source.kind} · 已核验</p>
-                <a href={source.url} target="_blank" rel="noreferrer">{source.title}<span aria-hidden="true"> ↗</span></a>
-                <p><strong>定位：</strong>{source.locator}</p>
-                <p><strong>用于：</strong>{source.supports}</p>
-              </li>
-            ))}
-          </ol>
-          <h3>本轮自审</h3>
-          <ol className="philosophy-review-findings">
-            {ledger.review.findings.map((finding) => (
-              <li key={finding.location}>
-                <h4>{finding.location}</h4>
-                <p><strong>发现：</strong>{finding.issue}</p>
-                <p><strong>依据：</strong>{finding.evidence}</p>
-                <p><strong>修订：</strong>{finding.revision}</p>
-              </li>
-            ))}
-          </ol>
-          <p><strong>相邻条目影响：</strong>{ledger.review.adjacentImpact}</p>
-          <p><strong>尚待核验：</strong>{ledger.review.remaining.join('；')}</p>
-        </div>
-      </details>
     </div>
   );
 }

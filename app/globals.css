@@ -1058,11 +1058,16 @@ footer p:last-child { justify-self: end; color: var(--rock-gray); }
 }
 
 /* ── 焦点可见性 ──────────────────────────────────────────────
-   交互元素共用高对比焦点环，深色区域换成信号色，避免深色描边不可见。 */
+   交互元素共用同一个焦点环。
+
+   基础色必须是信号色而不是 --ink：全站内容面已经统一为 #080809–#1a1a1f
+   的深色，`outline: 2px solid var(--ink)` 在这些面上对比度约 1.04:1，等于
+   没有焦点环。下面那条 `:focus-visible { outline-color: var(--ember) }`
+   补丁救不回来——它的特异度 (0,1,0) 低于这里的 (0,1,1)，一直没有生效。 */
 a:focus-visible,
 button:focus-visible,
 summary:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--ember);
   outline-offset: 3px;
 }
 .site-header a:focus-visible,
@@ -1076,7 +1081,7 @@ summary:focus-visible {
 }
 /* 整行链接：外扩的描边会压到相邻行，改成内描边。 */
 .note-row:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--ember);
   outline-offset: -4px;
 }
 
@@ -2507,7 +2512,17 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .knowledge-method-grid span { color: var(--signal); font-family: var(--font-mono), monospace; font-size: 10px; }
 .knowledge-method-grid p { margin: 44px 0 8px; font-size: 21px; letter-spacing: -.03em; }
 .knowledge-method-grid small { display: block; max-width: 220px; color: rgba(255,255,255,.57); font-size: 12px; line-height: 1.7; }
-.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.sr-only {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
 @media (max-width: 760px) {
   .site-header nav { gap: 9px; }
@@ -4514,6 +4529,8 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 #health-timeline, #health-snapshot, #health-trends, #health-nutrition, #health-notes,
 #top, #system, #notes-top, #preface, #archive,
 #mind-overview, #mind-workspace, #mind-review, #mind-library,
+/* 「存在与变化」那一页的页内锚点由它自己的 module.css 用类名接管，
+   不要再往这份 id 名单里补——加一节就得改两处的做法已经漏过一次。 */
 #learning-philosophy, #learning-method { scroll-margin-top: calc(var(--header-height) + 60px); }
 
 @media (max-width: 760px) {
@@ -4637,3 +4654,1259 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 @media (max-width: 760px) {
   .learning-block-heading { margin-top: 40px; }
 }
+
+/* ══ 哲学知识库 V2 ══════════════════════════════════════════
+   本轮新增的学习能力：概念卡、论证地图、思想实验、跨传统比较、
+   语义化的「继续学习」、折叠的研究层、知识地图和推荐学习路径。
+
+   共同约束：
+   - 深色面优先，沿用 --black-2/-3/-4 与 --ember，不引入新色系；
+   - 一律不横向展开，手机上全部退化成一列，永不产生横向滚动；
+   - 展开交互全部用原生 <details>，不需要 JS，键盘和读屏天然可用；
+   - 方向和语义由文字标签承担，箭头只是 aria-hidden 的装饰；
+   - 不加动画。仅有的过渡是颜色，reduced-motion 下一并关掉。 */
+
+/* 分区标题的那条 2px 规则原本是浅色面上的设计（border-top: var(--ink)），
+   在 #0e0e11 的深色面上对比度只有 1.02，等于不存在。区块分隔是这些页面
+   最主要的层级手段，把它调到看得见。 */
+.philosophy-page .philosophy-block-title {
+  border-top-color: rgba(242, 237, 232, 0.24);
+}
+
+/* ── 本页范围 ─────────────────────────────────────────────── */
+.philosophy-scope {
+  max-width: 820px;
+  margin-top: 26px;
+  padding-left: 15px;
+  border-left: 2px solid var(--black-4);
+  color: var(--warm-gray);
+  font-size: 14px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+.philosophy-scope-label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* 带行内概念注解的段落。<details> 不能放进 <p>，所以这些段落是 div，
+   排版要和 .philosophy-ledger-prose p 完全一致。 */
+.philosophy-ledger-prose .philosophy-para {
+  color: #d6d0c8;
+  font-size: 15px;
+  line-height: 1.95;
+  text-wrap: pretty;
+}
+.philosophy-ledger-prose .philosophy-para + p,
+.philosophy-ledger-prose p + .philosophy-para,
+.philosophy-ledger-prose .philosophy-para + .philosophy-para { margin-top: 17px; }
+
+/* ── 行内概念注解 ─────────────────────────────────────────── */
+.philosophy-gloss { display: inline; }
+.philosophy-gloss > summary {
+  display: inline;
+  list-style: none;
+  cursor: pointer;
+}
+.philosophy-gloss > summary::-webkit-details-marker { display: none; }
+.philosophy-gloss > summary::marker { content: ''; }
+.philosophy-gloss-term {
+  border-bottom: 1px dashed rgba(224, 99, 42, 0.75);
+  color: var(--warm-white);
+}
+.philosophy-gloss-marker {
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72em;
+  vertical-align: super;
+}
+.philosophy-gloss > summary:hover .philosophy-gloss-term { border-bottom-style: solid; }
+.philosophy-gloss > summary:focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 3px;
+}
+.philosophy-gloss[open] > summary .philosophy-gloss-term {
+  border-bottom-style: solid;
+  color: var(--ember-hot);
+}
+/* 面板是块级的，展开时把段落就地断开——比浮层可靠：任何视口宽度、
+   任何缩放比例下都不会被挤出屏幕，也不依赖 hover。 */
+.philosophy-gloss-panel {
+  display: block;
+  max-width: 640px;
+  margin: 14px 0;
+  padding: 16px 18px;
+  border-left: 2px solid var(--ember);
+  background: linear-gradient(135deg, #17171b, #111115);
+  font-size: 14px;
+  line-height: 1.75;
+}
+.philosophy-gloss-head { display: block; }
+.philosophy-gloss-head strong {
+  color: var(--ember-hot);
+  font-size: 16px;
+  font-weight: 620;
+}
+.philosophy-gloss-head em {
+  margin-left: 8px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-style: normal;
+  letter-spacing: 0.06em;
+}
+.philosophy-gloss-short {
+  display: block;
+  margin-top: 8px;
+  color: #d6d0c8;
+}
+.philosophy-gloss-line {
+  display: block;
+  margin-top: 9px;
+  color: var(--warm-gray);
+  font-size: 13px;
+}
+.philosophy-gloss-label {
+  margin-right: 8px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.philosophy-gloss-item + .philosophy-gloss-item::before {
+  content: '、';
+  color: var(--rock-gray);
+}
+.philosophy-gloss-line a {
+  color: var(--ember-hot);
+  border-bottom: 1px solid rgba(224, 99, 42, 0.4);
+}
+.philosophy-gloss-line a:hover { border-bottom-color: var(--ember-hot); }
+
+/* ── 概念卡清单 ───────────────────────────────────────────── */
+.philosophy-concept-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 24px;
+  border: 1px solid var(--black-4);
+  background: var(--black-4);
+}
+.philosophy-concept-card {
+  min-width: 0;
+  padding: 20px 22px 22px;
+  background: linear-gradient(135deg, #17171b, #111115);
+}
+.philosophy-concept-card h4 {
+  color: var(--ember-hot);
+  font-size: 17px;
+  font-weight: 620;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+.philosophy-concept-original {
+  margin-left: 9px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+.philosophy-concept-short {
+  margin-top: 10px;
+  color: #d6d0c8;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.philosophy-concept-detail {
+  margin-top: 9px;
+  color: var(--warm-gray);
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+.philosophy-concept-angle {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(242, 237, 232, 0.14);
+  color: #d6d0c8;
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+.philosophy-concept-angle > span,
+.philosophy-concept-where > span,
+.philosophy-concept-sources > span,
+.philosophy-concept-subhead {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.philosophy-concept-distinctions { margin-top: 13px; }
+.philosophy-concept-distinctions ul { display: grid; gap: 7px; }
+.philosophy-concept-distinctions li {
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.philosophy-concept-distinctions strong {
+  margin-right: 7px;
+  color: var(--warm-white);
+  font-weight: 600;
+}
+.philosophy-concept-distinctions strong::after {
+  content: '≠';
+  margin-left: 6px;
+  color: var(--ember);
+}
+.philosophy-concept-where,
+.philosophy-concept-sources { margin-top: 13px; }
+.philosophy-concept-where a,
+.philosophy-concept-sources a {
+  display: inline-block;
+  margin-right: 12px;
+  color: var(--ember-hot);
+  font-size: 13px;
+  line-height: 1.7;
+  border-bottom: 1px solid rgba(224, 99, 42, 0.35);
+}
+.philosophy-concept-where a:hover,
+.philosophy-concept-sources a:hover { border-bottom-color: var(--ember-hot); }
+
+/* ── 论证地图 ─────────────────────────────────────────────── */
+.philosophy-argmap { margin-top: 20px; }
+.philosophy-argmap-intro {
+  max-width: 760px;
+  color: var(--warm-gray);
+  font-size: 14px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+.philosophy-argmap-spine {
+  display: grid;
+  max-width: 700px;
+  margin-top: 24px;
+}
+.philosophy-argmap-step {
+  position: relative;
+  padding: 15px 18px;
+  border-left: 2px solid var(--black-4);
+  background: linear-gradient(135deg, #16161a, #111114);
+}
+.philosophy-argmap-step--fork {
+  border-left-color: var(--ember);
+  background: linear-gradient(135deg, rgba(224, 99, 42, 0.15), rgba(224, 99, 42, 0.04));
+}
+.philosophy-argmap-kind {
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+.philosophy-argmap-number {
+  margin-left: 8px;
+  color: var(--rock-gray);
+  font-weight: 500;
+}
+.philosophy-argmap-text {
+  margin-top: 7px;
+  color: var(--warm-white);
+  font-size: 15px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+.philosophy-argmap-note {
+  margin-top: 7px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+}
+.philosophy-argmap-step + .philosophy-argmap-step { margin-top: 26px; }
+/* 箭头落在两张卡之间的空隙里，而不是卡内底部——它表达的是「从这一步到下一步」，
+   不是这一步的内容。纯装饰，读屏不会读出一串向下箭头。 */
+.philosophy-argmap-step:not(:last-child)::after {
+  position: absolute;
+  bottom: -21px;
+  left: 50%;
+  color: var(--meta-on-dark);
+  content: '↓';
+  font-size: 15px;
+  line-height: 1;
+  transform: translateX(-50%);
+}
+
+.philosophy-argmap-branches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1px;
+  margin-top: 26px;
+  border: 1px solid var(--black-4);
+  background: var(--black-4);
+}
+.philosophy-argmap-branch {
+  min-width: 0;
+  padding: 20px 22px 22px;
+  background: linear-gradient(135deg, #17171b, #111115);
+}
+.philosophy-argmap-branch-name {
+  color: var(--warm-white);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+.philosophy-argmap-stance {
+  margin-top: 8px;
+  color: var(--ember-hot);
+  font-size: 14px;
+  line-height: 1.75;
+}
+.philosophy-argmap-branch-steps {
+  margin-top: 14px;
+  counter-reset: philosophy-branch-step;
+}
+.philosophy-argmap-branch-steps li {
+  position: relative;
+  padding-left: 26px;
+  color: #d6d0c8;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.philosophy-argmap-branch-steps li + li { margin-top: 9px; }
+.philosophy-argmap-branch-steps li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--rock-gray);
+  content: counter(philosophy-branch-step, decimal-leading-zero);
+  counter-increment: philosophy-branch-step;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  line-height: 2.2;
+}
+.philosophy-argmap-exchange {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(242, 237, 232, 0.14);
+}
+.philosophy-argmap-objection,
+.philosophy-argmap-response,
+.philosophy-argmap-cost {
+  color: var(--warm-gray);
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+.philosophy-argmap-response { margin-top: 11px; }
+.philosophy-argmap-cost {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(242, 237, 232, 0.16);
+}
+.philosophy-argmap-label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+/* ── 思想实验 ─────────────────────────────────────────────── */
+.philosophy-experiment {
+  max-width: 820px;
+  margin-top: 20px;
+}
+.philosophy-experiment-title {
+  color: var(--warm-white);
+  font-size: 23px;
+  font-weight: 590;
+  letter-spacing: -0.04em;
+  line-height: 1.3;
+}
+.philosophy-experiment-purpose {
+  margin-top: 11px;
+  color: #e0dad2;
+  font-size: 15px;
+  line-height: 1.9;
+  text-wrap: pretty;
+}
+.philosophy-experiment-origin {
+  margin-top: 11px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+}
+.philosophy-experiment-origin .philosophy-content-kind { margin-right: 9px; }
+.philosophy-experiment-scenes { margin-top: 24px; }
+.philosophy-experiment-scenes > li {
+  padding: 20px 22px;
+  border-left: 2px solid var(--ember);
+  background: linear-gradient(135deg, rgba(224, 99, 42, 0.13), rgba(224, 99, 42, 0.03));
+}
+.philosophy-experiment-scenes > li + li { margin-top: 16px; }
+.philosophy-experiment-label {
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.philosophy-experiment-tag {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.philosophy-experiment-changed {
+  margin-top: 11px;
+  color: var(--warm-white);
+  font-size: 13.5px;
+  line-height: 1.75;
+}
+.philosophy-experiment-scenario {
+  margin-top: 11px;
+  color: #e0dad2;
+  font-size: 15px;
+  line-height: 1.9;
+  text-wrap: pretty;
+}
+.philosophy-experiment-questions { margin-top: 13px; }
+.philosophy-experiment-questions li {
+  padding-left: 15px;
+  border-left: 1px solid rgba(242, 237, 232, 0.2);
+  color: #d6d0c8;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.philosophy-experiment-questions li + li { margin-top: 9px; }
+.philosophy-experiment-tests {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(242, 237, 232, 0.18);
+  color: var(--warm-gray);
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+.philosophy-experiment-principles {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(242, 237, 232, 0.18);
+}
+.philosophy-experiment-subhead {
+  color: var(--warm-white);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.philosophy-experiment-principles dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 26px;
+  margin-top: 16px;
+}
+.philosophy-experiment-principles dt {
+  color: var(--ember-hot);
+  font-size: 15px;
+  font-weight: 620;
+}
+.philosophy-experiment-principles dd {
+  margin: 6px 0 0;
+  color: #d6d0c8;
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+.philosophy-experiment-closing {
+  margin-top: 22px;
+  padding-left: 15px;
+  border-left: 2px solid var(--black-4);
+  color: #e0dad2;
+  font-size: 15px;
+  line-height: 1.9;
+  text-wrap: pretty;
+}
+
+/* ── 跨传统比较 ───────────────────────────────────────────── */
+.philosophy-comparison { margin-top: 24px; }
+.philosophy-comparison + .philosophy-comparison {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(242, 237, 232, 0.16);
+}
+.philosophy-comparison-question {
+  max-width: 780px;
+  color: var(--warm-white);
+  font-size: 21px;
+  font-weight: 580;
+  letter-spacing: -0.035em;
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+.philosophy-comparison-why {
+  max-width: 760px;
+  margin-top: 11px;
+  color: var(--warm-gray);
+  font-size: 14px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+/* 刻意不用表格：表格的每一行都在暗示同一个格子对应同一个东西，
+   而这正是跨传统比较最容易犯的错。 */
+.philosophy-comparison-framings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 1px;
+  margin-top: 22px;
+  border: 1px solid var(--black-4);
+  background: var(--black-4);
+}
+.philosophy-comparison-framing {
+  min-width: 0;
+  padding: 19px 21px 21px;
+  background: linear-gradient(135deg, #17171b, #111115);
+}
+.philosophy-comparison-framing h4 {
+  color: var(--warm-white);
+  font-size: 16px;
+  font-weight: 620;
+  letter-spacing: -0.02em;
+}
+.philosophy-comparison-framing h4 a { border-bottom: 1px solid rgba(224, 99, 42, 0.4); }
+.philosophy-comparison-framing h4 a:hover { color: var(--ember-hot); }
+.philosophy-comparison-cares {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin-top: 11px;
+}
+.philosophy-comparison-cares li {
+  padding: 3px 9px;
+  border: 1px solid rgba(242, 237, 232, 0.22);
+  color: #d6d0c8;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.philosophy-comparison-note {
+  margin-top: 13px;
+  color: var(--warm-gray);
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+.philosophy-comparison-caution {
+  max-width: 800px;
+  margin-top: 20px;
+  padding: 16px 18px;
+  border-left: 2px solid var(--ember);
+  background: rgba(224, 99, 42, 0.07);
+  color: #e0dad2;
+  font-size: 14px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+.philosophy-comparison-caution-label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.philosophy-comparison-pending { margin-top: 14px; }
+.philosophy-comparison-pending li {
+  padding-left: 14px;
+  border-left: 1px dashed rgba(242, 237, 232, 0.26);
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+}
+.philosophy-comparison-pending li + li { margin-top: 7px; }
+
+/* ── 继续学习（语义化关系） ───────────────────────────────── */
+.philosophy-next { margin-top: 20px; }
+.philosophy-next-group + .philosophy-next-group { margin-top: 26px; }
+.philosophy-next-group-title {
+  padding-bottom: 9px;
+  border-bottom: 1px solid rgba(242, 237, 232, 0.2);
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.philosophy-next-group ul { margin-top: 4px; }
+.philosophy-next-group li {
+  padding: 14px 0 15px;
+  border-bottom: 1px solid rgba(242, 237, 232, 0.1);
+}
+.philosophy-next-link {
+  display: inline-block;
+  color: var(--warm-white);
+  font-size: 17px;
+  font-weight: 540;
+  letter-spacing: -0.025em;
+  line-height: 1.4;
+}
+.philosophy-next-link:hover { color: var(--ember-hot); }
+.philosophy-next-why {
+  max-width: 720px;
+  margin-top: 6px;
+  color: var(--warm-gray);
+  font-size: 14px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+
+/* ── 研究层（默认折叠） ───────────────────────────────────── */
+.philosophy-research {
+  margin-top: 56px;
+  border-top: 1px solid rgba(242, 237, 232, 0.24);
+}
+.philosophy-research > summary {
+  display: flex;
+  min-height: 56px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 20px;
+  padding: 16px 0;
+  cursor: pointer;
+  list-style: none;
+}
+.philosophy-research > summary::-webkit-details-marker { display: none; }
+.philosophy-research > summary::marker { content: ''; }
+.philosophy-research > summary:focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 3px;
+}
+.philosophy-research-title {
+  color: var(--warm-white);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.philosophy-research-title::before {
+  display: inline-block;
+  width: 1.2em;
+  color: var(--ember);
+  content: '+';
+}
+.philosophy-research[open] .philosophy-research-title::before { content: '−'; }
+.philosophy-research-meta {
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.philosophy-research > summary:hover .philosophy-research-title { color: var(--ember-hot); }
+.philosophy-research-body { padding-bottom: 12px; }
+.philosophy-research-body > section + section {
+  margin-top: 34px;
+  padding-top: 26px;
+  border-top: 1px solid rgba(242, 237, 232, 0.12);
+}
+.philosophy-research-heading {
+  color: var(--warm-white);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.philosophy-research-status {
+  margin-top: 12px;
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+}
+.philosophy-research-text {
+  max-width: 820px;
+  margin-top: 10px;
+  color: var(--warm-gray);
+  font-size: 14px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+.philosophy-research .philosophy-review-findings h4 {
+  color: var(--warm-white);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+/* ── 知识地图 ─────────────────────────────────────────────── */
+.philosophy-section-body--wide { max-width: 1100px; }
+
+.philosophy-map-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 1px;
+  margin-top: 24px;
+  border: 1px solid var(--black-4);
+  background: var(--black-4);
+}
+.philosophy-map-legend > div {
+  min-width: 0;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #17171b, #111115);
+}
+.philosophy-map-legend dt {
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.philosophy-map-legend dd {
+  margin: 7px 0 0;
+  color: #d6d0c8;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+.philosophy-map-isolated {
+  max-width: 820px;
+  margin-top: 22px;
+  padding-left: 15px;
+  border-left: 2px dashed rgba(242, 237, 232, 0.28);
+  color: var(--warm-gray);
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+
+.philosophy-map-domains,
+.philosophy-map-traditions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 40px 44px;
+  margin-top: 34px;
+}
+.philosophy-map-domain,
+.philosophy-map-tradition { min-width: 0; }
+.philosophy-map-domain > h3,
+.philosophy-map-tradition > h3 {
+  padding-top: 13px;
+  border-top: 2px solid var(--ember);
+  color: var(--warm-white);
+  font-size: 19px;
+  font-weight: 580;
+  letter-spacing: -0.03em;
+  line-height: 1.3;
+}
+.philosophy-map-domain > h3 a:hover,
+.philosophy-map-tradition > h3 a:hover { color: var(--ember-hot); }
+.philosophy-map-domain-summary {
+  margin-top: 9px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+.philosophy-map-node-list { margin-top: 14px; }
+
+.philosophy-map-node { border-top: 1px solid rgba(242, 237, 232, 0.14); }
+.philosophy-map-node > summary {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 0;
+  cursor: pointer;
+  list-style: none;
+}
+.philosophy-map-node > summary::-webkit-details-marker { display: none; }
+.philosophy-map-node > summary::marker { content: ''; }
+.philosophy-map-node > summary:focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: -2px;
+}
+.philosophy-map-node-title {
+  color: var(--warm-white);
+  font-size: 15px;
+  font-weight: 480;
+  line-height: 1.5;
+}
+.philosophy-map-node > summary:hover .philosophy-map-node-title { color: var(--ember-hot); }
+.philosophy-map-node-marker {
+  flex: 0 0 auto;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+}
+.philosophy-map-node-marker::before { content: '+'; }
+.philosophy-map-node[open] .philosophy-map-node-marker::before { content: '−'; }
+.philosophy-map-node-body {
+  padding: 4px 0 20px 14px;
+  border-left: 2px solid rgba(224, 99, 42, 0.4);
+}
+.philosophy-map-node-summary {
+  color: #d6d0c8;
+  font-size: 13.5px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+.philosophy-map-node-relations { margin-top: 13px; }
+.philosophy-map-node-relations li {
+  padding: 9px 0;
+  border-top: 1px solid rgba(242, 237, 232, 0.09);
+}
+.philosophy-map-relation-kind {
+  display: inline-block;
+  margin-right: 9px;
+  padding: 1px 7px;
+  border: 1px solid rgba(224, 99, 42, 0.5);
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  vertical-align: 2px;
+}
+.philosophy-map-node-relations a {
+  color: var(--warm-white);
+  font-size: 14px;
+  border-bottom: 1px solid rgba(242, 237, 232, 0.24);
+}
+.philosophy-map-node-relations a:hover { color: var(--ember-hot); }
+.philosophy-map-relation-why {
+  display: block;
+  margin-top: 5px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+.philosophy-map-node-empty {
+  margin-top: 11px;
+  color: var(--rock-gray);
+  font-size: 13px;
+}
+.philosophy-map-node-enter { margin-top: 13px; }
+.philosophy-map-node-enter a {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.philosophy-map-node-enter a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.philosophy-map-chains {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 34px 40px;
+  margin-top: 32px;
+}
+.philosophy-map-chain { min-width: 0; }
+.philosophy-map-chain > h3 {
+  padding-top: 12px;
+  border-top: 2px solid rgba(242, 237, 232, 0.24);
+  color: var(--warm-white);
+  font-size: 17px;
+  font-weight: 580;
+  letter-spacing: -0.028em;
+  line-height: 1.35;
+}
+.philosophy-map-chain-why {
+  margin-top: 9px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+.philosophy-map-chain-steps { margin-top: 15px; }
+.philosophy-map-chain-steps li { text-align: left; }
+.philosophy-map-chain-arrow {
+  display: block;
+  padding: 3px 0;
+  color: var(--rock-gray);
+  font-size: 13px;
+}
+.philosophy-map-chain-steps a {
+  display: inline-block;
+  color: var(--warm-white);
+  font-size: 14.5px;
+  line-height: 1.5;
+  border-bottom: 1px solid rgba(224, 99, 42, 0.42);
+}
+.philosophy-map-chain-steps a:hover { color: var(--ember-hot); }
+
+.philosophy-map-concepts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 1px;
+  margin-top: 28px;
+  border: 1px solid var(--black-4);
+  background: var(--black-4);
+}
+.philosophy-map-concepts > li {
+  min-width: 0;
+  padding: 18px 20px 20px;
+  background: linear-gradient(135deg, #17171b, #111115);
+}
+.philosophy-map-concept-term {
+  color: var(--ember-hot);
+  font-size: 16px;
+  font-weight: 620;
+  letter-spacing: -0.02em;
+}
+.philosophy-map-concept-short {
+  margin-top: 8px;
+  color: #d6d0c8;
+  font-size: 13.5px;
+  line-height: 1.78;
+}
+.philosophy-map-concept-nodes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(242, 237, 232, 0.13);
+}
+.philosophy-map-concept-nodes a {
+  color: var(--warm-gray);
+  font-size: 12.5px;
+  border-bottom: 1px solid rgba(242, 237, 232, 0.2);
+}
+.philosophy-map-concept-nodes a:hover { color: var(--ember-hot); }
+
+/* ── 推荐基础学习路径 ─────────────────────────────────────── */
+.philosophy-path { margin-top: 34px; }
+.philosophy-path > li {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 0 18px;
+  padding: 22px 0 24px;
+  border-top: 1px solid rgba(242, 237, 232, 0.16);
+}
+.philosophy-path > li:first-child { border-top-width: 2px; border-top-color: var(--ember); }
+.philosophy-path-index {
+  grid-row: 1 / span 3;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}
+.philosophy-path-title {
+  font-size: 20px;
+  font-weight: 560;
+  letter-spacing: -0.032em;
+  line-height: 1.35;
+}
+.philosophy-path-title a { color: var(--warm-white); }
+.philosophy-path-title a:hover { color: var(--ember-hot); }
+.philosophy-path-why {
+  max-width: 720px;
+  margin-top: 9px;
+  color: #d6d0c8;
+  font-size: 14.5px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+.philosophy-path-detail {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 26px;
+  margin-top: 15px;
+}
+.philosophy-path-detail dt {
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.philosophy-path-detail dd {
+  margin: 6px 0 0;
+  color: var(--warm-gray);
+  font-size: 13.5px;
+  line-height: 1.78;
+}
+.philosophy-path-outro {
+  max-width: 760px;
+  margin-top: 34px;
+  color: var(--warm-gray);
+  font-size: 14px;
+  line-height: 1.85;
+}
+.philosophy-path-outro a {
+  margin: 0 4px;
+  color: var(--ember-hot);
+  border-bottom: 1px solid rgba(224, 99, 42, 0.42);
+}
+.philosophy-path-outro a:hover { border-bottom-color: var(--ember-hot); }
+
+/* ── 三个入口（哲学总览） ─────────────────────────────────── */
+.philosophy-entries {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 30px 36px;
+  margin-top: 34px;
+}
+.philosophy-entry { min-width: 0; }
+.philosophy-entry > h3 {
+  padding-top: 13px;
+  border-top: 2px solid var(--ember);
+  font-size: 20px;
+  font-weight: 570;
+  letter-spacing: -0.032em;
+  line-height: 1.3;
+}
+.philosophy-entry > h3 a { color: var(--warm-white); }
+.philosophy-entry > h3 a:hover { color: var(--ember-hot); }
+.philosophy-entry-for {
+  margin-top: 10px;
+  color: var(--ember-hot);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.philosophy-entry-note {
+  margin-top: 9px;
+  color: var(--warm-gray);
+  font-size: 13.5px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+
+@media (max-width: 760px) {
+  .philosophy-concept-cards,
+  .philosophy-experiment-principles dl,
+  .philosophy-path-detail { grid-template-columns: 1fr; }
+  .philosophy-concept-card { padding: 18px; }
+  .philosophy-argmap-step { padding: 14px 16px; }
+  .philosophy-argmap-branch,
+  .philosophy-comparison-framing,
+  .philosophy-map-legend > div,
+  .philosophy-map-concepts > li { padding: 17px 18px 19px; }
+  .philosophy-experiment-scenes > li { padding: 17px 18px; }
+  .philosophy-experiment-title { font-size: 21px; }
+  .philosophy-comparison-question { font-size: 19px; }
+  .philosophy-map-domains,
+  .philosophy-map-traditions { gap: 34px; margin-top: 28px; }
+  .philosophy-map-chains { gap: 28px; }
+  .philosophy-research > summary { min-height: 0; align-items: flex-start; flex-direction: column; }
+  .philosophy-path > li { grid-template-columns: 1fr; gap: 0; }
+  .philosophy-path-index { grid-row: auto; margin-bottom: 8px; }
+  .philosophy-gloss-panel { padding: 14px 16px; }
+  .philosophy-next-link { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .philosophy-gloss-term,
+  .philosophy-map-node-title,
+  .philosophy-research-title { transition: none; }
+}
+
+.philosophy-inline-map-link {
+  margin: 0 4px;
+  color: var(--ember-hot);
+  border-bottom: 1px solid rgba(224, 99, 42, 0.42);
+}
+.philosophy-inline-map-link:hover { border-bottom-color: var(--ember-hot); }
+.philosophy-coverage-heading { margin-top: 52px; }
+
+#entries, #by-question, #by-tradition, #how-to-read,
+#map-legend, #map-domains, #map-chains, #map-concepts, #map-traditions {
+  scroll-margin-top: calc(var(--header-height) + 60px);
+}
+
+/* 学习页的科目动作行可能有多个入口，换行时保持一致的间距。 */
+.learning-section-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+}
+
+/* ══ 哲学页的对比度、触控目标与断点补齐 ══════════════════
+   本轮无障碍审查的结果。全部是既有问题，不是新组件带来的。 */
+
+:root {
+  /* 深色面上的小号元信息用色。
+     原来这些标签用 --rock-gray (#6a6560)，在 #0e0e11 上只有 3.35:1，
+     在 .philosophy-pager-link 的 #1a1a1f 一端降到 3.01:1，而它们的字号
+     是 10–12px，达不到正文所需的 4.5:1。这个色在两种面上分别是
+     5.4:1 和 5.0:1，同时仍然比正文暗，层级不丢。 */
+  --meta-on-dark: #8f8880;
+}
+
+.philosophy-children-type,
+.philosophy-thread-type,
+.learning-question-count,
+.philosophy-pager-link > span,
+.philosophy-related-type,
+.philosophy-map-node-empty,
+.philosophy-research-meta,
+.philosophy-scope-label,
+.philosophy-argmap-number,
+.philosophy-argmap-branch-steps li::before,
+.philosophy-concept-original,
+.philosophy-concept-angle > span,
+.philosophy-concept-where > span,
+.philosophy-concept-sources > span,
+.philosophy-concept-subhead,
+.philosophy-experiment-tag,
+.philosophy-gloss-label,
+.philosophy-path-detail dt,
+.philosophy-map-chain-arrow,
+.philosophy-argmap-arrow {
+  color: var(--meta-on-dark);
+}
+
+/* 覆盖范围那五张卡是浅色面（#e8e5db 底、#19191b 字），写在全站深色化
+   之后就没再被任何规则覆盖，于是在一整页深色区块中间突然变成浅色卡。
+   并进同一套深色语言。 */
+.philosophy-coverage-map {
+  border: 1px solid var(--black-4);
+  background: var(--black-4);
+}
+.philosophy-coverage-map > div {
+  background: linear-gradient(135deg, #17171b, #111115);
+}
+.philosophy-coverage-map dt { color: var(--ember-hot); }
+.philosophy-coverage-map dd { color: #d6d0c8; }
+
+/* 触控目标。项目已有的约定是 44px（.notes-categories a、.philosophy-related li a、
+   .learning-question-link），下面这几处一直低于 24px。 */
+.philosophy-breadcrumb a,
+.philosophy-breadcrumb [aria-current='page'] {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+}
+.philosophy-history-links a,
+.philosophy-source-records a,
+.philosophy-concept-where a,
+.philosophy-concept-sources a,
+.philosophy-map-concept-nodes a,
+.philosophy-gloss-line a {
+  display: inline-block;
+  min-height: 26px;
+  padding: 3px 0;
+}
+
+/* 断点补齐：外层栅格在 980 折行，而研究／精读层的多列栅格只写了 760，
+   761–979 之间是一条挤压带——两列内容被塞进一条已经变窄的正文列。 */
+@media (max-width: 980px) {
+  .philosophy-concept-grid,
+  .philosophy-concept-cards,
+  .philosophy-texts,
+  .philosophy-source-records,
+  .philosophy-coverage-map,
+  .philosophy-experiment-principles dl,
+  .philosophy-path-detail {
+    grid-template-columns: 1fr;
+  }
+  .philosophy-voices > article { grid-template-columns: 1fr; gap: 10px; }
+}
+
+/* 减弱动效：全站有四个 prefers-reduced-motion 块各自点名少数选择器。
+   这里补上一条覆盖面更大的兜底，新增能力不必再逐个登记。 */
+@media (prefers-reduced-motion: reduce) {
+  .philosophy-page *,
+  .learning-page * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 行内概念注解里的「展开读」指向条目页的概念区，锚点要避开吸顶 header。 */
+#concepts { scroll-margin-top: calc(var(--header-height) + 60px); }
+
+/* 立场卡的「回应」。有反对就要有回应，两者用同一套版式但标签色分开：
+   反对是实心信号色，回应是描边，避免读者把回应误读成又一条反对。 */
+.philosophy-position-response {
+  margin-top: 12px;
+  color: #d6d0c8;
+  font-size: 14px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+.philosophy-tag--response {
+  background: transparent;
+  border: 1px solid var(--ember);
+  color: var(--ember-hot);
+}
+
+/* 来源的核验状态。三态在 id 行里已经有文字，这里只补一条左边界，
+   让「链接失效」和「待核验」在一列里能被扫出来——不靠颜色单独承担语义。 */
+.philosophy-source-pending { border-left: 2px solid rgba(242, 237, 232, 0.28); padding-left: 13px; }
+.philosophy-source-broken { border-left: 2px solid var(--ember); padding-left: 13px; }
+.philosophy-source-broken .philosophy-source-id { color: var(--ember-hot); }
+.philosophy-source-pending .philosophy-source-id { color: var(--meta-on-dark); }
+
+.philosophy-experiment-sources { margin-top: 16px; }
+.philosophy-experiment-sources a {
+  display: inline-block;
+  min-height: 26px;
+  margin-right: 14px;
+  padding: 3px 0;
+  color: var(--ember-hot);
+  font-size: 13px;
+  border-bottom: 1px solid rgba(224, 99, 42, 0.35);
+}
+.philosophy-experiment-sources a:hover { border-bottom-color: var(--ember-hot); }
+
+/* 条目页的页内目录。核心问题页有十来个区块，需要一个入口而不是把正文折起来。
+   版式上是一串细边小标签，不是侧边栏——它属于这一页，不参与全站导航。 */
+.philosophy-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 860px;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(242, 237, 232, 0.16);
+}
+.philosophy-toc a {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  padding: 0 11px;
+  border: 1px solid rgba(242, 237, 232, 0.2);
+  color: var(--warm-gray);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+.philosophy-toc a:hover,
+.philosophy-toc a:focus-visible {
+  border-color: var(--ember);
+  color: var(--warm-white);
+}
+/* 目录跳过去时标题要落在吸顶 header 下面。 */
+.philosophy-block-title,
+.philosophy-research > summary { scroll-margin-top: calc(var(--header-height) + 60px); }

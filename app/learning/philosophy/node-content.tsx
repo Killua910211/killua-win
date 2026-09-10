@@ -1,8 +1,20 @@
 import Link from 'next/link';
 import { getNodeById, nodeHref, type PhilosophyNode } from './tree';
 import { getStudyGuide } from './study-guides';
-import { getCoreEntryLedger, type LedgerParagraph } from './content-ledger';
+import { getCoreEntryLedger, type CoreEntryLedger, type LedgerParagraph } from './content-ledger';
 import { BeingChangeEntry } from './being-change-entry';
+import { getArgumentMap } from './argument-maps';
+import { getThoughtExperiment } from './thought-experiments';
+import { comparisonsForNode } from './comparisons';
+import { relationGroupsFor } from './relations';
+import { ArgumentMap } from './argument-map';
+import { Citations, ClaimSources } from './citation';
+import { ComparisonBlock } from './comparison';
+import { ConceptList } from './concept-card';
+import { NextSteps } from './next-steps';
+import { Prose } from './prose';
+import { ResearchLayer } from './research-layer';
+import { ThoughtExperiment } from './thought-experiment';
 
 type HeadingLevel = 'h2' | 'h3';
 
@@ -53,7 +65,7 @@ export function CoreQuestionGroups({
               {group.questions.map((question, questionIndex) => (
                 <li key={question.id}>
                   <Link className="learning-question-link" href={question.href}>
-                    <span className="learning-question-index" lang="en" aria-hidden="true">
+                    <span aria-hidden="true" className="learning-question-index" lang="en">
                       {String(questionOffset + questionIndex + 1).padStart(2, '0')}
                     </span>
                     <QuestionHeading className="learning-question-title">
@@ -70,12 +82,39 @@ export function CoreQuestionGroups({
   );
 }
 
+/** 来源账里的一段正文。kind 标出它是原文、概括、解释性重构还是原创例子。 */
+function LedgerProse({
+  paragraphs,
+  sources,
+}: {
+  paragraphs: LedgerParagraph[];
+  sources: CoreEntryLedger['sources'];
+}) {
+  return (
+    <div className="philosophy-ledger-prose">
+      {paragraphs.map((paragraph, index) => (
+        <Prose
+          key={`${paragraph.kind}-${index}`}
+          trailing={
+            <>
+              <Citations ids={paragraph.sourceIds} sources={sources} />
+            </>
+          }
+        >
+          {paragraph.text}
+        </Prose>
+      ))}
+    </div>
+  );
+}
+
 /**
- * 节点正文。总览页和每个节点页共用同一套渲染：基础树数据保持完整呈现，
- * 新增核心问题则在其上叠加概念、论证和原典的精读层。
+ * 节点正文。
  *
- * headingLevel 让同一套内容在「本页主体」和「某一节里的一块」两种位置
- * 都能保持标题层级连续。
+ * 阅读层的顺序按「问题 → 分歧 → 理由 → 论证 → 反驳 → 回应 → 检验 → 连接」
+ * 组织，而不是按数据结构的字段顺序。维护信息（条目状态、来源核验记录、
+ * 审查与待办）整块收进末尾的研究层——正文里的来源角标仍然直接指向来源，
+ * 不需要先展开折叠区。
  */
 export function NodeBody({
   node,
@@ -84,10 +123,6 @@ export function NodeBody({
   node: PhilosophyNode;
   headingLevel?: HeadingLevel;
 }) {
-  if (node.id === 'pt-being-change') {
-    return <BeingChangeEntry node={node} />;
-  }
-
   const BlockHeading = headingLevel;
   const SubHeading = headingLevel === 'h2' ? 'h3' : 'h4';
   const notes = node.notes ?? [];
@@ -95,85 +130,126 @@ export function NodeBody({
   const figures = node.figures ?? [];
   const guide = getStudyGuide(node.id);
   const ledger = getCoreEntryLedger(node.id);
-  const related = (node.related ?? [])
+  const argument = getArgumentMap(node.id);
+  const experiment = getThoughtExperiment(node.id);
+  const comparisons = comparisonsForNode(node.id);
+  const relationGroups = relationGroupsFor(node.id);
+  const sources = ledger?.sources ?? [];
+  const legacyRelated = (node.related ?? [])
     .map((id) => getNodeById(id))
     .filter((relatedNode): relatedNode is PhilosophyNode => Boolean(relatedNode));
-  const sources = node.sources ?? [];
+  const legacySources = node.sources ?? [];
 
-  const citationLinks = (sourceIds?: string[]) =>
-    sourceIds?.map((sourceId) => {
-      const source = ledger?.sources.find((item) => item.id === sourceId);
-      if (!source) return null;
-      return (
-        <a
-          className="philosophy-citation"
-          href={source.url}
-          key={source.id}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={`来源 ${source.id}：${source.title}（在新标签页打开）`}
-        >
-          [{source.id}]
-        </a>
-      );
-    });
-
-  const sourceLinks = (paragraph: LedgerParagraph) => citationLinks(paragraph.sourceIds);
-
-  const claimSources = (sourceIds?: string[]) => {
-    const citations = citationLinks(sourceIds);
-    if (!citations?.length) return null;
-    return <span className="philosophy-claim-sources">核对来源 {citations}</span>;
+  // 区块标题抽出来一份，目录和正文用同一个来源，不会各写一遍再漂移。
+  const headings = {
+    origin: ledger?.sectionHeadings?.origin ?? '问题为何会出现',
+    boundaries: ledger?.sectionHeadings?.boundaries ?? '定义与边界',
+    objections: ledger?.sectionHeadings?.objections ?? '有力反对及回应',
+    confusions: ledger?.sectionHeadings?.confusions ?? '容易混淆的地方',
+    historicalContext: ledger?.sectionHeadings?.historicalContext ?? '放回历史线索',
   };
+
+  /**
+   * 页内目录。
+   *
+   * 核心问题页现在有十来个区块，手机上要滚两万像素才到底。折叠正文不是办法
+   * ——正文本来就该读；给它一个入口才是。区块少的条目（传统导航、问题域）
+   * 不需要目录，所以只在超过六块时才出现。
+   *
+   * 条件必须和下面的渲染条件一致，否则会出现指向不存在锚点的死链。
+   */
+  const experimentEntry = experiment
+    ? { id: `${node.id}-experiment`, label: '思想实验' }
+    : guide
+      ? { id: `${node.id}-case`, label: '案例推演' }
+      : node.example
+        ? { id: `${node.id}-example`, label: '一个例子' }
+        : null;
+
+  const toc = [
+    ledger && { id: `${node.id}-origin`, label: headings.origin },
+    ledger && { id: `${node.id}-boundaries`, label: headings.boundaries },
+    notes.length > 0 && { id: `${node.id}-notes`, label: '阅读提醒' },
+    guide && { id: `${node.id}-orientation`, label: '先把问题拆开' },
+    argument && { id: `${node.id}-argument`, label: '论证地图' },
+    positions.length > 0 && { id: `${node.id}-positions`, label: '主要立场' },
+    ledger && { id: `${node.id}-objections`, label: headings.objections },
+    guide?.philosopherViews?.length && { id: `${node.id}-voices`, label: '哲学家怎样改写这个问题' },
+    experimentEntry,
+    ledger && { id: `${node.id}-confusions`, label: headings.confusions },
+    !guide && figures.length > 0 && { id: `${node.id}-figures`, label: '相关人物与文本' },
+    guide && { id: `${node.id}-texts`, label: '人物与原典' },
+    comparisons.length > 0 && { id: `${node.id}-comparisons`, label: '跨传统的可比问题' },
+    ledger &&
+      ledger.historicalContext.length > 0 && {
+        id: `${node.id}-history`,
+        label: headings.historicalContext,
+      },
+    guide?.nextQuestions.length && { id: `${node.id}-next-questions`, label: '带着问题继续读' },
+    relationGroups.length > 0 && { id: `${node.id}-next`, label: '继续学习' },
+  ].filter((entry): entry is { id: string; label: string } => Boolean(entry));
+
+  // 「存在与变化」有自己一条手写教学主线；新增能力挂在它后面，不套通用模板。
+  if (node.id === 'pt-being-change') {
+    return (
+      <div className="philosophy-body-main">
+        <BeingChangeEntry node={node} />
+        <SharedTail
+          argument={argument}
+          comparisons={comparisons}
+          experiment={experiment}
+          headingLevel={headingLevel}
+          ledger={ledger}
+          // 手写主线也要有出口：没有语义关系时退回 data.json 的 related，
+          // 否则这一页会变成全库最强也最孤立的一页。
+          legacyRelated={legacyRelated}
+          nextQuestions={guide?.nextQuestions}
+          node={node}
+          relationGroupCount={relationGroups.length}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="philosophy-body-main">
       {ledger && (
-        <section className="philosophy-block philosophy-entry-status" aria-labelledby={`${node.id}-status`}>
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-status`}>
-            本条范围与状态
-          </BlockHeading>
-          <p className="philosophy-entry-status-label">{ledger.status}</p>
-          <p className="philosophy-entry-status-text">{ledger.scope}</p>
-        </section>
+        <p className="philosophy-scope">
+          <span className="philosophy-scope-label">本页范围</span>
+          {ledger.scope}
+        </p>
+      )}
+
+      {toc.length > 6 && (
+        <nav aria-label="本页区块导航" className="philosophy-toc">
+          {toc.map((entry) => (
+            <a href={`#${entry.id}`} key={entry.id}>
+              {entry.label}
+            </a>
+          ))}
+        </nav>
       )}
 
       {ledger && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-origin`}>
+        <section aria-labelledby={`${node.id}-origin`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-origin`}>
-            {ledger.sectionHeadings?.origin ?? '问题为何会出现'}
+            {headings.origin}
           </BlockHeading>
-          <div className="philosophy-ledger-prose">
-            {ledger.origin.map((paragraph, index) => (
-              <p key={`${paragraph.kind}-${index}`}>
-                <span className="philosophy-content-kind">{paragraph.kind}</span>
-                {paragraph.text}
-                {sourceLinks(paragraph)}
-              </p>
-            ))}
-          </div>
+          <LedgerProse paragraphs={ledger.origin} sources={sources} />
         </section>
       )}
 
       {ledger && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-boundaries`}>
+        <section aria-labelledby={`${node.id}-boundaries`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-boundaries`}>
-            {ledger.sectionHeadings?.boundaries ?? '定义与边界'}
+            {headings.boundaries}
           </BlockHeading>
-          <div className="philosophy-ledger-prose">
-            {ledger.boundaries.map((paragraph, index) => (
-              <p key={`${paragraph.kind}-${index}`}>
-                <span className="philosophy-content-kind">{paragraph.kind}</span>
-                {paragraph.text}
-                {sourceLinks(paragraph)}
-              </p>
-            ))}
-          </div>
+          <LedgerProse paragraphs={ledger.boundaries} sources={sources} />
         </section>
       )}
 
       {notes.length > 0 && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-notes`}>
+        <section aria-labelledby={`${node.id}-notes`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-notes`}>
             阅读提醒
           </BlockHeading>
@@ -186,45 +262,66 @@ export function NodeBody({
       )}
 
       {guide && (
-        <section className="philosophy-block philosophy-study-intro" aria-labelledby={`${node.id}-orientation`}>
+        <section
+          aria-labelledby={`${node.id}-orientation`}
+          className="philosophy-block philosophy-study-intro"
+          id="concepts"
+        >
           <BlockHeading className="philosophy-block-title" id={`${node.id}-orientation`}>
             先把问题拆开
           </BlockHeading>
           <p className="philosophy-study-orientation">{guide.orientation}</p>
-          <dl className="philosophy-concept-grid">
-            {guide.concepts.map((concept) => (
-              <div key={concept.term}>
-                <dt>{concept.term}</dt>
-                <dd>{concept.explanation}</dd>
-              </div>
-            ))}
-          </dl>
+          {guide.conceptRefs && <ConceptList refs={guide.conceptRefs} />}
+          {guide.concepts.length > 0 && (
+            <dl className="philosophy-concept-grid">
+              {guide.concepts.map((concept) => (
+                <div key={concept.term}>
+                  <dt>{concept.term}</dt>
+                  <dd>{concept.explanation}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+        </section>
+      )}
+
+      {argument && (
+        <section aria-labelledby={`${node.id}-argument`} className="philosophy-block">
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-argument`}>
+            论证地图
+          </BlockHeading>
+          <ArgumentMap map={argument} sources={sources} />
         </section>
       )}
 
       {positions.length > 0 && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-positions`}>
+        <section aria-labelledby={`${node.id}-positions`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-positions`}>
             主要立场
           </BlockHeading>
           <ol className="philosophy-positions">
-            {positions.map((position, index) => (
+            {positions.map((position, index) => {
+              // 按立场名取论证路径，不按下标：下标对齐曾把论证挂到别的立场上。
+              const argument = guide?.positionArguments?.[position.name];
+              return (
               <li key={position.name}>
-                <p className="philosophy-position-index" lang="en" aria-hidden="true">
+                <p aria-hidden="true" className="philosophy-position-index" lang="en">
                   {String(index + 1).padStart(2, '0')}
                 </p>
                 <SubHeading className="philosophy-position-name">{position.name}</SubHeading>
                 <p className="philosophy-position-text">{position.text}</p>
-                {claimSources(guide?.positionSourceIds?.[index])}
-                {guide?.positionPaths[index] && (
-                  <div className="philosophy-position-path">
-                    <p>论证路径</p>
-                    <ol>
-                      {guide.positionPaths[index].map((step) => (
-                        <li key={step}>{step}</li>
-                      ))}
-                    </ol>
-                  </div>
+                {argument && (
+                  <>
+                    <ClaimSources ids={argument.sourceIds} sources={sources} />
+                    <div className="philosophy-position-path">
+                      <p>论证路径</p>
+                      <ol>
+                        {argument.steps.map((step) => (
+                          <li key={step}>{step}</li>
+                        ))}
+                      </ol>
+                    </div>
+                  </>
                 )}
                 {position.objection && (
                   <p className="philosophy-position-objection">
@@ -232,31 +329,30 @@ export function NodeBody({
                     {position.objection}
                   </p>
                 )}
+                {position.response && (
+                  <p className="philosophy-position-response">
+                    <span className="philosophy-tag philosophy-tag--response">回应</span>
+                    {position.response}
+                  </p>
+                )}
               </li>
-            ))}
+              );
+            })}
           </ol>
         </section>
       )}
 
       {ledger && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-objections`}>
+        <section aria-labelledby={`${node.id}-objections`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-objections`}>
-            {ledger.sectionHeadings?.objections ?? '有力反对及回应'}
+            {headings.objections}
           </BlockHeading>
-          <div className="philosophy-ledger-prose">
-            {ledger.objections.map((paragraph, index) => (
-              <p key={`${paragraph.kind}-${index}`}>
-                <span className="philosophy-content-kind">{paragraph.kind}</span>
-                {paragraph.text}
-                {sourceLinks(paragraph)}
-              </p>
-            ))}
-          </div>
+          <LedgerProse paragraphs={ledger.objections} sources={sources} />
         </section>
       )}
 
       {guide?.philosopherViews && guide.philosopherViews.length > 0 && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-voices`}>
+        <section aria-labelledby={`${node.id}-voices`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-voices`}>
             哲学家怎样改写这个问题
           </BlockHeading>
@@ -268,7 +364,7 @@ export function NodeBody({
               <article key={`${view.philosopher}-${view.work}`}>
                 <p className="philosophy-voice-period">{view.period}</p>
                 <div>
-                  <h3>{view.philosopher}</h3>
+                  <SubHeading>{view.philosopher}</SubHeading>
                   <p className="philosophy-voice-work">{view.work}</p>
                   <p>{view.framing}</p>
                   <p className="philosophy-voice-application">
@@ -279,7 +375,7 @@ export function NodeBody({
                     <span>不能直接推出</span>
                     {view.caution}
                   </p>
-                  {claimSources(view.sourceIds)}
+                  <ClaimSources ids={view.sourceIds} sources={sources} />
                 </div>
               </article>
             ))}
@@ -287,50 +383,15 @@ export function NodeBody({
         </section>
       )}
 
-      {guide && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-texts`}>
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-texts`}>
-            人物与原典：从哪里读起
+      {experiment ? (
+        <section aria-labelledby={`${node.id}-experiment`} className="philosophy-block">
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-experiment`}>
+            思想实验
           </BlockHeading>
-          <p className="philosophy-block-intro">
-            先抓住每部文本在争论中解决什么问题，再回到原文核对论证；不要把作者的名字当成某个立场的标签。
-          </p>
-          <ol className="philosophy-texts">
-            {guide.texts.map((text, index) => (
-              <li key={`${text.author}-${text.work}`}>
-                <p className="philosophy-text-index" aria-hidden="true">
-                  {String(index + 1).padStart(2, '0')}
-                </p>
-                <p className="philosophy-text-author">{text.author}</p>
-                <h3>{text.work}</h3>
-                <p className="philosophy-text-period">{text.period}</p>
-                <p className="philosophy-text-contribution">{text.contribution}</p>
-                {claimSources(text.sourceIds)}
-                <p className="philosophy-text-question">
-                  <span>带着这个问题读</span>
-                  {text.readingQuestion}
-                </p>
-              </li>
-            ))}
-          </ol>
+          <ThoughtExperiment experiment={experiment} />
         </section>
-      )}
-
-      {!guide && figures.length > 0 && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-figures`}>
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-figures`}>
-            相关人物与文本
-          </BlockHeading>
-          {figures.map((figure) => (
-            <p className="philosophy-paragraph" key={figure}>
-              {figure}
-            </p>
-          ))}
-        </section>
-      )}
-
-      {guide ? (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-case`}>
+      ) : guide ? (
+        <section aria-labelledby={`${node.id}-case`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-case`}>
             案例推演
           </BlockHeading>
@@ -345,7 +406,7 @@ export function NodeBody({
           </div>
         </section>
       ) : node.example ? (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-example`}>
+        <section aria-labelledby={`${node.id}-example`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-example`}>
             一个例子
           </BlockHeading>
@@ -354,33 +415,168 @@ export function NodeBody({
       ) : null}
 
       {ledger && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-confusions`}>
+        <section aria-labelledby={`${node.id}-confusions`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-confusions`}>
-            {ledger.sectionHeadings?.confusions ?? '容易混淆的地方'}
+            {headings.confusions}
           </BlockHeading>
           <ul className="philosophy-confusions">
             {ledger.confusions.map((paragraph, index) => (
               <li key={`${paragraph.kind}-${index}`}>
-                <span className="philosophy-content-kind">{paragraph.kind}</span>
+                <span className="philosophy-content-kind">
+                  {paragraph.kind}
+                  <span className="sr-only">：</span>
+                </span>
                 {paragraph.text}
-                {sourceLinks(paragraph)}
+                <Citations ids={paragraph.sourceIds} sources={sources} />
               </li>
             ))}
           </ul>
         </section>
       )}
 
+      {!guide && figures.length > 0 && (
+        <section aria-labelledby={`${node.id}-figures`} className="philosophy-block">
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-figures`}>
+            相关人物与文本
+          </BlockHeading>
+          {figures.map((figure) => (
+            <p className="philosophy-paragraph" key={figure}>
+              {figure}
+            </p>
+          ))}
+        </section>
+      )}
+
+      {guide && (
+        <section aria-labelledby={`${node.id}-texts`} className="philosophy-block">
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-texts`}>
+            人物与原典：从哪里读起
+          </BlockHeading>
+          <p className="philosophy-block-intro">
+            先抓住每部文本在争论中解决什么问题，再回到原文核对论证；不要把作者的名字当成某个立场的标签。
+          </p>
+          <ol className="philosophy-texts">
+            {guide.texts.map((text, index) => (
+              <li key={`${text.author}-${text.work}`}>
+                <p aria-hidden="true" className="philosophy-text-index">
+                  {String(index + 1).padStart(2, '0')}
+                </p>
+                <p className="philosophy-text-author">{text.author}</p>
+                <SubHeading>{text.work}</SubHeading>
+                <p className="philosophy-text-period">{text.period}</p>
+                <p className="philosophy-text-contribution">{text.contribution}</p>
+                <ClaimSources ids={text.sourceIds} sources={sources} />
+                <p className="philosophy-text-question">
+                  <span>带着这个问题读</span>
+                  {text.readingQuestion}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      <SharedTail
+        argument={undefined}
+        comparisons={comparisons}
+        experiment={undefined}
+        headingLevel={headingLevel}
+        ledger={ledger}
+        legacyRelated={legacyRelated}
+        legacySources={legacySources}
+        nextQuestions={guide?.nextQuestions}
+        node={node}
+        relationGroupCount={relationGroups.length}
+      />
+    </div>
+  );
+}
+
+/**
+ * 所有条目共享的尾部：跨传统比较、历史线索、继续学习、研究层。
+ *
+ * 「存在与变化」那条手写主线也走这里，所以新增能力不必在两处各写一遍。
+ * argument / experiment 只有手写页需要传进来——通用模板已经在正文中间
+ * 按顺序渲染过它们了。
+ */
+function SharedTail({
+  argument,
+  comparisons,
+  experiment,
+  headingLevel,
+  ledger,
+  legacyRelated = [],
+  legacySources = [],
+  nextQuestions,
+  node,
+  relationGroupCount,
+}: {
+  argument: ReturnType<typeof getArgumentMap>;
+  comparisons: ReturnType<typeof comparisonsForNode>;
+  experiment: ReturnType<typeof getThoughtExperiment>;
+  headingLevel: HeadingLevel;
+  ledger: CoreEntryLedger | undefined;
+  legacyRelated?: PhilosophyNode[];
+  legacySources?: { label: string; url: string }[];
+  nextQuestions?: string[];
+  node: PhilosophyNode;
+  relationGroupCount: number;
+}) {
+  const BlockHeading = headingLevel;
+  const sources = ledger?.sources ?? [];
+
+  return (
+    <>
+      {argument && (
+        <section aria-labelledby={`${node.id}-argument`} className="philosophy-block">
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-argument`}>
+            论证地图
+          </BlockHeading>
+          <ArgumentMap map={argument} sources={sources} />
+        </section>
+      )}
+
+      {experiment && (
+        <section aria-labelledby={`${node.id}-experiment`} className="philosophy-block">
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-experiment`}>
+            思想实验
+          </BlockHeading>
+          <ThoughtExperiment experiment={experiment} />
+        </section>
+      )}
+
+      {comparisons.length > 0 && (
+        <section aria-labelledby={`${node.id}-comparisons`} className="philosophy-block">
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-comparisons`}>
+            跨传统的可比问题
+          </BlockHeading>
+          <p className="philosophy-block-intro">
+            比较不从「哪个传统相当于哪一派」开始，而从一个双方真的能对话的问题开始。每一栏保留它
+            自己的问题框架；它们不一定在回答完全相同的问题。
+          </p>
+          {comparisons.map((item) => (
+            <ComparisonBlock item={item} key={item.id} />
+          ))}
+        </section>
+      )}
+
       {ledger && ledger.historicalContext.length > 0 && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-history`}>
+        <section aria-labelledby={`${node.id}-history`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-history`}>
             {ledger.sectionHeadings?.historicalContext ?? '放回历史线索'}
           </BlockHeading>
           <ul className="philosophy-history-links">
             {ledger.historicalContext.map((item) => {
               const historyNode = getNodeById(item.nodeId);
+              // 链接文字取节点当前标题，不取 label：label 是手写副本，本轮审查
+              // 查出 13 处已经和目标页标题对不上，页面显示的是不存在的标题。
               return (
                 <li key={item.nodeId}>
-                  {historyNode ? <Link href={nodeHref(historyNode)}>{item.label}</Link> : <span>{item.label}</span>}
+                  {historyNode ? (
+                    <Link href={nodeHref(historyNode)}>{historyNode.title}</Link>
+                  ) : (
+                    <span>{item.label}</span>
+                  )}
                   <p>{item.note}</p>
                 </li>
               );
@@ -389,71 +585,61 @@ export function NodeBody({
         </section>
       )}
 
-      {guide && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-next-questions`}>
+      {nextQuestions && nextQuestions.length > 0 && (
+        <section aria-labelledby={`${node.id}-next-questions`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-next-questions`}>
             带着问题继续读
           </BlockHeading>
           <ul className="philosophy-next-questions">
-            {guide.nextQuestions.map((question) => (
+            {nextQuestions.map((question) => (
               <li key={question}>{question}</li>
             ))}
           </ul>
         </section>
       )}
 
-      {related.length > 0 && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-related`}>
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-related`}>
-            相关节点
-          </BlockHeading>
-          <ul className="philosophy-related">
-            {related.map((relatedNode) => (
-              <li key={relatedNode.id}>
-                <Link href={nodeHref(relatedNode)}>
-                  <span className="philosophy-related-type" lang="zh-CN">
-                    {relatedNode.type}
-                  </span>
-                  <span className="philosophy-related-title">{relatedNode.title}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {ledger ? (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-sources`}>
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-sources`}>
-            来源与核验记录
+      {relationGroupCount > 0 ? (
+        <section aria-labelledby={`${node.id}-next`} className="philosophy-block">
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-next`}>
+            继续学习
           </BlockHeading>
           <p className="philosophy-block-intro">
-            每项只说明本轮实际核对到的定位和它支持的论断；原典入口不等于整部文本已经完成校勘。
+            每一条都说明为什么推荐它：是前置知识，是另一种回答，是一个反驳，是延伸问题，还是一个
+            只能并置比较的跨传统问题。
           </p>
-          <ol className="philosophy-source-records">
-            {ledger.sources.map((source) => (
-              <li key={source.id}>
-                <p className="philosophy-source-id">{source.id} · {source.kind} · 已核验</p>
-                <a href={source.url} target="_blank" rel="noreferrer">
-                  {source.title}
-                  <span aria-hidden="true"> ↗</span>
-                  <span className="sr-only">（在新标签页打开）</span>
-                </a>
-                <p><strong>定位：</strong>{source.locator}</p>
-                <p><strong>用于：</strong>{source.supports}</p>
-              </li>
-            ))}
-          </ol>
+          <NextSteps nodeId={node.id} />
         </section>
-      ) : sources.length > 0 && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-sources`}>
+      ) : (
+        legacyRelated.length > 0 && (
+          <section aria-labelledby={`${node.id}-related`} className="philosophy-block">
+            <BlockHeading className="philosophy-block-title" id={`${node.id}-related`}>
+              相关节点
+            </BlockHeading>
+            <ul className="philosophy-related">
+              {legacyRelated.map((relatedNode) => (
+                <li key={relatedNode.id}>
+                  <Link href={nodeHref(relatedNode)}>
+                    <span className="philosophy-related-type" lang="zh-CN">
+                      {relatedNode.type}
+                    </span>
+                    <span className="philosophy-related-title">{relatedNode.title}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      )}
+
+      {!ledger && legacySources.length > 0 && (
+        <section aria-labelledby={`${node.id}-sources`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-sources`}>
             延伸阅读
           </BlockHeading>
           <ul className="philosophy-sources">
-            {sources.map((source) => (
+            {legacySources.map((source) => (
               <li key={source.url}>
-                <a href={source.url} target="_blank" rel="noreferrer">
+                <a href={source.url} rel="noreferrer" target="_blank">
                   {source.label}
                   <span aria-hidden="true"> ↗</span>
                   <span className="sr-only">（在新标签页打开）</span>
@@ -464,32 +650,8 @@ export function NodeBody({
         </section>
       )}
 
-      {ledger && (
-        <section className="philosophy-block" aria-labelledby={`${node.id}-review`}>
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-review`}>
-            本轮审查与待办
-          </BlockHeading>
-          <p className="philosophy-review-meta">{ledger.review.mode} · {ledger.review.checkedOn}</p>
-          <ol className="philosophy-review-findings">
-            {ledger.review.findings.map((finding) => (
-              <li key={finding.location}>
-                <h3>{finding.location}</h3>
-                <p><strong>发现：</strong>{finding.issue}</p>
-                <p><strong>依据：</strong>{finding.evidence}</p>
-                <p><strong>修订：</strong>{finding.revision}</p>
-              </li>
-            ))}
-          </ol>
-          <p className="philosophy-review-impact"><strong>相邻条目影响：</strong>{ledger.review.adjacentImpact}</p>
-          <p className="philosophy-review-impact"><strong>下一优先：</strong>{ledger.review.nextPriority}</p>
-          {ledger.review.remaining.length > 0 && (
-            <ul className="philosophy-review-todos">
-              {ledger.review.remaining.map((item) => <li key={item}>待办：{item}</li>)}
-            </ul>
-          )}
-        </section>
-      )}
-    </div>
+      {ledger && <ResearchLayer ledger={ledger} nodeId={node.id} />}
+    </>
   );
 }
 
@@ -509,7 +671,7 @@ export function NodeChildren({
   if (children.length === 0) return null;
 
   return (
-    <section className="philosophy-block" aria-labelledby={`${node.id}-children`}>
+    <section aria-labelledby={`${node.id}-children`} className="philosophy-block">
       <BlockHeading className="philosophy-block-title" id={`${node.id}-children`}>
         {title}
       </BlockHeading>

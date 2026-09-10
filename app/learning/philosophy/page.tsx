@@ -1,14 +1,16 @@
 import Link from 'next/link';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
+import { SectionNav } from '@/app/components/section-nav';
 import { buildMetadata } from '@/app/lib/metadata';
 import { CoreQuestionGroups, NodeBody, type QuestionGroup } from './node-content';
 import { philosophyCoverage } from './coverage';
+import { basicPath } from './learning-path';
+import { philosophyRelations } from './relations';
 import {
   coreSection,
   coreQuestions,
   isCoreQuestion,
-  neighborsOf,
   nodeHref,
   philosophyTree,
   questionDomains,
@@ -18,7 +20,7 @@ import {
 
 export const metadata = buildMetadata({
   title: '哲学 · 从问题开始',
-  description: `按问题组织的哲学地图：${questionDomains.length} 个问题域、${coreQuestions.length} 个核心问题，以及 ${traditions.length} 条平行的传统导航。`,
+  description: `按问题组织的哲学地图：${questionDomains.length} 个问题域、${coreQuestions.length} 个核心问题，以及 ${traditions.length} 条平行的传统导航。三个入口：从问题开始、按推荐路线系统学习、从传统进入。`,
   path: '/learning/philosophy',
 });
 
@@ -34,21 +36,52 @@ const questionGroups: QuestionGroup[] = questionDomains.map((domain) => ({
   })),
 }));
 
-export default function PhilosophyOverviewPage() {
-  const { next } = neighborsOf(philosophyTree.id);
+/**
+ * 三个入口。
+ *
+ * 「从问题开始」仍然是核心，排第一，并且它指向的就是原来那份核心问题清单——
+ * 新增另外两个入口不是为了取代它，而是因为「我什么都不知道」和「我想从某个
+ * 传统进入」是它回答不了的两种真实需求。
+ *
+ * 版式上刻意克制：三条细规则线，不做成三张巨大的卡片。
+ */
+const entries = [
+  {
+    id: 'entry-question',
+    title: '从问题开始',
+    href: '#by-question',
+    for: '我现在对某个问题感兴趣。',
+    note: `${coreQuestions.length} 个核心问题，按问题类型排列，不按国别、时代或哲学家。每一个都可以单独读完。`,
+  },
+  {
+    id: 'entry-path',
+    title: '系统学习',
+    href: '/learning/philosophy/path',
+    for: '我什么都不知道，该从哪里开始？',
+    note: `一条 ${basicPath.steps.length} 步的推荐基础路线，每一步都为下一步准备一个必要的区分。它不是唯一正确的顺序。`,
+  },
+  {
+    id: 'entry-tradition',
+    title: '从传统进入',
+    href: '#by-tradition',
+    for: '我想从某个传统的文本和论辩史进入。',
+    note: `${traditions.length} 条平行的历史导航。传统有自己的问题框架，不是核心问题的地区版本。`,
+  },
+];
 
+export default function PhilosophyOverviewPage() {
   return (
     <>
       <SiteHeader current="learning" />
 
-      <main id="main" className="learning-page philosophy-page">
-        <section className="philosophy-hero" aria-labelledby="philosophy-title">
+      <main className="learning-page philosophy-page" id="main">
+        <section aria-labelledby="philosophy-title" className="philosophy-hero">
           <div className="section-label light" lang="en">
             <span>01</span>
             <span>Philosophy</span>
           </div>
           <div className="philosophy-hero-body">
-            <nav className="philosophy-breadcrumb" aria-label="面包屑">
+            <nav aria-label="面包屑" className="philosophy-breadcrumb">
               <Link href="/learning">学习空间</Link>
               <span aria-hidden="true">/</span>
               <span aria-current="page">哲学</span>
@@ -62,46 +95,55 @@ export default function PhilosophyOverviewPage() {
           </div>
         </section>
 
-        <section className="philosophy-section" aria-labelledby="philosophy-overview-heading">
+        <SectionNav
+          items={[
+            { href: '#entries', label: '三个入口' },
+            { href: '#by-question', label: '按问题' },
+            { href: '#by-tradition', label: '按传统' },
+            { href: '#how-to-read', label: '怎么读' },
+          ]}
+          label="哲学分区"
+        />
+
+        <section aria-labelledby="entries-heading" className="philosophy-section" id="entries">
           <div className="section-label" lang="en">
             <span>02</span>
-            <span>How to read it</span>
+            <span>Ways in</span>
           </div>
           <div className="philosophy-section-body">
-            <h2 className="philosophy-section-heading" id="philosophy-overview-heading">
-              这张地图怎么用
-            </h2>
-            <NodeBody node={philosophyTree} headingLevel="h3" />
-          </div>
-        </section>
-
-        <section className="philosophy-section" aria-labelledby="philosophy-coverage-heading">
-          <div className="section-label" lang="en">
-            <span>03</span>
-            <span>Edition scope</span>
-          </div>
-          <div className="philosophy-section-body">
-            <p className="eyebrow">Scope / 覆盖范围</p>
-            <h2 className="philosophy-section-heading" id="philosophy-coverage-heading">
-              这不是一份已经完成的名词表
+            <p className="eyebrow">Ways in / 三个入口</p>
+            <h2 className="philosophy-section-heading" id="entries-heading">
+              你现在是哪一种情况？
             </h2>
             <p className="philosophy-lede">
-              每篇的状态由正文、来源定位和审查记录决定；目录、标题和参考书目本身不算完成。
+              三个入口指向同一批内容，只是起点不同。如果你更想直接看这些问题之间的关系——哪些是
+              前置，哪些是竞争回答，哪些只能并置比较——那就打开
+              <Link className="philosophy-inline-map-link" href="/learning/philosophy/map">
+                哲学知识地图
+              </Link>
+              ，那里登记了 {philosophyRelations.length} 条带理由的关系。
             </p>
-            <dl className="philosophy-coverage-map">
-              {Object.values(philosophyCoverage).map((item) => (
-                <div key={item.label}>
-                  <dt>{item.label}</dt>
-                  <dd>{item.detail}</dd>
-                </div>
+
+            <div className="philosophy-entries">
+              {entries.map((entry) => (
+                <article className="philosophy-entry" key={entry.id}>
+                  <h3>
+                    <Link href={entry.href}>
+                      {entry.title}
+                      <span aria-hidden="true"> ↗</span>
+                    </Link>
+                  </h3>
+                  <p className="philosophy-entry-for">{entry.for}</p>
+                  <p className="philosophy-entry-note">{entry.note}</p>
+                </article>
               ))}
-            </dl>
+            </div>
           </div>
         </section>
 
-        <section className="philosophy-section" aria-labelledby="philosophy-core-heading">
+        <section aria-labelledby="philosophy-core-heading" className="philosophy-section" id="by-question">
           <div className="section-label" lang="en">
-            <span>04</span>
+            <span>03</span>
             <span>By question</span>
           </div>
           <div className="philosophy-section-body">
@@ -121,9 +163,13 @@ export default function PhilosophyOverviewPage() {
           </div>
         </section>
 
-        <section className="philosophy-section" aria-labelledby="philosophy-traditions-heading">
+        <section
+          aria-labelledby="philosophy-traditions-heading"
+          className="philosophy-section"
+          id="by-tradition"
+        >
           <div className="section-label" lang="en">
-            <span>05</span>
+            <span>04</span>
             <span>By tradition</span>
           </div>
           <div className="philosophy-section-body">
@@ -165,15 +211,32 @@ export default function PhilosophyOverviewPage() {
           </div>
         </section>
 
-        {next && (
-          <nav className="philosophy-pager" aria-label="哲学体系树导航">
-            <div className="philosophy-pager-slot" />
-            <Link className="philosophy-pager-link philosophy-pager-next" href={nodeHref(next)}>
-              <span lang="en">NEXT ↗</span>
-              <strong>{next.title}</strong>
-            </Link>
-          </nav>
-        )}
+        <section aria-labelledby="how-to-read-heading" className="philosophy-section" id="how-to-read">
+          <div className="section-label" lang="en">
+            <span>05</span>
+            <span>How to read it</span>
+          </div>
+          <div className="philosophy-section-body">
+            <p className="eyebrow">Scope / 怎么读、覆盖到哪</p>
+            <h2 className="philosophy-section-heading" id="how-to-read-heading">
+              这张地图怎么用，以及它还没做到什么
+            </h2>
+            <NodeBody headingLevel="h3" node={philosophyTree} />
+
+            <h3 className="philosophy-block-title philosophy-coverage-heading">本版覆盖范围</h3>
+            <p className="philosophy-lede">
+              每篇的状态由正文、来源定位和审查记录决定；目录、标题和参考书目本身不算完成。
+            </p>
+            <dl className="philosophy-coverage-map">
+              {Object.values(philosophyCoverage).map((item) => (
+                <div key={item.label}>
+                  <dt>{item.label}</dt>
+                  <dd>{item.detail}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
 
         <p className="philosophy-legacy-note">
           旧版单页导航仍然可用：

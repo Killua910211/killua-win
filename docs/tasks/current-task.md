@@ -1,4 +1,209 @@
-# 当前任务：撤下 AI 编程工作流，保留学习页与哲学页结构
+# 当前任务：哲学知识库 V2 —— 知识关系、阅读分层与来源诚信
+
+状态：进行中（2026-09-11）。尚未部署测试环境或正式网站。
+
+## 需求
+
+把现有「组织良好的哲学文章与问题体系」升级为能帮助用户探索问题、理解概念、看见论证、比较立场、建立知识连接的学习系统。重点是更好的知识结构，不是更多内容。
+
+本轮**不实现**：已读状态、学习百分比、已理解状态、复习状态、用户学习进度、积分／成就／游戏化。学习空间保持无状态。
+
+本轮**不以节点数量为 KPI**：55 个节点不变。
+
+## 验收
+
+按需求文档的验收清单逐项检查，其中硬性的几条：
+
+- 三个学习入口（问题探索／系统学习／哲学传统）清晰，且「FIND THE QUESTION」这条核心设计不被削弱。
+- 核心节点之间存在带语义、带理由的结构化关系，不只是「相关文章」；没有虚构关系。
+- 正文阅读不被维护信息打断，Research 信息仍可访问，关键来源不被隐藏。
+- 适合的主题有论证地图，前提／结论／反对／回应清晰，手机端正常。
+- 跨页面概念可复用、定义一致、易混概念得到区分，且页面没有产生链接噪音。
+- 思想实验服务于具体哲学分歧，不做人格测试，不给用户贴立场标签。
+- 跨传统不强行寻找「东方版 X」，保留各自的问题框架，区分比较关系与历史影响。
+- 没有虚构来源、虚构页码、虚假学界共识；不确定内容明确标记。
+- 保持原有视觉身份，不变成 Dashboard，不过度 Card 化。
+- 375px 正常，无横向溢出，关键交互键盘可达，焦点状态清晰。
+- Type Check、Lint、Build 通过；关键页面实际打开验证；无 Console Error；没有破坏原有 URL；没有引入大型依赖。
+
+## 本次改动
+
+节点数不变（55 个）。本轮加的是结构与关系，不是条目。
+
+### 新增数据层（`app/learning/philosophy/`）
+
+| 文件 | 内容 |
+| --- | --- |
+| `relations.ts` | 105 条带理由的有向关系边（前置理解 14／易混辨析 16／有力反对 11／延伸问题 15／处境应用 8／跨传统比较 19／历史语境 22），加 4 条横向链条。七种关系各带一个 `mustAnswer`，作者写 `why` 时必须回答它；刻意不设「相关」兜底项，父子边不进关系层 |
+| `concepts.ts` | 21 个跨条目复用的概念，含 20 项收录标准判断与逐条易混辨析 |
+| `argument-maps.ts` | 8 张论证地图、22 个立场分支，每个分支都有 `cost`（接受它要付的理论代价） |
+| `thought-experiments.ts` | 7 个改变变量式思想实验，`origin` 区分本站原创／教学重构／文献案例 |
+| `comparisons.ts` | 8 个跨传统可比问题，`caution` 与 `pending` 都是必填 |
+| `learning-path.ts` | 10 步推荐基础路线，每步的 `prepares` 与下一步的 `why` 逐环接上 |
+
+### 新增组件与路由
+
+- `research-layer.tsx`（折叠的研究层）、`argument-map.tsx`、`thought-experiment.tsx`、`comparison.tsx`、`concept-card.tsx`、`next-steps.tsx`、`prose.tsx`（行内概念注解解析）、`citation.tsx`、`map-view.tsx`。全部是服务端组件，整个哲学空间零客户端 JS。
+- `/learning/philosophy/map` —— 哲学知识地图。六个问题域 + 41 个节点，每个节点是原生 `<details>`：点开看到一句话介绍、按语义分组的直接相关节点（带理由）、进入专题的入口。另有横向链条、概念层与传统层。地图页会如实报出还有多少节点没有语义关系（当前为 0）。
+- `/learning/philosophy/path` —— 推荐基础学习路径。
+- `/learning/philosophy` 改为三个入口（从问题开始／系统学习／从传统进入）。「FIND THE QUESTION」这条核心设计保留，`03 按问题` 分区仍是原来那份核心问题清单，没有削弱。
+
+### 阅读层重排
+
+节点页顺序改为：本页范围 → 页内目录 → 问题为何会出现 → 定义与边界 → 阅读提醒 → 先把问题拆开（概念） → 论证地图 → 主要立场（含论证路径／反对／回应） → 有力反对及回应 → 哲学家怎样改写这个问题 → 思想实验或案例推演 → 容易混淆的地方 → 人物与原典 → 跨传统的可比问题 → 放回历史语境 → 带着问题继续读 → 继续学习 → 折叠的研究层。
+
+阅读层区块从 15 个降到 12–13 个；条目状态、来源核验记录、审查与待办整块收进末尾的 `<details>`。40 个页面自动生成页内目录（共 430 个链接，实测零死锚点）。
+
+### 结构性修复
+
+- **论证路径改为按立场名索引**（`positionArguments`），加构建期校验。22 个条目全部迁完，废弃的 `positionPaths` / `positionSourceIds` 已从类型里删除。修掉六页把论证挂到错误立场名下的错配，其中 `pt-care` 那条全页最有力的制度论证此前因下标取不到而从未上过页面。
+- **来源核验三态化**（`'verified' | 'pending' | 'broken'` + `checkedOn`），页面显示真实值。最终 149 条 verified、5 条 pending、1 条 broken。条目状态由来源状态数出来，不再用手写断言。
+- **立场新增 `response` 字段**。全库 101 个立场卡现在都有回应，并写明接受这个回应要付的代价；此前全部停在「反对意见」那一行。
+- **六个问题域页的 positions 重写**为域内真正对立的争点（此前是分类法元评论或「X 取向重视 X」式同义反复）。
+- **17 个条目接入共享概念层**（`conceptRefs`），页内重复定义删除；`功能主义` 从两份页内定义合并为一份共享定义 + 两句「在本页」的角度。
+- **「关键检验是：」句壳清零**（此前 66 处 100% 覆盖，其中 14 条根本不是检验）。`scope` 字段的统一模具、`orientation` 的统一起手式也一并打散。
+- 行内概念注解上线 25 处，跨 22 个页面，每页 1–3 处且只标第一次出现。
+
+### 无障碍与样式
+
+- 焦点环基础色从 `var(--ink)`（在深色面上 1.04:1，等于不存在）改为 `var(--ember)`。
+- 新增 `--meta-on-dark`（5.4:1 / 5.0:1）替换小号元信息上不足 4.5:1 的 `--rock-gray`。
+- `.philosophy-coverage-map` 从遗留的浅色卡并入深色语言。
+- 触控目标补齐；`being-change` 的五个页内锚点由该页 module.css 按类名接管 `scroll-margin-top`；断点补上 980 一档；新增覆盖 `.philosophy-page *` / `.learning-page *` 的减弱动效兜底；`.sr-only` 改用 `clip-path` 并补 `margin: -1px`。
+
+### 工具与文档
+
+- `scripts/check-philosophy-sources.mjs`（`pnpm check:philosophy-sources`）：抓取库内全部来源 URL，报 404、无法解析的域名，以及返回 200 但内容是 SEP「Not Yet Available」占位页的地址。不进 CI（CI 无网络），每轮内容整改前手动跑。
+- `app/learning/philosophy/CONTENT_GAP_REVIEW.md`：277 条审查发现的分级整改清单。
+- `KNOWLEDGE_BASE.md` 补写数据架构、来源核验与每轮工作顺序三节；`coverage.ts` 的文案改成描述实际状态（原文案声称「本版范围内无未建来源账条目」「缺口不被伪装成已核验结论」，本轮证明两句都不成立）。
+- `docs/architecture.md` 同步路由表与数据边界。
+
+## 关键设计决策
+
+只记会影响后续维护的几条。
+
+### 1. 关系有语义、有理由，且没有「相关」兜底项
+
+`relations.ts` 定义七种关系（前置理解／易混辨析／有力反对／延伸问题／处境应用／跨传统比较／历史语境），每种在 `relationLabels` 里带一个 `mustAnswer`，作者写 `why` 时必须回答它。刻意**不设**「相关 see-also」这一类：一旦留了兜底项，`data.json` 里那 97 条说不出理由的裸边就会原样搬过来。父子边也不进关系层——面包屑和「下一层」已经表达了树结构。
+
+`data.json` 的 `related` 字段因此不再渲染。它暂时留在数据里（有节点还在用它做兜底），但页面上的「继续学习」只来自 `relations.ts`。
+
+### 2. 论证路径按立场名索引，不按数组下标
+
+旧结构 `positionPaths: string[][]` 按下标与 `data.json` 的 `positions` 对齐，没有任何校验。本轮审查查出至少六页把论证挂到了别的立场名下——最严重的是「修身与解脱」（儒家与佛教）下面渲染出当代福祉理论的「客观清单」论证，以及「经验主义＝内部主义」这组错误对照。还有一页写了三条路径而该页只有两个立场，第三条永远取不到。
+
+改成 `positionArguments: Record<立场名, { steps, sourceIds }>`，并在 `study-guides.ts` 末尾加构建期校验：键名不是该节点真实的 `position.name` 就直接抛错。这类错配从此不可能静默通过。
+
+### 3. 来源核验状态是三态，且页面显示真实值
+
+`LedgerSource.checked` 原本的类型是字面量 `true`，「待核验」在类型上无法表达；渲染层又把「已核验」硬编码在 JSX 里，谁都不读这个字段。结果是标着「已核验」的来源里藏着 9 条失效链接、两处凭空写出的章节号（SEP Philosophy of Technology 没有 §6.2，SEP Mohism 没有 §2.1）和一个已不能解析的域名。
+
+现在 `checked` 是 `'verified' | 'pending' | 'broken'`，另有 `checkedOn`，页面显示的就是这个值。`source()` helper 的默认值是 `'pending'`——没有实际打开核对过的来源拿不到印章。本轮开始时把全部既有来源降级为 `pending`，再逐条重新核对。
+
+配套加了 `scripts/check-philosophy-sources.mjs`（`pnpm check:philosophy-sources`）：抓取库内全部来源 URL，报告 404、无法解析的域名，以及返回 200 但内容是 SEP「Not Yet Available」占位页的地址。它**不进 CI**（CI 里没有网络，也不该依赖外网），每轮内容整改前手动跑一次。它只查链接是否活着，不替代人工核对章节定位。
+
+### 4. 维护信息降为二级，但来源角标留在正文
+
+条目状态、来源核验记录、审查与待办整块收进正文之后一个默认折叠的 `<details>`（`research-layer.tsx`）。折叠标题上写清有多少条来源、各是什么状态、什么审查模式——状态不藏成需要点开才知道的秘密。正文里的 `[FRE-1]` 角标仍然直接指向来源本身，不需要先展开折叠区。
+
+### 5. 全部展开交互用原生 `<details>`，零 JS
+
+概念卡、知识地图节点、研究层都是 `<details>`：自带键盘操作和展开语义，手机上是点击而不是 hover，放大后不会有浮层被挤出屏幕。整个哲学空间没有客户端组件，知识地图是服务端渲染的静态结构，没有引入任何 Graph / Canvas 依赖。
+
+一个连带约束：`<details>` 属于 flow content，不能放进 `<p>`。所以带行内概念注解的段落渲染成 `.philosophy-para`（`prose.tsx` 里按是否含注解决定用哪个标签）——直接塞进 `<p>` 会被浏览器解析时提前闭合，后半句掉出段落之外。
+
+### 6. 行内概念注解用五行的正则，不引入 MDX
+
+正文里写 `[[concept-id|显示文本]]`，解析在 `prose.tsx`。不做成更通用的富文本，是因为知识库只需要这一个能力；引入 MDX 或自定义节点树会让每次写内容都要先想数据结构。不认识的 concept id 在构建期直接抛错，不会静默漏渲染。
+
+### 7. 跨传统比较刻意不用表格
+
+`comparison.tsx` 用的是并列的框架卡加一句必填的差异提示。表格的每一行都在暗示「同一个格子对应同一个东西」，而这正是跨传统比较最容易犯的错。
+
+## 验证与证据
+
+以下是实际跑出来的结果，不是预期。
+
+### 工程检查
+
+- `pnpm typecheck`（`tsc --noEmit`）：通过。
+- `pnpm lint`（`eslint .`）：通过。
+- `pnpm build`：通过。构建路由表包含 `/learning/philosophy/map`、`/learning/philosophy/path` 与 `/learning/philosophy/:node`。
+- 构建期数据校验实际生效（本轮新加，靠预渲染 55 个节点页触发）：关系边的节点存在性与去重、概念的 nodeIds／来源非空、论证地图的「主干末步必须是分歧点」与「至少两个分支」、思想实验的人格标签防线、可比问题的 sourceIds 登记检查，以及 `positionArguments` 的键名必须是该节点真实的立场名。
+
+### 路由与 URL
+
+- 59 条路由（55 个节点 + `/learning` + 总览 + `/map` + `/path`）全部返回 200，页面无错误标记。
+- `/learning/philosophy-tree` 仍返回 200，canonical 仍指向 `/learning/philosophy`。没有破坏任何既有 URL：本轮没有改动任何节点的 id、title 或 type。
+- `sitemap.xml` 共 124 条，其中 learning 相关 58 条，含新增的 `/map` 与 `/path`。
+
+### 响应式（375px）
+
+- 用同源 iframe 逐条量 58 条 learning 路由的 `scrollWidth`：**全部为 375，横向溢出 0**。整改完成后又整轮复测一次，结果相同。
+- 同一轮里把每页所有 `<details>`（研究层、概念注解、地图节点）强制展开后再量：仍然全部为 0。
+- 桌面 1440px：论证地图分支 3×292px、概念卡 2×438px、跨传统框架 3 列、地图问题域 3×337px、推荐路径 46px 序号列 + 816px 正文列，正文 measure 上限 820px，溢出 0。
+
+### 无障碍
+
+- 焦点环：CSSOM 实测基础规则已是 `a/button/summary:focus-visible { outline: 2px solid var(--ember) }`。修复前是 `var(--ink)`（#080809）落在 #080809–#1a1a1f 的深色面上，对比度约 1.04:1；那条 `:focus-visible { outline-color: var(--ember) }` 补丁因特异度 (0,1,0) 低于 (0,1,1) 一直没有生效。全库现在只剩 skip-link 用 `--ink` 描边，而它的背景是 ember，正确。
+- 新增能力的焦点环逐个确认：`.philosophy-gloss > summary`、`.philosophy-research > summary`、`.philosophy-map-node > summary` 都有显式 ember 描边。
+- 触控目标：页内目录 32px、地图节点 summary 52px、`being-change` 的 TOC 与练习 summary 44px、面包屑与来源链接补到 26px（WCAG 2.5.8 要求 24px）。
+- 页内目录：40 个页面共 430 个链接，用 `getElementById` 逐条校验**零死锚点**。
+- 减弱动效：新增一条覆盖 `.philosophy-page *` / `.learning-page *` 的兜底，不再依赖逐个选择器点名。
+- 行内概念注解端到端验证：全库 22 个页面共 25 处注解，`document.querySelectorAll('p .philosophy-gloss').length` 在全部 58 条路由上都是 **0**（即 `<details>` 没有落进 `<p>` 被浏览器提前闭合，带注解的段落正确降级为 `.philosophy-para`）；`<summary>` 是真 summary，键盘可达；面板宽度 335px＝正文列宽，展开前后均不溢出；段落高度 117px → 353px 就地展开。
+
+### 来源
+
+- `pnpm check:philosophy-sources`：184 个来源地址，失效数从整改开始时的 **11 降到 1**（唯一一条是 OUP 付费墙落地页对脚本 UA 返回 403，页面本身存在，已如实标 pending）。
+- 修掉的 9 条（每条都自己抓过替代页面、读过章节结构再换）：`entries/philosophy-language/` → `entries/meaning/`（Theories of Meaning）；`entries/chinese-phil-language/` → `entries/chinese-logic-language/`；`entries/normative-ethics/` → SEP Consequentialism ＋ Deontological Ethics（IEP 的 `/ethics/` 实测是分类索引页不是文章，没用）；`entries/political-philosophy/` → IEP `polphil`（实际标题是 Political Philosophy: Methodology，label 照实写）；`entries/epistemic-injustice/`（返回 200 但页面 H1 逐字为「Not Yet Available」）→ IEP `epistemic-injustice`；`entries/ancient-greek-roman/` → IEP `ancient-greek-philosophy`；`entries/neo-confucianism/` → IEP `neo-confucian-philosophy`；`iep.utm.edu/vedanta/`（label 写 SEP、网址给 IEP，两处都错）→ IEP `advaita-vedanta`；`entries/jainism/` → `entries/jaina-philosophy/`。另修 `SEP：Social Contract` → `SEP：Contractarianism`（链接有效但 label 与目标不符）。
+- 两处虚构章节号按实际抓取结果改准：SEP Philosophy of Technology 顶层章节只到 §3，其后即 Bibliography（原 TEC-1 写「§6.2」）；SEP Mohism 的 §2 没有任何子节（原 TEC-2 写「§2.1」）。改后 TEC-1 的 locator 是「§1 Different Approaches（海德格尔在此）、§3.1、§3.2（§3.2.4 Power and Justice——温纳与哈拉维在此）」，TEC-2 是「§3 及 §3.1 The Concept of Fa (Models)；兼爱与利见 §7 及 §7.1 Inclusive Care」。
+- 剩下 2 条如实标注、不假装可用：Fricker《Epistemic Injustice》的 OUP 书页对抓取返回 403（付费墙落地页，无正文无目录）；Singer《All Animals Are Equal》原挂的 `digitalcommons.brockport.edu` 域名已不能解析，SUNY 迁移后的 `soar.suny.edu` 记录页本轮抓取返回 403/500，找不到可确认的全文地址。
+
+## 未完成事项
+
+不因为想让任务看起来完成而隐藏。
+
+### 结构性缺口（本轮无法补齐）
+
+- **全库中文来源仍为 0。** 184 条来源里，论及儒家、道家、墨家、法家、宋明理学、正理、吠檀多、耆那、顺世、伊斯兰与非洲哲学的条目，依据全部是英文的 SEP／IEP 综述。《论语》《孟子》《荀子》《庄子》《墨子》《韩非子》《中论》一部都没有作为核验来源进入来源账——它们只出现在正文与书目卡里。一个面向中文读者、明确反对「把非西方传统翻译成西方分类」的知识库，其非西方内容的全部依据是英文二手综述，这与它自己的方法论主张不一致。本轮把这个缺口写进了 `coverage.ts`，但没有解决。下一轮应以原典版本核对为主线。
+- **来源仍高度集中在单一站点。** 修完死链后 SEP／IEP 之外的来源只增加了少数几条。
+
+### 明确留作待核验的来源（2 条）
+
+- `ID-2` Fricker《Epistemic Injustice》：用浏览工具实际打开，确认是 OUP 付费墙落地页——只有书名与学科分类，无目录、无章节摘要、无正文。已降级为 `pending`，证言不公／解释不公的定义改挂 IEP 条目；「原始区分」这一层仍缺原典依据。
+- `SCI-3` 库恩《科学革命的结构》：下载该 PDF 实测为 37 页纯扫描件（无 `/Font`、37 个 JBIG2 位图），无法从文件本身确认对应哪几章，且该书的结构单位是 Chapter 而非 §。已降级为 `pending`，相关论断改挂 SEP Thomas Kuhn。
+
+另有 3 条只确认链接存活、未逐节打开核对，如实留 `pending`。
+
+### 需要新来源才能补的内容（agent 正确地拒绝了伪造）
+
+- `pt-freedom` 的 figures 点名斯宾诺莎，而现有 FRE-1/2/3 都不支撑对他的论证转述——要补人物卡必须先加一条 SEP Spinoza。
+- `pt-logic` 的「解释性推断」是全页写得最完整的论证路径，却无来源（现有六条来源都不覆盖溯因／最佳解释推断）。
+- `pt-science-reality` 的划界内容无来源角标。
+- `pt-language-meaning` 的「解释与权力敏感取向」当代那半句无对口来源。
+- `pt-identity-oppression` 的「结构性压迫分析」无对口来源——最对口的是艾丽斯·马里昂·杨（压迫五面相、结构性不义），而本轮实测 SEP Feminist Political Philosophy **不讨论**这两项，该条目关于杨的内容全在 §2.5 与 §2.8（发声条件与协商民主）。
+- `pt-good-life` 的「解脱」一路缺论证与来源；该页 ledger 里没有任何佛教来源可挂。
+- `pt-identity-oppression` 新增的两条外部反对（统计差异不蕴含结构性不义、可信度调整的统计辩护）本轮找不到可核对的来源，正文按 `kind: '争议性判断'` 标出且刻意不挂 sourceId。
+
+### 已识别但本轮不做（会破坏 URL 或属结构洁癖）
+
+- **「X 取向」这套自造立场命名法仍有 21 处**留在核心问题页（把「制度论」写成「历史与制度取向」、「外在主义」写成「外部主义路线」）。核心问题的 `position.name` 是 `positionArguments` 的索引键，改名必须与两份 study guide 同批改，否则构建期校验直接抛错。本轮明确禁止改名以保证并行安全，因此一律没动。
+- **不拆 `pt-legalism`**（一个节点装了墨家、名家、法家三个分属不同问题的学派，slug 却是 `legalism`）、**不重排传统分支的分类轴**（西方按时段、印度按学派、中国时段学派混写、伊斯兰时段加问题）。两项都要改 slug，会破坏现有链接；收益是结构洁癖，不是学习体验。
+- **不统一 23 个核心问题的 title 体例**（7 个名词短语、16 个疑问句）。改 title 会牵动面包屑、其他页引用、metadata 与外部链接。
+- **`/core` 与 `/traditions` 两页内容与总览重复**，未处理。
+- **`pt-history-tech` 把历史与技术两个问题挤在一页**。不拆节点的前提下只能改 `question` 缓解。
+- **`pt-being-change` 的 `positions` 与 ledger 正文在页面上不渲染**：该节点走手写的 `being-change-entry.tsx`，正文由手写组件出。本轮已把共享尾部（跨传统比较、历史语境、继续学习、研究层）接上，`question` 的改动也生效，但那三张立场卡与四段 ledger 正文目前是备用数据。`StudyGuide.texts` 是必填字段，删不掉该页已被手写正文吸收的那份 `texts`。
+
+### 既有问题，超出本轮范围
+
+- **全站字体变量链失效**：`--font-barlow` 等由 `next/font` 挂在 `<body>`，而 `--font-body` / `--font-mono` 定义在 `:root`，导致 `var(--font-mono)` 解析不到，全站退回系统中文字体（本轮实测哲学页区块标题的 `font-family` 是 `PingFang SC`，而设计意图是等宽字体）。这会影响全站视觉，属独立改动。
+- **`pnpm build` 把 `/learning/philosophy/:node` 归类为 Dynamic**：该路由有 `revalidate = 0`（既有设置，注释说明是为了避免跨部署缓存住旧正文）。本轮未改。
+
+### 部署状态
+
+本轮改动**尚未部署到测试环境或正式网站**。按项目规则，视觉改动要先上 Codex Sites 测试环境确认，再按明确要求发布正式网站。当前只完成本地验证。
+
+# 历史任务：撤下 AI 编程工作流，保留学习页与哲学页结构
 
 状态：已完成并发布正式网站（2026-09-09）。
 

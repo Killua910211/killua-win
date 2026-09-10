@@ -2,17 +2,30 @@
   max-width: 920px;
 }
 
+/*
+  页内 TOC 的锚点会被吸顶 header 遮住，所以每个带 id 的 section 都要留出
+  滚动余量。这里用类名而不是 id 选择器：globals.css 里那份逐个 id 列出的
+  名单漏掉过本页的锚点，而且每加一个小节就要回去改一次全局文件。
+*/
+.section {
+  scroll-margin-top: calc(var(--header-height) + 60px);
+}
+
 .toc {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 20px;
+  gap: 4px 20px;
   margin-top: 28px;
-  padding: 15px 0;
+  padding: 6px 0;
   border-top: 1px solid var(--black-4);
   border-bottom: 1px solid var(--black-4);
 }
 
+/* 触控目标：项目约定 min-height 44px（同 globals.css 的 .notes-categories a）。 */
 .toc a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   color: #d6d0c8;
   font-size: 14px;
   line-height: 1.6;
@@ -28,33 +41,39 @@
 }
 
 .prose,
-.advancedBody,
-.evidenceBody {
+.advancedBody {
   max-width: 800px;
   margin-top: 20px;
 }
 
 .prose p,
-.advancedBody p,
-.evidenceBody > p {
+.advancedBody p {
   color: #ddd7cf;
   font-size: 16px;
   line-height: 1.92;
 }
 
 .prose p + p,
-.advancedBody p + p,
-.evidenceBody > p + p {
+.advancedBody p + p {
   margin-top: 18px;
 }
 
 .prose strong,
 .advancedBody strong,
-.evidenceBody strong,
 .walkthrough strong,
 .exercises strong {
   color: var(--warm-white);
   font-weight: 620;
+}
+
+.prose em,
+.standards em,
+.walkthrough em {
+  color: var(--warm-white);
+  font-style: normal;
+  text-decoration: underline;
+  text-decoration-color: var(--ember);
+  text-underline-offset: 4px;
 }
 
 .concepts {
@@ -111,7 +130,8 @@
 
 .standards h3,
 .theories h3,
-.exercises h3 {
+.exercises h3,
+.texts h3 {
   color: var(--warm-white);
   font-size: 22px;
   font-weight: 600;
@@ -130,6 +150,8 @@
 
 .standards p + p,
 .theories p + p { margin-top: 14px; }
+
+.standards strong { color: var(--warm-white); font-weight: 620; }
 
 .voices {
   margin-top: 26px;
@@ -209,12 +231,89 @@
   letter-spacing: .08em;
 }
 
+/* 每一步先标出它在论证里的身份：前提、推论、反例还是回应。 */
+.stepRole {
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.walkthrough li > p + p { margin-top: 8px; }
+
 .theories {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.advanced,
-.evidence {
+.texts {
+  display: grid;
+  gap: 16px;
+  margin-top: 25px;
+  counter-reset: texts;
+}
+
+.texts > li {
+  position: relative;
+  padding: 24px 74px 26px 25px;
+  border: 1px solid var(--black-4);
+  border-top: 2px solid var(--ember);
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
+  counter-increment: texts;
+}
+
+.texts > li::before {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  color: rgba(242, 237, 232, .16);
+  content: counter(texts, decimal-leading-zero);
+  font-family: var(--font-mono), monospace;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+}
+
+.textMeta {
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .065em;
+  line-height: 1.7;
+  text-transform: uppercase;
+}
+
+.texts h3 { margin-top: 8px; }
+
+.texts > li > p {
+  max-width: 760px;
+  margin-top: 13px;
+  color: #d6d0c8;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.textQuestion {
+  margin-top: 16px !important;
+  padding-top: 14px;
+  border-top: 1px solid rgba(242, 237, 232, .16);
+  color: #ddd7cf !important;
+}
+
+.textQuestion > span {
+  display: block;
+  color: var(--ember-hot);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.advanced {
   margin-top: 54px;
   padding: 0 22px 22px;
   border: 1px solid var(--black-4);
@@ -222,27 +321,26 @@
 }
 
 .advanced > summary,
-.evidence > summary,
 .exercises details > summary {
   cursor: pointer;
   color: var(--warm-white);
   font-weight: 600;
 }
 
-.advanced > summary,
-.evidence > summary {
-  padding: 20px 0;
+.advanced > summary {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 18px 0;
   font-size: 17px;
   line-height: 1.55;
 }
 
-.advanced[open] > summary,
-.evidence[open] > summary {
+.advanced[open] > summary {
   border-bottom: 1px solid var(--black-4);
 }
 
 .advanced summary::marker,
-.evidence summary::marker,
 .exercises summary::marker { color: var(--ember-hot); }
 
 .advancedBody { margin-top: 20px; }
@@ -270,17 +368,22 @@
 
 .exercises details {
   margin-top: 20px;
-  padding-top: 15px;
+  padding-top: 4px;
   border-top: 1px solid rgba(242, 237, 232, .18);
 }
 
+/* 同样的 44px 触控目标：这两处摘要行以前是 14px 无内边距的窄条。 */
 .exercises details > summary {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
   color: var(--ember-hot);
   font-size: 14px;
 }
 
 .exercises details p {
-  margin-top: 13px;
+  margin-top: 6px;
+  padding-bottom: 4px;
   color: #ddd7cf;
   font-size: 14px;
   line-height: 1.85;
@@ -294,24 +397,19 @@
   line-height: 1.85;
 }
 
-.evidence { margin-bottom: 6px; }
-.evidenceBody h3 { margin-top: 34px; color: var(--warm-white); font-size: 19px; }
-.evidenceBody h4 { color: var(--warm-white); font-size: 16px; }
-.evidenceBody :global(.philosophy-source-records),
-.evidenceBody :global(.philosophy-review-findings) { margin-top: 20px; }
 .missingCitation { margin-left: 6px; color: #c9c2b8; font-family: var(--font-mono), monospace; font-size: 11px; }
 
 @media (max-width: 760px) {
-  .toc { gap: 7px 16px; }
+  .toc { gap: 0 16px; }
   .concepts,
   .theories { grid-template-columns: 1fr; }
   .voices > section { grid-template-columns: 1fr; gap: 8px; }
   .standards > section,
   .theories > section,
   .exercises > li { padding: 20px; }
-  .advanced,
-  .evidence { padding: 0 18px 18px; }
+  .texts > li { padding: 20px 58px 20px 20px; }
+  .texts > li::before { top: 18px; right: 18px; }
+  .advanced { padding: 0 18px 18px; }
   .prose p,
-  .advancedBody p,
-  .evidenceBody > p { font-size: 15px; }
+  .advancedBody p { font-size: 15px; }
 }

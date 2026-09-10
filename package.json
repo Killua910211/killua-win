@@ -19,7 +19,8 @@
     "migrate:local": "wrangler d1 migrations apply killua-win-d1 --local",
     "migrate": "wrangler d1 migrations apply killua-win-d1 --remote",
     "deploy": "pnpm build && pnpm migrate && wrangler deploy --config dist/server/wrangler.json",
-    "deploy:only": "wrangler deploy --config dist/server/wrangler.json"
+    "deploy:only": "wrangler deploy --config dist/server/wrangler.json",
+    "check:philosophy-sources": "node scripts/check-philosophy-sources.mjs"
   },
   "dependencies": {
     "next": "16.3.3",

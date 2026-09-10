@@ -16,13 +16,13 @@ export const revalidate = 3600;
  * 一份不完整的地图远好过一份取不到的地图。
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const philosophyUpdatedAt = new Date('2026-09-06T00:00:00+08:00');
+  const philosophyUpdatedAt = new Date('2026-09-11T00:00:00+08:00');
   const staticEntries: MetadataRoute.Sitemap = [
     { url: `${SITE.url}/`, changeFrequency: 'monthly', priority: 1 },
     { url: `${SITE.url}/notes`, changeFrequency: 'weekly', priority: 0.9 },
     {
       url: `${SITE.url}/learning`,
-      lastModified: new Date('2026-09-09T00:00:00+08:00'),
+      lastModified: new Date('2026-09-11T00:00:00+08:00'),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
@@ -35,6 +35,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: index === 0 ? 0.8 : 0.6,
     })),
+    // 知识地图与推荐学习路径是哲学空间的两个入口页，不在节点树里。
+    {
+      url: `${SITE.url}/learning/philosophy/map`,
+      lastModified: philosophyUpdatedAt,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${SITE.url}/learning/philosophy/path`,
+      lastModified: philosophyUpdatedAt,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
     {
       url: `${SITE.url}/health`,
       lastModified: new Date('2026-08-31T00:00:00+08:00'),

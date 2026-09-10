@@ -102,6 +102,12 @@ export default function LearningPage() {
               <Link className="learning-inline-link" href="/learning/philosophy">
                 哲学总览 <span aria-hidden="true">↗</span>
               </Link>
+              <Link className="learning-inline-link" href="/learning/philosophy/path">
+                推荐学习路径 <span aria-hidden="true">↗</span>
+              </Link>
+              <Link className="learning-inline-link" href="/learning/philosophy/map">
+                知识地图 <span aria-hidden="true">↗</span>
+              </Link>
             </p>
 
             <h3 className="learning-block-heading" id="learning-philosophy-questions">
