@@ -5,8 +5,6 @@
 ## 长期规则
 
 - 保持现有 vinext + Vite + Cloudflare Workers + D1 + pnpm 技术基线；不要为了普通样式改动更换框架或包管理器。
-- 视觉改动先部署到 Codex Sites 测试环境，确认后再按用户明确要求部署到正式网站。
-- Codex Sites 地址统一称为“测试环境”；只有 `https://www.killua.win/` 才称为“正式网站”或“部署上线”。详见 `.cursor/rules/deployment-environment-language.mdc`。
 - 先完成本地类型检查、Lint 和构建，再更新测试环境或正式网站；不要把构建通过写成完整视觉回归通过。
 - D1 迁移只前滚；内容 INSERT 必须幂等；普通样式改动不要触碰远程数据库。`migrations/` 是内容事实源，`app/lib/static-posts.ts` 只能由生成脚本更新。
 - 公开汇总数据必须做运行期字段、长度和数量边界检查，不要只依赖 TypeScript 类型断言。
