@@ -175,6 +175,11 @@
 - 线上 375px 抽查 8 条路由（含 `/learning`、总览、地图、路径、being-change、三个问题域与核心问题页）：横向溢出 0，把所有 `<details>` 展开后仍为 0，`<p>` 内嵌 `<details>` 为 0，页内目录死锚点为 0。
 - 控制台无错误。
 
+## 推送与 CI
+
+- `git push origin main`：`61d8c3b..3190362`，本地与 `origin/main` 已同步（`rev-list --left-right --count` 为 `0 0`）。
+- GitHub Actions CI：**success**。CI 只跑 ESLint、TypeScript 与迁移回放，不负责任何环境的部署。
+
 ## 未完成事项
 
 不因为想让任务看起来完成而隐藏。
