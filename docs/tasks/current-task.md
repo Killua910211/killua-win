@@ -1,6 +1,6 @@
 # 当前任务：哲学知识库 V2 —— 知识关系、阅读分层与来源诚信
 
-状态：进行中（2026-09-11）。尚未部署测试环境或正式网站。
+状态：已完成并发布正式网站（2026-09-11）。
 
 ## 需求
 
@@ -159,6 +159,22 @@
 - 两处虚构章节号按实际抓取结果改准：SEP Philosophy of Technology 顶层章节只到 §3，其后即 Bibliography（原 TEC-1 写「§6.2」）；SEP Mohism 的 §2 没有任何子节（原 TEC-2 写「§2.1」）。改后 TEC-1 的 locator 是「§1 Different Approaches（海德格尔在此）、§3.1、§3.2（§3.2.4 Power and Justice——温纳与哈拉维在此）」，TEC-2 是「§3 及 §3.1 The Concept of Fa (Models)；兼爱与利见 §7 及 §7.1 Inclusive Care」。
 - 剩下 2 条如实标注、不假装可用：Fricker《Epistemic Injustice》的 OUP 书页对抓取返回 403（付费墙落地页，无正文无目录）；Singer《All Animals Are Equal》原挂的 `digitalcommons.brockport.edu` 域名已不能解析，SUNY 迁移后的 `soar.suny.edu` 记录页本轮抓取返回 403/500，找不到可确认的全文地址。
 
+## 正式网站发布记录
+
+- Worker Version ID：`a5607b45-d9c0-4369-929c-a38b43f4699b`，对应提交 `f6d9e7e`。
+- 用 `pnpm deploy:only` 发布已构建产物；纯前端改动，**未触碰远程数据库**（无 D1 迁移）。
+- 上传 10 个新资源（61 个已存在），总计 2240.59 KiB / gzip 776.37 KiB，Worker 启动 32 ms。
+- 按用户明确要求跳过了 Codex Sites 测试环境。
+
+### 发布后线上复核（https://www.killua.win/）
+
+- 13 条路由全部 200：`/`、`/learning`、`/learning/philosophy`、`/map`、`/path`、`/freedom`、`/being-change`、`/ethics`、`/learning/philosophy-tree`、`/notes`、`/health`、`/mind`、`/sitemap.xml`。
+- `/learning/philosophy` 三个入口就位：从问题开始 / 系统学习 / 从传统进入。
+- `/learning/philosophy/map`：41 个节点、4 条横向链条、概念层在位，**没有**触发「还有 N 个节点没有语义关系」的提示（孤岛为 0）。
+- `/learning/philosophy/freedom` 区块顺序线上实测：问题为何会出现 → 定义与边界 → 先把问题拆开 → 论证地图 → 主要立场 → 有力反对及回应 → 哲学家怎样改写这个问题 → 思想实验 → 容易混淆的地方 → 人物与原典 → 跨传统的可比问题 → 放回历史线索 → 带着问题继续读 → 继续学习；研究层折叠在最后，摘要行显示「3 条来源，已核验 3 · 自审（尚未独立复审）」。页内目录 14 项、零死锚点、3 条立场回应、「继续学习」6 个语义分组。
+- 线上 375px 抽查 8 条路由（含 `/learning`、总览、地图、路径、being-change、三个问题域与核心问题页）：横向溢出 0，把所有 `<details>` 展开后仍为 0，`<p>` 内嵌 `<details>` 为 0，页内目录死锚点为 0。
+- 控制台无错误。
+
 ## 未完成事项
 
 不因为想让任务看起来完成而隐藏。
@@ -201,7 +217,7 @@
 
 ### 部署状态
 
-本轮改动**尚未部署到测试环境或正式网站**。按项目规则，视觉改动要先上 Codex Sites 测试环境确认，再按明确要求发布正式网站。当前只完成本地验证。
+已按用户明确要求**直接发布正式网站，跳过 Codex Sites 测试环境**（用户在被问到时选择「直接发正式网站」）。这是对 AGENTS.md 里「视觉改动先上测试环境确认」那条规则的一次明确豁免，记在这里以免下次被误读成惯例。
 
 # 历史任务：撤下 AI 编程工作流，保留学习页与哲学页结构
 

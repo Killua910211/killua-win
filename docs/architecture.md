@@ -84,4 +84,4 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 
 环境命名和交付措辞以 `.cursor/rules/deployment-environment-language.mdc` 为准。
 
-最近一次正式网站发布是 Worker Version ID `e2ae9304-77d7-4303-93d7-7b0ec91cae18`（2026-09-09，撤下 AI 编程工作流，学习页保留一门科目一个分区的结构），对应提交 `cb9b966`，使用 `pnpm deploy:only`，未触碰远程数据库。上一次是 `70b5ff22-d27a-423e-8fc5-e4dfaf025141`（2026-09-08，对应 `d6c8b63`），再往前是 `17741be9-d6dd-4208-8efd-71781982026e` 与 `17505b49-ea67-4420-b131-2074228659c8`。
+最近一次正式网站发布是 Worker Version ID `a5607b45-d9c0-4369-929c-a38b43f4699b`（2026-09-11，哲学知识库 V2：语义关系层、概念层、论证地图、思想实验、跨传统比较、推荐学习路径、知识地图，以及阅读层与研究层分离和来源核验三态化），对应提交 `f6d9e7e`，使用 `pnpm deploy:only`，未触碰远程数据库。按用户明确要求跳过了测试环境。上一次是 `e2ae9304-77d7-4303-93d7-7b0ec91cae18`（2026-09-09，对应 `cb9b966`），再往前是 `70b5ff22-d27a-423e-8fc5-e4dfaf025141` 与 `17741be9-d6dd-4208-8efd-71781982026e`。
