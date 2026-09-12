@@ -144,16 +144,6 @@ export default async function PostPage({ params }: PostPageProps) {
                 <p key={`${post.slug}-${index}`}>{paragraph}</p>
               ))}
 
-              <div className="post-origin">
-                <span lang="en">FROM THE ARCHIVE</span>
-                <p>原载于 {post.source}，迁移时仅清理了排版与异常空格。</p>
-                {post.source_url ? (
-                  <a href={post.source_url} rel="noreferrer noopener" target="_blank">
-                    查看原文 ↗
-                  </a>
-                ) : null}
-              </div>
-
               {post.ai_summary ? (
                 <details className="post-analysis">
                   <summary>

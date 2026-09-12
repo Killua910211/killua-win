@@ -13,49 +13,11 @@ type KnowledgeCard = {
   tone: 'lime' | 'blue' | 'warm' | 'violet' | 'soft';
 };
 
-const categories = ['全部', '心理认知', '哲学与生活', '健康与身体', '工作与 AI'];
-
+/*
+ * 这一层只收「人格结构分析」以外的对话。那场对话已经在本页按主题展开、又做过一遍
+ * 主动回忆；再放一组同源卡片，只会让同样几句结论在同一页里出现第三遍。
+ */
 const cards: KnowledgeCard[] = [
-  {
-    id: 'emotion',
-    category: '心理认知',
-    tag: 'MIND / 01',
-    title: '理解情绪，不等于消化情绪。',
-    idea: '一个人可以很清楚地解释自己为什么难受，但解释本身并不会自动完成情绪的消化。',
-    takeaway: '先命名，再感受；不要把“我已经想明白了”误认为“我已经走出来了”。',
-    source: '人格结构分析：控制感、敏感度与意义感',
-    tone: 'lime',
-  },
-  {
-    id: 'control',
-    category: '心理认知',
-    tag: 'MIND / 02',
-    title: '不要把人生中没有标准答案的部分，当成工程问题。',
-    idea: '分析、建模、比较和执行，可以解决很多现实问题；但爱情、亲密、孤独与意义，往往需要先经历，答案才会出现。',
-    takeaway: '遇到卡住的问题时，问自己：我缺的是更多信息，还是一次真实经历？',
-    source: '人格结构分析：控制感、敏感度与意义感',
-    tone: 'blue',
-  },
-  {
-    id: 'meaning',
-    category: '心理认知',
-    tag: 'MIND / 03',
-    title: '旧的奖励变得不够用，不一定意味着生活变差。',
-    idea: '当赚钱、能力、职位、消费和证明自己越来越容易获得，过去有效的驱动力会出现边际递减。',
-    takeaway: '问题会从“怎样过得更好”升级成“什么才算过得好”。',
-    source: '人格结构分析：控制感、敏感度与意义感',
-    tone: 'violet',
-  },
-  {
-    id: 'curiosity',
-    category: '心理认知',
-    tag: 'MIND / 04',
-    title: '好奇心，是驱动力换挡时的重要保护因素。',
-    idea: '对技术、健康、哲学、关系和世界持续提问，说明旧的动力可能正在退场，但对世界的兴趣还在。',
-    takeaway: '把“理解更多”往前推一步，安排一些不以优化和产出为目的的参与。',
-    source: '人格结构分析：控制感、敏感度与意义感',
-    tone: 'soft',
-  },
   {
     id: 'pain-boredom',
     category: '哲学与生活',
@@ -98,6 +60,9 @@ const cards: KnowledgeCard[] = [
   },
 ];
 
+/** 分类从卡片本身生成：删掉某一类卡片时，不会留下一个永远筛不出内容的按钮。 */
+const categories = ['全部', ...new Set(cards.map((card) => card.category))];
+
 export function KnowledgeLibrary() {
   const [activeCategory, setActiveCategory] = useState('全部');
   const [query, setQuery] = useState('');
@@ -125,7 +90,10 @@ export function KnowledgeLibrary() {
           <div className="knowledge-index-heading">
             <div>
               <p className="eyebrow">Distilled notes / 提炼后的卡片</p>
-              <h2 id="knowledge-index-heading">把对话中的好东西，放进一个可以回来找的地方。</h2>
+              <h2 id="knowledge-index-heading">把其它对话里的好东西，放进一个可以回来找的地方。</h2>
+              <p className="knowledge-index-intro">
+                心理认知那场对话已经在 <a href="#mind-workspace">主题线索</a> 和 <a href="#mind-review">自我复习</a> 里展开，这里不再复述它的结论，只留下别的对话带出来的判断。
+              </p>
             </div>
             <label className="knowledge-search">
               <span className="sr-only">搜索知识点</span>
@@ -146,9 +114,7 @@ export function KnowledgeLibrary() {
               {visibleCards.map((card, index) => (
                 <button className={`knowledge-card knowledge-card-${card.tone} ${selectedCard?.id === card.id ? 'is-selected' : ''}`} key={card.id} onClick={() => setSelectedId(card.id)} type="button" aria-pressed={selectedCard?.id === card.id}>
                   <span className="knowledge-card-topline"><span>{String(index + 1).padStart(2, '0')}</span><span>{card.tag}</span></span>
-                  <strong>
-                    {card.id === 'emotion' ? <>理解情绪，<span className="type-keep">不等于</span>消化情绪。</> : card.title}
-                  </strong>
+                  <strong>{card.title}</strong>
                   <span className="knowledge-card-source">{card.category} · {card.source}</span>
                 </button>
               ))}
@@ -157,9 +123,7 @@ export function KnowledgeLibrary() {
             {selectedCard ? (
               <article className="knowledge-detail" aria-live="polite">
                 <div className="knowledge-detail-topline"><span>{selectedCard.tag}</span><span>Selected card</span></div>
-                <h3>
-                  {selectedCard.id === 'emotion' ? <>理解情绪，<span className="type-keep">不等于</span>消化情绪。</> : selectedCard.title}
-                </h3>
+                <h3>{selectedCard.title}</h3>
                 <p className="knowledge-idea">{selectedCard.idea}</p>
                 <div className="knowledge-takeaway">
                   <span className="knowledge-subhead">Takeaway / 带走</span>

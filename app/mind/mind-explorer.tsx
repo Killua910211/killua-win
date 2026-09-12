@@ -117,7 +117,7 @@ export function MindExplorer() {
             <article>
               <span className="mind-card-index">02 / MEANING</span>
               <h3>让意义系统追上能力系统。</h3>
-              <p>你已经很擅长得到想要的东西，新的问题开始变成：得到以后，什么值得继续投入？</p>
+              <p>能力这一侧已经跑在前面；意义这一侧还没有建立新的标准，暂时答不出什么值得长期投入。</p>
             </article>
           </div>
         </div>
