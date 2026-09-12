@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { concepts } from './concepts';
 import {
   crossDomainChains,
+  relationFacing,
   relationGroupsFor,
   relationLabels,
   type RelationKind,
@@ -16,16 +17,6 @@ import { getNodeById, isCoreQuestion, nodeHref, questionDomains, traditions } fr
  * 介绍、按语义分组的直接相关节点，以及进入专题的入口——手机上和桌面上
  * 是同一套操作，服务端渲染完就不再需要 JS。
  */
-
-const kindHint: Record<RelationKind, string> = {
-  prerequisite: '前置',
-  distinction: '易混',
-  objection: '压力',
-  extension: '延伸',
-  'case-domain': '处境',
-  'cross-tradition': '跨传统',
-  'historical-context': '历史',
-};
 
 function MapNode({ nodeId }: { nodeId: string }) {
   const node = getNodeById(nodeId);
@@ -45,7 +36,9 @@ function MapNode({ nodeId }: { nodeId: string }) {
             {groups.map((group) =>
               group.entries.map((entry) => (
                 <li key={`${group.kind}-${entry.node.id}-${entry.reversed ? 'in' : 'out'}`}>
-                  <span className="philosophy-map-relation-kind">{kindHint[group.kind]}</span>
+                  <span className="philosophy-map-relation-kind">
+                    {relationFacing(group.kind, entry.reversed).short}
+                  </span>
                   <Link href={nodeHref(entry.node)}>{entry.node.title}</Link>
                   <span className="philosophy-map-relation-why">{entry.why}</span>
                 </li>
@@ -66,17 +59,40 @@ function MapNode({ nodeId }: { nodeId: string }) {
   );
 }
 
+/**
+ * 关系图例。
+ *
+ * 同时列出一条边在两侧各自的说法：同一条记录，在「前一页」上显示成「先读」，
+ * 在「后一页」上显示成「后读」。把这个约定摆出来，读者才知道徽章是相对当前
+ * 这一页说的，而不是一个固定属性。
+ */
 export function MapLegend() {
   return (
     <dl className="philosophy-map-legend">
       {(Object.keys(relationLabels) as RelationKind[])
         .sort((a, b) => relationLabels[a].order - relationLabels[b].order)
-        .map((kind) => (
-          <div key={kind}>
-            <dt>{kindHint[kind]}</dt>
-            <dd>{relationLabels[kind].outbound}</dd>
-          </div>
-        ))}
+        .map((kind) => {
+          const label = relationLabels[kind];
+          const symmetric = label.shortOutbound === label.shortInbound;
+          return (
+            <div key={kind}>
+              <dt>
+                {label.shortOutbound}
+                {!symmetric && (
+                  <span className="philosophy-map-legend-reverse">／{label.shortInbound}</span>
+                )}
+              </dt>
+              <dd>
+                {label.outbound}
+                {!symmetric && (
+                  <span className="philosophy-map-legend-note">
+                    反过来在对面那一页显示为「{label.inbound}」
+                  </span>
+                )}
+              </dd>
+            </div>
+          );
+        })}
     </dl>
   );
 }

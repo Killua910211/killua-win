@@ -579,9 +579,7 @@ a { color: inherit; text-decoration: none; }
 .note-main time,
 .back-link,
 .post-meta,
-.post-layout aside,
-.post-origin span,
-.post-origin a {
+.post-layout aside {
   font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.11em;
@@ -685,16 +683,6 @@ a { color: inherit; text-decoration: none; }
   white-space: pre-line;
 }
 .post-body > p:first-child { font-size: clamp(20px, 1.7vw, 25px); line-height: 1.85; }
-.post-origin {
-  margin-top: 88px;
-  padding: 28px;
-  border: 1px solid rgba(21, 21, 21, 0.25);
-}
-.post-origin > span { color: var(--rock-gray); }
-.post-origin p { margin: 16px 0 18px; color: #5d5a53; font-size: 14px; line-height: 1.7; }
-.post-origin a { display: inline-block; border-bottom: 1px solid var(--ink); padding-bottom: 3px; }
-.post-origin a:hover,
-.post-origin a:focus-visible { border-color: var(--ember); color: var(--ember-hot); }
 .post-analysis {
   margin-top: 24px;
   padding: 28px;
@@ -844,7 +832,6 @@ footer p:last-child { justify-self: end; color: var(--rock-gray); }
   .post-layout aside { flex-direction: row; align-items: baseline; gap: 12px; }
   .post-body > p { font-size: 17px; line-height: 1.95; }
   .post-body > p:first-child { font-size: 20px; }
-  .post-origin { margin-top: 64px; padding: 22px; }
   .post-analysis { padding: 22px; }
   footer { grid-template-columns: 1fr; gap: 14px; padding: 34px 20px; }
   footer p:nth-child(2),
@@ -2466,6 +2453,10 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .knowledge-index-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; }
 .knowledge-index-heading h2 { max-width: 760px; font-size: clamp(32px, 4.5vw, 62px); font-weight: 520; letter-spacing: -.065em; line-height: 1.05; }
 .knowledge-index-heading .eyebrow { color: var(--rock-gray); }
+.knowledge-index-intro { max-width: 560px; margin: 20px 0 0; color: #5d5a53; font-size: 15px; line-height: 1.8; }
+.knowledge-index-intro a { color: var(--ember); border-bottom: 1px solid currentColor; }
+.knowledge-index-intro a:hover,
+.knowledge-index-intro a:focus-visible { color: var(--ember-hot); }
 .knowledge-search { display: flex; width: 190px; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid rgba(21,21,21,.42); color: var(--ember); font-family: var(--font-mono), monospace; }
 .knowledge-search input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); font: inherit; font-size: 10px; letter-spacing: .08em; }
 .knowledge-search input::placeholder { color: var(--rock-gray); }
@@ -2577,14 +2568,6 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .learning-question-index { color: #8a867c; font-family: var(--font-mono), monospace; font-size: 12px; }
 .learning-question-title { font-size: 16px; font-weight: 460; letter-spacing: -.012em; line-height: 1.45; }
 
-.learning-tradition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px; margin-top: 44px; }
-.learning-tradition { min-width: 0; padding-top: 15px; border-top: 1px solid rgba(255,255,255,.4); }
-.learning-tradition :is(h3, h4) { font-size: 20px; font-weight: 540; letter-spacing: -.035em; line-height: 1.3; }
-.learning-tradition :is(h3, h4) a:hover { color: var(--signal); }
-.learning-tradition > p { margin-top: 11px; color: rgba(255,255,255,.6); font-size: 13px; line-height: 1.75; }
-.learning-tradition ul { margin-top: 16px; }
-.learning-tradition li a { display: block; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.87); font-size: 14px; line-height: 1.5; }
-.learning-tradition li a:hover { color: var(--signal); }
 
 .learning-method { display: grid; grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr); padding: 92px 4vw 110px; background: var(--ink); color: #fff; }
 .learning-method-body { min-width: 0; }
@@ -2685,7 +2668,6 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 
 @media (max-width: 980px) {
   .learning-question-groups { grid-template-columns: 1fr; }
-  .learning-tradition-grid,
   .philosophy-tradition-grid { grid-template-columns: 1fr; }
   .philosophy-children { grid-template-columns: 1fr; }
   /* 窄一点的屏幕把说明折到第二行，位置全部写死，避免自动流把状态挤走。 */
@@ -2704,7 +2686,6 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .learning-subject-section { gap: 28px; padding-top: 60px; padding-bottom: 72px; }
   .learning-section-body > h2 { font-size: clamp(30px, 9.5vw, 44px); }
   .learning-question-groups { gap: 30px; margin-top: 34px; }
-  .learning-tradition-grid { gap: 26px; margin-top: 34px; }
   .learning-method { gap: 28px; padding-top: 66px; padding-bottom: 78px; }
   .learning-method-body h2 { font-size: clamp(30px, 9.5vw, 46px); }
   .learning-loop { grid-template-columns: 1fr; gap: 26px; margin-top: 44px; }
@@ -2896,7 +2877,6 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .note-main p,
 .note-time,
 .post-meta,
-.post-origin p,
 .post-analysis p,
 .post-related p,
 .post-body > p,
@@ -2912,6 +2892,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .mind-detail li,
 .mind-review-intro,
 .mind-review-card p,
+.knowledge-index-intro,
 .knowledge-card p,
 .knowledge-card-source,
 .learning-section-lede,
@@ -2953,7 +2934,6 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .knowledge-card.knowledge-card-neutral,
 .philosophy-positions li,
 .philosophy-example,
-.post-origin,
 .post-analysis,
 .post-related,
 .philosophy-pager-slot,
@@ -2995,7 +2975,6 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .knowledge-card,
 .notes-years li,
 .note-row,
-.post-origin,
 .post-analysis,
 .post-related,
 .learning-question-group,
@@ -3119,7 +3098,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .learning-section-body > h2,
 .learning-question-group :is(h3, h4),
 .learning-question-title,
-.learning-tradition :is(h3, h4),
+.learning-entry-grid strong,
 .learning-method-body h2,
 .philosophy-hero h1,
 .philosophy-section-heading,
@@ -3137,11 +3116,12 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .mind-core-grid p,
 .mind-detail p,
 .mind-review-intro,
+.knowledge-index-intro,
 .knowledge-card p,
 .knowledge-idea,
 .learning-section-lede,
 .learning-question-group-summary,
-.learning-tradition > p,
+.learning-entry-grid > li > p,
 .philosophy-summary,
 .philosophy-question,
 .philosophy-paragraph {
@@ -3700,7 +3680,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   margin-top: 22px;
 }
 
-.philosophy-source-records li {
+.philosophy-source-records > li {
   min-width: 0;
   padding: 20px;
   border: 1px solid var(--black-4);
@@ -3717,7 +3697,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   line-height: 1.45;
 }
 .philosophy-source-records a:hover { color: var(--ember-hot); text-decoration: underline; text-underline-offset: 4px; }
-.philosophy-source-records li > p:not(.philosophy-source-id) {
+.philosophy-source-records li > p:not(.philosophy-source-id):not(.philosophy-source-usage-head) {
   margin-top: 11px;
   color: #c9c2b8;
   font-size: 13px;
@@ -5864,8 +5844,10 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 
 /* 来源的核验状态。三态在 id 行里已经有文字，这里只补一条左边界，
    让「链接失效」和「待核验」在一列里能被扫出来——不靠颜色单独承担语义。 */
-.philosophy-source-pending { border-left: 2px solid rgba(242, 237, 232, 0.28); padding-left: 13px; }
-.philosophy-source-broken { border-left: 2px solid var(--ember); padding-left: 13px; }
+/* 特指度必须压过 `.philosophy-source-records > li` 的 border 简写（0-1-1），
+   否则这两条左边框永远不会出现——它们此前就一直是死规则。 */
+.philosophy-source-records > li.philosophy-source-pending { border-left: 2px solid rgba(242, 237, 232, 0.28); padding-left: 13px; }
+.philosophy-source-records > li.philosophy-source-broken { border-left: 2px solid var(--ember); padding-left: 13px; }
 .philosophy-source-broken .philosophy-source-id { color: var(--ember-hot); }
 .philosophy-source-pending .philosophy-source-id { color: var(--meta-on-dark); }
 
@@ -5910,3 +5892,105 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 /* 目录跳过去时标题要落在吸顶 header 下面。 */
 .philosophy-block-title,
 .philosophy-research > summary { scroll-margin-top: calc(var(--header-height) + 60px); }
+
+/* 关系图例里的反向说法。同一条边在两页上的措辞不同，图例把这点摆出来。 */
+.philosophy-map-legend-reverse { color: var(--meta-on-dark); }
+.philosophy-map-legend-note {
+  display: block;
+  margin-top: 6px;
+  color: var(--meta-on-dark);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* 研究层：同一份材料的多处引用。
+   正文引 §4、论证地图引 §5 是两条不同的核验记录，合并成一条就把「这一处
+   支持的是哪句话」丢了，所以逐条列出，用左边一条细线收在这份材料底下。 */
+.philosophy-source-usages {
+  margin-top: 14px;
+  display: grid;
+  gap: 12px;
+}
+.philosophy-source-usages > li {
+  padding-left: 12px;
+  border-left: 1px solid var(--black-4);
+}
+.philosophy-source-usage-head {
+  color: var(--meta-on-dark);
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: .04em;
+}
+
+/* 分页器的语境标签。
+   同一条目可能同时属于「问题域内的次序」和「推荐路线的第 N 步」，两组各画
+   一行分页器；不写清楚是哪条顺序，两行就会被读成互相矛盾的同一条线。 */
+.philosophy-pager-context {
+  grid-column: 1 / -1;
+  padding: 16px 4vw 0;
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
+  color: var(--meta-on-dark);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: .08em;
+  line-height: 1.5;
+}
+@media (max-width: 760px) {
+  .philosophy-pager-context { padding: 16px 20px 0; }
+}
+
+/* 「适用限制」「未解难题」不是反驳。
+   和真正的反对共用同一块实心警示色，标签本身就会传达错误信息——逻辑页的
+   演绎有效性下面挂的是「演绎管不到哪里」，不是「演绎错了」。 */
+.philosophy-tag--scope {
+  background: transparent;
+  border: 1px solid var(--meta-on-dark);
+  color: var(--meta-on-dark);
+}
+
+/* 学习空间首页的科目入口卡。
+   这里刻意只到「问题域 / 传统」这一层就停：再往下展开就变成把哲学总览
+   那份完整目录抄第二遍，跳转过去等于什么都没发生。 */
+.learning-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: 44px;
+}
+.learning-entry-grid > li {
+  min-width: 0;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, .4);
+}
+.learning-entry-grid a {
+  display: block;
+  color: inherit;
+}
+.learning-entry-grid a:hover strong { color: var(--signal); }
+.learning-entry-count {
+  display: block;
+  color: rgba(255, 255, 255, .55);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: .1em;
+}
+.learning-entry-grid strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: 540;
+  letter-spacing: -.035em;
+  line-height: 1.3;
+}
+.learning-entry-grid > li > p {
+  margin-top: 11px;
+  color: rgba(255, 255, 255, .6);
+  font-size: 13px;
+  line-height: 1.75;
+}
+@media (max-width: 980px) {
+  .learning-entry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; margin-top: 34px; }
+}
+@media (max-width: 760px) {
+  .learning-entry-grid { grid-template-columns: 1fr; }
+}

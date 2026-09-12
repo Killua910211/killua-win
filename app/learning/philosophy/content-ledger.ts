@@ -63,7 +63,17 @@ export type CoreEntryLedger = {
     objections: string;
     confusions: string;
     historicalContext: string;
+    /** 「主要立场」在方法页上并不合适——那里的三项不是三个互斥阵营。 */
+    positions: string;
   }>;
+  /**
+   * 立场区块的导语。
+   *
+   * 只有需要先说明「这几项是什么关系」的条目才写。逻辑页是典型：演绎、归纳与
+   * 解释性推断不是三选一，而这句纠正原本埋在第三张卡片论证路径的最后一步，
+   * 读者要先读完三张编号 01/02/03、各带「反对意见」标签的卡片才可能看到。
+   */
+  positionsIntro?: string;
   origin: LedgerParagraph[];
   boundaries: LedgerParagraph[];
   objections: LedgerParagraph[];
@@ -125,6 +135,10 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
   },
   'pt-logic': {
     status: '核验正文｜自审完成',
+    // 这一页的三项不是三个互斥阵营，套「主要立场」会把方法读成站队。
+    sectionHeadings: { positions: '三种推理方式与各自的评价标准' },
+    positionsIntro:
+      '下面三项不是三选一的立场，而是三种推理方式：它们评价的东西不同，适用的地方也不同，同一段论证常常需要不止一种。因此每一项后面写的多半不是「反驳」，而是这种方式管不到哪里、它的评价标准在什么地方还没有定论——适用限制不等于对这种方法的反驳。',
     scope: '演绎有效、归纳支持和解释性推断各按什么标准评价理由，是这一页要分开的三件事。形式逻辑在此不充当所有好判断的裁判；但真实论证再复杂，前提、歧义和反例仍要一条条查。',
     origin: [
       { kind: '概括', text: '人们不仅会争论结论，也会争论结论是否由给出的理由支持。逻辑把这种支持的结构显明：在经典演绎中，有效意味着不存在前提全真而结论假的解释；这只评价保真形式，不保证前提真实。', sourceIds: ['LOG-1'] },
@@ -142,6 +156,7 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
     confusions: [
       { kind: '解释性重构', text: '前提假而论证有效并不矛盾；它只说明若前提为真，结论不能为假。' },
       { kind: '解释性重构', text: '相关性不是因果性，统计关联也不自动消除混杂、选择偏差和替代解释。' },
+      { kind: '概括', text: '但「相关不等于因果」也不推出「只有实验才能研究因果、观察数据没有帮助」。推不出因果的是单凭统计关联这件事本身——任何因果结论都得依赖某个同样是因果性的前提。一旦把这些前提写明，并说明要估的量在这套前提下能由现有数据算出来，观察数据同样可以给出无偏的因果估计。缺的始终是可辩护的因果假设，不是样本量；而实验也不是无条件保证。', sourceIds: ['LOG-8'] },
       { kind: '解释性重构', text: '形式化是澄清工具，也是模型；它会忽略语气、语境、权力关系或事实调查，须说明它保留了什么。' },
     ],
     historicalContext: [
@@ -155,6 +170,8 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
       { id: 'LOG-4', title: 'SEP：Gottlob Frege', kind: '学术综述', url: 'https://plato.stanford.edu/entries/frege/', locator: '§1、§2.1–§2.2、§2.7、§3', checked: 'verified', checkedOn: '2026-09-11', supports: '§2.1–§2.2 给出弗雷格的词项逻辑、谓词演算与复合语句、一般性（量化）；§2.7 给出他对逻辑本身的构想；§3 是他的语言哲学。' },
       { id: 'LOG-5', title: 'SEP：Epistemology in Classical Indian Philosophy', kind: '学术综述', url: 'https://plato.stanford.edu/entries/epistemology-india/', locator: '§1.1（知识与知识来源）、§2（怀疑论，含 hetv-ābhāsa 的引入）、§5（推理）', checked: 'verified', checkedOn: '2026-09-11', supports: '§1.1 以 pramāṇa 组织“知识来源”；§2 说明佛教与正理都把 Cārvāka 的归纳质疑转成关于推理的可错论，并引入 hetv-ābhāsa（似是而非的“理由”）；§5 专论推理。' },
       { id: 'LOG-6', title: 'SEP：The Problem of Induction', kind: '学术综述', url: 'https://plato.stanford.edu/entries/induction-problem/', locator: '§1–§2（休谟两难的重构）、§3.1–§3.5、§4.1–§4.2、§5.2–§5.4', checked: 'verified', checkedOn: '2026-09-11', supports: '§1–§2 给出论证性／概率性推理两支与齐一性原则的循环；§3 收录先天综合、解释性、贝叶斯、部分解与组合论进路；§4 收录规则循环式辩护与“无规则”回应；§5 收录改换正当性标准的方案（日常语言消解、实用主义辩护、形式学习理论）。' },
+      { id: 'LOG-7', title: 'IEP：Reductio ad Absurdum', kind: '学术综述', url: 'https://iep.utm.edu/reductio/', locator: '§1 Basic Ideas、§2 The Logic of Strict Propositional Reductio: Indirect Proof、§3 A Classical Example of Reductio Argumentation', checked: 'verified', checkedOn: '2026-09-12', supports: '§2 把间接证明写成三步：“(1) Assume not-p; (2) Provide argumentation that derives p from this assumption; (3) Maintain p on this basis.”——被假设的那一步是暂时引入、随后由 modus tollens 撤销的；§3 的通约性例子明确说“that initial commensurability assumption engendered a contradiction”。这两处一起支持：从一个被认为为假的前提出发的有效推理不是无用的，它正是间接证明的工作方式。' },
+      { id: 'LOG-8', title: 'Judea Pearl, An Introduction to Causal Inference', kind: '学术综述', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC2836213/', locator: '§2 From Association to Causation、§3 Structural Models, Diagrams, Causal Effects, and Counterfactuals、§4 Methodological Principles of Causal Inference（The International Journal of Biostatistics, 2010）', checked: 'verified', checkedOn: '2026-09-12', supports: '一方面：“Every claim invoking causal concepts must rely on some premises that invoke such concepts; it cannot be inferred from … statistical associations alone.”——单凭统计关联推不出因果。另一方面：在识别条件满足时“the causal effect can likewise be estimated from such data without bias”，识别问题即“Can the controlled (post-intervention) distribution … be estimated from data governed by the pre-intervention distribution?”。两句合起来支持：观察数据不是无条件无效，缺的是可辩护的因果假设，而不是样本量。' },
     ],
     review: { mode: '自审（尚未独立复审）', checkedOn: '2026-09-11', findings: [
       { location: '主要立场｜演绎有效性', issue: '原文将有效性说成“结论为真”。', evidence: 'LOG-1 将有效性界定为没有前提全真而结论假的解释。', revision: '增加有效／健全、前提／形式的分工。' },
@@ -162,7 +179,10 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
       { location: '新增｜哲学家怎样改写这个问题', issue: '原书单没有说明三段论、量词形式、归纳怀疑与正理论辩是在处理不同的推理任务。', evidence: 'LOG-3 区分推论与归纳，LOG-4 说明现代形式工具的变化，LOG-5 将正理放进 pramāṇa 与似是理由的争论。', revision: '新增四个比较单元，并把“带伞”案例拆为形式、因果支持和反例排除。' },
       { location: '来源账｜LOG-1 的错挂', issue: '本轮审查指出休谟卡、休谟阅读卡与“归纳”那条论证路径都挂 LOG-1，而 LOG-1 是 SEP：Classical Logic，其定位既不讨论休谟也不讨论归纳。', evidence: '本轮实际打开 LOG-1 全文核对目录与内容：§1 导论、§2 语言、§3 推导、§4 语义、§5 元理论、§6 唯一正确的逻辑，全文不出现休谟，也不出现归纳问题。', revision: '为归纳问题另建 LOG-6（SEP：The Problem of Induction），在“有力反对及回应”写出两难的两支与各类回应，并在 LOG-1 的 supports 里明确写出它不覆盖休谟与归纳，以免再被误挂。精读层挂 LOG-1 的休谟条目须改挂 LOG-6，这部分不在本文件内。' },
       { location: '容易混淆的地方｜形式化', issue: '“形式化会忽略语气、语境、权力关系或事实调查”一句原挂 LOG-1。', evidence: 'LOG-1 §2.4 只讨论句法特征，不作此类论断。', revision: '去掉来源标注，保留为解释性重构。' },
-    ], remaining: ['贝叶斯与因果推断尚未建立各自独立的原典阅读卡；LOG-6 只覆盖归纳的正当性问题，不覆盖因果推断方法。', '墨辩原典（《墨经》《小取》）仍无可核定位。'], adjacentImpact: '“语言意义”页须提醒论证可因歧义失效；“正理”页不能被降格为欧洲逻辑的附录。精读层与人物卡若还把休谟挂在 LOG-1，须改挂 LOG-6。原挂在本条历史语境里的 pt-knowledge-sources 已删除，应由关系层收录。', nextPriority: '补写因果与解释推断的独立来源账，并对接正理、墨辩的原典材料。' },
+      { location: '先把问题拆开｜健全性', issue: '原文写「反过来，从假前提出发的有效论证毫无用处」。「不健全」只说明不能据此断定结论为真，推不出「毫无用处」；同一页的论证路径第 3 步已正确写着「有效不等于健全」，两处自相矛盾。', evidence: 'LOG-7（IEP：Reductio ad Absurdum）§1 与 §2 说明间接证明正是先假设一个待否定的命题、推出矛盾、再撤销该假设——从假前提出发的有效推理是标准证明手段。', revision: '改写为说明「不健全」的确切代价，并新增「反证法（间接证明）」概念卡；同时不走向反面——有效性与假前提都不担保结论为真。' },
+      { location: '案例推演｜带伞下雨（第 3、4 问）', issue: '原文把「单凭相关性不能确立因果」扩展成「需要的是干预而不是更多观察」，并把「再多观察也没用」判为三句里最有指导性的一句。这条方法论主张此前在来源账里没有任何对应条目，而本条的待办明确写着 LOG-6 不覆盖因果推断方法。', evidence: 'LOG-8（Pearl, An Introduction to Causal Inference, 2010）§2 说明单凭统计关联推不出因果，§3–§4 同时说明在因果假设与识别条件明确时，观察数据也能无偏估计因果效应。本例的混杂变量「天气预报」本身可观测，正属于可由观察设计解决的情形。', revision: '改写第 3、4 问：分界在有没有可辩护、可被反驳的因果假设，而不在「实验对观察」；同类样本再多不解决混杂，换一种观察设计或做干预都是办法；并补上实验自身的代价（依从性、失访、外推）。新增 LOG-8 与一条 confusions。' },
+      { location: '主要立场｜区块模板', issue: '演绎、归纳与解释性推断被套进「主要立场—反对—回应」模板，读起来像三个互斥阵营。三条「反对意见」里有两条其实是适用限制——第一条的回应第一句就写着「这不是对演绎的反驳」，却顶着与真正反驳相同的标签；唯一一句纠正误读的话埋在第三张卡片论证路径的最后一步。', evidence: '本页 data.json 的 positions 与 study-guides 的 positionArguments 自身即证据：objection 与紧随其后的 response 在这一页互相矛盾。', revision: '区块标题改为「三种推理方式与各自的评价标准」，在区块开头加导语说明三者不是三选一；为立场卡新增 objectionKind，把两条适用限制与一条未解难题与真正的反驳区分开。模板本身保留，只按内容类型配置。' },
+    ], remaining: ['贝叶斯尚无独立的原典阅读卡；LOG-6 只覆盖归纳的正当性问题，因果推断方法现由 LOG-8 覆盖，但只核对到 §2–§4。', '墨辩原典（《墨经》《小取》）仍无可核定位。'], adjacentImpact: '“语言意义”页须提醒论证可因歧义失效；“正理”页不能被降格为欧洲逻辑的附录。精读层与人物卡若还把休谟挂在 LOG-1，须改挂 LOG-6。原挂在本条历史语境里的 pt-knowledge-sources 已删除，应由关系层收录。', nextPriority: '正理、墨辩的原典材料仍待对接；反证法目前只有 IEP 一条来源，宜再补一条独立材料。' },
   },
   'pt-language-meaning': {
     status: '核验正文｜自审完成',

@@ -24,6 +24,15 @@ export type PhilosophyPosition = {
    * 确实没有有力回应时，宁可在 objection 里写清它为什么难答。
    */
   response?: string;
+  /**
+   * 这条「反对」到底是哪一种。
+   *
+   * 默认是真正的反驳。但有些条目下面挂的根本不是反驳：逻辑页里
+   * 「生活中的多数判断不是纯演绎」说的是演绎管不到哪里，紧接着的回应第一句
+   * 就写着「这不是对演绎的反驳」——却仍然顶着一个和佛教无我论、照护伦理
+   * 那些真正反驳一模一样的红色「反对意见」标签。标签本身在传达错误信息。
+   */
+  objectionKind?: '反对意见' | '适用限制' | '未解难题';
 };
 
 export type PhilosophyNode = {
@@ -114,19 +123,6 @@ export function nodePath(id: string): PhilosophyNode[] {
 export function parentOf(id: string): PhilosophyNode | undefined {
   const parentId = parentIdByNodeId.get(id);
   return parentId ? nodeById.get(parentId) : undefined;
-}
-
-/** 上一节点 / 下一节点，按阅读顺序连续导航。 */
-export function neighborsOf(id: string): {
-  previous?: PhilosophyNode;
-  next?: PhilosophyNode;
-} {
-  const index = orderedNodes.findIndex((node) => node.id === id);
-  if (index < 0) return {};
-  return {
-    previous: index > 0 ? orderedNodes[index - 1] : undefined,
-    next: index < orderedNodes.length - 1 ? orderedNodes[index + 1] : undefined,
-  };
 }
 
 export function isCoreQuestion(node: PhilosophyNode): boolean {

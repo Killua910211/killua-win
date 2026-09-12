@@ -14,6 +14,7 @@ import { ConceptList } from './concept-card';
 import { NextSteps } from './next-steps';
 import { Prose } from './prose';
 import { ResearchLayer } from './research-layer';
+import { collectPageSources } from './page-sources';
 import { ThoughtExperiment } from './thought-experiment';
 
 type HeadingLevel = 'h2' | 'h3';
@@ -147,6 +148,7 @@ export function NodeBody({
     objections: ledger?.sectionHeadings?.objections ?? '有力反对及回应',
     confusions: ledger?.sectionHeadings?.confusions ?? '容易混淆的地方',
     historicalContext: ledger?.sectionHeadings?.historicalContext ?? '放回历史线索',
+    positions: ledger?.sectionHeadings?.positions ?? '主要立场',
   };
 
   /**
@@ -172,7 +174,7 @@ export function NodeBody({
     notes.length > 0 && { id: `${node.id}-notes`, label: '阅读提醒' },
     guide && { id: `${node.id}-orientation`, label: '先把问题拆开' },
     argument && { id: `${node.id}-argument`, label: '论证地图' },
-    positions.length > 0 && { id: `${node.id}-positions`, label: '主要立场' },
+    positions.length > 0 && { id: `${node.id}-positions`, label: headings.positions },
     ledger && { id: `${node.id}-objections`, label: headings.objections },
     guide?.philosopherViews?.length && { id: `${node.id}-voices`, label: '哲学家怎样改写这个问题' },
     experimentEntry,
@@ -297,8 +299,15 @@ export function NodeBody({
       {positions.length > 0 && (
         <section aria-labelledby={`${node.id}-positions`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-positions`}>
-            主要立场
+            {headings.positions}
           </BlockHeading>
+          {/*
+            导语放在区块开头，而不是最后一张卡片的论证路径末尾：读者是按顺序
+            读的，「这三项不是三选一」写在第三张卡片里等于没写。
+          */}
+          {ledger?.positionsIntro && (
+            <p className="philosophy-block-intro">{ledger.positionsIntro}</p>
+          )}
           <ol className="philosophy-positions">
             {positions.map((position, index) => {
               // 按立场名取论证路径，不按下标：下标对齐曾把论证挂到别的立场上。
@@ -325,7 +334,16 @@ export function NodeBody({
                 )}
                 {position.objection && (
                   <p className="philosophy-position-objection">
-                    <span className="philosophy-tag">反对意见</span>
+                    {/* 适用限制不是反驳，不能和真正的反驳共用一个标签。 */}
+                    <span
+                      className={
+                        position.objectionKind && position.objectionKind !== '反对意见'
+                          ? 'philosophy-tag philosophy-tag--scope'
+                          : 'philosophy-tag'
+                      }
+                    >
+                      {position.objectionKind ?? '反对意见'}
+                    </span>
                     {position.objection}
                   </p>
                 )}
@@ -555,7 +573,9 @@ function SharedTail({
             自己的问题框架；它们不一定在回答完全相同的问题。
           </p>
           {comparisons.map((item) => (
-            <ComparisonBlock item={item} key={item.id} />
+            // 比较栏的角标以前只在 item.sources 里查，条目来源账已登记过的材料
+            // 要想引用就得再登记一遍。两边都给，编号才是全页一套。
+            <ComparisonBlock item={item} key={item.id} ledgerSources={sources} />
           ))}
         </section>
       )}
@@ -650,7 +670,14 @@ function SharedTail({
         </section>
       )}
 
-      {ledger && <ResearchLayer ledger={ledger} nodeId={node.id} />}
+      {/*
+        研究层的来源统计覆盖整页，而不是只数 ledger：论证地图、跨传统比较、
+        思想实验和概念卡的自带来源也在这一页上渲染，漏掉它们会让「N 条来源」
+        小于读者实际点得到的角标数。
+      */}
+      {ledger && (
+        <ResearchLayer ledger={ledger} nodeId={node.id} registry={collectPageSources(node.id)} />
+      )}
     </>
   );
 }

@@ -4,7 +4,6 @@ import { SiteHeader } from '@/app/components/site-header';
 import { SectionNav } from '@/app/components/section-nav';
 import { PageHero } from '@/app/components/page-hero';
 import { buildMetadata } from '@/app/lib/metadata';
-import { CoreQuestionGroups, type QuestionGroup } from './philosophy/node-content';
 import {
   liveSubjects,
   methodSectionNumber,
@@ -28,18 +27,6 @@ export const metadata = buildMetadata({
   description: `按科目组织的个人学习工作台：哲学铺开了 ${questionDomains.length} 个问题域、${coreQuestions.length} 个核心问题与 ${traditions.length} 条传统导航，可以随时回来查；之后还会加别的科目。`,
   path: '/learning',
 });
-
-const questionGroups: QuestionGroup[] = questionDomains.map((domain) => ({
-  id: domain.id,
-  title: domain.title,
-  href: nodeHref(domain),
-  summary: domain.summary,
-  questions: (domain.children ?? []).filter(isCoreQuestion).map((question) => ({
-    id: question.id,
-    title: question.title,
-    href: nodeHref(question),
-  })),
-}));
 
 /** 科目分区共用的外壳：编号、标签和深浅面都由科目清单决定。 */
 function subjectSectionProps(id: string, label: string) {
@@ -110,13 +97,32 @@ export default function LearningPage() {
               </Link>
             </p>
 
+            {/*
+              这里只给入口，不再把哲学总览那份目录整份抄一遍。
+              以前这一段渲染的是完整的 CoreQuestionGroups（6 个问题域 + 23 个核心问题
+              全部展开）和把每条线索都列出来的传统网格——和 /learning/philosophy 上
+              的那份一模一样。于是「哲学总览 ↗」这个链接跳过去只是再看一次同样的东西。
+              首页负责的是「有哪些科目、从哪里进去」，完整索引留给总览。
+            */}
             <h3 className="learning-block-heading" id="learning-philosophy-questions">
               按问题 / Main path
             </h3>
             <p className="learning-block-lede">
-              {questionDomains.length} 个问题域，{coreQuestions.length} 个核心问题。这是主路径。
+              {questionDomains.length} 个问题域，{coreQuestions.length} 个核心问题。这是主路径；完整索引在哲学总览里。
             </p>
-            <CoreQuestionGroups groups={questionGroups} headingLevel="h4" />
+            <ul className="learning-entry-grid">
+              {questionDomains.map((domain) => (
+                <li key={domain.id}>
+                  <Link href={nodeHref(domain)}>
+                    <span className="learning-entry-count" lang="en">
+                      {(domain.children ?? []).filter(isCoreQuestion).length} questions
+                    </span>
+                    <strong>{domain.title}</strong>
+                  </Link>
+                  <p>{domain.summary}</p>
+                </li>
+              ))}
+            </ul>
 
             <h3 className="learning-block-heading" id="learning-philosophy-traditions">
               按传统 / Parallel history
@@ -124,25 +130,19 @@ export default function LearningPage() {
             <p className="learning-block-lede">
               同一批问题，在不同传统里怎么被追问 —— 把它们放回文本、语言、制度与论辩史中。
             </p>
-            <div className="learning-tradition-grid">
+            <ul className="learning-entry-grid">
               {traditions.map((tradition) => (
-                <article className="learning-tradition" key={tradition.id}>
-                  <h4>
-                    <Link href={nodeHref(tradition)}>
-                      {tradition.title} <span aria-hidden="true">↗</span>
-                    </Link>
-                  </h4>
+                <li key={tradition.id}>
+                  <Link href={nodeHref(tradition)}>
+                    <span className="learning-entry-count" lang="en">
+                      {(tradition.children ?? []).length} threads
+                    </span>
+                    <strong>{tradition.title}</strong>
+                  </Link>
                   <p>{tradition.summary}</p>
-                  <ul>
-                    {(tradition.children ?? []).map((thread) => (
-                      <li key={thread.id}>
-                        <Link href={nodeHref(thread)}>{thread.title}</Link>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 

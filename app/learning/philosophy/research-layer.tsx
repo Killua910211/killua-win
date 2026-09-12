@@ -1,4 +1,17 @@
 import { sourceCheckLabels, type CoreEntryLedger } from './content-ledger';
+import type { PageSourceRegistry, SourceUsage } from './page-sources';
+
+/**
+ * 一份材料整体标成什么状态。
+ *
+ * 取最差的那一处，不取第一处：同一个 SEP 条目可能在正文里核对过 §4、在论证
+ * 地图里引了尚未核对的 §5。按第一处上色会把「其中一处还没核」显示成绿色。
+ */
+function worstState(usages: SourceUsage[]): SourceUsage['checked'] {
+  if (usages.some((usage) => usage.checked === 'broken')) return 'broken';
+  if (usages.some((usage) => usage.checked === 'pending')) return 'pending';
+  return 'verified';
+}
 
 /**
  * 研究层。
@@ -12,11 +25,21 @@ import { sourceCheckLabels, type CoreEntryLedger } from './content-ledger';
  *   - 正文里的来源角标仍然直接指向来源本身，不需要先展开这一层；
  *   - 折叠标题上写清里面有多少条来源、什么审查模式、核对到哪一天，
  *     不把状态藏成一个需要点开才知道的秘密。
+ *
+ * 统计口径以整页为准（page-sources.ts），不是只数条目来源账。以前只数来源账，
+ * 于是自由意志页正文点得到 14 个角标、研究层却写「3 条来源，已核验 3」——
+ * 那个数字既对不上页面，又让人以为全页引文都已核验。
  */
-export function ResearchLayer({ ledger, nodeId }: { ledger: CoreEntryLedger; nodeId: string }) {
-  const verified = ledger.sources.filter((source) => source.checked === 'verified').length;
-  const broken = ledger.sources.filter((source) => source.checked === 'broken').length;
-  const pending = ledger.sources.length - verified - broken;
+export function ResearchLayer({
+  ledger,
+  nodeId,
+  registry,
+}: {
+  ledger: CoreEntryLedger;
+  nodeId: string;
+  registry: PageSourceRegistry;
+}) {
+  const { materialCount, usageCount, verified, pending, broken } = registry;
 
   /**
    * 条目状态由来源的真实状态推出，不用 `ledger.status` 里手写的那句。
@@ -38,7 +61,14 @@ export function ResearchLayer({ ledger, nodeId }: { ledger: CoreEntryLedger; nod
       <summary>
         <span className="philosophy-research-title">来源、核验与修订记录</span>
         <span className="philosophy-research-meta">
-          {ledger.sources.length} 条来源
+          {/*
+            同一份材料常被正文和论证地图各引一次、定位不同。只报「份数」会少算
+            核验工作量，只报「引用数」又会让人以为有那么多份不同的材料，所以
+            两个数都写出来，两者相等时才合并成一句。
+          */}
+          {materialCount === usageCount
+            ? `${usageCount} 条来源`
+            : `${usageCount} 条引用 · ${materialCount} 份材料`}
           {verified > 0 && `，已核验 ${verified}`}
           {pending > 0 && `，待核验 ${pending}`}
           {broken > 0 && `，链接失效 ${broken}`} · {ledger.review.mode}
@@ -61,30 +91,56 @@ export function ResearchLayer({ ledger, nodeId }: { ledger: CoreEntryLedger; nod
             来源与核验记录
           </h3>
           <p className="philosophy-research-text">
-            每项只说明本轮实际核对到的定位和它支持的论断；原典入口不等于整部文本已经完成校勘。
+            本页所有区块引用的来源都在这里，按材料归并：正文、论证地图、跨传统比较、思想实验和
+            概念卡共用同一份材料时只列一次，但各自的定位、支持的论断和核验状态分开记。每项只说明
+            本轮实际核对到的定位；原典入口不等于整部文本已经完成校勘。
+            {registry.extraUses.length > 0 &&
+              `本页除正文外，${registry.extraUses.join('、')}也各自带了来源。`}
           </p>
           <ol className="philosophy-source-records">
-            {ledger.sources.map((source) => (
-              <li className={`philosophy-source-${source.checked}`} key={source.id}>
+            {registry.sources.map((source) => {
+              const state = worstState(source.usages);
+              return (
+              <li className={`philosophy-source-${state}`} key={source.url}>
                 <p className="philosophy-source-id">
-                  {source.id} · {source.kind} · {sourceCheckLabels[source.checked]}
-                  {source.checkedOn && ` · ${source.checkedOn}`}
+                  {source.ids.join(' / ')} · {source.kind}
+                  {/*
+                    待核验和链接失效要有文字，不能只靠左边那条色边——颜色单独承担
+                    语义，色觉差异和高对比模式下就什么都没说。全部已核验时不写，
+                    免得每一条都挂一个「已核验」，反而把真正需要注意的那条淹掉。
+                  */}
+                  {state !== 'verified' && ` · ${sourceCheckLabels[state]}`}
                 </p>
                 <a href={source.url} rel="noreferrer" target="_blank">
                   {source.title}
                   <span aria-hidden="true"> ↗</span>
                   <span className="sr-only">（在新标签页打开）</span>
                 </a>
-                <p>
-                  <strong>定位：</strong>
-                  {source.locator}
-                </p>
-                <p>
-                  <strong>用于：</strong>
-                  {source.supports}
-                </p>
+                {/*
+                  同一份材料的多处引用逐条列出。合并成一条会丢掉「这一处核对到的
+                  是哪一小节、支持的是哪一句」，而那正是这份清单存在的理由。
+                */}
+                <ul className="philosophy-source-usages">
+                  {source.usages.map((usage) => (
+                    <li key={`${usage.id}-${usage.usedIn}-${usage.locator}`}>
+                      <p className="philosophy-source-usage-head">
+                        {usage.id} · {usage.usedIn} · {sourceCheckLabels[usage.checked]}
+                        {usage.checkedOn && ` · ${usage.checkedOn}`}
+                      </p>
+                      <p>
+                        <strong>定位：</strong>
+                        {usage.locator}
+                      </p>
+                      <p>
+                        <strong>用于：</strong>
+                        {usage.supports}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
               </li>
-            ))}
+              );
+            })}
           </ol>
         </section>
 

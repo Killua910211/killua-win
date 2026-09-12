@@ -35,6 +35,17 @@ export type RelationLabel = {
   outbound: string;
   /** 从对面那一页反向看这条边时的中文标题。 */
   inbound: string;
+  /**
+   * 知识地图上那枚小徽章的文字，同样分方向。
+   *
+   * 加它的原因是一个真实的方向 bug：地图以前直接用一张按 kind 索引的短标签表，
+   * 完全不看这条边是正向还是反向，于是「以本页为前置的问题：道德运气」在地图上
+   * 显示成「前置 · 道德运气」——徽章说道德运气是自由意志的前置，而紧挨着的
+   * 解释句说的恰恰相反。正反两个方向的措辞现在和标题一起放在这里，
+   * 只有一处需要维护。
+   */
+  shortOutbound: string;
+  shortInbound: string;
   /** 这一组关系在页面上排第几。数字小的排前面。 */
   order: number;
   /** 写 why 时必须回答的问题。数据层不校验它，但审查时按它检查。 */
@@ -45,42 +56,56 @@ export const relationLabels: Record<RelationKind, RelationLabel> = {
   prerequisite: {
     outbound: '先读这些（前置理解）',
     inbound: '以本页为前置的问题',
+    shortOutbound: '先读',
+    shortInbound: '后读',
     order: 1,
     mustAnswer: '对面那一页的哪个区分是本页的前提？',
   },
   distinction: {
     outbound: '常被混为一谈，需要分开',
     inbound: '常被混为一谈，需要分开',
+    shortOutbound: '易混',
+    shortInbound: '易混',
     order: 2,
     mustAnswer: '为什么会混同，分界在哪？',
   },
   objection: {
     outbound: '对本页构成压力',
     inbound: '本页对它构成压力',
+    shortOutbound: '受挑战',
+    shortInbound: '挑战它',
     order: 3,
     mustAnswer: '它攻击的是本页哪一条前提？',
   },
   extension: {
     outbound: '接着追问（延伸问题）',
     inbound: '这个问题从哪里来',
+    shortOutbound: '延伸',
+    shortInbound: '起点',
     order: 4,
     mustAnswer: '本页的哪一步逼出了这个问题？',
   },
   'case-domain': {
     outbound: '落到具体处境',
     inbound: '这个处境背后的核心问题',
+    shortOutbound: '处境',
+    shortInbound: '母问题',
     order: 5,
     mustAnswer: '这个处境改变了原问题的哪个变量？',
   },
   'cross-tradition': {
     outbound: '跨传统的可比问题',
     inbound: '跨传统的可比问题',
+    shortOutbound: '跨传统',
+    shortInbound: '跨传统',
     order: 6,
     mustAnswer: '可比较的具体争点是什么，又在哪里不可等同？',
   },
   'historical-context': {
     outbound: '放回历史语境',
     inbound: '在这段历史里被追问的问题',
+    shortOutbound: '历史',
+    shortInbound: '此期问题',
     order: 7,
     mustAnswer: '是哪一段材料，以及不能从它推出什么？',
   },
@@ -88,6 +113,133 @@ export const relationLabels: Record<RelationKind, RelationLabel> = {
 
 /** 对称的关系不需要区分方向，反向展示时不改写标题。 */
 const symmetricKinds = new Set<RelationKind>(['distinction', 'cross-tradition']);
+
+/**
+ * 一条边在某一侧该显示的标题与徽章。
+ *
+ * 所有渲染方向语义的地方都必须走这里，不要各自再建一张按 kind 索引的表——
+ * 地图上那个「前置」徽章与解释句互相矛盾的 bug，就是因为存在第二张表。
+ */
+export function relationFacing(
+  kind: RelationKind,
+  reversed: boolean,
+): { title: string; short: string } {
+  const label = relationLabels[kind];
+  return reversed
+    ? { title: label.inbound, short: label.shortInbound }
+    : { title: label.outbound, short: label.shortOutbound };
+}
+
+/**
+ * 方向语义的数据不变式。
+ *
+ * 这些断言写在模块顶层，import 时执行。注意它们**不会**在 `pnpm build` 时跑：
+ * vinext 的 build 只打包和做静态分析，从不 import 应用模块，而 `[node]/page.tsx`
+ * 的 `revalidate = 0` 又把节点路由标成 Dynamic，没有预渲染产物。也就是说，靠构建
+ * 是拦不住写坏的数据的——它会变成线上第一次请求时的 500。
+ *
+ * 真正的闸门是 `pnpm test:philosophy`（scripts/check-philosophy-invariants.mjs），
+ * 它把这些模块打成 bundle 再 import，逼这些断言在提交前跑一遍；`pnpm check` 会调它。
+ * 改了这里的断言，记得同步那个脚本里的不变式清单。
+ */
+/**
+ * why 里不得出现没有先行词的方向性指代。
+ *
+ * `relationGroupsFor` 对正反两个方向都原样透传 `relation.why`——只有分组标题和
+ * 徽章会按方向改写。所以 why 里的「本页」在 from 页指 from、在 to 页指 to：
+ * 同一句话在两页上说的是相反的事。本轮就栽在这里，`pt-history-tech →
+ * pt-africana-race` 那条写成「它攻击的是本页「进步与解放叙事」那一栏」，在非裔
+ * 哲学页上读成该页有一栏叫「进步与解放叙事」，而那是对面那一页的立场。
+ *
+ * 「自由那一页」「历史与技术那一页」这样带页名的说法不在禁止之列：先行词是写死的
+ * 页名，翻面也不会改变它指谁。
+ */
+const directionalDeixis = ['本页', '该页', '同一页'];
+
+function assertNoDirectionalDeixis(relations: PhilosophyRelation[]) {
+  for (const relation of relations) {
+    for (const word of directionalDeixis) {
+      if (relation.why.includes(word)) {
+        throw new Error(
+          `[relations] ${relation.from} → ${relation.to}：why 里出现了「${word}」。` +
+            'why 在正反两个方向上原样显示，这类指代会在对面那一页翻面。请直接写出页名。',
+        );
+      }
+    }
+  }
+}
+
+function assertDirectionSemantics() {
+  for (const kind of Object.keys(relationLabels) as RelationKind[]) {
+    const label = relationLabels[kind];
+    const symmetric = symmetricKinds.has(kind);
+    const titlesSame = label.outbound === label.inbound;
+    const shortsSame = label.shortOutbound === label.shortInbound;
+
+    // 非对称关系的两个方向必须给出不同措辞，否则「A 是 B 的前置」和
+    // 「B 是 A 的前置」会在页面上长得一模一样。
+    if (!symmetric && (titlesSame || shortsSame)) {
+      throw new Error(
+        `关系「${kind}」不是对称关系，正反两个方向必须用不同措辞：` +
+          `outbound=${label.outbound}／inbound=${label.inbound}，` +
+          `short=${label.shortOutbound}／${label.shortInbound}`,
+      );
+    }
+    // 对称关系反过来必须完全一样，否则同一条边在两页上会读成两回事。
+    if (symmetric && (!titlesSame || !shortsSame)) {
+      throw new Error(`关系「${kind}」登记为对称关系，正反措辞却不一致`);
+    }
+    if (!label.shortOutbound.trim() || !label.shortInbound.trim()) {
+      throw new Error(`关系「${kind}」缺少地图徽章文字`);
+    }
+  }
+}
+
+/**
+ * 严格前置关系里不能有环。
+ *
+ * 「教学先后建议」可以随便排，但 prerequisite 声称的是理解上的依赖：
+ * 若 A 要求先读 B、B 又要求先读 A，读者无从下手。
+ */
+function assertNoPrerequisiteCycle(relations: PhilosophyRelation[]) {
+  const edges = new Map<string, string[]>();
+  for (const relation of relations) {
+    if (relation.kind !== 'prerequisite') continue;
+    edges.set(relation.from, [...(edges.get(relation.from) ?? []), relation.to]);
+  }
+
+  const state = new Map<string, 'visiting' | 'done'>();
+  const stack: string[] = [];
+  const walk = (node: string) => {
+    if (state.get(node) === 'done') return;
+    if (state.get(node) === 'visiting') {
+      const cycle = [...stack.slice(stack.indexOf(node)), node].join(' → ');
+      throw new Error(`前置关系出现循环：${cycle}`);
+    }
+    state.set(node, 'visiting');
+    stack.push(node);
+    for (const next of edges.get(node) ?? []) walk(next);
+    stack.pop();
+    state.set(node, 'done');
+  };
+  for (const node of edges.keys()) walk(node);
+}
+
+/** 同一对节点之间只允许一条边：靠叠加关系类型充数会让「继续学习」变成复读。 */
+function assertNoDuplicatePairs(relations: PhilosophyRelation[]) {
+  const seen = new Map<string, string>();
+  for (const relation of relations) {
+    const pair = [relation.from, relation.to].sort().join('|');
+    const existing = seen.get(pair);
+    if (existing) {
+      throw new Error(
+        `${relation.from} 与 ${relation.to} 之间有多条边（${existing}、${relation.kind}）；` +
+          '一对节点只保留最能说明问题的那一条。',
+      );
+    }
+    seen.set(pair, relation.kind);
+  }
+}
 
 export type PhilosophyRelation = {
   from: string;
@@ -201,6 +353,12 @@ export const philosophyRelations: PhilosophyRelation[] = [
 
   // ——— 易混辨析 ———————————————————————————————————————————————
   {
+    from: 'pt-aesthetic-value',
+    to: 'pt-african-method',
+    kind: 'distinction',
+    why: '两边都在问「由谁的训练决定什么算好理由」，结构相似因此容易被叠起来读。分界在于争的东西不同：审美那边争一个判断能否被交流和辩护，「什么算非洲哲学」争的是一门学科的准入资格与材料范围。后者是 20 世纪的方法论争论，不是从审美价值那一步长出来的。',
+  },
+  {
     from: 'pt-legitimacy',
     to: 'pt-law',
     kind: 'distinction',
@@ -299,6 +457,18 @@ export const philosophyRelations: PhilosophyRelation[] = [
 
   // ——— 有力反对 ———————————————————————————————————————————————
   {
+    from: 'pt-science-reality',
+    to: 'pt-justice',
+    kind: 'objection',
+    why: '它攻击的是「预测够用就好」这一步工具主义辩护。一旦模型的分类和误差率决定谁获得资源，「用得上」就不再是中立标准，还要回答误判的负担落在谁身上。这条压力来自分配正义那一路，不是对科学实在论的形而上学反驳。',
+  },
+  {
+    from: 'pt-freedom',
+    to: 'pt-care',
+    kind: 'objection',
+    why: '它攻击的是相容论对「我自己的理由」这个说法的独占权。照护伦理里的关系性自我主张：如果能力与需要本身就在关系中形成，那么「出自我的理由」里的那个「我」是谁，本身要先回答，而不是给控制条件补一句社会背景就算处理过了。',
+  },
+  {
     from: 'pt-right-action',
     to: 'pt-care',
     kind: 'objection',
@@ -314,13 +484,13 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-science-reality',
     to: 'pt-history-tech',
     kind: 'objection',
-    why: '它攻击的是「理论的持续成功可以当作它近似抓到真实结构的证据」这一步。若成功本身由仪器、资助与同行制度共同造出来，成功就不再是独立于这些条件的证据。',
+    why: '它攻击的是「理论的持续成功可以当作它近似抓到真实结构的证据」这一步。提出这条反对的是历史与技术那一页谱系与权力分析那一路：若成功本身由仪器、资助与同行制度共同造出来，成功就不再是独立于这些条件的证据。那一页的进步与解放叙事一路并不作此判断。',
   },
   {
     from: 'pt-justice',
     to: 'pt-africana-race',
     kind: 'objection',
-    why: '它攻击的是「正义可以从比较当前份额开始」这一前提。若剥夺经由法律、空间与劳动累积成今天的起点，只调整份额等于把历史当作已经结清。',
+    why: '它攻击的是「正义可以从比较当前份额开始」这一前提。提出这条反对的是非裔哲学里非殖民与解放实践那一路，它把剥夺看作经由法律、空间与劳动累积成今天的起点；照这个看法，只调整份额等于把历史当作已经结清。这是非裔哲学三路中的一路，不是那一页的统一结论。',
   },
   {
     from: 'pt-justice',
@@ -332,13 +502,13 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-legitimacy',
     to: 'pt-africana-race',
     kind: 'objection',
-    why: '它攻击的是「正当性可以在既定政治单位内部证成」这一前提。若这个单位的边界由征服划定，同意、参与与公共自我治理都要先回答谁被算作公民。',
+    why: '它攻击的是「正当性可以在既定政治单位内部证成」这一前提。提出这条反对的是非殖民与解放实践那一路：若这个单位的边界由征服划定，同意、参与与公共自我治理都要先回答谁被算作公民。',
   },
   {
     from: 'pt-history-tech',
     to: 'pt-africana-race',
     kind: 'objection',
-    why: '它攻击的是「历史可以被写成能力逐步扩展」这一前提。殖民与奴役不是进步叙事之外的例外，而是同一段时间里被记为进步的那些制度的组成部分。',
+    why: '它攻击的是历史与技术那一页「进步与解放叙事」一路的前提：历史可以被写成能力逐步扩展。提出这条反对的是非裔哲学里非殖民与解放实践那一路——殖民与奴役不是进步叙事之外的例外，而是同一段时间里被记为进步的那些制度的组成部分。非裔哲学另有种族的社会建构、生活经验与现象学两路，问的不是同一件事。',
   },
   {
     from: 'pt-mind-self',
@@ -385,12 +555,6 @@ export const philosophyRelations: PhilosophyRelation[] = [
     why: '照护实践的品质说不出照护劳动该由谁承担、承担到什么代价。一旦问到时间、金钱与公共支持怎么分，问题就从关系伦理转到制度分配。',
   },
   {
-    from: 'pt-care',
-    to: 'pt-freedom',
-    kind: 'extension',
-    why: '如果能力与需要都在关系中形成，那么「按自己的理由行动」里的「自己」是谁？关系性自我这一步要求重写相容论对控制的描述，而不只是补一句社会条件。',
-  },
-  {
     from: 'pt-religion-reason',
     to: 'pt-death-meaning',
     kind: 'extension',
@@ -431,12 +595,6 @@ export const philosophyRelations: PhilosophyRelation[] = [
     to: 'pt-history-tech',
     kind: 'extension',
     why: '如果「艺术世界」的承认参与决定分类，那么当复制、平台与生成系统改变谁能发布、谁被看见时，这套承认机制本身就得重新描述。',
-  },
-  {
-    from: 'pt-aesthetic-value',
-    to: 'pt-african-method',
-    kind: 'extension',
-    why: '若审美理由可以交流，那由谁的训练来决定什么算好理由？准入标准怎样形成、哪些材料被排除在外，在「什么算非洲哲学」的争论里是同一个结构。',
   },
   {
     from: 'pt-islamic-translation',
@@ -499,12 +657,6 @@ export const philosophyRelations: PhilosophyRelation[] = [
     to: 'pt-history-tech',
     kind: 'case-domain',
     why: '这个处境改变的是照护关系的中介：排班系统、远程监护与平台派单重新分配谁看得见谁、谁承担等待和赶路的时间。注意与回应因此不再只是照护者的个人品质。',
-  },
-  {
-    from: 'pt-science-reality',
-    to: 'pt-justice',
-    kind: 'case-domain',
-    why: '这个处境改变的是模型的用途：一旦分类和误差率决定谁获得资源，「预测够用就好」这个工具主义辩护就要额外回答误判的负担落在谁身上。',
   },
 
   // ——— 跨传统比较 —————————————————————————————————————————————
@@ -620,7 +772,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-good-life',
     to: 'pt-african-personhood',
     kind: 'cross-tradition',
-    why: '可比较的争点是个人的好能否离开共同善来说明。不可等同的是「人格」在那一页指道德成熟的成就或社会承认，而不是福祉的承载者；叠起来会让「人格在共同体中成就」听着像取消个人福祉。',
+    why: '可比较的争点是个人的好能否离开共同善来说明。不可等同的是「人格」在非洲人格观里指道德成熟的成就或社会承认，而不是福祉的承载者；叠起来会让「人格在共同体中成就」听着像取消个人福祉。',
   },
 
   // ——— 历史语境 ———————————————————————————————————————————————
@@ -782,6 +934,10 @@ function assertRelations(relations: PhilosophyRelation[]) {
 }
 
 assertRelations(philosophyRelations);
+assertDirectionSemantics();
+assertNoDirectionalDeixis(philosophyRelations);
+assertNoPrerequisiteCycle(philosophyRelations);
+assertNoDuplicatePairs(philosophyRelations);
 
 /**
  * 横向链条。
@@ -812,8 +968,8 @@ export const crossDomainChains: CrossDomainChain[] = [
   {
     id: 'chain-evidence-to-accountability',
     title: '从「我凭什么相信」走到「模型出错谁负责」',
-    why: '一条链上的四页问的是同一件事在不同层次上的样子：一个人的证据、一个共同体的证据、一个系统的表现，以及一次错误的归属。中间任何一步被跳过，讨论就会在「算法很准」和「算法有偏见」之间空转。',
-    nodeIds: ['pt-knowledge-sources', 'pt-science-reality', 'pt-ai-future', 'pt-responsibility'],
+    why: '一条链上的四页问的是同一件事在不同层次上的样子：一个人的证据、一个共同体的证据、一次错误该归给谁，最后才是这套归属遇上一个系统时还剩多少。责任排在 AI 之前不是随手放的——缺了可归属、可要求说明与可追究这三层区分，自动化伤害的讨论只会在「怪算法」和「怪用户」之间空转。',
+    nodeIds: ['pt-knowledge-sources', 'pt-science-reality', 'pt-responsibility', 'pt-ai-future'],
   },
   {
     id: 'chain-naming-to-redress',
@@ -836,6 +992,32 @@ for (const chain of crossDomainChains) {
   for (const nodeId of chain.nodeIds) {
     if (!getNodeById(nodeId)) {
       throw new Error(`横向链条 ${chain.id} 指向了不存在的节点：${nodeId}`);
+    }
+  }
+}
+
+/**
+ * 构建期校验：链条的步进方向不能和 prerequisite 边打架。
+ *
+ * `from: A, to: B` 的 prerequisite 意思是「读 A 之前先读 B」。所以链条里
+ * 一旦出现 A 紧接着 B 的步进，就等于同一份数据在两处给出相反的阅读顺序：
+ * 地图上的链条说「往前走一步到 B」，B 的关系区却说「B 是 A 的前置」。
+ * 「从我凭什么相信走到模型出错谁负责」那条链原先正是这样，把责任排在了
+ * 人工智能之后。
+ */
+for (const chain of crossDomainChains) {
+  for (let index = 0; index < chain.nodeIds.length - 1; index += 1) {
+    const current = chain.nodeIds[index];
+    const following = chain.nodeIds[index + 1];
+    const conflict = philosophyRelations.find(
+      (relation) =>
+        relation.kind === 'prerequisite' && relation.from === current && relation.to === following,
+    );
+    if (conflict) {
+      throw new Error(
+        `横向链条 ${chain.id} 把 ${following} 排在 ${current} 之后，` +
+          `但 relations 里 ${following} 是 ${current} 的前置（先读 ${following}）。两处顺序相反。`,
+      );
     }
   }
 }
@@ -897,8 +1079,8 @@ export function relationGroupsFor(nodeId: string): RelationGroup[] {
   // 保留先出现的那条理由。
   const seen = new Set<string>();
   for (const entry of entries) {
-    const label = relationLabels[entry.kind];
-    const title = entry.reversed ? label.inbound : label.outbound;
+    // 方向措辞只有 relationFacing 一处实现，文章页和地图页都走它。
+    const { title } = relationFacing(entry.kind, entry.reversed);
     const key = `${entry.kind}|${title}`;
     const entryKey = `${key}|${entry.node.id}`;
     if (seen.has(entryKey)) continue;

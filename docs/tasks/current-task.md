@@ -1,4 +1,205 @@
-# 当前任务：哲学知识库 V2 —— 知识关系、阅读分层与来源诚信
+# 当前任务：/mind 页面去掉重复内容
+
+状态：本地已完成，未发布正式网站（2026-09-13）。
+
+## 需求
+
+`https://www.killua.win/mind#mind-library` 有重复内容，需要合理调整：同一场对话的结论在同一页里被复述多次。
+
+## 验收
+
+- `#mind-library` 不再收录与本页「主题线索」「自我复习」同源、同话的卡片。
+- 分类筛选里不留计数为 0、永远筛不出内容的按钮。
+- 本地 Type Check、Lint、Build 通过；本地页面渲染正常、控制台无错误、页内锚点仍能跳转。
+
+## 计划
+
+1. 先核对页面上同一批结论出现了几次，分别在哪一区。
+2. 卡片索引只保留其它对话的卡片，并在分区导语里写明这一层的边界。
+3. 本地检查与页面复核；是否发布正式网站由用户决定。
+
+## 本次改动
+
+- `app/knowledge/knowledge-library.tsx`：删掉「心理认知」4 张卡片（`emotion`、`control`、`meaning`、`curiosity`）。它们的 takeaway 与 03 区各主题的 practice、04 区自我复习的答案几乎逐字相同，来源又都写着同一场「人格结构分析」对话，等于同一批结论在一页里出现第三遍；卡片列表里还连着 4 行一模一样的来源文字。
+- `app/knowledge/knowledge-library.tsx`：分区标题改为「把其它对话里的好东西，放进一个可以回来找的地方。」，并新增一句导语，说明心理认知那场对话在本页哪两区展开（带 `#mind-workspace`、`#mind-review` 锚点）。
+- `app/knowledge/knowledge-library.tsx`：分类列表改为从卡片数据生成，删掉某一类卡片后不会留下计数为 0 的筛选按钮；同时删掉只为 `emotion` 一张卡片写的两处硬编码高亮 JSX。
+- `app/mind/mind-explorer.tsx`：02 区 MEANING 卡正文原本与 04 区结尾「你已经很擅长得到想要的东西……得到以后呢？」是同一句话，改写成该区自己的判断。
+- `app/globals.css`：新增 `.knowledge-index-intro`（正文色、深色面配色与行内链接样式）。
+
+## 验证与证据
+
+- `pnpm typecheck`、`pnpm lint`、`pnpm build`：均通过。
+- 本地 `http://localhost:3000/mind#mind-library`：卡片索引剩 4 张（哲学与生活 1、健康与身体 1、工作与 AI 2），筛选为「全部 4」，没有空分类；导语链接跳转后 `#mind-workspace` 的落点为 132px，等于该 id 的 `scroll-margin-top`；控制台无错误；375px 宽度下导语、搜索框与筛选按钮换行正常。
+- 未触碰 D1 与迁移文件；未执行 `pnpm deploy:only`，正式网站仍是改动前的版本。
+
+---
+
+
+# 待续任务：《存在与变化》面向初学者的教学性重写
+
+状态：已发布正式网站（2026-09-13）。只改这一篇及它页面上的论证图，未批量套用。
+
+## 本次改动
+
+**补上缺失的发动机。** 原文第二节写「反过来，同一个对象也可以有不同性质：去年是红色，今天补漆成黑色」，当作理所当然；到了「对象怎样跨时间存在」一节，又说「它如何既有不同性质，又仍是一个对象」是最深的难题。同一件事前面说没问题、后面说是大问题，中间那一步从未出现——缺的是莱布尼茨律。新增一段引入「同一者不可分辨」，把变化难题立成一道明确欠着的账，第六节开头再还它。
+
+依据 BEC-1 §2.3，本轮实际打开 SEP《Identity Over Time》核对：该节标题即「Leibniz's Law and the Possibility of Change: The Problem of Temporary Intrinsics」；莱布尼茨律指「同一者不可分辨」，方向相反的「不可分辨者同一」争议更大；§2.2 另写明同一性的对称性与传递性均可由莱布尼茨律推出，这条把第二节与第四节的传递性论证接上了。
+
+**术语教学。** 质料／形式／实体原本只有半句带过（「实体」全文 5 次从未解释），现按 BEC-7 §6、§8 展开，并点破它与中文日常语感几乎相反；无限制融合／Y 形分叉对象／真部分原本三个未解释术语叠在一句话里，已拆成三段；传递性与对称性写出定义并演示矛盾如何推出；暂时内在性质、潜能与实现、实际契机、中观、自性、分叉与「不对称」均在首次使用处解释。
+
+**顺序修正。** 耐存论／延存论原本在龙树卡片里先于第六节出现，已改为描述性前指；四个持续理论术语现全部首现于第六节之后。
+
+**论证图（同页渲染）改 7 处**：等价关系补齐三条性质、莱布尼茨律、构成论的「构成不等于同一」、模态属性、ens successivum（译出「相继之物」）、无限制融合、真部分。
+
+**其他**：新增第二节锚点 `#being-distinction` 并进目录；重写若干生硬中文；关键位置把「综述文献」改为点名「斯坦福哲学百科」。
+
+## 验证与证据
+
+- `pnpm check`（lint + typecheck + 迁移回放 + 哲学不变式）与 `pnpm build` 通过。
+- 脚本逐项核对 22 个术语的首次出现上下文，全部在首现处即有解释。
+- 375px 无横向溢出；目录 8 个锚点全部有对应元素、无死链；39 个来源角标全部解析成功，无「待核验」占位；控制台 error 为 0。
+
+## 正式网站发布记录
+
+- 用户明确要求发布。
+- `pnpm deploy:only` 发布 Worker Version ID：`e5d5f5b7-dae3-4129-bd93-87053d14fb01`（上传 11 个资源，Worker 启动 20ms）。无 D1 迁移。
+- 线上核对：`/`、`/learning`、`/learning/philosophy`、`/being-change`、`/logic`、`/freedom`、`/notes` 均 200；莱布尼茨律段、实体解释、真部分与无限制融合解释、ens successivum 译名均已在线；耐存论／延存论／时间部分确认首现于第六节之后；8 个锚点齐全。
+
+## 需要注意：本次发布连带上线了 /mind 的未提交改动
+
+`pnpm deploy:only` 从当前工作树构建，没有办法只发布其中一部分。发布时工作树里还有 `app/mind/mind-explorer.tsx` 的未提交改动（「/mind 页面去掉重复内容」那条任务），于是它也一并上线了——线上 `/mind` 现在显示「全部 4」，即那条任务所描述的改动后状态。那条任务的记录里写着「未执行 `pnpm deploy:only`，正式网站仍是改动前的版本」，该说法自本次发布起不再成立。
+
+发布前应当先确认工作树里有没有别人未打算上线的改动，这一步本轮漏了。若要撤回，须回滚整个 Worker 版本（会同时撤回本篇重写），或先提交／暂存 `/mind` 的改动后重新发布。
+
+## 尚待处理
+
+- 只改了这一篇。其他条目的同类问题（例如别处也用「实体」而不解释）本轮未动。
+- 本篇仍标「自审（尚未独立复审）」。
+
+---
+
+# 待续任务：学习空间内容纠错与体验收敛
+
+状态：已发布正式网站（2026-09-12）。P0 全部完成；P1 完成 4 项，搜索一项未做（见「尚待处理」）。
+
+## 需求
+
+按《Learning 学习空间：内容纠错与体验收敛整改提示词》定点整改，不做全面升级：修正内容错误、关系方向、页面模板与导航。先核对最新源码和浏览器页面，逐项区分仍存在／已解决／无法复现／需资料核验；已解决的只验收，不重复改造。保留现有视觉、有效内容与公开 URL。
+
+## 本次改动
+
+### P0 逻辑页知识错误
+
+- `study-guides.ts`｜pt-logic 概念「健全性」：删去「从假前提出发的有效论证毫无用处」，改为说明「不健全」的确切代价，并新增概念「反证法（间接证明）」。依据 LOG-7（IEP：Reductio ad Absurdum §1–§3）。
+- `study-guides.ts`｜pt-logic 案例推演第 3、4 问：原文把「相关≠因果」扩成「只有干预能研究因果」。改为分界在「有没有可辩护、可被反驳的因果假设」，并补上实验自身的代价（依从性、失访、外推）。依据 LOG-8（Pearl, An Introduction to Causal Inference, §2–§4）。
+- `content-ledger.ts`｜pt-logic 新增 LOG-7、LOG-8 与一条 confusions，并在 review.findings 补记三条本轮修订。
+
+### P0 关系方向
+
+- `relations.ts`｜`RelationLabel` 增加 `shortOutbound` / `shortInbound`，新增 `relationFacing(kind, reversed)`；地图删掉按 kind 索引、不看方向的短标签表。
+- 新增构建期校验：`assertDirectionSemantics`（非对称关系正反必须不同措辞）、`assertNoPrerequisiteCycle`、`assertNoDuplicatePairs`、链条步进不得与 prerequisite 边相反。
+- 数据修正 9 处：对称关系里的方向性指代（pt-good-life → pt-african-personhood 的「那一页」）；两条 kind 选错（pt-aesthetic-value → pt-african-method 改 distinction；pt-care → pt-freedom 改为 pt-freedom → pt-care 的 objection）；pt-science-reality → pt-justice 由 case-domain 改 objection；四条 objection 的 why 点名提出反对的是哪一路，不再把多立场页面当成一个论点；`chain-evidence-to-accountability` 把责任移到 AI 之前。
+
+### P1 来源汇总
+
+- 新增 `page-sources.ts`：按 URL 归并整页来源（条目正文、论证地图、跨传统比较、思想实验、概念卡），逐处保留各自的定位、支持论断与核验状态。附构建期校验：同页同一编号不得指向两份材料。
+- `research-layer.tsx` 改用整页登记：计数与「来源与核验记录」清单都覆盖全页。
+- `comparison.tsx` 的角标池改为 `[...ledgerSources, ...item.sources]`，比较栏可直接复用条目已登记的编号。
+
+### P1 模板按内容类型
+
+- `PhilosophyPosition` 新增 `objectionKind`（反对意见／适用限制／未解难题），非反驳用中性标签样式 `.philosophy-tag--scope`。
+- `CoreEntryLedger` 新增 `sectionHeadings.positions` 与 `positionsIntro`。pt-logic 标题改为「三种推理方式与各自的评价标准」，导语移到区块开头。
+
+### P1 导航语境
+
+- 新增 `pager.ts`，按语境给前后页：同一问题域／同一传统的次序，以及推荐路线的前后步；目录页不显示 Prev/Next。删除 `tree.ts` 中按深度优先数组取邻居的 `neighborsOf`。
+- `app/learning/page.tsx` 不再整份重复哲学总览的目录，改为问题域与传统的入口卡。
+
+## 验证与证据
+
+- `pnpm check`（lint + typecheck + 迁移回放）通过；`pnpm build` 通过。
+- 三条新增构建期校验各自故意破坏一次，确认报错并恢复：链条与 prerequisite 冲突、同页编号指向两份材料、分页器指向自己。
+- pt-freedom 研究层：改前「3 条来源，已核验 3」，改后「21 条引用 · 15 份材料，已核验 21」；正文 14 个角标全部能在清单中查到。pt-logic：改前「6 条来源」，改后「12 条引用 · 10 份材料」。
+- `/traditions` 上一页原指向「人工智能与未来」，现不显示 Prev/Next；`/freedom`、`/logic` 各显示两组带语境标签的前后页。
+- 375 / 768 / 1440px：三处页面横向溢出均为 0。
+- 新标签页全新加载 `/logic`、`/traditions`、`/learning`：控制台 error 为 0。
+- 概念注解（原生 `<details>`）键盘可聚焦、可开可合，焦点留在触发点；无浮层，故不涉及 Escape 关闭。
+- 深链接：跨页带 hash 加载与页内目录点击均正确定位到目标区块。
+
+## 尚待处理
+
+- 搜索未实现。当前哲学空间确实没有搜索；`/mind` 那套是客户端组件且面向另一份数据，旧静态页 `philosophy-tree.html` 的搜索不宜作为入口。新建客户端搜索与 `KNOWLEDGE_BASE.md` 的「零 JS」约束冲突，本轮未擅自突破，留给后续单独决定。
+- 关系层仍有 P2 级措辞项未处理：`chain-freedom-to-justice` 第 2 步与 `chain-good-life-to-care-work` 第 1 步踩在 distinction（对称）边上，链条的「往前走一步」与边的「别混为一谈」语义不一致。
+- 未做独立复审：来源核验记录仍标「自审（尚未独立复审）」。
+- `pnpm check:philosophy-sources` 报 ID-2（academic.oup.com/book/32817）HTTP 403。属出版社 bot 拦截（换浏览器 UA 仍 403），该条已标 `checked: 'pending'`，不是失效链接，但脚本每轮都会红一次。
+
+## 发布前审查（对抗性）
+
+发布前跑了一轮多维审查 + 对抗性复核（21 个 agent，6 个维度，每条发现由独立 agent 尝试证伪）：提出 15 条，证伪驳回 7 条，成立 8 条，**全部在发布前修掉**。其中两条是本轮自己引入的内容错误：
+
+- `relations.ts` pt-history-tech → pt-africana-race 的 why 用了「本页／该页」。why 在正反两个方向原样显示，这两个词在对面那一页整段翻面——正是本轮立项要消灭的那类矛盾，却被我在修别的边时写了进去。
+- 同一条 why 点名的三条立场有两条与 data.json 对不上：「非殖民与历史批判」不存在；「非殖民与解放实践」被劈成两半；真实存在的「种族的社会建构」漏掉。
+
+由此新增两样东西：
+- `relations.ts` 的 `assertNoDirectionalDeixis`：why 里禁止出现「本页／该页／同一页」。带页名的「自由那一页」不在禁止之列。
+- `scripts/check-philosophy-invariants.mjs` + `pnpm test:philosophy`，并挂进 `pnpm check`。
+
+## 一处需要纠正的既有说法
+
+之前把这些数据校验称作「构建期校验」，不成立：`vinext build` 只打包、不 import 应用模块，`[node]/page.tsx` 的 `revalidate = 0` 又让节点路由不产出预渲染产物，CI 也不跑 build。所以它们原本第一次执行的时刻是**生产 Worker 的第一次请求**——数据写坏会是线上 500，不是构建失败。relations.ts 与 `[node]/page.tsx` 里那两处注释已改写成事实，并补上真正的闸门 `pnpm test:philosophy`（0.17s，已故意破坏验证过会拦下）。
+
+## 正式网站发布记录
+
+- 用户明确要求发布。
+- `pnpm deploy:only` 发布 Worker Version ID：`29958193-f3ba-4ad5-b713-992a1d281002`（上传 9 个资源，Worker 启动 37ms）。无 D1 迁移，未执行 `pnpm migrate`。
+- 发布后线上核对：`/`、`/learning`、`/learning/philosophy`、`/logic`、`/freedom`、`/traditions`、`/map`、`/path`、`/notes` 均 200。
+- 逐项确认改动已生效：freedom 研究层由「3 条来源，已核验 3」变为「21 条引用 · 15 份材料，已核验 21」；`/traditions` 不再有分页器链接（原 Prev 指向人工智能专题）；logic 页出现「三种推理方式与各自的评价标准」「适用限制」「未解难题」「反证法（间接证明）」；pt-africana-race 与 pt-history-tech 两页读到同一句且都成立；`/learning` 只剩入口卡，不再重复完整目录。
+
+---
+
+# 历史任务：Notes 文章页移除归档来源模块并深化 AI 阅读评注
+
+状态：已完成并发布正式网站（2026-09-12）。
+
+## 需求
+
+- 删除所有文章页正文末尾的完整归档来源模块，包括 `FROM THE ARCHIVE`、来源说明与原文链接。
+- 把 58 篇文章现有的 AI Reading Note 全部逐篇重写为更具体的分析与评价，每则不少于 200 个汉字／字符，不以通用模板代替原文阅读。
+
+## 验收
+
+- 页面和源代码中不再渲染归档来源模块、`FROM THE ARCHIVE`、来源说明或原文链接。
+- 58 条 `ai_summary` 均已更新，逐条长度不低于 200，且能对应文章的叙述、结构或主题。
+- 新增前滚 D1 迁移并重新生成 `app/lib/static-posts.ts`；迁移回放、Type Check、Lint、Build 通过。
+- 本地与线上各抽查一篇文章：归档来源区完全移除、AI Reading Note 可以展开、浏览器控制台无错误。
+
+## 计划
+
+1. 已在文章组件删除完整归档来源模块及其样式。
+2. 已用前滚迁移逐篇更新 AI 阅读评注，并生成静态回退数据。
+3. 已完成本地工程检查、线上页面复核与 Worker 重新发布；未操作 D1 数据库。
+
+## 本次改动
+
+- `app/notes/[slug]/page.tsx` 不再渲染归档来源模块；原载来源说明与外链一并移除。
+- `migrations/0016_deepen_ai_reading_notes.sql` 前滚更新 58 条 `ai_summary`，每条都是针对该篇文章的叙述、主题或结构的分析。
+- `app/lib/static-posts.ts` 已由 `pnpm generate:static-posts` 从全部迁移重新生成，供尚未初始化 D1 的部署回退。
+
+## 验证与证据
+
+- 逐条程序检查：58/58 篇均有 AI Reading Note，长度范围为 242—290 字符，平均 268；无低于 200 的条目。
+- `pnpm test:migrations`：通过。16 个迁移从 `0001_initial.sql` 重放到 `0016_deepen_ai_reading_notes.sql`，`database_version` 为 16，已发布文章仍为 58 篇。
+- `pnpm typecheck`、`pnpm lint`、`pnpm build`：均通过。
+- 前一次发布验证：`FROM THE ARCHIVE` 已移除，但来源说明与外链仍在；用户确认期望删除整个模块，故本次继续更正。
+- Cloudflare：首次远程迁移曾返回 7403；复查账号与数据库后重试 `pnpm migrate`，`0016_deepen_ai_reading_notes.sql` 已成功应用到 `killua-win-d1`。
+- 正式网站：`pnpm deploy:only` 已成功发布 Worker Version ID `9ad38619-0843-4ff0-aab7-992771cf6294`，上传 9 个资源；`/api/database` 现返回版本 16。
+- 本次线上复核：正式 URL `/notes/loneliness-is-not-a-misunderstanding` 的正文后直接进入 AI Reading Note；`FROM THE ARCHIVE`、来源说明与“查看原文”外链均不存在，展开评注后为新版 290 字符全文。
+- 本次发布：`pnpm typecheck`、`pnpm lint`、`pnpm build` 通过；`pnpm deploy:only` 发布 Worker Version ID `9b158a27-cca0-49d3-8a77-bf81816fec52`。
+
+---
+
+# 历史任务：哲学知识库 V2 —— 知识关系、阅读分层与来源诚信
 
 状态：已完成并发布正式网站（2026-09-11）。
 

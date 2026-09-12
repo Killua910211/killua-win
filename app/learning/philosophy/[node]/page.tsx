@@ -5,9 +5,9 @@ import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { buildMetadata } from '@/app/lib/metadata';
 import { NodeBody, NodeChildren } from '../node-content';
+import { pagerContextsFor } from '../pager';
 import {
   getNodeBySlug,
-  neighborsOf,
   nodeHref,
   nodePath,
   nodeSlug,
@@ -26,10 +26,12 @@ type NodePageProps = {
 export const revalidate = 0;
 
 /**
- * 除总览外，全部节点都在构建期生成。
+ * 除总览外，枚举全部节点的路由参数。
  *
  * 数据来自仓库里的 data.json，没有数据库依赖，所以和 /notes 的分类页不同，
- * 这里可以放心用 generateStaticParams —— vinext 的预渲染跑在纯 Node 里。
+ * 这里可以放心枚举。但注意：上面的 `revalidate = 0` 把这条路由标成了 Dynamic，
+ * 所以这份清单当前**不会**产出预渲染的 HTML/RSC 产物——节点页是按请求渲染的。
+ * 条目数据的结构性校验因此也不靠构建兜底，见 `pnpm test:philosophy`。
  */
 export function generateStaticParams() {
   return philosophyNodes
@@ -67,7 +69,7 @@ export default async function PhilosophyNodePage({ params }: NodePageProps) {
   }
 
   const trail = nodePath(node.id).slice(0, -1);
-  const { previous, next } = neighborsOf(node.id);
+  const pagerContexts = pagerContextsFor(node.id);
   const childrenTitle =
     node.type === '问题领域'
       ? '这个问题域下的核心问题'
@@ -123,24 +125,32 @@ export default async function PhilosophyNodePage({ params }: NodePageProps) {
           </section>
         </article>
 
-        <nav className="philosophy-pager" aria-label="哲学体系树导航">
-          {previous ? (
-            <Link className="philosophy-pager-link" href={nodeHref(previous)}>
-              <span lang="en">↖ PREV</span>
-              <strong>{previous.title}</strong>
-            </Link>
-          ) : (
-            <div className="philosophy-pager-slot" />
-          )}
-          {next ? (
-            <Link className="philosophy-pager-link philosophy-pager-next" href={nodeHref(next)}>
-              <span lang="en">NEXT ↗</span>
-              <strong>{next.title}</strong>
-            </Link>
-          ) : (
-            <div className="philosophy-pager-slot" />
-          )}
-        </nav>
+        {/*
+          分页器按语境分组：同一问题域／同一传统里的次序是一组，推荐路线的
+          前后步是另一组。目录页没有合理顺序，`pagerContextsFor` 返回空数组，
+          这里就什么都不渲染——不给一条并不存在的阅读线。
+        */}
+        {pagerContexts.map((context) => (
+          <nav className="philosophy-pager" aria-label={context.label} key={context.label}>
+            <p className="philosophy-pager-context">{context.label}</p>
+            {context.previous ? (
+              <Link className="philosophy-pager-link" href={nodeHref(context.previous)}>
+                <span lang="en">↖ PREV</span>
+                <strong>{context.previous.title}</strong>
+              </Link>
+            ) : (
+              <div className="philosophy-pager-slot" />
+            )}
+            {context.next ? (
+              <Link className="philosophy-pager-link philosophy-pager-next" href={nodeHref(context.next)}>
+                <span lang="en">NEXT ↗</span>
+                <strong>{context.next.title}</strong>
+              </Link>
+            ) : (
+              <div className="philosophy-pager-slot" />
+            )}
+          </nav>
+        ))}
 
       </main>
 
