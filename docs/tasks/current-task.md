@@ -1,4 +1,74 @@
-# 当前任务：/mind 页面去掉重复内容
+# 当前任务：哲学学习空间内容整改（定义、标签、答非所问、术语与中文）
+
+状态：已发布正式网站（2026-09-13）。
+
+## 需求
+
+整改 `/learning/philosophy` 及其全部子页面的内容：文章正文、论证地图、概念说明、思想实验和知识关系文案。不增加功能、不重做视觉、不扩充文章数量。保留专业性，把内容讲清楚，并保证概念、论证与中文表达准确。先修《存在与变化》的五项具体问题，再按同一标准逐页处理其余页面。
+
+## 验收
+
+- 《存在与变化》：数值同一性统一为定义式表述；构成论那段不再标成对上述质疑的直接回应；论证图里名不副实的「反例」改正；「真正做工的是」「接管历史」等生硬中文改掉；四维主义及其回应补齐解释过程。
+- 其余页面按同一标准逐页审查并直接修订，已合格的保留。
+- 从真实内容源列出全部页面，不沿用旧的页面数量。
+- 本地 Type Check、Lint、Build 通过；全部路由渲染正常、控制台无错误；数据不变式通过。
+- 涉及实质性哲学纠错时核对可靠来源；不编造原话、页码、理论归属或核验记录。
+
+## 页面清单（从 data.json 与路由文件枚举）
+
+**57 条路由** = 55 个节点（总览住在 `/learning/philosophy` 本身）+ `/learning/philosophy/map` + `/learning/philosophy/path`。
+节点分布：总览 1、目录分组 2、问题域 6、核心问题 23、传统导航 5、历史时段 8、传统线索 9、方法论争论 1。
+
+## 计划与执行
+
+1. 先完成《存在与变化》五项定点整改（主线手工）。
+2. 其余内容按文件划分为 8 条并行审查线，各线独占文件、互不写同一个文件，共用一份整改标准。
+3. 主线逐条复核各线上报的结构性改动与存疑点，误报不执行。
+4. 本地 typecheck / lint / build / 不变式脚本 / 全路由渲染验证。
+
+## 本次改动
+
+17 个文件（含两份文档），约 486 处内容修订，另追加 40 条审查记录。
+
+按路由计（共 57 条）：**已审查并修改 47 条**（45 个节点页 + `/map` + `/path`）；**已审查、本轮判定无需修改 10 条**——全部是目录分组、问题域与传统导航这类没有立场、没有研究层、也没有精读层的导航节点（`pt-core`、`pt-traditions`、`pt-ethics`、`pt-aesthetics`、`pt-boundaries`、`pt-western`、`pt-chinese`、`pt-indian`、`pt-islamic`、`pt-african`）。
+
+分层：
+
+- `being-change-entry.tsx`：《存在与变化》正文 40 余处（见下）。
+- `data.json`：61 处，覆盖 55 个节点中的 32 个；`objectionKind` 新增 12 条「适用限制」、撤销 1 条误标。未动任何立场 `name`（它是论证路径的索引键）。
+- `content-ledger.ts` / `remaining-content-ledgers.ts`：研究层 41 条全部过一遍，正文修订 117 处，`review.findings` 追加 40 条。
+- `study-guides.ts` / `remaining-study-guides.ts`：精读层 23 条全部过一遍，约 100 处。
+- `argument-maps.ts`：8 张图中 7 张有改动，40 处；`thought-experiments.ts`：7 个中 6 个有改动，19 处。
+- `concepts.ts`（29 处）/ `comparisons.ts`（33 处）：跨条目复用层。
+- `relations.ts`（18 处）、`learning-path.ts`、`page.tsx`、`map/page.tsx`、`node-content.tsx`。
+- `argument-map.tsx`：`objection` / `response` 新增可选 `label`，默认仍是「反对」「回应」。硬编码的「回应」曾把一条不回答该反对的论证呈现成已经答掉了它。
+
+四类问题与代表性改例见 [app/learning/philosophy/CONTENT_GAP_REVIEW.md](../../app/learning/philosophy/CONTENT_GAP_REVIEW.md) 的「2026-09-13 内容整改轮」。
+
+## 验证与证据
+
+- `pnpm typecheck`、`pnpm lint`、`pnpm build`：均通过。
+- `node scripts/check-philosophy-invariants.mjs`：6 个模块 13 条不变式全部通过（含 `positionArguments` 键名与立场名一致、关系边方向、prerequisite 无环、来源编号不冲突）。
+- 逐条请求 57 条路由：0 条失败；浏览器控制台无错误。
+- 实读核对：《存在与变化》全文、`pt-freedom` 重构后的论证主干、`pt-law` 与 `pt-knowledge-sources` 的新标签渲染。
+- 未触碰 D1 与迁移文件。本轮无新增迁移，因此按 `pnpm build` + `pnpm deploy:only` 发布，未执行 `pnpm migrate`、未连接远程数据库。
+- 发布记录：Worker Version ID `18d5d178-3f3e-4978-9978-ff8cabfc1ff7`，上传 8 个新增／变更静态资源，Worker 启动 23ms。`deploy:only` 从当前工作树构建；本次发布时工作树里只有本任务的哲学内容改动与两份文档，没有夹带其他未提交改动。
+- 正式网站复验：逐条请求 `https://www.killua.win` 上的 57 条哲学路由，0 条失败；抽查确认《存在与变化》五项整改、`pt-law` 与 `pt-knowledge-sources` 的新标签、`pt-freedom` 改标为「前提」的传递规则、跨页复用的认知正当性新定义、`objectionKind`「适用限制」渲染、关系层改型后的逻辑→语言说明，以及被删除的那条伪造边，均与本地一致。
+- 一处需要说明：`pt-indian-vedanta` 修正的来源标签（限定不二论 Viśiṣṭādvaita）位于 `data.json` 的 `sources`，而该字段只在节点没有研究层时才渲染（`node-content.tsx:654`）。该节点有研究层，所以这条修正不出现在页面上，属数据层修正而非读者可见改动。
+
+## 未完成事项
+
+- 本轮无网络核验：没有把任何 `pending` 改成 `verified`，没有改动任何 `checked` / `checkedOn` / `url` / `locator`。
+- 需开外部页面才能确认的存疑点（不据此改来源账）：各原典篇幅估计；「责任缺口」的首创归属（SEP 写 esp. Sparrow 2007，另有文献归给 2004 年一篇论文，正文已改为不下首创断言）；荀子「道非天之道」一句的校勘定位（已从引文降为转述）；紧缩论不在 LAN-2 已核定位内（已移除该词）；`LAW-1 §4`、`ART-1 §4.2`、`ISL2-2 §6`、`LEGZ-1 §4.2`、`JUS-2`、`AES-2 §2.2`、`ISR-3 §7.3` 七处定位是否覆盖相应论断；本轮补写的若干教科书式术语解释虽落在既有定位内，但未逐句回查。
+- `pt-history-tech` 受福柯影响的一段，TEC-1 那一节只到温纳与哈拉维；已就地标为解释性重构并写明来源缺口，待补来源。
+- 三个把两条路线压成一个名字的立场名（`pt-law`「公民抗命与修复性视角」、`pt-right-action`「德性与照护取向」、`pt-good-life`「修身与解脱」）本轮只在正文写明缺口；改名会动 `data.json` 的立场名并影响按名索引的论证路径。
+- 「证言／证词」两套译名并存（前者 54 处、后者 6 处），本轮未统一。
+- `coverage.ts` 的 23／18／55 三个数字本轮核对无误，但它们是写死的，不随 `data.json` 变化。
+
+---
+
+
+# 历史任务：/mind 页面去掉重复内容
 
 状态：本地已完成，未发布正式网站（2026-09-13）。
 
@@ -35,7 +105,7 @@
 ---
 
 
-# 待续任务：《存在与变化》面向初学者的教学性重写
+# 历史任务：《存在与变化》面向初学者的教学性重写
 
 状态：已发布正式网站（2026-09-13）。只改这一篇及它页面上的论证图，未批量套用。
 

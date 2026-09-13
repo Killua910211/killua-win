@@ -275,8 +275,13 @@ export const philosophyRelations: PhilosophyRelation[] = [
   {
     from: 'pt-logic',
     to: 'pt-language-meaning',
-    kind: 'prerequisite',
-    why: '要评价一个论证，先得固定前提说了什么。语言那一页区分词义、语境与说话者意图——同一个词在两处不是同一个意思时，「有效」这个判断就无处落脚。',
+    kind: 'extension',
+    // 这条边原来标 prerequisite，声称「读逻辑之前先读语言与意义」。那不成立：
+    // 判断有效性用不着先选定一套意义理论，学得会「同一个词不能换着意思用」
+    // 就够了，而这条规则本来就在逻辑页内部。它同时和推荐学习路径冲突——
+    // 路径把逻辑排第 2 步、语言排第 4 步，并自述「前三步都默认用词是稳定的」。
+    // 真实的关系是延伸：逻辑页的那个默认被追问下去，才走到语言页。
+    why: '判断一个论证是否有效，默认了同一个词在前提和结论里说的是同一件事；「有效」这个判断正是靠这个默认才落得下来。逻辑页用得上这个默认，却不负责说明它凭什么成立。一旦追问下去——词义由什么固定，语境和说话者意图各起多大作用，同一个词在两处不是同一个意思时该怎么办——就已经走到语言那一页了。',
   },
   {
     from: 'pt-science-reality',
@@ -306,7 +311,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-ai-future',
     to: 'pt-responsibility',
     kind: 'prerequisite',
-    why: '责任那一页把可归属性、可要求说明与可追究分开，也给出角色责任的条件。缺了这套区分，自动化伤害的讨论只会在「怪算法」和「怪用户」之间摆动。',
+    why: '责任那一页把三件事分开：这件事是否出自某个人、他能否被要求说明理由、他能否被追究并承担后果；角色责任的条件也在那里给出。缺了这套区分，自动化伤害的讨论只会在「怪算法」和「怪用户」之间摆动。',
   },
   {
     from: 'pt-religion-reason',
@@ -324,7 +329,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-legalism',
     to: 'pt-language-meaning',
     kind: 'prerequisite',
-    why: '法、术、势要能执行，先得说清名与实、职名与标准怎样被固定下来。把「正名」读成词汇政策，就看不出它为什么是治理问题而不是语文问题。',
+    why: '法、术、势要能执行，先得说清名与实、职名与标准怎样被固定下来。把「正名」读成一项用字规范，就看不出它为什么是治理问题：职名一旦松动，按职名追究实绩的赏罚也就落不到具体的人身上。',
   },
   {
     from: 'pt-african-personhood',
@@ -353,12 +358,6 @@ export const philosophyRelations: PhilosophyRelation[] = [
 
   // ——— 易混辨析 ———————————————————————————————————————————————
   {
-    from: 'pt-aesthetic-value',
-    to: 'pt-african-method',
-    kind: 'distinction',
-    why: '两边都在问「由谁的训练决定什么算好理由」，结构相似因此容易被叠起来读。分界在于争的东西不同：审美那边争一个判断能否被交流和辩护，「什么算非洲哲学」争的是一门学科的准入资格与材料范围。后者是 20 世纪的方法论争论，不是从审美价值那一步长出来的。',
-  },
-  {
     from: 'pt-legitimacy',
     to: 'pt-law',
     kind: 'distinction',
@@ -368,7 +367,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-art',
     to: 'pt-aesthetic-value',
     kind: 'distinction',
-    why: '一句「我不觉得这是艺术」把两个问题压在一起。分界在于一边问分类与制度承认，另一边问能否为作品哪里值得注意给出理由——一件被普遍算作艺术的作品仍然可以很差。',
+    why: '一句「我不觉得这是艺术」把两个问题压在一起。分界在于一边问的是分类与制度承认，另一边问的是能不能说清这件作品哪里值得注意、凭什么——一件被普遍算作艺术的作品仍然可以很差。',
   },
   {
     from: 'pt-being-change',
@@ -386,7 +385,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-right-action',
     to: 'pt-justice',
     kind: 'distinction',
-    why: '两页都在问「应该怎么做」，但一边评价行动者的选择，一边评价制度分配的规则。混同的代价是：制度性不义被读成一群人心不好，或者反过来，个人不必再问自己做了什么。',
+    why: '两页都在问「应该怎么做」，但一边评价行动者的选择，一边评价制度分配的规则。混同的代价是：制度性不义被读成几个人品行不端，或者反过来，个人不必再问自己做了什么。',
   },
   {
     from: 'pt-good-life',
@@ -434,7 +433,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-confucian',
     to: 'pt-daoism',
     kind: 'distinction',
-    why: '「儒道互补」或「儒道对立」都是后世整理出的标签。分界要从具体争论看：礼与学习是否算强作，合宜的回应能否离开习得的规范；给两方各分配一种性格，会跳过文本里相互批评的地方。',
+    why: '「儒道互补」或「儒道对立」都是后世整理出的标签。分界要从具体争论看：礼与学习算不算人为造作，合宜的回应能否离开习得的规范；先给两家各安一种人生态度，就会跳过文本里彼此批评的那些具体地方。',
   },
   {
     from: 'pt-confucian',
@@ -490,7 +489,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-justice',
     to: 'pt-africana-race',
     kind: 'objection',
-    why: '它攻击的是「正义可以从比较当前份额开始」这一前提。提出这条反对的是非裔哲学里非殖民与解放实践那一路，它把剥夺看作经由法律、空间与劳动累积成今天的起点；照这个看法，只调整份额等于把历史当作已经结清。这是非裔哲学三路中的一路，不是那一页的统一结论。',
+    why: '它攻击的是「正义可以从比较当前份额开始」这一前提。提出这条反对的是非裔哲学里非殖民与解放实践那一路，它把剥夺看作经由法律、土地划分与劳动安排一代代累积成今天的起点；照这个看法，只调整份额等于默认那段历史已经了结。这是非裔哲学三路中的一路，不是那一页的统一结论。',
   },
   {
     from: 'pt-justice',
@@ -514,13 +513,13 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-mind-self',
     to: 'pt-buddhist',
     kind: 'objection',
-    why: '无我分析攻击的是「必须先有一个持续的承载者，经验和记忆才有归属」这一前提：若五蕴一类的分析已经能说明连续性，「我」就从解释项变成了待解释项。各部派与大乘对此的论证并不一致。',
+    why: '无我分析攻击的是「必须先有一个持续的承载者，经验和记忆才有归属」这一前提：若把身心拆成五蕴一类的成分就足以说明连续性，「我」便不再是用来解释连续性的那个东西，自己反倒成了待解释的对象。各部派与大乘对此的论证并不一致。',
   },
   {
     from: 'pt-nyaya',
     to: 'pt-jain-carvaka',
     kind: 'objection',
-    why: '顺世论攻击的是「推论可以作为独立的知识手段」这一前提：若烟与火的遍在关系本身只能由经验建立，推论就没有超出经验的效力。这条反对多经对手转述保存，重构时要标出证据条件。',
+    why: '顺世论攻击的是「推论可以作为独立的知识手段」这一前提：由烟推出火，先要有「凡有烟处必有火」这条普遍联系；若这条联系本身只能靠过往经验建立，推论就没有超出经验的效力。顺世论的说法大多只经由批评者转述保存下来，重构时要标明证据条件。',
   },
   {
     from: 'pt-interpretation',
@@ -558,7 +557,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-religion-reason',
     to: 'pt-death-meaning',
     kind: 'extension',
-    why: '若关于神的论证只能允许多种解释、定不下某个传统的全部教义，那么「有限的一生能否不靠永恒保证而有意义」就必须单独回答。',
+    why: '若关于神的论证最多只能得到一个很一般的结论，定不下某个传统的全部教义，那么「有限的一生能否不靠永恒保证而有意义」就必须单独回答。',
   },
   {
     from: 'pt-justice',
@@ -632,7 +631,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-history-tech',
     to: 'pt-ai-future',
     kind: 'case-domain',
-    why: '这个处境改变的是中介的密度：推荐、评分与自动决策在人和后果之间插进许多层，注意力、可见性与责任分配都由它们重排。技术不中立这一点在这里必须落到具体的问责链。',
+    why: '这个处境改变的是中介的密度：推荐、评分与自动决策在人和后果之间插进许多层，注意力、可见性与责任分配都由它们重排。「技术只是中性工具吗」这个争论在这里不能停在原则上，必须落到具体的问责链：谁定下了排序目标，谁改得动它，出错时谁必须给出说明。',
   },
   {
     from: 'pt-history-tech',
@@ -664,7 +663,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-being-change',
     to: 'pt-buddhist',
     kind: 'cross-tradition',
-    why: '可比较的争点是：一个东西是否需要不依赖条件的自性，才能算在时间中持续。不可等同的是，缘起与空性的论证带着二谛一类的框架和修行目标，不是替代实体论的另一套本体论；各中观传统的解释也不一致。',
+    why: '可比较的争点是：一个东西是否需要不依赖条件的自性，才能算在时间中持续。不可等同的是，缘起与空性的论证要放在二谛（日常说法与究竟说法分作两层）这类框架里读，也带着修行目标，不是替代实体论的另一套本体论；各中观传统的解释也不一致。',
   },
   {
     from: 'pt-being-change',
@@ -688,7 +687,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-good-life',
     to: 'pt-buddhist',
     kind: 'cross-tradition',
-    why: '可比较的争点是好生活是否要求改变对自我的执取。不可等同的是解脱不是福祉清单上的一项，把它并进清单，这个目标本身就丢掉了。',
+    why: '可比较的争点是好生活是否要求改变对自我的执取。不可等同的是解脱不是福祉清单上的一项：一旦把它并进清单、与其他项目比较取舍，这个目标本身就已经被改写了。',
   },
   {
     from: 'pt-good-life',
@@ -730,7 +729,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-knowledge-sources',
     to: 'pt-nyaya',
     kind: 'cross-tradition',
-    why: '可比较的争点是有几种独立的知识手段，以及证言算不算一种。不可等同的是 pramāṇa 的分类连着辩论规则和似是理由的理论，套不进经验主义／理性主义的两分。',
+    why: '可比较的争点是有几种独立的知识手段，以及证言算不算一种。不可等同的是 pramāṇa（量，即知识手段）的分类连着一整套辩论规则，还连着一份「看似成立、其实不成立的理由」的清单，套不进经验主义／理性主义的两分。',
   },
   {
     from: 'pt-logic',
@@ -760,13 +759,13 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-science-reality',
     to: 'pt-islamic-reason-revelation',
     kind: 'cross-tradition',
-    why: '可比较的争点是稳定的自然次序是否足以支持因果解释。不可等同的是偶因论要回答的是神的自由与创造，它不站在当代实在论—工具主义之争的任何一边。',
+    why: '可比较的争点是稳定的自然次序是否足以支持因果解释。不可等同的是，偶因论——主张自然中前后相继的事件之间并无必然联系，真正起作用的是神——要回答的是神的自由与创造，它不站在当代实在论—工具主义之争的任何一边。',
   },
   {
     from: 'pt-care',
     to: 'pt-african-personhood',
     kind: 'cross-tradition',
-    why: '可比较的争点是关系性自我能否与个人权利、退出和批评相容。不可等同的是两者出自不同的道德语言与政治问题，Ubuntu 在不同语言和政治项目里的含义本身就不统一。',
+    why: '可比较的争点是：如果一个人的能力与需要本身就在关系中形成，这样理解的自我还能不能与个人权利、退出和批评相容。不可等同的是两者出自不同的道德语言与政治问题，Ubuntu 在不同语言和政治项目里的含义本身就不统一。',
   },
   {
     from: 'pt-good-life',
@@ -968,7 +967,7 @@ export const crossDomainChains: CrossDomainChain[] = [
   {
     id: 'chain-evidence-to-accountability',
     title: '从「我凭什么相信」走到「模型出错谁负责」',
-    why: '一条链上的四页问的是同一件事在不同层次上的样子：一个人的证据、一个共同体的证据、一次错误该归给谁，最后才是这套归属遇上一个系统时还剩多少。责任排在 AI 之前不是随手放的——缺了可归属、可要求说明与可追究这三层区分，自动化伤害的讨论只会在「怪算法」和「怪用户」之间空转。',
+    why: '一条链上的四页问的是同一件事在不同层次上的样子：一个人的证据、一个共同体的证据、一次错误该归给谁，最后是当出错的是一套自动系统时，这套归责方式还剩下多少可用。责任排在人工智能之前不是随手放的——缺了「是否出自某个人」「能否被要求说明理由」「能否被追究并承担后果」这三层区分，自动化伤害的讨论只会在「怪算法」和「怪用户」之间空转。',
     nodeIds: ['pt-knowledge-sources', 'pt-science-reality', 'pt-responsibility', 'pt-ai-future'],
   },
   {

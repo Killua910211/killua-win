@@ -14,6 +14,9 @@ import { Citations } from './citation';
  *   - 不横向展开。手机上是一列，桌面上分支并排，但分支内部永远是一列，
  *     所以再深的论证也不会产生横向滚动。
  *   - 关键信息不藏在 hover 里。
+ *   - 「反对／回应」两个标签可以被数据覆写（objection.label / response.label）。
+ *     硬编码的「回应」曾经把一条只支持该立场自身第一步、并不回答上面那条反对的
+ *     论证，呈现成已经答掉了那条反对。标签本身在传达信息，名实必须相符。
  */
 
 export function ArgumentMap({
@@ -71,12 +74,12 @@ export function ArgumentMap({
 
             <div className="philosophy-argmap-exchange">
               <p className="philosophy-argmap-objection">
-                <span className="philosophy-argmap-label">反对</span>
+                <span className="philosophy-argmap-label">{branch.objection.label ?? '反对'}</span>
                 {branch.objection.text}
                 <Citations ids={branch.objection.sourceIds} sources={allSources} />
               </p>
               <p className="philosophy-argmap-response">
-                <span className="philosophy-argmap-label">回应</span>
+                <span className="philosophy-argmap-label">{branch.response.label ?? '回应'}</span>
                 {branch.response.text}
                 <Citations ids={branch.response.sourceIds} sources={allSources} />
               </p>

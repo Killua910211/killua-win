@@ -116,8 +116,8 @@ export default function PhilosophyOverviewPage() {
               你现在是哪一种情况？
             </h2>
             <p className="philosophy-lede">
-              三个入口指向同一批内容，只是起点不同。如果你更想直接看这些问题之间的关系——哪些是
-              前置，哪些是竞争回答，哪些只能并置比较——那就打开
+              三个入口指向同一批内容，只是起点不同。如果你更想直接看这些问题之间的关系——哪些必须
+              先读，哪些在互相反驳，哪些只能并置比较——那就打开
               <Link className="philosophy-inline-map-link" href="/learning/philosophy/map">
                 哲学知识地图
               </Link>
@@ -219,7 +219,7 @@ export default function PhilosophyOverviewPage() {
           <div className="philosophy-section-body">
             <p className="eyebrow">Scope / 怎么读、覆盖到哪</p>
             <h2 className="philosophy-section-heading" id="how-to-read-heading">
-              这张地图怎么用，以及它还没做到什么
+              这套内容怎么读，以及它还没做到什么
             </h2>
             <NodeBody headingLevel="h3" node={philosophyTree} />
 

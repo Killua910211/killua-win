@@ -61,12 +61,12 @@ export default function PhilosophyMapPage() {
             <p className="eyebrow">Map / 知识地图</p>
             <h1 id="map-title">哲学知识地图</h1>
             <p className="philosophy-question">
-              问题之间有哪些真实关系？哪些必须先读，哪些是竞争回答，哪些只是能并置比较？
+              问题之间有哪些真实关系？哪些必须先读，哪些在互相反驳，哪些只能并置比较？
             </p>
             <p className="philosophy-summary">
-              这张地图不按国别或年代排列，而按问题之间的关系排列。每个节点点开就能看到它的一句话
-              介绍、按语义分组的直接相关节点，以及进入专题的入口。目前登记了 {philosophyRelations.length} 条
-              带理由的关系。
+              这张地图不按国别或年代排列，而按问题之间的关系排列。每个核心问题和每条传统线索都可以
+              就地展开，看到它的一句话介绍、按语义分组的直接相关节点，以及进入专题的入口。目前
+              登记了 {philosophyRelations.length} 条带理由的关系。
             </p>
           </div>
         </section>
@@ -121,8 +121,8 @@ export default function PhilosophyMapPage() {
               {questionDomains.length} 个问题域，{coreQuestions.length} 个核心问题
             </h2>
             <p className="philosophy-lede">
-              第一层是问题域，第二层是它下面的核心问题。点开任一个问题，就能看到它和其他问题之间
-              已经建立的关系。
+              第一层是问题域，第二层是它下面的核心问题。点开任一个问题，就能看到它与其他问题、
+              传统线索之间已经建立的关系。
             </p>
             <MapDomains />
           </div>
@@ -140,8 +140,8 @@ export default function PhilosophyMapPage() {
                 一个问题的答案会压到下一个问题
               </h2>
               <p className="philosophy-lede">
-                六个问题域是并列的，但真实的追问会横穿它们。这几条链条是知识地图上最容易被目录结构
-                切断的部分。
+                六个问题域是并列的，但真实的追问会横穿它们。这几条链条串起来的，正是被目录结构
+                切断得最彻底的那些连接。
               </p>
               <MapChains />
             </div>

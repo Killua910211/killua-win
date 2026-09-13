@@ -375,7 +375,7 @@ export function NodeBody({
             哲学家怎样改写这个问题
           </BlockHeading>
           <p className="philosophy-block-intro">
-            这些人物并非在为同一条现成结论投票。每一则先交代其原有论证的着力点，再说明它能怎样推进本页的问题；“不能直接推出”用来阻止跨时代、跨传统的快捷等同。
+            下面这些人并不是在为同一条现成结论各投一票。每一则先说明这个人原来的论证在处理什么问题、着力点在哪里，再说明它能怎样推进本页的讨论；“不能直接推出”那一行是用来挡住跨时代、跨传统的草率等同的。
           </p>
           <div className="philosophy-voices">
             {guide.philosopherViews.map((view) => (
