@@ -281,7 +281,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     // 就够了，而这条规则本来就在逻辑页内部。它同时和推荐学习路径冲突——
     // 路径把逻辑排第 2 步、语言排第 4 步，并自述「前三步都默认用词是稳定的」。
     // 真实的关系是延伸：逻辑页的那个默认被追问下去，才走到语言页。
-    why: '判断一个论证是否有效，默认了同一个词在前提和结论里说的是同一件事；「有效」这个判断正是靠这个默认才落得下来。逻辑页用得上这个默认，却不负责说明它凭什么成立。一旦追问下去——词义由什么固定，语境和说话者意图各起多大作用，同一个词在两处不是同一个意思时该怎么办——就已经走到语言那一页了。',
+    why: '判断一个论证是否有效，默认了同一个词在前提和结论里说的是同一件事。逻辑那一页用得上这个默认，却不负责说明它凭什么成立。一旦追问下去——词义由什么固定，语境和说话者意图各起多大作用，同一个词在两处不是同一个意思时该怎么办——就已经走到语言那一页了。',
   },
   {
     from: 'pt-science-reality',
@@ -397,7 +397,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-responsibility',
     to: 'pt-law',
     kind: 'distinction',
-    why: '「有罪」和「该受道德责备」被当成同义。分界在于法律要在程序、举证与公共可执行性的限制下运作，道德归责不受这些限制，也不因判决生效而结束。',
+    why: '「有罪」和「该受道德责备」被当成同义。可是法律要在程序、举证与公共可执行性的限制下运作，道德归责不受这些限制，也不因判决生效而结束。',
   },
   {
     from: 'pt-islamic-later',
@@ -415,7 +415,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-freedom',
     to: 'pt-mind-self',
     kind: 'distinction',
-    why: '「我只是一堆神经元」把两个问题连了起来。分界在于即使物理主义为真，关于控制条件的争论仍要独立进行；二元论也不因为心灵另属一类，就自动提供了自由。',
+    why: '「我只是一堆神经元」把两个问题连了起来。可是即使物理主义为真，关于控制条件的争论仍要独立进行；二元论也不因为心灵另属一类，就自动提供了自由。',
   },
   {
     from: 'pt-good-life',
@@ -445,7 +445,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-legalism',
     to: 'pt-law',
     kind: 'distinction',
-    why: '法、术、势与现代法治常被互相翻译。分界在于前者以君主治术和可公开执行的标准为目标，后者关于有效性的讨论已经预设了权利、程序救济与合法性审查；把后者的问题倒灌回去，会读出文本里没有的东西。',
+    why: '法、术、势与现代法治常被互相翻译。可是前者以君主治术和可公开执行的标准为目标，后者关于有效性的讨论已经预设了权利、程序救济与合法性审查；把后者的问题倒灌回去，会读出文本里没有的东西。',
   },
   {
     from: 'pt-mind-self',
@@ -465,7 +465,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-freedom',
     to: 'pt-care',
     kind: 'objection',
-    why: '它攻击的是相容论对「我自己的理由」这个说法的独占权。照护伦理里的关系性自我主张：如果能力与需要本身就在关系中形成，那么「出自我的理由」里的那个「我」是谁，本身要先回答，而不是给控制条件补一句社会背景就算处理过了。',
+    why: '它攻击的是相容论在「出自我自己的理由」这一步上的默认：那个「我」是谁，被当作已经清楚。照护伦理提出的关系性自我则说，如果能力与需要本身就在关系中形成，这个「我」得先交代，而不是给控制条件补一句社会背景就算处理过了。',
   },
   {
     from: 'pt-right-action',
@@ -483,13 +483,13 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-science-reality',
     to: 'pt-history-tech',
     kind: 'objection',
-    why: '它攻击的是「理论的持续成功可以当作它近似抓到真实结构的证据」这一步。提出这条反对的是历史与技术那一页谱系与权力分析那一路：若成功本身由仪器、资助与同行制度共同造出来，成功就不再是独立于这些条件的证据。那一页的进步与解放叙事一路并不作此判断。',
+    why: '它攻击的是「理论的持续成功可以当作它近似抓到真实结构的证据」这一步。提出反对的是历史与技术那一页里做谱系与权力分析的一路：若成功本身由仪器、资助与同行制度共同造出来，成功就不再是独立于这些条件的证据。那一页的进步与解放叙事一路并不作此判断。',
   },
   {
     from: 'pt-justice',
     to: 'pt-africana-race',
     kind: 'objection',
-    why: '它攻击的是「正义可以从比较当前份额开始」这一前提。提出这条反对的是非裔哲学里非殖民与解放实践那一路，它把剥夺看作经由法律、土地划分与劳动安排一代代累积成今天的起点；照这个看法，只调整份额等于默认那段历史已经了结。这是非裔哲学三路中的一路，不是那一页的统一结论。',
+    why: '它攻击的是「正义可以从比较当前份额开始」这一前提。非裔哲学里的非殖民与解放实践一路把剥夺看作经由法律、土地划分与劳动安排一代代累积成今天的起点；照这个看法，只调整份额等于默认那段历史已经了结。这是那一页三条路线中的一条，不是它的统一结论。',
   },
   {
     from: 'pt-justice',
@@ -501,13 +501,13 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-legitimacy',
     to: 'pt-africana-race',
     kind: 'objection',
-    why: '它攻击的是「正当性可以在既定政治单位内部证成」这一前提。提出这条反对的是非殖民与解放实践那一路：若这个单位的边界由征服划定，同意、参与与公共自我治理都要先回答谁被算作公民。',
+    why: '它攻击的是「正当性可以在既定政治单位内部证成」这一前提。非殖民与解放实践一路追问的正是这个单位本身：若它的边界由征服划定，同意、参与与公共自我治理都得先回答谁被算作公民。',
   },
   {
     from: 'pt-history-tech',
     to: 'pt-africana-race',
     kind: 'objection',
-    why: '它攻击的是历史与技术那一页「进步与解放叙事」一路的前提：历史可以被写成能力逐步扩展。提出这条反对的是非裔哲学里非殖民与解放实践那一路——殖民与奴役不是进步叙事之外的例外，而是同一段时间里被记为进步的那些制度的组成部分。非裔哲学另有种族的社会建构、生活经验与现象学两路，问的不是同一件事。',
+    why: '它攻击的是历史与技术那一页「进步与解放叙事」一路的前提：历史可以被写成能力逐步扩展。反对来自非裔哲学的非殖民与解放实践一路——殖民与奴役不是进步叙事之外的例外，而是同一段时间里被记为进步的那些制度的组成部分。非裔哲学另有种族的社会建构、生活经验与现象学两路，问的不是同一件事。',
   },
   {
     from: 'pt-mind-self',
@@ -551,7 +551,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-care',
     to: 'pt-justice',
     kind: 'extension',
-    why: '照护实践的品质说不出照护劳动该由谁承担、承担到什么代价。一旦问到时间、金钱与公共支持怎么分，问题就从关系伦理转到制度分配。',
+    why: '照护做得好不好，回答不了照护劳动该由谁承担、承担到什么代价。一旦问到时间、金钱与公共支持怎么分，问题就从关系伦理转到制度分配。',
   },
   {
     from: 'pt-religion-reason',
@@ -581,7 +581,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-identity-oppression',
     to: 'pt-ai-future',
     kind: 'extension',
-    why: '若可信度和分类在制度里被分配，那么把这些分类交给自动系统会发生什么？证言不公的分析逼出的下一问是：模型的类别从哪里来，误判的负担落在谁身上。',
+    why: '证言不公的分析说明可信度与分类在制度里是被分配的。把这套分配交给自动系统之后，紧接着要问的就是：模型的类别从哪里来，误判的代价落在谁身上。',
   },
   {
     from: 'pt-language-meaning',
@@ -669,7 +669,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-being-change',
     to: 'pt-daoism',
     kind: 'cross-tradition',
-    why: '可比较的争点是固定的分类能否稳定地切分不断变化的世界。不可等同的是《庄子》松动分类的目标在行动与视角，不在给出一套跨时间同一性的判断标准。',
+    why: '可比较的争点是：世界不断变化时，固定的分类还切不切得住。不可等同的是《庄子》并不接着问「过一段时间还是不是同一个东西」——它把对分类的怀疑用在人该如何回应处境上，不用来给持续条件定标准。',
   },
   {
     from: 'pt-language-meaning',
@@ -699,13 +699,13 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-care',
     to: 'pt-confucian',
     kind: 'cross-tradition',
-    why: '可比较的争点是道德要求能否从具体关系的不对称中生出。不可等同的是儒家把这种要求接在礼、孝与角色秩序上，而照护伦理同时要批评性别分工——比较必须带着这层批评一起做。',
+    why: '可比较的争点是道德要求能否从具体关系的不对称中生出。不可等同的是儒家把这种要求系在礼、孝与既定的角色秩序上，而照护伦理提出同一主张时正在批评性别分工——比较必须带着这层批评一起做，否则剩下的只有「两边都重视关系」这句空话。',
   },
   {
     from: 'pt-legitimacy',
     to: 'pt-confucian',
     kind: 'cross-tradition',
-    why: '可比较的争点是统治凭什么要求服从：可接受的合作条件与不受任意支配，还是德、礼与教化产生的信任。不可等同的是儒家文本讨论的是君臣、父子一类的角色义务，不以个人授权为计算单位。',
+    why: '可比较的争点是统治凭什么要求服从：可接受的合作条件与不受任意支配，还是德、礼与教化产生的信任。不可等同的是儒家文本的计算单位不是个人授权，而是君臣、父子一类的角色义务；拿「有没有取得同意」去量它，量出来的只是它不讨论这个问题。',
   },
   {
     from: 'pt-mind-self',
@@ -747,7 +747,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-knowledge-sources',
     to: 'pt-jain-carvaka',
     kind: 'cross-tradition',
-    why: '可比较的争点是感知、推论、证言与有限视角该怎样排序。不可等同的是耆那的多面性要求说明断言的对象、条件与视角，不是「各种说法都对」；顺世论的立场又大量经批评者转述，重构必须标出证据条件。',
+    why: '可比较的争点是感知、推论、证言与有限视角该怎样排序。不可等同的是耆那的多面性要求说清一个断言针对什么对象、在什么条件下、从哪个视角说出；读成「各种说法都对」，它对断言的这套限制就全丢了。',
   },
   {
     from: 'pt-right-action',
@@ -771,7 +771,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-good-life',
     to: 'pt-african-personhood',
     kind: 'cross-tradition',
-    why: '可比较的争点是个人的好能否离开共同善来说明。不可等同的是「人格」在非洲人格观里指道德成熟的成就或社会承认，而不是福祉的承载者；叠起来会让「人格在共同体中成就」听着像取消个人福祉。',
+    why: '可比较的争点是个人的好能否离开共同善来说明。不可等同的是「人格」在非洲人格观里指道德成熟的成就或社会承认，而不是福祉的承载者——两边的「人格」不在同一个位置上，直接叠起来，比较从第一步就已经错了。',
   },
 
   // ——— 历史语境 ———————————————————————————————————————————————
@@ -797,7 +797,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-legitimacy',
     to: 'pt-western-modern',
     kind: 'historical-context',
-    why: '材料是同一时期关于自然权利、契约与政治权威的争论。不能从它推出同意是正当性的唯一历史来源，也不能把契约论读成对当时政治实践的描述。',
+    why: '材料是近代欧洲关于自然权利、契约与政治权威的争论。不能从它推出同意是正当性的唯一历史来源，也不能把契约论读成对当时政治实践的描述。',
   },
   {
     from: 'pt-science-reality',
@@ -851,7 +851,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-being-change',
     to: 'pt-islamic-reason-revelation',
     kind: 'historical-context',
-    why: '材料是阿拉伯语哲学中关于存在、本质、因果与第一原理的技术传统。不能假定这些术语与亚里士多德原文或近代形而上学同义，译语的选择正是争论的一部分。',
+    why: '材料是阿拉伯语哲学中关于存在、本质、因果与第一原理的技术传统。不能假定这些术语与亚里士多德原文或近代形而上学同义——当作同义，这条传统里那些关于本质与存在的分歧就整个看不见了。',
   },
   {
     from: 'pt-religion-reason',
@@ -881,7 +881,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-history-tech',
     to: 'pt-western-contemporary',
     kind: 'historical-context',
-    why: '材料是 19 世纪以来关于技术、劳动与媒介的多条思想线。不能从它推出这些线索有共同结论，它们对进步、异化与权力的判断彼此冲突。',
+    why: '材料是 19 世纪以来关于技术、劳动与媒介的多条思想线。它们对进步、异化与权力的判断彼此冲突，所以不能挑出其中一条当作「这段时期的技术观」来用。',
   },
   {
     from: 'pt-buddhist',
@@ -899,7 +899,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-confucian',
     to: 'pt-chinese-later',
     kind: 'historical-context',
-    why: '材料是先秦文本在后世被选择、注释并赋予新权威的那段历史。不能从「儒家」这个名称推出各时代读的是同一套主张；今天的读法本身有来历。',
+    why: '材料是先秦文本在后世被选择、注释并赋予新权威的那段历史。不能把「儒家」当成一个自始就有固定内容的名号——哪些文本进正典、由谁定注，本身就是后世反复争过的事；今天的读法也有来历。',
   },
   {
     from: 'pt-identity-oppression',
@@ -961,13 +961,13 @@ export const crossDomainChains: CrossDomainChain[] = [
   {
     id: 'chain-freedom-to-justice',
     title: '从「我能不能另作选择」走到「制度该怎样分配」',
-    why: '关于控制的结论不会停在心里。它先决定谁该被责备，再决定惩罚与补偿凭什么正当，最后落到一套制度按什么标准对待人。每往前一步都会多出上一页没有的变量：先是运气与角色，然后是程序与强制，最后是权利与份额。',
+    why: '关于控制的结论不会停在心里。这条链把它一路推下去，每往前一步都多出上一步没有的变量：从自由到责任，多出运气与角色；从责任到法律，多出程序与强制；从法律到正义，多出权利与份额。每一步新添的那个变量，就是上一页答不了下一页的原因。',
     nodeIds: ['pt-freedom', 'pt-responsibility', 'pt-law', 'pt-justice'],
   },
   {
     id: 'chain-evidence-to-accountability',
     title: '从「我凭什么相信」走到「模型出错谁负责」',
-    why: '一条链上的四页问的是同一件事在不同层次上的样子：一个人的证据、一个共同体的证据、一次错误该归给谁，最后是当出错的是一套自动系统时，这套归责方式还剩下多少可用。责任排在人工智能之前不是随手放的——缺了「是否出自某个人」「能否被要求说明理由」「能否被追究并承担后果」这三层区分，自动化伤害的讨论只会在「怪算法」和「怪用户」之间空转。',
+    why: '四页问的是同一件事在不同层次上的样子：一个人的证据、一个共同体的证据、一次错误该归给谁，最后是当出错的是一套自动系统时，这套归责方式还剩下多少可用。次序不能调换：责任那一页要先读，它给出的那套区分决定了最后一页能问出什么。',
     nodeIds: ['pt-knowledge-sources', 'pt-science-reality', 'pt-responsibility', 'pt-ai-future'],
   },
   {
@@ -979,7 +979,7 @@ export const crossDomainChains: CrossDomainChain[] = [
   {
     id: 'chain-good-life-to-care-work',
     title: '从「什么值得过」走到「照护劳动谁承担」',
-    why: '把好生活想成一个人的成就，接着问该怎么行动时就会发现对象是彼此依赖的人；承认依赖之后，照护的时间、金钱和体力又不是靠品格能分配的。这条链把一个看似私人的问题一路推到制度上。',
+    why: '把好生活想成一个人的成就，接着问该怎么行动时就会发现对象是彼此依赖的人；承认依赖之后，问题就不再停在个人品格上。这条链的价值在顺序：一个看起来纯属私人的问题，要走满这四步才落到制度，中间少走一步，结论就会像是从私人偏好直接跳到公共分配。',
     nodeIds: ['pt-good-life', 'pt-right-action', 'pt-care', 'pt-justice'],
   },
 ];

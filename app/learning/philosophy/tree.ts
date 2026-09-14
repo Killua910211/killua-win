@@ -139,9 +139,9 @@ if (!coreGroup || !traditionsGroup) {
   throw new Error('哲学体系树缺少 pt-core 或 pt-traditions 分组');
 }
 
-/** 主学习路径的分组节点（“核心问题｜主学习路径”）。 */
+/** 主学习路径的分组节点（「核心问题｜主学习路径」）。 */
 export const coreSection: PhilosophyNode = coreGroup;
-/** 平行历史导航的分组节点（“传统地图｜平行历史导航”）。 */
+/** 平行历史导航的分组节点（「传统地图｜平行历史导航」）。 */
 export const traditionsSection: PhilosophyNode = traditionsGroup;
 
 /** 问题域，每个域下挂着它自己的核心问题。 */

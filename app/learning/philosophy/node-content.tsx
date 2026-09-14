@@ -12,7 +12,7 @@ import { Citations, ClaimSources } from './citation';
 import { ComparisonBlock } from './comparison';
 import { ConceptList } from './concept-card';
 import { NextSteps } from './next-steps';
-import { Prose } from './prose';
+import { hasGloss, Prose, renderProse } from './prose';
 import { ResearchLayer } from './research-layer';
 import { collectPageSources } from './page-sources';
 import { ThoughtExperiment } from './thought-experiment';
@@ -195,6 +195,13 @@ export function NodeBody({
   if (node.id === 'pt-being-change') {
     return (
       <div className="philosophy-body-main">
+        {/* 手写主线也从「本页范围」开始：这一行是每个条目页共有的，不能因为走了提前 return 就丢掉。 */}
+        {ledger && (
+          <p className="philosophy-scope">
+            <span className="philosophy-scope-label">本页范围</span>
+            {ledger.scope}
+          </p>
+        )}
         <BeingChangeEntry node={node} />
         <SharedTail
           argument={argument}
@@ -375,7 +382,7 @@ export function NodeBody({
             哲学家怎样改写这个问题
           </BlockHeading>
           <p className="philosophy-block-intro">
-            下面这些人并不是在为同一条现成结论各投一票。每一则先说明这个人原来的论证在处理什么问题、着力点在哪里，再说明它能怎样推进本页的讨论；“不能直接推出”那一行是用来挡住跨时代、跨传统的草率等同的。
+            这些人不是在为同一条现成结论各投一票，他们的名字也不等于某个立场的标签。每一则先回到他本来在处理的问题，再看它能怎样推进本页的讨论；「不能直接推出」那一行挡的是跨时代、跨传统的草率等同。
           </p>
           <div className="philosophy-voices">
             {guide.philosopherViews.map((view) => (
@@ -444,7 +451,13 @@ export function NodeBody({
                   {paragraph.kind}
                   <span className="sr-only">：</span>
                 </span>
-                {paragraph.text}
+                {/*
+                  这一栏也要过一遍行内概念注解。以前它直接输出 paragraph.text，于是
+                  「容易混淆的地方」里写的 [[concept-id|显示文本]] 原样印在页面上——
+                  正是最该解释术语的那一栏，把标记本身给了读者。<li> 里可以放 <details>，
+                  不像 <p> 会被提前闭合，所以这里直接用 renderProse。
+                */}
+                {hasGloss(paragraph.text) ? renderProse(paragraph.text) : paragraph.text}
                 <Citations ids={paragraph.sourceIds} sources={sources} />
               </li>
             ))}
@@ -471,7 +484,7 @@ export function NodeBody({
             人物与原典：从哪里读起
           </BlockHeading>
           <p className="philosophy-block-intro">
-            先抓住每部文本在争论中解决什么问题，再回到原文核对论证；不要把作者的名字当成某个立场的标签。
+            先抓住每部文本在这场争论里要解决什么问题，再回到原文核对它自己的论证。
           </p>
           <ol className="philosophy-texts">
             {guide.texts.map((text, index) => (
@@ -569,8 +582,8 @@ function SharedTail({
             跨传统的可比问题
           </BlockHeading>
           <p className="philosophy-block-intro">
-            比较不从「哪个传统相当于哪一派」开始，而从一个双方真的能对话的问题开始。每一栏保留它
-            自己的问题框架；它们不一定在回答完全相同的问题。
+            比较不从「哪个传统相当于哪一派」开始，而从一个双方真的能对话的问题开始；每一栏按它
+            自己的问题框架陈述，不译成同一套术语。
           </p>
           {comparisons.map((item) => (
             // 比较栏的角标以前只在 item.sources 里查，条目来源账已登记过的材料
@@ -624,8 +637,8 @@ function SharedTail({
             继续学习
           </BlockHeading>
           <p className="philosophy-block-intro">
-            每一条都说明为什么推荐它：是前置知识，是另一种回答，是一个反驳，是延伸问题，还是一个
-            只能并置比较的跨传统问题。
+            这几条不是按相似度推荐的：分组标题说明它和本页构成哪一种关系，下面那句话说明为什么
+            值得现在就读。
           </p>
           <NextSteps nodeId={node.id} />
         </section>

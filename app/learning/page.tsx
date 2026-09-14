@@ -49,8 +49,8 @@ export default function LearningPage() {
         <PageHero
           description={
             <>
-              先定位问题，再比较立场。第一门铺开的科目是哲学：{philosophyNodes.length} 个节点、
-              {coreQuestions.length} 个核心问题，之后还会加别的科目。
+              先定位问题，再比较立场。第一门铺开的科目是哲学，铺到 {philosophyNodes.length} 个节点；
+              之后还会加别的科目。
             </>
           }
           eyebrow="Learn / 学习空间"
@@ -83,7 +83,7 @@ export default function LearningPage() {
               {coreQuestions.length} 个核心问题，<br />每一个都可以单独读完。
             </h2>
             <p className="learning-section-lede">
-              按问题类型排列，而不是按国别、时代或哲学家。每个问题都可以单独打开，也可以隔很久再回来重读；传统地图是平行的第二条轴，不是另一条主线。
+              按问题类型排列，而不是按国别、时代或哲学家。传统地图是平行的第二条轴，不是另一条主线。
             </p>
             <p className="learning-section-actions">
               <Link className="learning-inline-link" href="/learning/philosophy">
@@ -108,7 +108,7 @@ export default function LearningPage() {
               按问题 / Main path
             </h3>
             <p className="learning-block-lede">
-              {questionDomains.length} 个问题域，{coreQuestions.length} 个核心问题。这是主路径；完整索引在哲学总览里。
+              分成 {questionDomains.length} 个问题域；完整索引在哲学总览里。
             </p>
             <ul className="learning-entry-grid">
               {questionDomains.map((domain) => (
@@ -158,7 +158,7 @@ export default function LearningPage() {
               不是先记住答案，<br />而是先看见问题。
             </h2>
             <p className="learning-section-lede">
-              这条循环对每门科目都一样：哲学里是立场与理由，换成别的科目也是同一套动作。
+              这条循环对每门科目都一样，在哲学里对应的是立场与理由。
             </p>
             <ol className="learning-loop">
               <li>

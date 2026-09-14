@@ -51,21 +51,21 @@ const entries = [
     title: '从问题开始',
     href: '#by-question',
     for: '我现在对某个问题感兴趣。',
-    note: `${coreQuestions.length} 个核心问题，按问题类型排列，不按国别、时代或哲学家。每一个都可以单独读完。`,
+    note: `${coreQuestions.length} 个核心问题，分成 ${questionDomains.length} 个问题域列出。每一个都可以单独读完，不必从第一个开始。`,
   },
   {
     id: 'entry-path',
     title: '系统学习',
     href: '/learning/philosophy/path',
     for: '我什么都不知道，该从哪里开始？',
-    note: `一条 ${basicPath.steps.length} 步的推荐基础路线，每一步都为下一步准备一个必要的区分。它不是唯一正确的顺序。`,
+    note: `一条 ${basicPath.steps.length} 步的推荐基础路线，从一个日常判断起步，最后落到死亡与意义。它不是唯一正确的顺序。`,
   },
   {
     id: 'entry-tradition',
     title: '从传统进入',
     href: '#by-tradition',
     for: '我想从某个传统的文本和论辩史进入。',
-    note: `${traditions.length} 条平行的历史导航。传统有自己的问题框架，不是核心问题的地区版本。`,
+    note: `${traditions.length} 条平行的历史导航，各自按时段和思想线索展开。不必先读完核心问题再进来。`,
   },
 ];
 
@@ -116,12 +116,11 @@ export default function PhilosophyOverviewPage() {
               你现在是哪一种情况？
             </h2>
             <p className="philosophy-lede">
-              三个入口指向同一批内容，只是起点不同。如果你更想直接看这些问题之间的关系——哪些必须
-              先读，哪些在互相反驳，哪些只能并置比较——那就打开
+              三个入口指向同一批内容，只是起点不同。你也可以都不选，直接打开
               <Link className="philosophy-inline-map-link" href="/learning/philosophy/map">
                 哲学知识地图
               </Link>
-              ，那里登记了 {philosophyRelations.length} 条带理由的关系。
+              ，用 {philosophyRelations.length} 条写明理由的连接找路。
             </p>
 
             <div className="philosophy-entries">
@@ -217,7 +216,7 @@ export default function PhilosophyOverviewPage() {
             <span>How to read it</span>
           </div>
           <div className="philosophy-section-body">
-            <p className="eyebrow">Scope / 怎么读、覆盖到哪</p>
+            <p className="eyebrow">Scope / 范围与缺口</p>
             <h2 className="philosophy-section-heading" id="how-to-read-heading">
               这套内容怎么读，以及它还没做到什么
             </h2>

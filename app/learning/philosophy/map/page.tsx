@@ -64,9 +64,8 @@ export default function PhilosophyMapPage() {
               问题之间有哪些真实关系？哪些必须先读，哪些在互相反驳，哪些只能并置比较？
             </p>
             <p className="philosophy-summary">
-              这张地图不按国别或年代排列，而按问题之间的关系排列。每个核心问题和每条传统线索都可以
-              就地展开，看到它的一句话介绍、按语义分组的直接相关节点，以及进入专题的入口。目前
-              登记了 {philosophyRelations.length} 条带理由的关系。
+              这张地图不按国别或年代排列，而按问题之间的关系排列。核心问题和传统线索都在原地展开，
+              不必先跳进专题页才知道它连着谁。目前登记了 {philosophyRelations.length} 条带理由的关系。
             </p>
           </div>
         </section>
@@ -94,17 +93,15 @@ export default function PhilosophyMapPage() {
               七种关系，七个不同的理由
             </h2>
             <p className="philosophy-lede">
-              「相关」不是一种关系。每条边都要说清读者为什么应该走过去：它是前置知识，是一对常被混为
-              一谈的问题，是一个反驳，是延伸问题，是同一个问题落到具体处境，是历史语境，还是一个只能
-              并置比较的跨传统问题。这份词表刻意没有「相关」这个兜底项——说不出理由的边不会出现在
-              这张地图上。
+              「相关」不算一种关系：说不出理由的边就不连。一条边属于下面哪一种，决定了读者为什么
+              该走过去，也决定了它在两端的页面上各自怎么显示。
             </p>
             <MapLegend />
             {isolated.length > 0 && (
               <p className="philosophy-map-isolated">
                 目前还有 {isolated.length} 个节点没有建立语义关系
                 {isolatedTitles.length > 0 && <>（{isolatedTitles.join('、')}{isolated.length > isolatedTitles.length && ' 等'}）</>}
-                。它们仍然可以从问题域和传统导航进入，但还没有进入这张关系图。缺口写在这里，不藏起来。
+                。在这张地图上它们暂时是孤立的，但仍然可以从问题域和传统导航进入。
               </p>
             )}
           </div>
@@ -121,8 +118,8 @@ export default function PhilosophyMapPage() {
               {questionDomains.length} 个问题域，{coreQuestions.length} 个核心问题
             </h2>
             <p className="philosophy-lede">
-              第一层是问题域，第二层是它下面的核心问题。点开任一个问题，就能看到它与其他问题、
-              传统线索之间已经建立的关系。
+              问题域只是第一层归拢，真正的连接长在问题与问题之间。展开任一个问题，就能看到它已经
+              连上了谁。
             </p>
             <MapDomains />
           </div>
@@ -140,8 +137,8 @@ export default function PhilosophyMapPage() {
                 一个问题的答案会压到下一个问题
               </h2>
               <p className="philosophy-lede">
-                六个问题域是并列的，但真实的追问会横穿它们。这几条链条串起来的，正是被目录结构
-                切断得最彻底的那些连接。
+                真实的追问会横穿并列的问题域。这几条链条串起来的，正是被目录结构切断得最彻底的
+                那些连接。
               </p>
               <MapChains />
             </div>
@@ -160,7 +157,7 @@ export default function PhilosophyMapPage() {
                 横穿多个问题的 {concepts.length} 个概念
               </h2>
               <p className="philosophy-lede">
-                这些概念在多页里承担解释工作，定义只有一份。理解错一个，后面几页都会跟着错。
+                这些概念在多页里反复出现，定义只写一份。理解错一个，后面几页都会跟着错。
               </p>
               <MapConcepts />
             </div>
@@ -182,8 +179,8 @@ export default function PhilosophyMapPage() {
               {traditions.length} 条平行的历史导航
             </h2>
             <p className="philosophy-lede">
-              传统不是问题域的另一种分类。它们各自有自己的问题框架、文本和论辩史，在这张地图上是
-              平行的一层，而不是核心问题的地区版本。
+              传统不是核心问题的地区版本。它们各自有自己的问题框架、文本和论辩史，在这张地图上
+              是平行的一层。
             </p>
             <MapTraditions />
           </div>

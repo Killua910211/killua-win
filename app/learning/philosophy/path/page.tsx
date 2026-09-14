@@ -47,11 +47,10 @@ export default function PhilosophyPathPage() {
           <div className="philosophy-section-body">
             <p className="eyebrow">Route / 路线</p>
             <h2 className="philosophy-section-heading" id="path-steps-heading">
-              {steps.length} 步，每一步都为下一步准备一个区分
+              {steps.length} 步，以及每一步排在这里的理由
             </h2>
             <p className="philosophy-lede">
-              这里没有进度、没有完成度、也没有打卡。它是一份可以随时回来查的顺序建议：任何一步都能
-              单独打开，读到一半跳去别的问题也不算走错。
+              这里没有进度条、完成度或打卡：页面不记录你读到哪一步，回来时看到的还是同一份顺序建议。
             </p>
 
             <ol className="philosophy-path">

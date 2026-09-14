@@ -44,7 +44,7 @@ export function ResearchLayer({
   /**
    * 条目状态由来源的真实状态推出，不用 `ledger.status` 里手写的那句。
    *
-   * `status` 的类型是字面量 `'核验正文｜自审完成'`，42 条 ledger 全取同一个值——
+   * `status` 的类型是字面量 `'核验正文｜自审完成'`，每一条 ledger 都取同一个值——
    * 也就是说它不承载任何信息，而在还有来源待核验或链接失效的页面上，这句话
    * 是不成立的。手写的断言会随内容漂移，数出来的不会。
    */
@@ -80,10 +80,12 @@ export function ResearchLayer({
           <h3 className="philosophy-research-heading" id={`${nodeId}-research-scope`}>
             本条状态
           </h3>
-          <p className="philosophy-research-status">
-            {derivedStatus} · {ledger.review.mode}
-          </p>
-          <p className="philosophy-research-text">{ledger.scope}</p>
+          {/*
+            这里只说来源核到了哪一步。审查模式已经写在折叠标题上，本页范围已经写在
+            正文最前面那行「本页范围」里——两处都曾在这一节里再渲染一遍，等于每个
+            条目页把同一段范围说明印两次。
+          */}
+          <p className="philosophy-research-status">{derivedStatus}</p>
         </section>
 
         <section aria-labelledby={`${nodeId}-research-sources`}>
@@ -91,9 +93,9 @@ export function ResearchLayer({
             来源与核验记录
           </h3>
           <p className="philosophy-research-text">
-            本页所有区块引用的来源都在这里，按材料归并：正文、论证地图、跨传统比较、思想实验和
-            概念卡共用同一份材料时只列一次，但各自的定位、支持的论断和核验状态分开记。每项只说明
-            本轮实际核对到的定位；原典入口不等于整部文本已经完成校勘。
+            本页引用的来源都在这里，按材料归并：同一份材料被多处引用时只列一条，但每一处的定位、
+            支持的论断和核验状态分开记。每项只说明本轮实际核对到的那一处定位，原典入口不等于整部
+            文本都已校勘。
             {registry.extraUses.length > 0 &&
               `本页除正文外，${registry.extraUses.join('、')}也各自带了来源。`}
           </p>
