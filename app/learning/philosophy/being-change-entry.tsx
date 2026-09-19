@@ -1,7 +1,12 @@
 import Link from 'next/link';
 import type { PhilosophyNode } from './tree';
 import { getCoreEntryLedger, type LedgerSource } from './content-ledger';
-import styles from './being-change-entry.module.css';
+/*
+  版式与《心灵、身体与「我」》共用同一份模块：两页都是手写教学主线，
+  区块词汇（小节、概念格、判准卡、走查、进阶折叠、练习）完全一致。
+  模块原名 being-change-entry.module.css，本轮改名以示它不再专属一页。
+*/
+import styles from './teaching-entry.module.css';
 
 type CitationProps = { id: string; sources: LedgerSource[] };
 

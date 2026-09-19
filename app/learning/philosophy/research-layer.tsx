@@ -151,8 +151,9 @@ export function ResearchLayer({
             本轮审查与待办
           </h3>
           <ol className="philosophy-review-findings">
-            {ledger.review.findings.map((finding) => (
-              <li key={finding.location}>
+            {ledger.review.findings.map((finding, index) => (
+              // location 不保证唯一：同一处被不同轮各记一条是正常的，键要带上序号
+              <li key={`${finding.location}-${index}`}>
                 <h4>{finding.location}</h4>
                 <p>
                   <strong>发现：</strong>

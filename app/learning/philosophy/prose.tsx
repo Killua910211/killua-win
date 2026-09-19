@@ -1,5 +1,7 @@
 import { Fragment, type ReactNode } from 'react';
 import { ConceptGloss } from './concept-card';
+import { Citations } from './citation';
+import type { CoreEntryLedger, LedgerParagraph } from './content-ledger';
 
 /**
  * 正文里的行内概念标记。
@@ -18,7 +20,7 @@ export function hasGloss(text: string): boolean {
   return GLOSS.test(text);
 }
 
-export function renderProse(text: string): ReactNode[] {
+export function renderProse(text: string, currentNodeId?: string): ReactNode[] {
   const parts: ReactNode[] = [];
   let cursor = 0;
   let key = 0;
@@ -30,7 +32,7 @@ export function renderProse(text: string): ReactNode[] {
       key += 1;
     }
     parts.push(
-      <ConceptGloss id={match[1]} key={`g${key}`}>
+      <ConceptGloss currentNodeId={currentNodeId} id={match[1]} key={`g${key}`}>
         {match[2]}
       </ConceptGloss>,
     );
@@ -54,17 +56,20 @@ export function renderProse(text: string): ReactNode[] {
 export function Prose({
   children,
   className,
+  currentNodeId,
   trailing,
 }: {
   children: string;
   className?: string;
+  /** 读者正在看的那一页；「展开读」用它判断该不该跨页。 */
+  currentNodeId?: string;
   /** 段末追加的内容，例如引用角标。 */
   trailing?: ReactNode;
 }) {
   const glossed = hasGloss(children);
   const content = (
     <>
-      {glossed ? renderProse(children) : children}
+      {glossed ? renderProse(children, currentNodeId) : children}
       {trailing}
     </>
   );
@@ -73,4 +78,34 @@ export function Prose({
     return <p className={className}>{content}</p>;
   }
   return <div className={[className, 'philosophy-para'].filter(Boolean).join(' ')}>{content}</div>;
+}
+
+/** 来源账里的一段正文。kind 标出它是原文、概括、解释性重构还是原创例子。 */
+export function LedgerProse({
+  paragraphs,
+  sources,
+  currentNodeId,
+}: {
+  paragraphs: LedgerParagraph[];
+  sources: CoreEntryLedger['sources'];
+  /** 读者正在看的那一页；传给行内概念注解的「展开读」。 */
+  currentNodeId?: string;
+}) {
+  return (
+    <div className="philosophy-ledger-prose">
+      {paragraphs.map((paragraph, index) => (
+        <Prose
+          currentNodeId={currentNodeId}
+          key={`${paragraph.kind}-${index}`}
+          trailing={
+            <>
+              <Citations ids={paragraph.sourceIds} sources={sources} />
+            </>
+          }
+        >
+          {paragraph.text}
+        </Prose>
+      ))}
+    </div>
+  );
 }

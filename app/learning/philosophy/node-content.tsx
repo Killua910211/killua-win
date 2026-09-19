@@ -1,18 +1,19 @@
 import Link from 'next/link';
 import { childOrderNote, getNodeById, nodeHref, orderedChildren, type PhilosophyNode } from './tree';
 import { getStudyGuide } from './study-guides';
-import { getCoreEntryLedger, type CoreEntryLedger, type LedgerParagraph } from './content-ledger';
+import { getCoreEntryLedger, type CoreEntryLedger } from './content-ledger';
 import { BeingChangeEntry } from './being-change-entry';
+import { MindSelfEntry } from './mind-self-entry';
 import { getArgumentMap } from './argument-maps';
 import { getThoughtExperiment } from './thought-experiments';
 import { comparisonsForNode } from './comparisons';
 import { prerequisitesOf, relationGroupsFor } from './relations';
 import { ArgumentMap } from './argument-map';
 import { Citations, ClaimSources } from './citation';
+import { GuideCaseStudy, GuideConcepts, GuideTexts, GuideVoices } from './guide-sections';
 import { ComparisonBlock } from './comparison';
-import { ConceptList } from './concept-card';
 import { NextSteps } from './next-steps';
-import { hasGloss, Prose, renderProse } from './prose';
+import { hasGloss, LedgerProse, renderProse } from './prose';
 import { ResearchLayer } from './research-layer';
 import { collectPageSources } from './page-sources';
 import { ThoughtExperiment } from './thought-experiment';
@@ -155,32 +156,6 @@ function GuidanceLead({ node }: { node: PhilosophyNode }) {
   );
 }
 
-/** 来源账里的一段正文。kind 标出它是原文、概括、解释性重构还是原创例子。 */
-function LedgerProse({
-  paragraphs,
-  sources,
-}: {
-  paragraphs: LedgerParagraph[];
-  sources: CoreEntryLedger['sources'];
-}) {
-  return (
-    <div className="philosophy-ledger-prose">
-      {paragraphs.map((paragraph, index) => (
-        <Prose
-          key={`${paragraph.kind}-${index}`}
-          trailing={
-            <>
-              <Citations ids={paragraph.sourceIds} sources={sources} />
-            </>
-          }
-        >
-          {paragraph.text}
-        </Prose>
-      ))}
-    </div>
-  );
-}
-
 /**
  * 节点正文。
  *
@@ -285,8 +260,30 @@ export function NodeBody({
     relationGroups.length > 0 && { id: `${node.id}-next`, label: '继续学习' },
   ].filter((entry): entry is { id: string; label: string } => Boolean(entry));
 
-  // 「存在与变化」有自己一条手写教学主线；新增能力挂在它后面，不套通用模板。
-  if (node.id === 'pt-being-change') {
+  /*
+    手写教学主线。两页（「存在与变化」「心灵、身体与『我』」）各自有一条按
+    读者理解顺序写的正文，不套通用模板——通用模板假定一页只处理一个问题，
+    这两页都不是。其余 21 个核心问题页仍走下面的通用模板。
+
+    两页共用同一段外壳：本页范围 → 读这一页之前 → 具体入口 → 手写正文 →
+    共享尾部。差别只有两处，用 handwritten 描述：
+      - body：渲染哪一条正文；
+      - tailArgument：论证地图交给共享尾部，还是由正文自己安排位置。
+        mind-self 选后者。共享尾部把论证地图排在最前，而这一页的那张图
+        （排除论证）要用到的前提，读者要到三个单元之后才具备。
+  */
+  const handwritten =
+    node.id === 'pt-being-change'
+      ? { body: <BeingChangeEntry node={node} />, tailArgument: argument, tailExperiment: experiment }
+      : node.id === 'pt-mind-self'
+        ? {
+            body: <MindSelfEntry argument={argument} experiment={experiment} node={node} />,
+            tailArgument: undefined,
+            tailExperiment: undefined,
+          }
+        : null;
+
+  if (handwritten) {
     return (
       <div className="philosophy-body-main">
         {/* 手写主线也从「本页范围」开始：这一行是每个条目页共有的，不能因为走了提前 return 就丢掉。 */}
@@ -309,11 +306,11 @@ export function NodeBody({
             <p className="philosophy-opening-turn">{ledger.entry.turn}</p>
           </div>
         )}
-        <BeingChangeEntry node={node} />
+        {handwritten.body}
         <SharedTail
-          argument={argument}
+          argument={handwritten.tailArgument}
           comparisons={comparisons}
-          experiment={experiment}
+          experiment={handwritten.tailExperiment}
           headingLevel={headingLevel}
           ledger={ledger}
           // 手写主线也要有出口：没有语义关系时退回 data.json 的 related，
@@ -366,7 +363,7 @@ export function NodeBody({
               <p className="philosophy-opening-turn">{ledger.entry.turn}</p>
             </div>
           )}
-          <LedgerProse paragraphs={ledger.origin} sources={sources} />
+          <LedgerProse currentNodeId={node.id} paragraphs={ledger.origin} sources={sources} />
         </section>
       )}
 
@@ -375,27 +372,12 @@ export function NodeBody({
         边界那一块本来就在用这些词做推理，解释却排在它后面。
       */}
       {guide && (
-        <section
-          aria-labelledby={`${node.id}-orientation`}
-          className="philosophy-block philosophy-study-intro"
-          id="concepts"
-        >
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-orientation`}>
-            先把问题拆开
-          </BlockHeading>
-          <p className="philosophy-study-orientation">{guide.orientation}</p>
-          {guide.conceptRefs && <ConceptList currentNodeId={node.id} refs={guide.conceptRefs} />}
-          {guide.concepts.length > 0 && (
-            <dl className="philosophy-concept-grid">
-              {guide.concepts.map((concept) => (
-                <div key={concept.term}>
-                  <dt>{concept.term}</dt>
-                  <dd>{concept.explanation}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
-        </section>
+        <GuideConcepts
+          guide={guide}
+          headingLevel={headingLevel}
+          nodeId={node.id}
+          sources={sources}
+        />
       )}
 
       {ledger && (
@@ -403,7 +385,7 @@ export function NodeBody({
           <BlockHeading className="philosophy-block-title" id={`${node.id}-boundaries`}>
             {headings.boundaries}
           </BlockHeading>
-          <LedgerProse paragraphs={ledger.boundaries} sources={sources} />
+          <LedgerProse currentNodeId={node.id} paragraphs={ledger.boundaries} sources={sources} />
         </section>
       )}
 
@@ -498,57 +480,21 @@ export function NodeBody({
           <BlockHeading className="philosophy-block-title" id={`${node.id}-objections`}>
             {headings.objections}
           </BlockHeading>
-          <LedgerProse paragraphs={ledger.objections} sources={sources} />
-        </section>
-      )}
-
-      {guide?.philosopherViews && guide.philosopherViews.length > 0 && (
-        <section aria-labelledby={`${node.id}-voices`} className="philosophy-block">
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-voices`}>
-            哲学家怎样改写这个问题
-          </BlockHeading>
-          <p className="philosophy-block-intro">
-            这些人不是在为同一条现成结论各投一票，他们的名字也不等于某个立场的标签。每一则先回到他本来在处理的问题，再看它能怎样推进本页的讨论；「不能直接推出」那一行挡的是跨时代、跨传统的草率等同。
-          </p>
-          <div className="philosophy-voices">
-            {guide.philosopherViews.map((view) => (
-              <article key={`${view.philosopher}-${view.work}`}>
-                <p className="philosophy-voice-period">{view.period}</p>
-                <div>
-                  <SubHeading>{view.philosopher}</SubHeading>
-                  <p className="philosophy-voice-work">{view.work}</p>
-                  <p>{view.framing}</p>
-                  <p className="philosophy-voice-application">
-                    <span>对本页的推进</span>
-                    {view.application}
-                  </p>
-                  <p className="philosophy-voice-caution">
-                    <span>不能直接推出</span>
-                    {view.caution}
-                  </p>
-                  <ClaimSources ids={view.sourceIds} sources={sources} />
-                </div>
-              </article>
-            ))}
-          </div>
+          <LedgerProse currentNodeId={node.id} paragraphs={ledger.objections} sources={sources} />
         </section>
       )}
 
       {guide && (
-        <section aria-labelledby={`${node.id}-case`} className="philosophy-block">
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-case`}>
-            案例推演
-          </BlockHeading>
-          <div className="philosophy-case-study">
-            <h3>{guide.caseStudy.title}</h3>
-            <p>{guide.caseStudy.setup}</p>
-            <ol>
-              {guide.caseStudy.prompts.map((prompt) => (
-                <li key={prompt}>{prompt}</li>
-              ))}
-            </ol>
-          </div>
-        </section>
+        <GuideVoices guide={guide} headingLevel={headingLevel} nodeId={node.id} sources={sources} />
+      )}
+
+      {guide && (
+        <GuideCaseStudy
+          guide={guide}
+          headingLevel={headingLevel}
+          nodeId={node.id}
+          sources={sources}
+        />
       )}
 
       {experiment ? (
@@ -585,7 +531,7 @@ export function NodeBody({
                   正是最该解释术语的那一栏，把标记本身给了读者。<li> 里可以放 <details>，
                   不像 <p> 会被提前闭合，所以这里直接用 renderProse。
                 */}
-                {hasGloss(paragraph.text) ? renderProse(paragraph.text) : paragraph.text}
+                {hasGloss(paragraph.text) ? renderProse(paragraph.text, node.id) : paragraph.text}
                 <Citations ids={paragraph.sourceIds} sources={sources} />
               </li>
             ))}
@@ -607,32 +553,7 @@ export function NodeBody({
       )}
 
       {guide && (
-        <section aria-labelledby={`${node.id}-texts`} className="philosophy-block">
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-texts`}>
-            人物与原典：从哪里读起
-          </BlockHeading>
-          <p className="philosophy-block-intro">
-            先抓住每部文本在这场争论里要解决什么问题，再回到原文核对它自己的论证。
-          </p>
-          <ol className="philosophy-texts">
-            {guide.texts.map((text, index) => (
-              <li key={`${text.author}-${text.work}`}>
-                <p aria-hidden="true" className="philosophy-text-index">
-                  {String(index + 1).padStart(2, '0')}
-                </p>
-                <p className="philosophy-text-author">{text.author}</p>
-                <SubHeading>{text.work}</SubHeading>
-                <p className="philosophy-text-period">{text.period}</p>
-                <p className="philosophy-text-contribution">{text.contribution}</p>
-                <ClaimSources ids={text.sourceIds} sources={sources} />
-                <p className="philosophy-text-question">
-                  <span>带着这个问题读</span>
-                  {text.readingQuestion}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </section>
+        <GuideTexts guide={guide} headingLevel={headingLevel} nodeId={node.id} sources={sources} />
       )}
 
       <SharedTail

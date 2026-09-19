@@ -51,9 +51,26 @@ function expandHref(concept: Concept): string {
   return anchor ? `${href}#concepts` : href;
 }
 
-/** 正文里的行内概念注解。同一页同一个概念只标第一次出现，避免链接噪音。 */
-export function ConceptGloss({ id, children }: { id: string; children: string }) {
+/**
+ * 正文里的行内概念注解。同一页同一个概念只标第一次出现，避免链接噪音。
+ *
+ * currentNodeId 是读者正在看的那一页。给了它，「展开读」才知道该不该跨页：
+ * 概念卡常常就渲染在同一页上（心灵页的「人格同一性」「缘起」都是），这时
+ * 原来的写法会印成「展开读：心灵、身体与「我」」——把读者所在的这一页当作
+ * 别处推荐给他。实测全库 8 页共 11 处。命中本页就改成同页锚点。
+ */
+export function ConceptGloss({
+  id,
+  children,
+  currentNodeId,
+}: {
+  id: string;
+  children: string;
+  currentNodeId?: string;
+}) {
   const concept = requireConcept(id);
+  const target = expandTarget(concept);
+  const onThisPage = target.nodeId === currentNodeId;
 
   return (
     <details className="philosophy-gloss">
@@ -82,7 +99,11 @@ export function ConceptGloss({ id, children }: { id: string; children: string })
         )}
         <span className="philosophy-gloss-line">
           <span className="philosophy-gloss-label">展开读</span>
-          <Link href={expandHref(concept)}>{getNodeById(expandTarget(concept).nodeId)!.title}</Link>
+          {onThisPage ? (
+            <a href={target.anchor ? '#concepts' : '#'}>本页的概念卡</a>
+          ) : (
+            <Link href={expandHref(concept)}>{getNodeById(target.nodeId)!.title}</Link>
+          )}
         </span>
       </span>
     </details>
