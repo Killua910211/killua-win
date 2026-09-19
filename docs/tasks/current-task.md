@@ -1,4 +1,61 @@
-# 当前任务：哲学学习专区教学重构（面向零基础读者）
+# 当前任务：《心灵、身体与「我」》重建（2026-09-20）
+
+状态：**本地完成，未提交、未推送、未部署**——本轮任务明确要求不擅自发布，这条覆盖 `AGENTS.md` 里
+「发布＝提交＋推送＋部署」那条常规。线上 `killua.win` 仍是 2026-09-19 那一版。
+
+## 需求
+
+复审并重建 `/learning/philosophy/mind-self`：基础主线按零基础读者的理解顺序重组为三个学习单元，
+技术内容移入重写过的进阶区，八条具体的概念与推理订正逐条落实，案例与推演重新设计，
+中文资料实际检索并可核验，然后把同类问题在全站扫一遍。不修改无关专区，不破坏路由、锚点、内容标识。
+
+## 本次改动
+
+14 个文件。完整记录在
+[app/learning/philosophy/MIND_SELF_REBUILD.md](../../app/learning/philosophy/MIND_SELF_REBUILD.md)
+（当前状态确认、结构、八条订正、中文资料核对表、全站清查、工程检查、数据债、未完成项），
+跨页结论另记于 [CONTENT_GAP_REVIEW.md](../../app/learning/philosophy/CONTENT_GAP_REVIEW.md) 的
+「2026-09-20 轮」。
+
+### 清单 A：页面覆盖（分母不缩）
+
+| 范围 | 页数 | 本轮处理 |
+| --- | --- | --- |
+| 本轮重点页 | 1（mind-self） | 全页重建 |
+| 全站同类问题清查 | 58 条路由全部扫过 | 命中并修复 8 页 11 处「展开读」自指；其余 7 类问题只命中 mind-self |
+| 共享层（概念卡、渲染组件） | `concepts.ts`、`concept-card.tsx`、`prose.tsx`、`research-layer.tsx`、`guide-sections.tsx`、`node-content.tsx` | 各改一处，影响全部 55 个节点页 |
+| 未改动的哲学页 | 其余 54 个节点页 | 按类别 grep 逐条判读后判定不改，依据记在 MIND_SELF_REBUILD.md 第四节 |
+| 非哲学学习专区 | 0 | 按要求不动 |
+
+### 清单 B：要求覆盖
+
+| 任务要求 | 落在哪里 | 状态 |
+| --- | --- | --- |
+| 先确认当前状态，区分线上／仓库／本地 | MIND_SELF_REBUILD.md 第零节（10 条逐条判定） | 完成 |
+| 基础主线改成三个学习单元并写明交接 | `mind-self-entry.tsx` | 完成 |
+| 基础／进阶真正分开，进阶重写而非折叠隐藏 | 同上，进阶甲／乙 | 完成 |
+| 八条概念与推理订正 | `data.json`、`study-guides.ts`、`thought-experiments.ts`、`concepts.ts`、`content-ledger.ts`、`argument-maps.ts` | 8/8 完成 |
+| 案例与推演重新设计（保留失忆／承诺案例并后置） | `study-guides.ts` caseStudy、`thought-experiments.ts` | 完成 |
+| 中文资料实际检索并可核验 | 来源账新增 MS-6～MS-14 共 12 条，全部本轮实际打开逐字比对 | 完成 |
+| 自然中文重写 | 三个单元全文改写；译名陷阱就地说破（人格／随附／假名／数值同一） | 完成 |
+| 全站同类问题清查并直接修复 | 8 类逐类 grep；命中即修，未改的写明依据 | 完成 |
+| 复审—修复—复验闭环 | 两轮阅读复审，各自抓到的问题已修并重新取页复验 | 完成 |
+| 工程检查真实执行 | lint / typecheck / test:migrations / test:philosophy / build / 58 路由扫描 / 锚点扫描 / 浏览器控制台 / 375px | 全部执行，结果见第五节 |
+| 不提交不推送不部署 | —— | 遵守 |
+
+### 逐文件
+
+**新增**：`mind-self-entry.tsx`（手写教学主线）、`guide-sections.tsx`（精读层四段的共用 JSX）、
+`MIND_SELF_REBUILD.md`。
+**改名**：`being-change-entry.module.css` → `teaching-entry.module.css`（两页共用）。
+**修改**：`node-content.tsx`（`handwritten` 描述取代写死的节点判断）、`prose.tsx`（接收 `LedgerProse`，
+`currentNodeId` 下传）、`concept-card.tsx`（「展开读」不再指向本页）、`research-layer.tsx`（findings 的 key）、
+`being-change-entry.tsx`（样式模块改名）、`data.json`、`study-guides.ts`、`thought-experiments.ts`、
+`argument-maps.ts`、`concepts.ts`、`content-ledger.ts`、`KNOWLEDGE_BASE.md`、`CONTENT_GAP_REVIEW.md`。
+
+---
+
+# 上一轮：哲学学习专区教学重构（面向零基础读者）
 
 状态：已发布正式网站（2026-09-19）。
 
