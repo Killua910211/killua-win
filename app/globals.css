@@ -5994,3 +5994,243 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 @media (max-width: 760px) {
   .learning-entry-grid { grid-template-columns: 1fr; }
 }
+
+/* ── 2026-09-19 教学重构新增的四块 ────────────────────────────
+   共同原则：都是正文的一部分，不做成卡片墙。每一块只用一条细线或一行小标签
+   跟上下文分开，字号和行高与正文一致——把页面切成更多色块会让「读下去」
+   这件事更难，而这正是本轮要修的问题。 */
+
+/* 1. 页首的前置理解。
+   前置关系原本只出现在页尾「继续学习」里，也就是读完才说「你该先读那一篇」。
+   这里给它一个页首位置，并允许附一句回顾，让不想跳转的人也能继续读。 */
+.philosophy-prereq {
+  max-width: 820px;
+  margin-top: 22px;
+  padding: 14px 0 0;
+  border-top: 1px solid rgba(242, 237, 232, 0.16);
+}
+.philosophy-prereq-label {
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.philosophy-prereq ul { margin-top: 10px; display: grid; gap: 12px; }
+.philosophy-prereq li {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.philosophy-prereq a {
+  color: var(--warm-white);
+  font-size: 15px;
+  border-bottom: 1px solid rgba(242, 237, 232, 0.3);
+  justify-self: start;
+}
+.philosophy-prereq a:hover { color: var(--ember-hot); border-bottom-color: currentColor; }
+.philosophy-prereq-why { color: #c9c2b8; text-wrap: pretty; }
+.philosophy-prereq-recap { color: var(--warm-gray); text-wrap: pretty; }
+.philosophy-prereq-recap > span {
+  margin-right: 8px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+/* 2. 条目开头的具体入口。
+   左边一条 ember 竖线把它和后面的概括分开：它是一个情形，不是一个判断。 */
+.philosophy-opening {
+  max-width: 760px;
+  margin-top: 20px;
+  padding-left: 16px;
+  border-left: 2px solid var(--ember);
+}
+.philosophy-opening-scene {
+  color: var(--warm-white);
+  font-size: 16.5px;
+  line-height: 1.9;
+  text-wrap: pretty;
+}
+.philosophy-opening-turn {
+  margin-top: 12px;
+  color: #d6d0c8;
+  font-size: 15px;
+  line-height: 1.9;
+  text-wrap: pretty;
+}
+
+/* 3. 导航页的读者导语。问题域和传统导航原本直接从立场名或子页清单开始。 */
+.philosophy-guidance-lead { max-width: 780px; margin-top: 24px; }
+.philosophy-guidance-lead p {
+  color: #d6d0c8;
+  font-size: 15.5px;
+  line-height: 1.95;
+  text-wrap: pretty;
+}
+.philosophy-guidance-lead p + p { margin-top: 15px; }
+
+/* 4. 页尾的「回到问题」。四问各自成行，不合成一段「总之……」。 */
+.philosophy-takeaway { margin-top: 18px; max-width: 820px; display: grid; gap: 16px; }
+.philosophy-takeaway > div {
+  display: grid;
+  grid-template-columns: minmax(140px, 168px) minmax(0, 1fr);
+  gap: 6px 20px;
+  padding-top: 13px;
+  border-top: 1px solid rgba(242, 237, 232, 0.14);
+}
+.philosophy-takeaway dt {
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.9;
+}
+.philosophy-takeaway dd {
+  color: #d6d0c8;
+  font-size: 15px;
+  line-height: 1.9;
+  text-wrap: pretty;
+}
+@media (max-width: 720px) {
+  .philosophy-takeaway > div { grid-template-columns: 1fr; gap: 4px; }
+}
+
+/* 5. 子节点清单里的顺序编号与理由。 */
+.philosophy-children-order {
+  margin-right: 10px;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.philosophy-children-note {
+  margin-top: 9px;
+  color: var(--warm-gray);
+  font-size: 13px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+.philosophy-children-note > span {
+  margin-right: 8px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+}
+
+/* 「读这一页之前」里那种不指向整页的条目：它是一个区分的名字，不是链接。 */
+.philosophy-prereq-point {
+  color: var(--warm-white);
+  font-size: 15px;
+}
+.philosophy-prereq-recap a {
+  color: var(--warm-gray);
+  border-bottom: 1px solid rgba(242, 237, 232, 0.28);
+}
+.philosophy-prereq-recap a:hover { color: var(--ember-hot); border-bottom-color: currentColor; }
+
+/* ── 推荐路线页的「主线之外」 ─────────────────────────────────
+   主线十一步，核心问题二十三个。这一块负责剩下那十二篇的去处，所以每一条
+   都要写出「它默认你已经有哪个区分」——否则它就只是把目录再抄一遍。 */
+.philosophy-branch-heading { margin-top: 64px; }
+.philosophy-branch { margin-top: 36px; }
+.philosophy-branch-label {
+  font-size: 19px;
+  font-weight: 560;
+  letter-spacing: -0.03em;
+  line-height: 1.35;
+}
+.philosophy-branch-intro {
+  max-width: 720px;
+  margin-top: 10px;
+  color: #d6d0c8;
+  font-size: 15px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+.philosophy-branch-list { margin-top: 20px; display: grid; gap: 22px; }
+.philosophy-branch-list > li {
+  max-width: 780px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(242, 237, 232, 0.16);
+}
+.philosophy-branch-list h5 { font-size: 17px; font-weight: 540; line-height: 1.4; }
+.philosophy-branch-list h5 a:hover { color: var(--ember-hot); }
+.philosophy-branch-for {
+  margin-top: 8px;
+  color: #d6d0c8;
+  font-size: 14.5px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+.philosophy-branch-needs {
+  margin-top: 8px;
+  color: var(--warm-gray);
+  font-size: 13.5px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+.philosophy-branch-needs > span {
+  margin-right: 8px;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+}
+
+/* 总览上的「条目页长什么样」。
+   本轮把区块顺序当成一条教学承诺写出来，读者知道形状才谈得上「翻到任何一页
+   都知道去哪儿找」。用有序列表而不是卡片网格：它本身就是一条顺序。 */
+.philosophy-page-shape { margin-top: 22px; max-width: 820px; display: grid; gap: 12px; }
+.philosophy-page-shape > li {
+  display: grid;
+  grid-template-columns: minmax(150px, 190px) minmax(0, 1fr);
+  gap: 4px 20px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(242, 237, 232, 0.14);
+}
+.philosophy-page-shape strong {
+  color: var(--warm-white);
+  font-size: 14px;
+  font-weight: 560;
+  line-height: 1.75;
+}
+.philosophy-page-shape span {
+  color: var(--warm-gray);
+  font-size: 14px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+@media (max-width: 720px) {
+  .philosophy-page-shape > li { grid-template-columns: 1fr; gap: 3px; }
+}
+
+/* 手写主线页上的具体入口：它前面没有区块标题，所以自己留出上边距。 */
+.philosophy-opening--standalone { margin-top: 30px; }
+
+/* 跨传统比较的待核验清单。
+   它是维护记录，折起来放在这一组比较的末尾；展开的样式与页尾研究层一致。 */
+.philosophy-comparison-pending-wrap { margin-top: 16px; }
+.philosophy-comparison-pending-wrap > summary {
+  cursor: pointer;
+  color: var(--rock-gray);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.philosophy-comparison-pending-wrap > summary:hover { color: var(--warm-gray); }
+.philosophy-comparison-pending-wrap[open] > summary { margin-bottom: 10px; }
+
+/* 地图图例里的徽章名。两个徽章各自配一句解释，读者不必自己换算。 */
+.philosophy-map-legend-facing {
+  margin-right: 6px;
+  color: var(--ember);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}

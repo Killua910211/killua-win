@@ -1,3 +1,4 @@
+import { basicPath } from './learning-path';
 import { coreQuestions, philosophyNodes, traditions } from './tree';
 
 /**
@@ -27,6 +28,12 @@ export const philosophyCoverage = {
     */
     detail:
       `本版包含 ${coreQuestions.length} 个核心问题和 ${traditionThreadCount} 条传统／历史线索，共 ${philosophyNodes.length} 个节点。问题页负责比较论证，历史页负责把问题放回语言、文本、制度与传播之中；两者是平行的两条轴，不是主线与附录。`,
+  },
+  reading: {
+    label: '阅读顺序｜有主线，也有支线',
+    /* 步数同样不写死：这份文案的作用是说清范围，说错了比不说更糟。 */
+    detail:
+      `有一条 ${basicPath.steps.length} 步的推荐路线，从一个日常判断起步，最后落到死亡与意义；主线之外的 ${coreQuestions.length - basicPath.steps.length} 个核心问题按「你关心什么」列在同一页，每一条都写明它默认你已经有哪个区分。问题域和传统导航各自给出建议顺序并逐条说明理由，条目页底部的前后页跟着同一条顺序走。任何一页都可以单独打开：需要前置理解的页面，开头会写明本页默认你已经知道什么，并附一句不跳转也够用的回顾。`,
   },
   relations: {
     label: '知识关系｜带理由的连接',

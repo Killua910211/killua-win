@@ -58,16 +58,28 @@ export function ComparisonBlock({
       </div>
 
       <p className="philosophy-comparison-caution">
-        <span className="philosophy-comparison-caution-label">这不是几种竞争理论</span>
+        <span className="philosophy-comparison-caution-label">不可等同之处</span>
         {item.caution}
       </p>
 
+      {/*
+        待核验清单是维护记录，不该插在阅读流里。
+        复审实测：/western-ancient 的跨传统比较下面直接排着四条待核验，其中还带着
+        「昔勒尼学派」这种全页没出现过的新名词；/mind-self 有七条。页尾的来源账
+        已经整块折叠，这里用同样的办法。
+      */}
       {item.pending && item.pending.length > 0 && (
-        <ul className="philosophy-comparison-pending">
-          {item.pending.map((pendingItem) => (
-            <li key={pendingItem}>待核验：{pendingItem}</li>
-          ))}
-        </ul>
+        <details className="philosophy-comparison-pending-wrap">
+          <summary>
+            这一组比较还欠 {item.pending.length} 项核验
+            <span className="sr-only">（展开查看）</span>
+          </summary>
+          <ul className="philosophy-comparison-pending">
+            {item.pending.map((pendingItem) => (
+              <li key={pendingItem}>{pendingItem}</li>
+            ))}
+          </ul>
+        </details>
       )}
     </div>
   );

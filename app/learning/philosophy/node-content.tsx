@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import { getNodeById, nodeHref, type PhilosophyNode } from './tree';
+import { childOrderNote, getNodeById, nodeHref, orderedChildren, type PhilosophyNode } from './tree';
 import { getStudyGuide } from './study-guides';
 import { getCoreEntryLedger, type CoreEntryLedger, type LedgerParagraph } from './content-ledger';
 import { BeingChangeEntry } from './being-change-entry';
 import { getArgumentMap } from './argument-maps';
 import { getThoughtExperiment } from './thought-experiments';
 import { comparisonsForNode } from './comparisons';
-import { relationGroupsFor } from './relations';
+import { prerequisitesOf, relationGroupsFor } from './relations';
 import { ArgumentMap } from './argument-map';
 import { Citations, ClaimSources } from './citation';
 import { ComparisonBlock } from './comparison';
@@ -79,6 +79,78 @@ export function CoreQuestionGroups({
           </article>
         );
       })}
+    </div>
+  );
+}
+
+/**
+ * 页首的「读这一页之前」。
+ *
+ * 两层信息并在一块，因为对读者来说是同一件事：
+ *
+ *   1. 关系层声明的整页前置（`prerequisite`）。这类边全库只有十二条，
+ *      每条都写明了对面那一页的哪个区分是本页的前提。它原本只出现在页尾
+ *      「继续学习」的第一组里——读完之后才告诉读者「其实你该先读那一篇」，
+ *      位置本身在传达错误信息。反向的「以本页为前置的问题」仍然留在页尾，
+ *      那属于读完之后的去处。
+ *   2. 来源账的 `assumed`：本页会用到、但要到别的页才展开的具体区分，
+ *      每条附一句回顾，让不想跳转的读者也能接着往下读。
+ *
+ * 同一个节点在两层都出现时只显示一次，用来源账那条（它带回顾）。
+ */
+function ReadingPrep({ nodeId, assumed }: { nodeId: string; assumed?: CoreEntryLedger['assumed'] }) {
+  const assumedIds = new Set((assumed ?? []).map((item) => item.nodeId).filter(Boolean));
+  const prerequisites = prerequisitesOf(nodeId).filter((entry) => !assumedIds.has(entry.node.id));
+  if (prerequisites.length === 0 && (assumed ?? []).length === 0) return null;
+
+  return (
+    <aside aria-labelledby={`${nodeId}-prereq`} className="philosophy-prereq">
+      <p className="philosophy-prereq-label" id={`${nodeId}-prereq`}>
+        读这一页之前
+      </p>
+      <ul>
+        {prerequisites.map((entry) => (
+          <li key={entry.node.id}>
+            <Link href={nodeHref(entry.node)}>{entry.node.title}</Link>
+            <span className="philosophy-prereq-why">{entry.why}</span>
+          </li>
+        ))}
+        {(assumed ?? []).map((item) => {
+          const target = item.nodeId ? getNodeById(item.nodeId) : undefined;
+          return (
+            <li key={item.point}>
+              <span className="philosophy-prereq-point">{item.point}</span>
+              <span className="philosophy-prereq-why">{item.recap}</span>
+              {target && (
+                <span className="philosophy-prereq-recap">
+                  <span>展开读</span>
+                  <Link href={nodeHref(target)}>{target.title}</Link>
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </aside>
+  );
+}
+
+/**
+ * 导航页的读者导语。
+ *
+ * 问题域、传统导航和两个目录分组没有研究层，原来直接从「主要立场」或子节点
+ * 清单开始——读者点进「1. 存在、世界与人」，第一屏就是「自然连续论」这样
+ * 一个没有铺垫的名字。这一块负责在那之前说清：这一组问题在追问什么，
+ * 为什么它们被放在一起。
+ */
+function GuidanceLead({ node }: { node: PhilosophyNode }) {
+  const lead = node.guidance?.lead ?? [];
+  if (lead.length === 0) return null;
+  return (
+    <div className="philosophy-guidance-lead">
+      {lead.map((paragraph) => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
     </div>
   );
 }
@@ -160,23 +232,44 @@ export function NodeBody({
    *
    * 条件必须和下面的渲染条件一致，否则会出现指向不存在锚点的死链。
    */
+  /*
+    案例推演与思想实验原本是三选一（`experiment ? … : guide ? … : example`）。
+    结果是：有思想实验的七个页面上，精读层写好的案例推演一个字都不渲染——而
+    思想实验的开场白又写着「在本页前面那次案例推演上加装变量」，读者被指向一段
+    他根本看不到的内容。本轮的「完整走一遍」分析示范也正写在案例推演里。
+
+    改为两块都渲染，先案例后实验：案例把一次判断从头走到尾（示范怎么做），
+    实验再逐个改变量（示范判断为什么会变）。两者分工不同，不是同一块的两个版本。
+    `example` 仍然只在两者都没有时兜底。
+  */
+  const caseEntry = guide ? { id: `${node.id}-case`, label: '案例推演' } : null;
   const experimentEntry = experiment
     ? { id: `${node.id}-experiment`, label: '思想实验' }
-    : guide
-      ? { id: `${node.id}-case`, label: '案例推演' }
-      : node.example
-        ? { id: `${node.id}-example`, label: '一个例子' }
-        : null;
+    : !guide && node.example
+      ? { id: `${node.id}-example`, label: '一个例子' }
+      : null;
 
+  /*
+    区块顺序按「读者需要先懂什么」排，不按数据结构的字段顺序排。
+
+    本轮改掉的那一处是：概念解释（「先把问题拆开」）原本排在「定义与边界」
+    之后，而「定义与边界」几乎每一页都已经在用这些概念——自由那一页的
+    第二块就同时出现相容论、不相容论、决定论、宿命论、基本应得和责任的
+    三种意义，它们的解释要再往下翻一屏才到。现在概念紧跟在「问题为何会
+    出现」后面，「定义与边界」拿到的是已经解释过的词。
+
+    这个数组和下面的渲染顺序必须一致，否则目录会指向一个还没出现的锚点。
+  */
   const toc = [
     ledger && { id: `${node.id}-origin`, label: headings.origin },
+    guide && { id: `${node.id}-orientation`, label: '先把问题拆开' },
     ledger && { id: `${node.id}-boundaries`, label: headings.boundaries },
     notes.length > 0 && { id: `${node.id}-notes`, label: '阅读提醒' },
-    guide && { id: `${node.id}-orientation`, label: '先把问题拆开' },
     argument && { id: `${node.id}-argument`, label: '论证地图' },
     positions.length > 0 && { id: `${node.id}-positions`, label: headings.positions },
     ledger && { id: `${node.id}-objections`, label: headings.objections },
     guide?.philosopherViews?.length && { id: `${node.id}-voices`, label: '哲学家怎样改写这个问题' },
+    caseEntry,
     experimentEntry,
     ledger && { id: `${node.id}-confusions`, label: headings.confusions },
     !guide && figures.length > 0 && { id: `${node.id}-figures`, label: '相关人物与文本' },
@@ -187,6 +280,7 @@ export function NodeBody({
         id: `${node.id}-history`,
         label: headings.historicalContext,
       },
+    ledger?.takeaway && { id: `${node.id}-takeaway`, label: '回到问题' },
     guide?.nextQuestions.length && { id: `${node.id}-next-questions`, label: '带着问题继续读' },
     relationGroups.length > 0 && { id: `${node.id}-next`, label: '继续学习' },
   ].filter((entry): entry is { id: string; label: string } => Boolean(entry));
@@ -201,6 +295,19 @@ export function NodeBody({
             <span className="philosophy-scope-label">本页范围</span>
             {ledger.scope}
           </p>
+        )}
+        <ReadingPrep assumed={ledger?.assumed} nodeId={node.id} />
+        {/*
+          具体入口也要渲染。它原本只写在下面的通用模板里，于是这条手写主线
+          会把来源账里写好的 entry 整块吞掉——和当年「本页范围」漏在提前
+          return 之外是同一个毛病。这里不带「问题为何会出现」那个标题：
+          手写主线的第一节自己就是问题的起点。
+        */}
+        {ledger?.entry && (
+          <div className="philosophy-opening philosophy-opening--standalone">
+            <p className="philosophy-opening-scene">{ledger.entry.scene}</p>
+            <p className="philosophy-opening-turn">{ledger.entry.turn}</p>
+          </div>
         )}
         <BeingChangeEntry node={node} />
         <SharedTail
@@ -229,6 +336,10 @@ export function NodeBody({
         </p>
       )}
 
+      <ReadingPrep assumed={ledger?.assumed} nodeId={node.id} />
+
+      <GuidanceLead node={node} />
+
       {toc.length > 6 && (
         <nav aria-label="本页区块导航" className="philosophy-toc">
           {toc.map((entry) => (
@@ -244,7 +355,46 @@ export function NodeBody({
           <BlockHeading className="philosophy-block-title" id={`${node.id}-origin`}>
             {headings.origin}
           </BlockHeading>
+          {/*
+            具体入口排在概括之前。这一页要讨论的东西先以一个能想象的情形出现，
+            再由它逼出问题——而不是先给一句「本问题在两种直觉的冲突中产生」，
+            让读者一边猜画面一边读判断。
+          */}
+          {ledger.entry && (
+            <div className="philosophy-opening">
+              <p className="philosophy-opening-scene">{ledger.entry.scene}</p>
+              <p className="philosophy-opening-turn">{ledger.entry.turn}</p>
+            </div>
+          )}
           <LedgerProse paragraphs={ledger.origin} sources={sources} />
+        </section>
+      )}
+
+      {/*
+        概念解释排在「定义与边界」之前。顺序改过来的理由写在上面 toc 那段注释里：
+        边界那一块本来就在用这些词做推理，解释却排在它后面。
+      */}
+      {guide && (
+        <section
+          aria-labelledby={`${node.id}-orientation`}
+          className="philosophy-block philosophy-study-intro"
+          id="concepts"
+        >
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-orientation`}>
+            先把问题拆开
+          </BlockHeading>
+          <p className="philosophy-study-orientation">{guide.orientation}</p>
+          {guide.conceptRefs && <ConceptList currentNodeId={node.id} refs={guide.conceptRefs} />}
+          {guide.concepts.length > 0 && (
+            <dl className="philosophy-concept-grid">
+              {guide.concepts.map((concept) => (
+                <div key={concept.term}>
+                  <dt>{concept.term}</dt>
+                  <dd>{concept.explanation}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
         </section>
       )}
 
@@ -267,30 +417,6 @@ export function NodeBody({
               <li key={note}>{note}</li>
             ))}
           </ul>
-        </section>
-      )}
-
-      {guide && (
-        <section
-          aria-labelledby={`${node.id}-orientation`}
-          className="philosophy-block philosophy-study-intro"
-          id="concepts"
-        >
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-orientation`}>
-            先把问题拆开
-          </BlockHeading>
-          <p className="philosophy-study-orientation">{guide.orientation}</p>
-          {guide.conceptRefs && <ConceptList refs={guide.conceptRefs} />}
-          {guide.concepts.length > 0 && (
-            <dl className="philosophy-concept-grid">
-              {guide.concepts.map((concept) => (
-                <div key={concept.term}>
-                  <dt>{concept.term}</dt>
-                  <dd>{concept.explanation}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
         </section>
       )}
 
@@ -408,14 +534,7 @@ export function NodeBody({
         </section>
       )}
 
-      {experiment ? (
-        <section aria-labelledby={`${node.id}-experiment`} className="philosophy-block">
-          <BlockHeading className="philosophy-block-title" id={`${node.id}-experiment`}>
-            思想实验
-          </BlockHeading>
-          <ThoughtExperiment experiment={experiment} />
-        </section>
-      ) : guide ? (
+      {guide && (
         <section aria-labelledby={`${node.id}-case`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-case`}>
             案例推演
@@ -430,7 +549,16 @@ export function NodeBody({
             </ol>
           </div>
         </section>
-      ) : node.example ? (
+      )}
+
+      {experiment ? (
+        <section aria-labelledby={`${node.id}-experiment`} className="philosophy-block">
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-experiment`}>
+            思想实验
+          </BlockHeading>
+          <ThoughtExperiment experiment={experiment} />
+        </section>
+      ) : !guide && node.example ? (
         <section aria-labelledby={`${node.id}-example`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-example`}>
             一个例子
@@ -618,6 +746,36 @@ function SharedTail({
         </section>
       )}
 
+      {/*
+        回到问题。放在「带着问题继续读」之前：先把这一页收住，再往外走。
+        四问是分开的四件事，所以逐条给标签，而不是合成一段「总之……」。
+      */}
+      {ledger?.takeaway && (
+        <section aria-labelledby={`${node.id}-takeaway`} className="philosophy-block">
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-takeaway`}>
+            回到问题：现在能说什么
+          </BlockHeading>
+          <dl className="philosophy-takeaway">
+            <div>
+              <dt>这一页在问什么</dt>
+              <dd>{ledger.takeaway.question}</dd>
+            </div>
+            <div>
+              <dt>分歧落在哪里</dt>
+              <dd>{ledger.takeaway.split}</dd>
+            </div>
+            <div>
+              <dt>现在可以确定什么</dt>
+              <dd>{ledger.takeaway.settled}</dd>
+            </div>
+            <div>
+              <dt>还不能确定什么</dt>
+              <dd>{ledger.takeaway.open}</dd>
+            </div>
+          </dl>
+        </section>
+      )}
+
       {nextQuestions && nextQuestions.length > 0 && (
         <section aria-labelledby={`${node.id}-next-questions`} className="philosophy-block">
           <BlockHeading className="philosophy-block-title" id={`${node.id}-next-questions`}>
@@ -710,19 +868,38 @@ export function NodeChildren({
   const children = node.children ?? [];
   if (children.length === 0) return null;
 
+  /*
+    有建议顺序时按建议顺序排，并给每一条写出它排在这里的理由。
+    没有理由就不排——一份没有理由的顺序只是把目录换了个次序，读者
+    仍然不知道该从哪一篇开始。
+  */
+  const order = node.guidance?.order;
+  const ordered = orderedChildren(node);
+
   return (
     <section aria-labelledby={`${node.id}-children`} className="philosophy-block">
       <BlockHeading className="philosophy-block-title" id={`${node.id}-children`}>
         {title}
       </BlockHeading>
+      {order && (
+        <p className="philosophy-block-intro">
+          下面按建议的阅读顺序排列，每一条后面说明它为什么排在这里。任何一篇都可以单独打开，
+          这个顺序只解决「先读哪一篇比较省力」。
+        </p>
+      )}
       {/*
         链接只包住标题，摘要留在链接外面：整块可点的卡片会把一整段摘要
         念成链接名，焦点框也会拉成一大块。
       */}
       <ul className="philosophy-children">
-        {children.map((child) => (
+        {ordered.map((child, index) => (
           <li key={child.id}>
             <p className="philosophy-children-type" lang="zh-CN">
+              {order && (
+                <span className="philosophy-children-order" lang="en">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+              )}
               {child.type}
             </p>
             <ItemHeading className="philosophy-children-title">
@@ -732,6 +909,12 @@ export function NodeChildren({
               </Link>
             </ItemHeading>
             <p className="philosophy-children-summary">{child.summary}</p>
+            {childOrderNote(node, child.id) && (
+              <p className="philosophy-children-note">
+                <span>为什么排在这里</span>
+                {childOrderNote(node, child.id)}
+              </p>
+            )}
           </li>
         ))}
       </ul>

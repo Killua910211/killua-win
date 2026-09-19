@@ -41,7 +41,11 @@ import { build } from 'vite';
 const MODULES = [
   {
     file: 'app/learning/philosophy/tree.ts',
-    guards: ['节点 ID 唯一', '存在 pt-core 与 pt-traditions 分组'],
+    guards: [
+      '节点 ID 唯一',
+      '存在 pt-core 与 pt-traditions 分组',
+      '导航页的阅读顺序说明与下一级节点一一对应',
+    ],
   },
   {
     file: 'app/learning/philosophy/relations.ts',
@@ -52,6 +56,7 @@ const MODULES = [
       'prerequisite 无环',
       '同一对节点之间没有重复边',
       '横向链条的步进方向不与 prerequisite 冲突',
+      '来源账「默认已知」条目都写了回顾、不自指、目标节点存在',
     ],
   },
   {
@@ -65,6 +70,13 @@ const MODULES = [
   {
     file: 'app/learning/philosophy/page-sources.ts',
     guards: ['同一页上一个来源编号不指向两份不同材料'],
+  },
+  {
+    file: 'app/learning/philosophy/learning-path.ts',
+    guards: [
+      '推荐路线的每一步都指向存在的节点',
+      '支线不重不漏地覆盖主线之外的全部核心问题',
+    ],
   },
   {
     file: 'app/learning/philosophy/pager.ts',

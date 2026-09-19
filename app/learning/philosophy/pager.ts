@@ -1,5 +1,5 @@
 import { basicPath } from './learning-path';
-import { getNodeById, parentOf, philosophyNodes, type PhilosophyNode } from './tree';
+import { getNodeById, orderedChildren, parentOf, philosophyNodes, type PhilosophyNode } from './tree';
 
 /**
  * 条目底部的「上一页 / 下一页」。
@@ -32,14 +32,23 @@ function siblingContext(node: PhilosophyNode): PagerContext | undefined {
   if (catalogueTypes.has(node.type)) return undefined;
 
   const parent = parentOf(node.id);
-  const siblings = parent?.children ?? [];
+  if (!parent) return undefined;
+  const siblings = orderedChildren(parent);
   if (siblings.length < 2) return undefined;
 
+  /*
+    父页上写了建议阅读顺序时，前后页按那个顺序走。
+
+    这两处必须是同一条顺序：父页的子节点清单现在是按 guidance.order 编号
+    显示的，而分页器原来取的是 data.json 里的书写顺序。两者一旦不同，
+    「知识、理由与语言」那一页会把逻辑标成 02，而在逻辑页底部点「下一页」
+    却跳回 01 的那一篇。数据层的书写顺序保持不动，只在展示层统一。
+  */
   const index = siblings.findIndex((sibling) => sibling.id === node.id);
   if (index < 0) return undefined;
 
   return {
-    label: `在「${parent!.title}」里`,
+    label: `在「${parent.title}」里按建议顺序`,
     previous: index > 0 ? siblings[index - 1] : undefined,
     next: index < siblings.length - 1 ? siblings[index + 1] : undefined,
   };
@@ -51,7 +60,8 @@ function pathContext(node: PhilosophyNode): PagerContext | undefined {
 
   // 「第 N 步」只说位置，不说读没读过、读懂没有。
   return {
-    label: `${basicPath.title} · 第 ${index + 1} 步（共 ${basicPath.steps.length} 步）`,
+    // 标签要写明这条线会离开当前问题域，否则两行分页器只能靠目标页名区分。
+    label: `${basicPath.title}第 ${index + 1} 步（共 ${basicPath.steps.length} 步，会跨问题域）`,
     previous: index > 0 ? getNodeById(basicPath.steps[index - 1].nodeId) : undefined,
     next:
       index < basicPath.steps.length - 1
@@ -67,9 +77,35 @@ export function pagerContextsFor(nodeId: string): PagerContext[] {
   const node = getNodeById(nodeId);
   if (!node) return [];
 
-  return [siblingContext(node), pathContext(node)].filter(
+  /*
+    推荐路线那一组排在前面。
+
+    复审走查抓到的问题：《存在与变化》是路线的第一步，页尾却先出现「在「1. 存在、
+    世界与人」里 → 下一页：心灵、身体与「我」」，路线那一行排在它下面。两行外观
+    一样，刚从路线页点进来的读者会照着上面那一行走，在第一页就被送去第五步。
+    路线是给「不知道从哪开始」的人用的，它该排在前面。
+  */
+  const contexts = [pathContext(node), siblingContext(node)].filter(
     (context): context is PagerContext => Boolean(context?.previous || context?.next),
   );
+
+  /*
+    两个语境给出同一对前后页时，合并成一行。
+
+    本轮把问题域的子条目改成按建议顺序排列之后，「知识、理由与语言」那一域的
+    次序和推荐路线在这一段正好重合——这是好事，说明两处建议不打架。但画两行
+    完全一样的分页器等于用两行重复同一条顺序，读者会以为它们是两条不同的线。
+    合并时两个语境都写出来，因为「同一域里的下一篇」和「路线的下一步」仍然是
+    两件事，只是此处恰好同指。
+  */
+  if (contexts.length === 2) {
+    const [first, second] = contexts;
+    if (first.previous?.id === second.previous?.id && first.next?.id === second.next?.id) {
+      return [{ ...first, label: `${first.label}，同时是${second.label}` }];
+    }
+  }
+
+  return contexts;
 }
 
 /**
@@ -89,12 +125,14 @@ function assertPagers(): void {
         throw new Error(`[pager] ${node.id}：「${context.label}」的前后页指向了自己。`);
       }
     }
+    // 合并由 pagerContextsFor 负责；这里确认它真的合并掉了，页面上不会出现
+    // 两行写着同一对前后页的分页器。
     if (contexts.length === 2) {
       const [first, second] = contexts;
       if (first.previous?.id === second.previous?.id && first.next?.id === second.next?.id) {
         throw new Error(
-          `[pager] ${node.id}：两个语境给出了完全相同的前后页，应当只保留一个，` +
-            '否则等于用两行重复同一条顺序。',
+          `[pager] ${node.id}：两个语境给出了完全相同的前后页却没有被合并，` +
+            '页面上会出现两行重复同一条顺序的分页器。',
         );
       }
     }

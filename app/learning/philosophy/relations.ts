@@ -1,3 +1,4 @@
+import { coreEntryLedgers } from './content-ledger';
 import { getNodeById, philosophyNodes, type PhilosophyNode } from './tree';
 
 /**
@@ -270,7 +271,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-responsibility',
     to: 'pt-freedom',
     kind: 'prerequisite',
-    why: '「本可以做别的」和「行动是否出自我的理由」是两个不同的控制条件，自由那一页把它们分开处理。不先分开，道德运气的讨论会一路退回「到底自由不自由」，而运气问题恰恰在两种控制都被承认之后才出现。',
+    why: '「本可以做别的」和「行动是否出自我的理由」是两个不同的控制条件，这两页里在前的那一页把它们分开处理。不先分开，道德运气的讨论会一路退回「到底自由不自由」，而运气问题恰恰在两种控制都被承认之后才出现。',
   },
   {
     from: 'pt-logic',
@@ -287,25 +288,25 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-science-reality',
     to: 'pt-logic',
     kind: 'prerequisite',
-    why: '说一个解释「更好」用的是解释性推断，不是演绎有效。逻辑那一页把演绎、归纳与最佳解释的评价标准分开；理论的成功究竟支持了什么，要靠这套区分才说得清。',
+    why: '说一个解释「更好」用的是解释性推断，不是演绎有效。这两页里在前的那一页把演绎、归纳与最佳解释的评价标准分开；理论的成功究竟支持了什么，要靠这套区分才说得清。',
   },
   {
     from: 'pt-identity-oppression',
     to: 'pt-knowledge-sources',
     kind: 'prerequisite',
-    why: '证言不公要立得住，先得承认证言本身是一种可被评价的知识来源。把「别人说的」一律当二手意见，可信度如何分配就只剩礼貌问题，不再是认识问题。',
+    why: '证言不正义要立得住，先得承认证言本身是一种可被评价的知识来源。把「别人说的」一律当二手意见，可信度如何分配就只剩礼貌问题，不再是认识问题。',
   },
   {
     from: 'pt-aesthetic-value',
     to: 'pt-interpretation',
     kind: 'prerequisite',
-    why: '要说一幅画的哪些地方值得反复看，先得承认「看见什么」依赖对作品背景的解释。解释争议不摊开，双方会以为在争品味，其实在争对象是什么。',
+    why: '要说一幅画的哪些地方值得反复看，先得承认「看见什么」依赖对作品背景的解释。这层争议不摊开，双方会以为在争品味，其实在争对象是什么。',
   },
   {
     from: 'pt-art',
     to: 'pt-interpretation',
     kind: 'prerequisite',
-    why: '判断一件东西是不是作品，绕不开它的接受史与意图归属，而这两样正是解释那一页里最有争议的部分——椅子搬进美术馆之所以可能成为作品，靠的是展示语境能被读出来。',
+    why: '判断一件东西是不是作品，绕不开它的接受史与意图归属，而这两样正是「我们如何理解文本、传统与他人？」那一页里最有争议的部分——椅子搬进美术馆之所以可能成为作品，靠的是展示语境能被读出来。',
   },
   {
     from: 'pt-ai-future',
@@ -329,13 +330,13 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-legalism',
     to: 'pt-language-meaning',
     kind: 'prerequisite',
-    why: '法、术、势要能执行，先得说清名与实、职名与标准怎样被固定下来。把「正名」读成一项用字规范，就看不出它为什么是治理问题：职名一旦松动，按职名追究实绩的赏罚也就落不到具体的人身上。',
+    why: '法、术、势要能执行，先得说清名与实的对应怎样被固定下来。「正名」指把名称与它所指的东西对齐；落到治理上，它管的是每个职位叫什么、这个名分对应哪些该做的事。把正名只读成一项用字规范，就看不出它为什么是治理问题：职位名分一旦松动，按名分追究实绩的赏罚也就落不到具体的人身上。',
   },
   {
     from: 'pt-african-personhood',
     to: 'pt-african-method',
     kind: 'prerequisite',
-    why: '「通过他人成为人」这类说法要拿来比较，先得说清材料出自谁、经过谁的翻译、谁被算作提出了论证。方法那一页争的正是这个；跳过它，被比较的就是研究者的概括。',
+    why: '「通过他人成为人」这类说法要拿来比较，先得说清材料出自谁、经过谁的翻译、谁被算作提出了论证。「什么算作非洲哲学？」那一页争的正是这个；跳过它，被比较的就是研究者的概括。',
   },
   {
     from: 'pt-african-method',
@@ -465,7 +466,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-freedom',
     to: 'pt-care',
     kind: 'objection',
-    why: '它攻击的是相容论在「出自我自己的理由」这一步上的默认：那个「我」是谁，被当作已经清楚。照护伦理提出的关系性自我则说，如果能力与需要本身就在关系中形成，这个「我」得先交代，而不是给控制条件补一句社会背景就算处理过了。',
+    why: '它攻击的是相容论在「出自我自己的理由」这一步上的默认：那个「我」是谁，被当作已经清楚。关怀伦理提出的关系性自我则说，如果能力与需要本身就在关系中形成，这个「我」得先交代，而不是给控制条件补一句社会背景就算处理过了。',
   },
   {
     from: 'pt-right-action',
@@ -581,7 +582,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-identity-oppression',
     to: 'pt-ai-future',
     kind: 'extension',
-    why: '证言不公的分析说明可信度与分类在制度里是被分配的。把这套分配交给自动系统之后，紧接着要问的就是：模型的类别从哪里来，误判的代价落在谁身上。',
+    why: '证言不正义的分析说明可信度与分类在制度里是被分配的。把这套分配交给自动系统之后，紧接着要问的就是：模型的类别从哪里来，误判的代价落在谁身上。',
   },
   {
     from: 'pt-language-meaning',
@@ -699,7 +700,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-care',
     to: 'pt-confucian',
     kind: 'cross-tradition',
-    why: '可比较的争点是道德要求能否从具体关系的不对称中生出。不可等同的是儒家把这种要求系在礼、孝与既定的角色秩序上，而照护伦理提出同一主张时正在批评性别分工——比较必须带着这层批评一起做，否则剩下的只有「两边都重视关系」这句空话。',
+    why: '可比较的争点是道德要求能否从具体关系的不对称中生出。不可等同的是儒家把这种要求系在礼、孝与既定的角色秩序上，而关怀伦理提出同一主张时正在批评性别分工——比较必须带着这层批评一起做，否则剩下的只有「两边都重视关系」这句空话。',
   },
   {
     from: 'pt-legitimacy',
@@ -978,9 +979,14 @@ export const crossDomainChains: CrossDomainChain[] = [
   },
   {
     id: 'chain-good-life-to-care-work',
-    title: '从「什么值得过」走到「照护劳动谁承担」',
-    why: '把好生活想成一个人的成就，接着问该怎么行动时就会发现对象是彼此依赖的人；承认依赖之后，问题就不再停在个人品格上。这条链的价值在顺序：一个看起来纯属私人的问题，要走满这四步才落到制度，中间少走一步，结论就会像是从私人偏好直接跳到公共分配。',
-    nodeIds: ['pt-good-life', 'pt-right-action', 'pt-care', 'pt-justice'],
+    title: '从「什么算做对了」走到「照护劳动谁承担」',
+    /*
+      前两步按伦理域自己声明的建议顺序（对的行动 → 好生活）排。
+      原来是「好生活 → 对的行动」，与域页明写的「先读它，后面三页都要用这套
+      区分」相反；而这条链自己写着「价值在顺序」，次序相反就自相矛盾了。
+    */
+    why: '先有几类判断对错的理由，再问一生对当事人自己算不算过得好；接着会发现被讨论的对象是彼此依赖的人；承认依赖之后，问题就不再停在个人品格上。这条链的价值在顺序：一个看起来纯属私人的问题，要走满这四步才落到制度，中间少走一步，结论就会像是从私人偏好直接跳到公共分配。',
+    nodeIds: ['pt-right-action', 'pt-good-life', 'pt-care', 'pt-justice'],
   },
 ];
 
@@ -1104,4 +1110,44 @@ export function isolatedNodeIds(): string[] {
   return philosophyNodes
     .filter((node) => (node.children ?? []).length === 0 && degreeOf(node.id) === 0)
     .map((node) => node.id);
+}
+
+/**
+ * 本页的前置条目，按阅读顺序给出。
+ *
+ * `from: A, to: B` 的 prerequisite 表示「读 A 之前先读 B」，所以这里只取出边：
+ * 反向边（「以本页为前置的问题」）是读完之后的去处，不该出现在页首。
+ */
+export type PrerequisiteEntry = { node: PhilosophyNode; why: string };
+
+export function prerequisitesOf(nodeId: string): PrerequisiteEntry[] {
+  const entries: PrerequisiteEntry[] = [];
+  for (const relation of outboundByNode.get(nodeId) ?? []) {
+    if (relation.kind !== 'prerequisite') continue;
+    const node = getNodeById(relation.to);
+    if (node) entries.push({ node, why: relation.why });
+  }
+  return entries;
+}
+
+/**
+ * 构建期校验：来源账「本页默认你已经知道」里的跳转目标必须存在，且不能是本页。
+ *
+ * 指向自己是一条点了等于没点的链接；指向不存在的节点会在渲染时炸掉。
+ * 另外要求每条都写出 recap——这一栏的作用就是让读者不跳转也能继续读，
+ * 只给一个链接等于把问题推回给读者。
+ */
+for (const [nodeId, ledger] of Object.entries(coreEntryLedgers)) {
+  for (const item of ledger.assumed ?? []) {
+    if (!item.recap.trim()) {
+      throw new Error(`${nodeId} 的「默认已知」条目「${item.point}」没有写一句话回顾。`);
+    }
+    if (!item.nodeId) continue;
+    if (item.nodeId === nodeId) {
+      throw new Error(`${nodeId} 的「默认已知」条目「${item.point}」指向了自己。`);
+    }
+    if (!getNodeById(item.nodeId)) {
+      throw new Error(`${nodeId} 的「默认已知」条目「${item.point}」指向了不存在的节点：${item.nodeId}`);
+    }
+  }
 }

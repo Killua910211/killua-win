@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getConcept, requireConcept, type Concept } from './concepts';
+import { studyGuides } from './study-guides';
 import { getNodeById, nodeHref } from './tree';
 
 /**
@@ -20,6 +21,34 @@ function ConceptOriginal({ concept }: { concept: Concept }) {
       {concept.original}
     </span>
   );
+}
+
+/**
+ * 「展开读」该指向哪一页。
+ *
+ * 原来写死取 `nodeIds[0]`，并在后面接 `#concepts` 锚点。问题是 `nodeIds` 说的是
+ * 「这个概念在哪几页被讨论」，而概念卡只从精读层的 `conceptRefs` 渲染出来——
+ * 两者不是一回事。本轮查出五条概念的 `nodeIds[0]` 那一页根本不渲染这张卡：
+ * personal-autonomy 指向自由页（真正渲染它的是好生活页）、pratityasamutpada
+ * 指向佛教页（渲染它的是心灵页）、self-cultivation 指向儒家页（渲染它的是
+ * 好生活与解释页）、race-ontology 指向非裔哲学页（渲染它的是身份与压迫页）。
+ * 读者点「展开读」，跳过去，锚点落空，页面上也没有那张卡。
+ *
+ * 现在先找真正会渲染这张卡的页；找不到就退回 `nodeIds[0]`，并且不带锚点
+ * ——指向一个不存在的锚点比不带锚点更糟。
+ */
+function expandTarget(concept: Concept): { nodeId: string; anchor: boolean } {
+  for (const nodeId of concept.nodeIds) {
+    const refs = studyGuides[nodeId]?.conceptRefs;
+    if (refs?.some((ref) => ref.id === concept.id)) return { nodeId, anchor: true };
+  }
+  return { nodeId: concept.nodeIds[0], anchor: false };
+}
+
+function expandHref(concept: Concept): string {
+  const { nodeId, anchor } = expandTarget(concept);
+  const href = nodeHref(getNodeById(nodeId)!);
+  return anchor ? `${href}#concepts` : href;
 }
 
 /** 正文里的行内概念注解。同一页同一个概念只标第一次出现，避免链接噪音。 */
@@ -53,9 +82,7 @@ export function ConceptGloss({ id, children }: { id: string; children: string })
         )}
         <span className="philosophy-gloss-line">
           <span className="philosophy-gloss-label">展开读</span>
-          <Link href={`${nodeHref(getNodeById(concept.nodeIds[0])!)}#concepts`}>
-            {getNodeById(concept.nodeIds[0])!.title}
-          </Link>
+          <Link href={expandHref(concept)}>{getNodeById(expandTarget(concept).nodeId)!.title}</Link>
         </span>
       </span>
     </details>
@@ -65,7 +92,7 @@ export function ConceptGloss({ id, children }: { id: string; children: string })
 export type ConceptRef = { id: string; angle?: string };
 
 /** 条目开头的概念清单。定义来自共享的概念层，各页只补一句「在本页」的角度。 */
-export function ConceptList({ refs }: { refs: ConceptRef[] }) {
+export function ConceptList({ refs, currentNodeId }: { refs: ConceptRef[]; currentNodeId?: string }) {
   const items: { concept: Concept; angle?: string }[] = [];
   for (const ref of refs) {
     const concept = getConcept(ref.id);
@@ -77,7 +104,13 @@ export function ConceptList({ refs }: { refs: ConceptRef[] }) {
   return (
     <div className="philosophy-concept-cards">
       {items.map(({ concept, angle }) => {
+        /*
+          「也在这些条目里被讨论」要排掉读者正在看的这一页。
+          复审实测自由页有 7 条、知识来源页 5 条、心灵页 5 条自指链接：点过去
+          原地不动，读者只会以为链接坏了。
+        */
         const nodes = concept.nodeIds
+          .filter((id) => id !== currentNodeId)
           .map((id) => getNodeById(id))
           .filter((node): node is NonNullable<typeof node> => Boolean(node));
 
@@ -108,7 +141,7 @@ export function ConceptList({ refs }: { refs: ConceptRef[] }) {
                 </ul>
               </div>
             )}
-            {nodes.length > 1 && (
+            {nodes.length > 0 && (
               <p className="philosophy-concept-where">
                 <span>也在这些条目里被讨论</span>
                 {nodes.map((node) => (

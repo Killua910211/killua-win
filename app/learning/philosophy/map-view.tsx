@@ -7,7 +7,14 @@ import {
   relationLabels,
   type RelationKind,
 } from './relations';
-import { getNodeById, isCoreQuestion, nodeHref, questionDomains, traditions } from './tree';
+import {
+  getNodeById,
+  isCoreQuestion,
+  nodeHref,
+  orderedChildren,
+  questionDomains,
+  traditions,
+} from './tree';
 
 /**
  * 哲学知识地图。
@@ -83,10 +90,18 @@ export function MapLegend() {
                 )}
               </dt>
               <dd>
+                {/*
+                  两个徽章配一句半解释，读者得自己把「后读」和「以本页为前置的问题」
+                  换算成同一件事。这里把两个徽章各自说清楚。
+                */}
+                <span className="philosophy-map-legend-facing">
+                  「{label.shortOutbound}」
+                </span>
                 {label.outbound}
                 {!symmetric && (
                   <span className="philosophy-map-legend-note">
-                    反过来在对面那一页显示为「{label.inbound}」
+                    <span className="philosophy-map-legend-facing">「{label.shortInbound}」</span>
+                    同一条边在对面那一页上显示为「{label.inbound}」
                   </span>
                 )}
               </dd>
@@ -107,7 +122,7 @@ export function MapDomains() {
           </h3>
           <p className="philosophy-map-domain-summary">{domain.summary}</p>
           <div className="philosophy-map-node-list">
-            {(domain.children ?? []).filter(isCoreQuestion).map((question) => (
+            {orderedChildren(domain).filter(isCoreQuestion).map((question) => (
               <MapNode key={question.id} nodeId={question.id} />
             ))}
           </div>
@@ -190,7 +205,7 @@ export function MapTraditions() {
             <Link href={nodeHref(tradition)}>{tradition.title}</Link>
           </h3>
           <div className="philosophy-map-node-list">
-            {(tradition.children ?? []).map((thread) => (
+            {orderedChildren(tradition).map((thread) => (
               <MapNode key={thread.id} nodeId={thread.id} />
             ))}
           </div>

@@ -389,14 +389,6 @@
   line-height: 1.85;
 }
 
-.closing {
-  max-width: 760px;
-  margin-top: 30px;
-  color: var(--warm-white);
-  font-size: 17px;
-  line-height: 1.85;
-}
-
 .missingCitation { margin-left: 6px; color: #c9c2b8; font-family: var(--font-mono), monospace; font-size: 11px; }
 
 @media (max-width: 760px) {

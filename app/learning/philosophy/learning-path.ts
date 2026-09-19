@@ -1,4 +1,4 @@
-import { getNodeById, type PhilosophyNode } from './tree';
+import { getNodeById, philosophyNodes, type PhilosophyNode } from './tree';
 
 /**
  * 推荐基础学习路径。
@@ -22,6 +22,25 @@ export type PathStep = {
   prepares: string;
 };
 
+/**
+ * 主线之外的去处。
+ *
+ * 主线只走十一步，而核心问题有二十三个。原来的页面对剩下那十二个一字未提，
+ * 读者走完之后只能回目录自己猜。这一层把它们按「你关心什么」分组，并逐条
+ * 写明它默认你已经读过哪一步——这样它既不是第二条主线，也不是一份目录副本。
+ */
+export type PathBranch = {
+  label: string;
+  intro: string;
+  entries: {
+    nodeId: string;
+    /** 什么样的关心会把人带到这一篇。 */
+    forWho: string;
+    /** 它默认你已经有的那个区分，以及在主线的第几步给出。 */
+    needs: string;
+  }[];
+};
+
 export type LearningPath = {
   id: string;
   title: string;
@@ -29,6 +48,7 @@ export type LearningPath = {
   /** 必须显示的免责说明：哲学没有唯一正确的学习顺序。 */
   disclaimer: string;
   steps: PathStep[];
+  branches: PathBranch[];
 };
 
 export const basicPath: LearningPath = {
@@ -100,7 +120,15 @@ export const basicPath: LearningPath = {
       brings:
         '能说出快乐、成就、德性、关系、自主、以及从苦与执著中解脱各自把价值放在什么上，哪几种之间会真的互相排斥。也能用它说清升职换取陪伴时间的取舍里，只算收入会漏掉什么。',
       prepares:
-        '可选的生活方案不是人人一样多：贫穷、病痛与压迫会先把选项拿走。下一步转向决定这些条件的制度安排。',
+        '可选的生活方案不是人人一样多：贫穷、病痛与压迫会先把选项拿走。接下来两步转向决定这些条件的制度——先问这套制度凭什么算数，再问它分得对不对。',
+    },
+    {
+      nodeId: 'pt-legitimacy',
+      why: '前面几步问的都是「我该怎么判断、怎么做」。这一步换一个对象：一套所有人都被强制适用、你并没有签字同意的制度，凭什么算数。先问这一问，是因为它和「分得对不对」是两件事——一套分配得很糟的制度可能仍然有资格要求你守法，一套正当的制度也可能做出不正义的决定。',
+      brings:
+        '能分开「有力量让你服从」和「有资格要求你服从」，并说出几种常见的证成路线各自卡在哪里：同意路线要处理「我从没同意过」，公平受益路线要处理「我并没有要这份好处」，民主程序路线要处理「多数决定凭什么约束少数」。',
+      prepares:
+        '一套制度有资格要求服从，还没有说它分得对。下一步转到分配本身。',
     },
     {
       nodeId: 'pt-justice',
@@ -116,10 +144,146 @@ export const basicPath: LearningPath = {
       brings:
         '能分辨「意义需要永恒根据」「意义在于客观上有价值的事本身」「意义由投入与承诺建立」三种回答各自要付的代价。也能说出为什么「死亡对死者是不是伤害」不能用「他已经不在了，不会痛苦」直接结束——争论的另一半是死亡剥夺了他本来会有的可能性。',
       prepares:
-        '这条路线到此为止，哲学不到此为止。想知道责任怎样被结果和处境改变，走「自由、责任与道德运气」；想知道证据与解释的标准，走「科学如何解释世界，又有什么边界」；想看这些问题落到当代技术上，走「人工智能能否行动、负责或拥有道德地位」。',
+        '这条路线到此为止，哲学不到此为止。剩下十二个核心问题按「你关心什么」列在下面，每一条都写明它默认你已经有哪个区分。',
+    },
+  ],
+  branches: [
+    {
+      label: '如果你关心「该怎么做」',
+      intro:
+        '主线在第七、八步给了判断行动与判断一生的两套标准。这三篇各自从一个方向压这两套标准：追究的条件、被排除在外的关系、以及判准推广到人以外时会发生什么。',
+      entries: [
+        {
+          nodeId: 'pt-responsibility',
+          forWho: '你觉得「他也不是故意的」和「可是后果就是这么严重」两句话都有道理，又说不清该听哪一句。',
+          needs:
+            '第六步（因果、自由与责任）给出的两种控制条件——「当时能不能另作选择」和「这是不是出自他自己的理由」。运气问题恰恰在两者都被承认之后才出现。',
+        },
+        {
+          nodeId: 'pt-care',
+          forWho: '你发现前面几篇谈的都像是一个独立、有能力、能自己作决定的成年人，而现实里照护、疾病与依赖占了人生很长一段。',
+          needs: '第七步（什么使行动成为对、错、善或恶）里那几类道德理由。第七步把照护当作其中一类带过；这一篇要问的正是它能不能只当其中一类。',
+        },
+        {
+          nodeId: 'pt-environment-animals',
+          forWho: '你想知道「会痛」是不是足以让一个存在进入道德考虑，一片森林或一个物种又算不算。',
+          needs: '第七步的判准分类。这一篇做的事就是把那些判准用到它们当初没打算覆盖的对象上，看它们在哪里绷不住。',
+        },
+      ],
+    },
+    {
+      label: '如果你关心「凭什么这么说」',
+      intro:
+        '主线第二、三、四步给的是检查理由的工具。这三篇把同一套工具用到三个具体战场：科学、宗教、以及「谁的话会被当真」。',
+      entries: [
+        {
+          nodeId: 'pt-science-reality',
+          forWho: '你想知道科学结论的分量到底从哪里来，以及「这不科学」这句话能不能当判决。',
+          needs:
+            '第二步（什么是好推理与有效论证）里演绎、归纳与「哪种解释更好」的三分。科学理论的成功属于第三类支持，把它当成第一类会得出过强的结论。',
+        },
+        {
+          nodeId: 'pt-religion-reason',
+          forWho: '你想知道宗教信念能不能、又该不该用公共理由来评价，以及世上的苦难对信仰构成什么样的压力。',
+          needs: '第三步（知识从哪里来）关于证据与证言的说法，以及它在跨传统一栏点出的那个麻烦：每一个理由都要另一个理由来保，保证就会无穷后退。宗教认识论正是从这个缺口出发，主张有些信念可以当起点。',
+        },
+        {
+          nodeId: 'pt-identity-oppression',
+          forWho: '你注意到同一句话由不同的人说出来，被相信的程度差别很大。',
+          needs:
+            '第三步里把证言当作一种可被评价的知识来源这一条。少了它，「不被相信」就只剩礼貌问题，不再是认识问题。',
+        },
+      ],
+    },
+    {
+      label: '如果你关心「一起生活的规则」',
+      intro:
+        '主线第九、十步处理制度凭什么算数、以及怎么分才对。这两篇接着问：法律这个具体形式有什么特别，以及这些制度本身是在什么条件下被造出来的。',
+      entries: [
+        {
+          nodeId: 'pt-law',
+          forWho: '你想知道一条不正义的法律还该不该守，以及公开违法抗议与一般犯罪的界线在哪里。',
+          needs: '第九步（何种权力与制度是正当的）里「有力量」与「有资格」之分，以及第十步关于分配的几种判准。',
+        },
+        {
+          nodeId: 'pt-history-tech',
+          forWho: '你怀疑「技术本身是中立的，看人怎么用」这句话，但说不出它错在哪里。',
+          needs: '第十步（正义）里把不正义定位到制度安排而不是个人意图的那一步。',
+        },
+      ],
+    },
+    {
+      label: '如果你关心「怎样理解一个作品、一段文本、一个人」',
+      intro:
+        '这三篇自成一条小线，而且有严格的先后：解释那一篇要先读，另外两篇都从它拿走「对作品的描述本身已经包含解释」这一条。',
+      entries: [
+        {
+          nodeId: 'pt-interpretation',
+          forWho: '你和别人对同一段话的理解差很远，又不想以「各有各的看法」收场。',
+          needs:
+            '第四步（语言如何承载意义与真理）里关于词义、语境与言语行为的约束。跳过这一层，「作者想表达什么」会变成一个无法核对的心理问题。',
+        },
+        {
+          nodeId: 'pt-art',
+          forWho: '你想知道一个现成物件搬进美术馆凭什么就成了作品。',
+          needs: '「解释」那一篇里接受史与意图归属的争论。',
+        },
+        {
+          nodeId: 'pt-aesthetic-value',
+          forWho: '你想说清「这部电影好」不只是「我喜欢」，又不想变成谁论证得漂亮谁就赢。',
+          needs: '「解释」那一篇里「看见什么依赖对作品背景的解释」这一条，否则双方会以为在争品味，其实在争对象是什么。',
+        },
+      ],
+    },
+    {
+      label: '如果你关心「机器能不能算数」',
+      intro: '这一篇放在最后，因为它同时用到前面几条支线。单独读它，讨论很容易停在「怪算法」和「怪用户」之间摆动。',
+      entries: [
+        {
+          nodeId: 'pt-ai-future',
+          forWho: '你想知道自动系统出了事该由谁负责，以及它有没有可能获得道德地位。',
+          needs:
+            '「自由、责任与道德运气」那一篇把责任分成三件事：这件事是否出自某个人、他能否被要求说明理由、他能否被追究并承担后果。',
+        },
+      ],
     },
   ],
 };
+
+/**
+ * 构建期校验：支线必须不重不漏地覆盖主线之外的全部核心问题。
+ *
+ * 漏一个，读者走完主线就再也遇不到它；重复一个，两处说明会不一致。
+ * 主线里已有的条目也不该再出现在支线里。
+ */
+function assertBranchCoverage(path: LearningPath): void {
+  const onPath = new Set(path.steps.map((step) => step.nodeId));
+  const listed = new Set<string>();
+  for (const branch of path.branches) {
+    for (const entry of branch.entries) {
+      const node = getNodeById(entry.nodeId);
+      if (!node) throw new Error(`[path] 支线指向了不存在的节点：${entry.nodeId}`);
+      if (node.type !== '核心问题') {
+        throw new Error(`[path] 支线只列核心问题，${entry.nodeId} 的类型是「${node.type}」。`);
+      }
+      if (onPath.has(entry.nodeId)) {
+        throw new Error(`[path] ${entry.nodeId} 已经是主线的一步，不应再出现在支线里。`);
+      }
+      if (listed.has(entry.nodeId)) throw new Error(`[path] 支线里重复列出了 ${entry.nodeId}。`);
+      listed.add(entry.nodeId);
+    }
+  }
+  for (const node of philosophyNodes) {
+    if (node.type !== '核心问题') continue;
+    if (onPath.has(node.id) || listed.has(node.id)) continue;
+    throw new Error(
+      `[path] 核心问题 ${node.id} 既不在主线上，也没有出现在任何一条支线里——` +
+        '读者走完主线之后不会再遇到它。',
+    );
+  }
+}
+
+assertBranchCoverage(basicPath);
 
 export type ResolvedPathStep = PathStep & { node: PhilosophyNode; order: number };
 

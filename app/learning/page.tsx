@@ -17,6 +17,7 @@ import {
   coreQuestions,
   isCoreQuestion,
   nodeHref,
+  orderedChildren,
   philosophyNodes,
   questionDomains,
   traditions,
@@ -40,6 +41,17 @@ function subjectSectionProps(id: string, label: string) {
 }
 
 const philosophy = subjectSectionProps('philosophy', 'Philosophy');
+
+/**
+ * 首页的科目卡只给一句定位。
+ *
+ * 各节点的 summary 是写给条目页与总览用的完整判定说明；首页重复一遍，读者点
+ * 「哲学总览」过去只会再看到同样的文字。这里截到第一个句号。
+ */
+function firstSentence(text: string): string {
+  const end = text.search(/[。？！]/);
+  return end < 0 ? text : text.slice(0, end + 1);
+}
 
 export default function LearningPage() {
   return (
@@ -84,13 +96,14 @@ export default function LearningPage() {
             </h2>
             <p className="learning-section-lede">
               按问题类型排列，而不是按国别、时代或哲学家。传统地图是平行的第二条轴，不是另一条主线。
+              没读过哲学也能从第一个链接直接开始：那条路线从一辆换光零件的自行车起步，每一步都说明它为下一步准备了什么。
             </p>
             <p className="learning-section-actions">
+              <Link className="learning-inline-link" href="/learning/philosophy/path">
+                从推荐路线开始 <span aria-hidden="true">↗</span>
+              </Link>
               <Link className="learning-inline-link" href="/learning/philosophy">
                 哲学总览 <span aria-hidden="true">↗</span>
-              </Link>
-              <Link className="learning-inline-link" href="/learning/philosophy/path">
-                推荐学习路径 <span aria-hidden="true">↗</span>
               </Link>
               <Link className="learning-inline-link" href="/learning/philosophy/map">
                 知识地图 <span aria-hidden="true">↗</span>
@@ -110,16 +123,22 @@ export default function LearningPage() {
             <p className="learning-block-lede">
               分成 {questionDomains.length} 个问题域；完整索引在哲学总览里。
             </p>
+            {/*
+              这里只给标题、题数和一句定位。
+              复审实测：这一节原来把 domain.summary / tradition.summary 整段印出来，
+              与 /learning/philosophy 上的那 11 段逐字相同——链接早就不重复了，
+              最长的那部分文字还在重复。完整判定说明留给总览。
+            */}
             <ul className="learning-entry-grid">
               {questionDomains.map((domain) => (
                 <li key={domain.id}>
                   <Link href={nodeHref(domain)}>
                     <span className="learning-entry-count" lang="en">
-                      {(domain.children ?? []).filter(isCoreQuestion).length} questions
+                      {orderedChildren(domain).filter(isCoreQuestion).length} questions
                     </span>
                     <strong>{domain.title}</strong>
                   </Link>
-                  <p>{domain.summary}</p>
+                  <p>{firstSentence(domain.summary)}</p>
                 </li>
               ))}
             </ul>
@@ -135,11 +154,11 @@ export default function LearningPage() {
                 <li key={tradition.id}>
                   <Link href={nodeHref(tradition)}>
                     <span className="learning-entry-count" lang="en">
-                      {(tradition.children ?? []).length} threads
+                      {orderedChildren(tradition).length} threads
                     </span>
                     <strong>{tradition.title}</strong>
                   </Link>
-                  <p>{tradition.summary}</p>
+                  <p>{firstSentence(tradition.summary)}</p>
                 </li>
               ))}
             </ul>

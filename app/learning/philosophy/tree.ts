@@ -29,10 +29,29 @@ export type PhilosophyPosition = {
    *
    * 默认是真正的反驳。但有些条目下面挂的根本不是反驳：逻辑页里
    * 「生活中的多数判断不是纯演绎」说的是演绎管不到哪里，紧接着的回应第一句
-   * 就写着「这不是对演绎的反驳」——却仍然顶着一个和佛教无我论、照护伦理
+   * 就写着「这不是对演绎的反驳」——却仍然顶着一个和佛教无我论、关怀伦理
    * 那些真正反驳一模一样的红色「反对意见」标签。标签本身在传达错误信息。
    */
   objectionKind?: '反对意见' | '适用限制' | '未解难题';
+};
+
+/**
+ * 导航页（总览、目录分组、问题域、传统导航）的读者导语与阅读顺序建议。
+ *
+ * 这十四个页面没有研究层，也就没有「本页范围」「问题为何会出现」这些区块；
+ * 它们直接从「主要立场」或子节点清单开始。问题是：这些恰好是读者最先撞上的
+ * 页面——从学习空间点「1. 存在、世界与人」进来，第一屏就是「自然连续论」
+ * 「人格不可还原论」两个没有任何铺垫的名字。
+ *
+ * guidance 只做两件事，都不引入新的知识点：
+ *   - lead：用具体处境说明这一组问题在追问什么、为什么它们放在一起；
+ *   - order：给下一级一个建议顺序，并逐条说明为什么排在这里。
+ *
+ * 它不是给每个导航页再写一篇文章。写不出具体理由就不要写。
+ */
+export type PhilosophyGuidance = {
+  lead: string[];
+  order?: { nodeId: string; note: string }[];
 };
 
 export type PhilosophyNode = {
@@ -42,6 +61,7 @@ export type PhilosophyNode = {
   summary: string;
   question?: string;
   notes?: string[];
+  guidance?: PhilosophyGuidance;
   positions?: PhilosophyPosition[];
   figures?: string[];
   example?: string;
@@ -77,8 +97,51 @@ function indexNode(node: PhilosophyNode, parentId: string | null) {
 
 indexNode(philosophyTree, null);
 
+/**
+ * 导语里的阅读顺序必须真的是这个节点的下一级，而且不能漏。
+ *
+ * 漏一条就等于页面上有一个没有理由的入口；多一条就等于指向了一个在这一页
+ * 点不到的节点。两种情况读者都会当成自己看漏了。
+ */
+for (const node of orderedNodes) {
+  const order = node.guidance?.order;
+  if (!order) continue;
+  const childIds = new Set((node.children ?? []).map((child) => child.id));
+  for (const item of order) {
+    if (!childIds.has(item.nodeId)) {
+      throw new Error(`${node.id} 的阅读顺序说明指向了不是它下一级的节点：${item.nodeId}`);
+    }
+  }
+  const covered = new Set(order.map((item) => item.nodeId));
+  for (const id of childIds) {
+    if (!covered.has(id)) {
+      throw new Error(`${node.id} 的阅读顺序说明漏掉了下一级节点：${id}`);
+    }
+  }
+}
+
 /** 深度优先的阅读顺序，也就是旧页面目录树从上到下的顺序。 */
 export const philosophyNodes: readonly PhilosophyNode[] = orderedNodes;
+
+/**
+ * 子节点的展示顺序。
+ *
+ * data.json 里的书写顺序保持不动（它是内容源，改它会牵动 diff 与历史记录），
+ * 展示顺序改由 `guidance.order` 决定。所有把子节点列给读者看的地方都要走这里
+ * ——目录页、条目页的下一层、学习空间首页、分页器。有一处不走，页面上就会
+ * 出现「这一域第 02 篇」和「点下一页却跳到另一篇」的矛盾。
+ */
+export function orderedChildren(node: PhilosophyNode): PhilosophyNode[] {
+  const children = node.children ?? [];
+  const order = node.guidance?.order;
+  if (!order) return children;
+  return order.map((item) => children.find((child) => child.id === item.nodeId)!);
+}
+
+/** 某个子节点在建议顺序里的说明，没有建议顺序时返回 undefined。 */
+export function childOrderNote(parent: PhilosophyNode, childId: string): string | undefined {
+  return parent.guidance?.order?.find((item) => item.nodeId === childId)?.note;
+}
 
 /** URL 里不重复 `pt-` 前缀：pt-being-change → /learning/philosophy/being-change。 */
 export function nodeSlug(node: PhilosophyNode): string {
@@ -144,10 +207,10 @@ export const coreSection: PhilosophyNode = coreGroup;
 /** 平行历史导航的分组节点（「传统地图｜平行历史导航」）。 */
 export const traditionsSection: PhilosophyNode = traditionsGroup;
 
-/** 问题域，每个域下挂着它自己的核心问题。 */
-export const questionDomains: readonly PhilosophyNode[] = coreSection.children ?? [];
-/** 传统线索，每条下挂着历史时段或思想线索。 */
-export const traditions: readonly PhilosophyNode[] = traditionsSection.children ?? [];
+/** 问题域，每个域下挂着它自己的核心问题。顺序按目录页给出的建议顺序。 */
+export const questionDomains: readonly PhilosophyNode[] = orderedChildren(coreSection);
+/** 传统线索，每条下挂着历史时段或思想线索。顺序按目录页给出的建议顺序。 */
+export const traditions: readonly PhilosophyNode[] = orderedChildren(traditionsSection);
 
 /** 供 sitemap 使用：所有节点对应的站内路径。 */
 export function allNodePaths(): string[] {
