@@ -709,7 +709,7 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
       { location: '定义与边界、有力反对及回应｜2026-09-19 教学重构', issue: '区块之间没有过渡：盖梯尔那一段直接从「『有真信念』不等于『有知识』」起头，还原论那一段也没有说明它针对的是本页的哪一个问题。', evidence: '两段原文均以论断句开头，与上文无连接。', revision: '盖梯尔一段开头点明它承接上面的概念卡、要做的是把两者分开；还原论一段开头点明它正对着入口里那条被转述的建议；经验主义／理性主义一段开头点明它属于「来路」这条老争论。' },
       { location: '容易混淆的地方｜怀疑论', issue: '原文写「它要求你指出：手上的理由为什么不足以排除错误、幻觉或运气」——按这句话，怀疑论者是在要求你替他论证你自己不知道，方向反了。', evidence: '怀疑论的要求是让你交代手上的理由凭什么足以排除这几种可能；KNO-1 §6.2 讨论的也是对闭合论证的各种回应，即「哪一步不成立」。', revision: '改为「它要求你交代：手上这些理由，凭什么足以排除你正在弄错、正在幻觉、只是碰巧蒙对这几种可能」；另两条易混也各补出可操作的部分。' },
       { location: '回到问题｜2026-09-19 教学重构', issue: '页尾没有把分歧收拢，读者读完记住的是一串理论名（可靠过程、反事实安全性……）而不是它们在补什么。', evidence: '本轮为 CoreEntryLedger 新增 takeaway 字段即为此。', revision: '新增四问，写明分歧落在「有理由的真信念够不够」与「转述算不算独立来路」两处，并把那串理论名收回到它们各自要补的那个缺口上。' },
-      { location: '问题起点｜异译说明去重｜2026-09-19 复审修复', issue: '「也译作辩护、确证」这句异译说明在同一页上出现四次——开场段的行内括注、行内 gloss 面板、概念卡的短定义、概念卡的角度句。读者第一次读到它是说明，第四次读到只剩噪音。', evidence: '开场段原文写「也问[[epistemic-justification|认知证成]]（这个词也译作「辩护」「确证」，说的是一个信念有没有足够的理由支持它）」，而同一个词的行内 gloss 面板紧接着又说一遍。', revision: '开场段那处行内括注删掉，改为「也问认知证成（见下面的概念卡）、出错之后怎样纠正」；异译说明留在 gloss 面板与概念卡上，本层不再重复。' },
+      { location: '问题起点｜异译说明去重｜2026-09-19 复审修复', issue: '「也译作辩护、确证」这句异译说明在同一页上出现四次——开场段的行内括注、行内 gloss 面板、概念卡的短定义、概念卡的角度句。读者第一次读到它是说明，第四次读到只剩噪音。', evidence: '开场段原文在「也问认知证成」这几个字上挂了行内概念注解，紧接着又用括注写了一遍「这个词也译作「辩护」「确证」，说的是一个信念有没有足够的理由支持它」，而点开那个注解，面板里说的还是同一句。', revision: '开场段那处行内括注删掉，改为「也问认知证成（见下面的概念卡）、出错之后怎样纠正」；异译说明留在 gloss 面板与概念卡上，本层不再重复。' },
       { location: '回到问题｜2026-09-19 复审修复', issue: '页尾 split 换了一套分类，直接从盖梯尔与证言两处争点讲起，读者刚读完的三个立场名在总结里一个也没出现。', evidence: '本页立场是经验主义、理性主义、批判与多源取向；原 split 通篇不提其中任何一个。', revision: 'split 先用本页立场名收一遍——三条路线分的是知识的来路，并各写一句它们欠着的那一步——再接上「有理由的真信念够不够」与「转述算不算独立来路」这两处更硬的分歧。' },
       { location: '术语统一｜2026-09-19 主线', issue: '本站此前把 epistemic justification 译作「认知正当性」，而政治哲学那几页同时在用「正当性」指 legitimacy，两个词在同一站内撞车；中文读者看到「正当性」会往「在道德或法律上站得住」上想，而这里说的是有证据支持。', evidence: '華文哲學百科（國立中正大學）词条《認知證成及其結構》以「證成」译 justification，以「內在論／外在論」译 internalism／externalism；本站原用的「内部主义／外部主义」在实际读到的中文哲学资料里没有出现。', revision: '全库统一改为「认知证成」（首次出现注明也译作辩护、确证）与「内在论／外在论」（注明大陆文献多作内在主义／外在主义）；政治哲学那几页的「正当性」保持不变，并在两处各加一句区分。' },
     ], remaining: ['本轮统一的译名已与相邻层对齐：概念层的词条名为「认知证成」，本页精读层的概念卡为「内在论与外在论」。今后若再改动这三处中的任何一处，须三处同改，否则同一页会出现两个译名。', '尚未完成中文 pramāṇa 译名和正理原典版本的对勘。', '做梦论证与缸中之脑的具体重构本轮未写进本账；论证的逐步骨架由本页的论证地图承担，本账只交代闭合原则这一步。若要在研究层细述，须另核 KNO-1 §6.3–§6.5。'], adjacentImpact: '与「科学如何解释世界」连接时，不能把科学证据降为单一感官经验；与「身份、压迫与认知不正义」连接时，应另说明证言不正义与一般证言理论的关系。', nextPriority: '补写正理历史线索的阅读路径，并校对中文原典选本。' },
@@ -1208,6 +1208,48 @@ export const coreEntryLedgers: Record<string, CoreEntryLedger> = {
     ], remaining: ['机器意识的经验指标与非西方技术哲学尚未进入本条；不能由现有论证断言任何现存模型有或无感受。', 'AI-5 是会随版本变动的制度文件，本轮核对的是 AI RMF 1.0 的 Core 页面。条款号一旦随新版调整，本条的定位就会失效，须定期回查。', 'AI-2 §4.2（机器人回应）、§4.3（脑模拟器回应）、§4.5、§4.6 与 §5.2–§5.4 本轮未核对；本页只用到系统回应、虚拟心灵回应与他心回应三支。'], adjacentImpact: '与「心灵、身体与我」互链时，必须区分行为归因与意识本体论；与「自由、责任与道德运气」互链时，必须区分归责、赔偿与风险治理。功能主义的定义现由共享的概念层给出，本页与「心灵、身体与我」页用的是同一份，两页不要各自再写一份。本页的历史语境一栏只列时段与传统线索；与「历史、文化与技术怎样塑造共同生活」这一核心问题页的连接放在关系层，那里要求每条连接说出自己的理由。', nextPriority: '补充技术哲学、数据劳动与东亚思想资源；另建 AI 治理的时效性法规页并定期核验。' },
   },
 };
+
+/**
+ * 构建期校验：只有会过行内概念解析器的字段才允许出现 `[[concept-id|显示文本]]`。
+ *
+ * 这条防线是本轮线上复验抓出来的：`review.findings` 里有一条为了说明改动而照抄了
+ * 原句，原句里带着行内概念标记，而研究层是按纯文本渲染的——于是标记本身被印给了
+ * 读者。会解析标记的只有 `LedgerProse`（origin / boundaries / objections）与
+ * `confusions`；scope、entry、assumed、takeaway、review 全部按纯文本输出。
+ *
+ * 引述带标记的原句时，改成描述它（「在某某这句上挂了行内概念注解」），不要照抄标记。
+ */
+const RAW_GLOSS = /\[\[[a-z0-9-]+\|[^\]]+\]\]/;
+
+for (const [nodeId, ledger] of Object.entries(coreEntryLedgers)) {
+  const plainText: [string, string][] = [
+    ['scope', ledger.scope],
+    ...(ledger.entry ? ([['entry.scene', ledger.entry.scene], ['entry.turn', ledger.entry.turn]] as [string, string][]) : []),
+    ...(ledger.assumed ?? []).flatMap((item, i): [string, string][] => [
+      [`assumed[${i}].point`, item.point],
+      [`assumed[${i}].recap`, item.recap],
+    ]),
+    ...(ledger.takeaway
+      ? (Object.entries(ledger.takeaway).map(([k, v]) => [`takeaway.${k}`, v]) as [string, string][])
+      : []),
+    ...ledger.review.findings.flatMap((f, i): [string, string][] => [
+      [`review.findings[${i}].issue`, f.issue],
+      [`review.findings[${i}].evidence`, f.evidence],
+      [`review.findings[${i}].revision`, f.revision],
+    ]),
+    ...ledger.review.remaining.map((r, i): [string, string] => [`review.remaining[${i}]`, r]),
+    ['review.adjacentImpact', ledger.review.adjacentImpact],
+    ['review.nextPriority', ledger.review.nextPriority],
+  ];
+  for (const [field, value] of plainText) {
+    if (RAW_GLOSS.test(value)) {
+      throw new Error(
+        `${nodeId} 的 ${field} 里出现了未解析的行内概念标记。这个字段按纯文本渲染，` +
+          '标记会原样印给读者；引述带标记的原句时请改成描述它。',
+      );
+    }
+  }
+}
 
 export function getCoreEntryLedger(nodeId: string): CoreEntryLedger | undefined {
   return coreEntryLedgers[nodeId];

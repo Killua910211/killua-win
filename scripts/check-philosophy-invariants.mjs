@@ -48,6 +48,10 @@ const MODULES = [
     ],
   },
   {
+    file: 'app/learning/philosophy/content-ledger.ts',
+    guards: ['按纯文本渲染的字段里没有未解析的行内概念标记'],
+  },
+  {
     file: 'app/learning/philosophy/relations.ts',
     guards: [
       '边指向存在的节点、无自指、why 非空',
