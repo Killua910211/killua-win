@@ -6,6 +6,7 @@
 
 - 保持现有 vinext + Vite + Cloudflare Workers + D1 + pnpm 技术基线；不要为了普通样式改动更换框架或包管理器。
 - 先完成本地类型检查、Lint 和构建，再更新测试环境或正式网站；不要把构建通过写成完整视觉回归通过。
+- 「发布」指三件事一次做完：**提交 → 推送 `origin/main` → 部署 Worker**，之后逐条复验线上路由。不要把推送留成需要另行确认的一步；`main` 就是工作分支，GitHub 上的 `main` 与线上 Worker 应当一致。待推送的提交里若有不属于本次任务的，照推，但在汇报里点名它们是什么。
 - D1 迁移只前滚；内容 INSERT 必须幂等；普通样式改动不要触碰远程数据库。`migrations/` 是内容事实源，`app/lib/static-posts.ts` 只能由生成脚本更新。
 - 公开汇总数据必须做运行期字段、长度和数量边界检查，不要只依赖 TypeScript 类型断言。
 - 修改哲学知识库时，先遵守 [app/learning/philosophy/AGENTS.md](app/learning/philosophy/AGENTS.md) 和其中指定的知识库规则。
