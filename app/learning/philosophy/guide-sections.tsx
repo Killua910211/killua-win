@@ -29,7 +29,12 @@ type SectionProps = {
  * `id="concepts"` 挂在这一节上，不能改名：行内概念注解的「展开读」链到
  * `<页面>#concepts`（见 concept-card.tsx 的 expandHref），概念卡就在这里。
  */
-export function GuideConcepts({ guide, nodeId, headingLevel = 'h2' }: SectionProps) {
+export function GuideConcepts({
+  guide,
+  nodeId,
+  headingLevel = 'h2',
+  heading = '先把问题拆开',
+}: SectionProps & { heading?: string }) {
   const BlockHeading = headingLevel;
 
   return (
@@ -38,8 +43,12 @@ export function GuideConcepts({ guide, nodeId, headingLevel = 'h2' }: SectionPro
       className="philosophy-block philosophy-study-intro"
       id="concepts"
     >
+      {/*
+        标题可传入。通用模板里这一块排在正文之前，叫「先把问题拆开」；
+        手写主线的页面把它移到了文末当参考，那里再叫「先」就与位置打架。
+      */}
       <BlockHeading className="philosophy-block-title" id={`${nodeId}-orientation`}>
-        先把问题拆开
+        {heading}
       </BlockHeading>
       <p className="philosophy-study-orientation">{guide.orientation}</p>
       {guide.conceptRefs && <ConceptList currentNodeId={nodeId} refs={guide.conceptRefs} />}

@@ -274,12 +274,24 @@ export function NodeBody({
   */
   const handwritten =
     node.id === 'pt-being-change'
-      ? { body: <BeingChangeEntry node={node} />, tailArgument: argument, tailExperiment: experiment }
+      ? {
+          body: <BeingChangeEntry node={node} />,
+          tailArgument: argument,
+          tailExperiment: experiment,
+          ownEntry: false,
+        }
       : node.id === 'pt-mind-self'
         ? {
             body: <MindSelfEntry argument={argument} experiment={experiment} node={node} />,
             tailArgument: undefined,
             tailExperiment: undefined,
+            /*
+              这一页的具体入口（失忆后的那份承诺）不排在页首。它要用到三条持续
+              判准才分析得动，摆在最前面等于让读者先扛一个他还没有工具处理的
+              案例；正文把它移到判准之后，由 MindSelfEntry 自己渲染。页首改用
+              单元一原有的那个日常例子（多年不见的朋友）当入口。
+            */
+            ownEntry: true,
           }
         : null;
 
@@ -300,7 +312,7 @@ export function NodeBody({
           return 之外是同一个毛病。这里不带「问题为何会出现」那个标题：
           手写主线的第一节自己就是问题的起点。
         */}
-        {ledger?.entry && (
+        {ledger?.entry && !handwritten.ownEntry && (
           <div className="philosophy-opening philosophy-opening--standalone">
             <p className="philosophy-opening-scene">{ledger.entry.scene}</p>
             <p className="philosophy-opening-turn">{ledger.entry.turn}</p>
