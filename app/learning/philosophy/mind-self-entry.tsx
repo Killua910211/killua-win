@@ -88,7 +88,7 @@ export function MindSelfEntry({
         <a href="#ms-unit-one">一、我为什么还是原来的我？</a>
         <a href="#ms-unit-two">二、感觉与身体是什么关系？</a>
         <a href="#ms-unit-three">三、是否必须有一个不变的我？</a>
-        <a href="#ms-advanced">进阶：两场更技术的争论</a>
+        <a href="#ms-advanced">进阶：三块更细的材料</a>
         <a href="#ms-practice">迁移练习</a>
       </nav>
 
@@ -471,11 +471,11 @@ export function MindSelfEntry({
         aria-labelledby="ms-advanced-title"
       >
         <h2 className="philosophy-block-title" id="ms-advanced-title">
-          进阶：两场更技术的争论
+          进阶：三块更细的材料
         </h2>
         <p className={styles.sectionIntro}>
-          下面两场争论都发生在上面三个单元之后：它们各自挑出主线里的某一句话，问它能不能顶住更细的追问。
-          <strong>两块都可以跳过</strong>——不读它们，前面三个单元的问题、回答与困难仍然是完整的。要读的话，每一块开头都写了它在解决什么、需要你已经有什么。
+          下面三块都排在上面三个单元之后：前两块各自挑出主线里的某一句话，问它能不能顶住更细的追问；第三块是无我那一侧的注疏材料。
+          <strong>三块都可以跳过</strong>——不读它们，前面三个单元的问题、回答与困难仍然是完整的。要读的话，每一块开头都写了它在解决什么、需要你已经有什么。
         </p>
 
         {argument && (
