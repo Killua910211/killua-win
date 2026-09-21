@@ -53,12 +53,8 @@
   border-left: 1px solid var(--black-4);
 }
 
-.reviewCard :global(strong) {
-  margin-top: 28px;
-}
-
-.reviewCard :global(.mind-review-answer) {
-  margin-top: auto;
+.reviewCard :global(.mind-review-details) {
+  margin-top: 24px;
 }
 
 @media (max-width: 760px) {

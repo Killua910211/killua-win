@@ -34,7 +34,7 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 | `/notes/[slug]` | 文章详情与 Article JSON-LD | `app/notes/[slug]/page.tsx` |
 | `/notes/category/[category]` | 分类归档 | `app/notes/category/[category]/page.tsx` |
 | `/health` | 健康时间线、快照、趋势和补剂 | `app/health/`、`app/lib/health.ts` |
-| `/mind` | 认知地图与对话索引 | `app/mind/`、`app/knowledge/` |
+| `/mind` | 认知地图与卡片索引 | `app/mind/`、`app/knowledge/` |
 | `/learning` | 科目分区（当前只有哲学）与学习方法 | `app/learning/page.tsx`、`app/learning/subjects.ts` |
 | `/learning/philosophy` | 哲学总览：三个学习入口、按问题、按传统 | `app/learning/philosophy/page.tsx` |
 | `/learning/philosophy/map` | 哲学知识地图：节点之间的语义关系 | `app/learning/philosophy/map/`、`map-view.tsx` |
@@ -65,6 +65,8 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 - 构建期没有 D1；不要在 `generateStaticParams` 等构建阶段查询数据库。
 - 顶层页面通过共享 `PageHero` 使用同一首屏内容骨架；默认栏目提供标题、说明和标签，首页额外提供装饰层。当前接口不再提供 Hero 内嵌 CTA/footer 槽位，页内导航由 `SectionNav` 承担。
 - Hero 的扫描层是低对比装饰，不应遮挡内容；当前包含斜向、横向、纵向、网格面和径向五种形式，并通过不同周期、相位和 `prefers-reduced-motion` 控制重叠。
+- `/mind` 只有一个客户端岛：`app/mind/mind-topics.tsx` 的主题切换，按 WAI-ARIA tab 模式实现（`tablist`/`tab`/`tabpanel`、`aria-selected` 驱动选中样式、roving tabindex、方向键与 Home/End），五个面板都渲染、非当前项用 `hidden` 收起。该页其余分区都是服务端渲染，复习答案的展开用原生 `<details>`。
+- 深色面上 9–12px 的元信息文字用 `--meta-on-dark`，不要用 `--rock-gray`：后者在 `#080809`/`#0e0e11` 上只有 3.1–3.5:1。哲学专区与 `/mind` 已经改过，`/notes`、`/health` 与首页尚有同类选择器未改。
 
 ## 验证与发布链路
 

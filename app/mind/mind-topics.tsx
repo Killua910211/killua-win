@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import styles from './mind-explorer.module.css';
+import { useRef, useState, type KeyboardEvent } from 'react';
+import styles from './mind.module.css';
 
 type Topic = {
   id: string;
@@ -73,138 +73,118 @@ const topics: Topic[] = [
   },
 ];
 
-const reviewCards = [
-  { prompt: '我最容易把什么问题当成工程问题？', answer: '爱情、婚姻、孤独、意义，以及任何没有标准答案的人生问题。' },
-  { prompt: '理解情绪，等于消化情绪吗？', answer: '不等于。解释能带来距离，但情绪还需要被感受、表达和经历。' },
-  { prompt: '当前最大的长期风险是什么？', answer: '不是失败，而是外部生活正常，内部却逐渐觉得「什么都没什么意思」。' },
-  { prompt: '现在更重要的问题发生了什么变化？', answer: '从「怎么过得更好」变成「什么才算过得好」。' },
-];
-
 function titleWithProtectedPhrase(text: string, phrase: string) {
   const [before, after] = text.split(phrase);
   return <>{before}<span className="type-keep">{phrase}</span>{after}</>;
 }
 
-export function MindExplorer() {
-  const [activeId, setActiveId] = useState('control');
-  const [query, setQuery] = useState('');
+/**
+ * 主题切换是这一页唯一的客户端交互，按 WAI-ARIA 的 tab 模式实现。
+ *
+ * 之前是一排普通按钮：靠 `is-active` 这个 class 表示选中，读屏软件读到的
+ * 只是五个同样的按钮，既不知道哪一个是当前项，也不知道右边那块内容归谁。
+ * 现在 tab 与面板互相指认，方向键在标签之间移动（roving tabindex），
+ * 五个面板都渲染出来，非当前项用 hidden 收起——内容仍留在 DOM 里，
+ * 页内查找和搜索引擎都还能拿到。
+ */
+export function MindTopics() {
+  const [activeId, setActiveId] = useState(topics[0].id);
+  const tabRefs = useRef(new Map<string, HTMLButtonElement>());
 
-  const activeTopic = topics.find((topic) => topic.id === activeId) ?? topics[0];
-  const filteredTopics = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    if (!normalized) return topics;
-    return topics.filter((topic) => `${topic.label} ${topic.title} ${topic.detail} ${topic.short}`.toLowerCase().includes(normalized));
-  }, [query]);
+  function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    const last = topics.length - 1;
+    const target =
+      event.key === 'ArrowDown' || event.key === 'ArrowRight' ? (index === last ? 0 : index + 1)
+      : event.key === 'ArrowUp' || event.key === 'ArrowLeft' ? (index === 0 ? last : index - 1)
+      : event.key === 'Home' ? 0
+      : event.key === 'End' ? last
+      : null;
+
+    if (target === null) return;
+
+    event.preventDefault();
+    const next = topics[target];
+    setActiveId(next.id);
+    tabRefs.current.get(next.id)?.focus();
+  }
 
   return (
-    <>
-      <section className="mind-overview" id="mind-overview" aria-labelledby="mind-overview-heading">
-        <div className="section-label">
-          <span>02</span>
-          <span>Reading map</span>
+    <section className="mind-workspace" id="mind-workspace" aria-labelledby="mind-workspace-heading">
+      <div className="section-label light">
+        <span>03</span>
+        <span lang="en">Explore by theme</span>
+      </div>
+      <div className="mind-workspace-body">
+        <div className="mind-workspace-heading">
+          <p className="eyebrow">Topic index / 主题索引</p>
+          <h2 id="mind-workspace-heading">沿着一条线索，回到当时的判断。</h2>
         </div>
-        <div>
-          <p className="eyebrow">A compressed view / 压缩后的核心判断</p>
-          <h2 id="mind-overview-heading">
-            不是「问题很多」，而是<span className="type-keep">两道核心课题</span>在不同场景里的投影。
-          </h2>
-          <div className={`mind-core-grid ${styles.coreGrid}`}>
-            <article>
-              <span className="mind-card-index">01 / CONTROL</span>
-              <h3>把不可控的部分，重新交还给生活。</h3>
-              <p>高控制、高反思、强现实感，是能力的正面；它的背面是很难容忍模糊、等待和没有最优解。</p>
-            </article>
-            <article>
-              <span className="mind-card-index">02 / MEANING</span>
-              <h3>让意义系统追上能力系统。</h3>
-              <p>能力这一侧已经跑在前面；意义这一侧还没有建立新的标准，暂时答不出什么值得长期投入。</p>
-            </article>
-          </div>
-        </div>
-      </section>
 
-      <section className="mind-workspace" id="mind-workspace" aria-labelledby="mind-workspace-heading">
-        <div className="section-label light">
-          <span>03</span>
-          <span>Explore by theme</span>
-        </div>
-        <div className="mind-workspace-body">
-          <div className="mind-workspace-heading">
-            <div>
-              <p className="eyebrow">Topic index / 主题索引</p>
-              <h2 id="mind-workspace-heading">沿着一条线索，回到当时的判断。</h2>
-            </div>
-            <label className="mind-search">
-              <span className="sr-only">搜索主题</span>
-              <span aria-hidden="true">⌕</span>
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索主题" />
-            </label>
-          </div>
+        <div className="mind-topic-layout">
+          <div className="mind-topic-nav" role="tablist" aria-label="心理认知主题" aria-orientation="vertical">
+            {topics.map((topic, index) => {
+              const isActive = topic.id === activeId;
 
-          <div className="mind-topic-layout">
-            <nav className="mind-topic-nav" aria-label="心理认知主题">
-              {filteredTopics.map((topic, index) => (
-                <button className={activeId === topic.id ? 'is-active' : ''} key={topic.id} onClick={() => setActiveId(topic.id)} type="button">
+              return (
+                <button
+                  aria-controls={`mind-panel-${topic.id}`}
+                  aria-selected={isActive}
+                  id={`mind-tab-${topic.id}`}
+                  key={topic.id}
+                  onClick={() => setActiveId(topic.id)}
+                  onKeyDown={(event) => handleKeyDown(event, index)}
+                  ref={(node) => {
+                    if (node) tabRefs.current.set(topic.id, node);
+                    else tabRefs.current.delete(topic.id);
+                  }}
+                  role="tab"
+                  tabIndex={isActive ? 0 : -1}
+                  type="button"
+                >
                   <span>{String(index + 1).padStart(2, '0')}</span>
                   <strong>{topic.label}</strong>
-                  <em>{topic.short}</em>
+                  <em lang="en">{topic.short}</em>
                 </button>
-              ))}
-              {filteredTopics.length === 0 ? <p className="mind-empty">没有匹配的主题。</p> : null}
-            </nav>
+              );
+            })}
+          </div>
 
-            <article className={`mind-detail ${styles.detail}`}>
+          {topics.map((topic) => (
+            <article
+              aria-labelledby={`mind-tab-${topic.id}`}
+              className={`mind-detail ${styles.detail}`}
+              hidden={topic.id !== activeId}
+              id={`mind-panel-${topic.id}`}
+              key={topic.id}
+              role="tabpanel"
+              tabIndex={0}
+            >
               <div className="mind-detail-topline">
-                <span>{activeTopic.short}</span>
+                <span lang="en">{topic.short}</span>
                 <span>Observation / 观察</span>
               </div>
-              <h3>{titleWithProtectedPhrase(activeTopic.title, activeTopic.protectedPhrase)}</h3>
-              <p className="mind-thesis">{activeTopic.thesis}</p>
+              <h3>{titleWithProtectedPhrase(topic.title, topic.protectedPhrase)}</h3>
+              <p className="mind-thesis">{topic.thesis}</p>
               <div className="mind-detail-columns">
                 <div>
                   <span className="mind-subhead">How it appears / 表现</span>
-                  <p>{activeTopic.detail}</p>
+                  <p>{topic.detail}</p>
                 </div>
                 <div>
                   <span className="mind-subhead">Signals / 识别信号</span>
                   <ul>
-                    {activeTopic.signals.map((signal) => <li key={signal}>{signal}</li>)}
+                    {topic.signals.map((signal) => <li key={signal}>{signal}</li>)}
                   </ul>
                 </div>
               </div>
               <div className="mind-practice">
                 <span className="mind-subhead">Try this / 复习时带走</span>
-                <p>{activeTopic.practice}</p>
+                <p>{topic.practice}</p>
               </div>
             </article>
-          </div>
+          ))}
         </div>
-      </section>
-
-      <section className="mind-review" id="mind-review" aria-labelledby="mind-review-heading">
-        <div className="section-label">
-          <span>04</span>
-          <span>Review loop</span>
-        </div>
-        <div className="mind-review-body">
-          <p className="eyebrow">Recall / 主动回忆</p>
-          <h2 id="mind-review-heading">先自己回答，再回看当时的结论。</h2>
-          <p className="mind-review-intro">把复习从重新阅读，变成一次小型的自我提问。结论直接保留在卡片里，随时可以对照。</p>
-          <div className={`mind-review-grid ${styles.reviewGrid}`}>
-            {reviewCards.map((card, index) => (
-              <article className={`mind-review-card ${styles.reviewCard}`} key={card.prompt}>
-                <span className="mind-review-number">{String(index + 1).padStart(2, '0')}</span>
-                <strong>{card.prompt}</strong>
-                <p className="mind-review-answer">{card.answer}</p>
-              </article>
-            ))}
-          </div>
-          <div className="mind-closing-note">
-            <span className="mind-card-index">ONE SENTENCE</span>
-            <p>你不是一个不知道自己要什么的人；你已经很擅长得到想要的东西。真正的问题开始变成——得到以后呢？</p>
-          </div>
-        </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
