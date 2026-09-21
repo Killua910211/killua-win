@@ -1,6 +1,9 @@
 # 当前任务：/mind 页面复审与优化（2026-09-22）
 
-状态：本地完成，待发布。
+状态：**已发布正式网站（2026-09-22）**。提交 `495d49d` → 推送 `origin/main` → `pnpm deploy:only`，
+Worker Version ID `47fd656e-788b-4990-bda6-43ac3291ef28`（无数据库改动）。同一次部署顺带把 main 上两条
+不属于本轮的学习页提交带上线：`9bf35af`（《心灵、身体与「我」》R1—R6 定点整改）与 `e651e45`（进阶区
+「两块」措辞修正），它们此前已提交、已推送，但还没有部署过。
 
 ## 需求
 
@@ -57,6 +60,21 @@
 - 客户端 JS：`mind-explorer`（10,748 B）+ `knowledge-library`（6,615 B）两个 chunk 合计 17,363 B，改为单个 `mind-topics` chunk 7,528 B，少一个请求，约 −57%。
 - 版面：1024px 下主题区 260px + 447px 两栏、卡片两栏各 375px；375px 下全部单栏，`scrollWidth` 375，无横向滚动；主题按钮高 67px。
 - 工程检查：`pnpm check`（lint、typecheck、16 个迁移回放、哲学不变式 8 模块 18 条）与 `pnpm build` 均通过。控制台无错误。
+
+## 线上复验（发布后在正式网站上跑）
+
+- `/mind` 200，HTML 72,121 字节。对比度脚本在线上重跑：不达标 0 处。
+- 服务端 HTML 里 `role="tab"` 5 个、`role="tabpanel"` 5 个、`aria-selected="true"` 恰好 1 个、
+  `<details class="mind-review-details">` 4 个；旧的搜索框、分类筛选与详情面板标记 0 处。
+- 四张卡片的正文（「满足一个欲望」「连续记录才能把偶然波动」「先让 AI 产出一个可讨论的版本」
+  「列出选项、风险和权重」）逐条能在服务端 HTML 里抓到。
+- 线上交互实测：↓ 切到「敏感与理性化」并跟随焦点、End 跳到「好奇心与保护因素」、点击切换与
+  `aria-selected` 同步、复习卡展开后读到答案全文；控制台无错误。
+- 客户端 chunk：`knowledge-library-*.js` 已不再请求，只剩 `mind-topics-Cz3e1o2f.js`。
+- 标题层级：h1 → 5 个 h2 → 各区 h3，无跳级。
+- 一并复验其它路由均 200：`/`、`/notes`、`/health`、`/learning`、`/learning/philosophy`、
+  `/learning/philosophy/mind-self`、`/learning/philosophy/map`、`/sitemap.xml`、`/api/database`；
+  `/sitemap.xml` 里 `/mind` 的 `lastmod` 已是 `2026-09-21T16:00:00.000Z`（即 +08:00 的 09-22）。
 
 ## 未做的项
 
