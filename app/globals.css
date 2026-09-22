@@ -4411,7 +4411,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .section-local-nav a:focus-visible { color: var(--signal); }
 #health-timeline, #health-snapshot, #health-trends, #health-nutrition, #health-notes,
 #top, #system, #notes-top, #preface, #archive,
-#mind-overview, #mind-workspace, #mind-review, #mind-library,
+#mind-overview, #mind-workspace, #mind-review, #mind-practice, #mind-library,
 /* 「存在与变化」那一页的页内锚点由它自己的 module.css 用类名接管，
    不要再往这份 id 名单里补——加一节就得改两处的做法已经漏过一次。 */
 #learning-philosophy, #learning-method { scroll-margin-top: calc(var(--header-height) + 60px); }
@@ -4477,6 +4477,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .mind-overview,
   .mind-workspace,
   .mind-review,
+  #mind-practice,
   .knowledge-index,
   .knowledge-method,
   .learning-subject-section,

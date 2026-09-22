@@ -69,7 +69,7 @@ const topics: Topic[] = [
     thesis: '好奇心是重要的保护因素，也是把旧系统带向新意义的入口。',
     detail: '从技术、健康、运动、营养、摄影到宇宙、哲学、爱情与日本社会，看似分散的兴趣说明你仍然在向世界伸出触角。你不是看透人生以后觉得无聊，而是正在经历驱动力换挡：旧的方式不够用了，新的方式正在形成。',
     signals: ['愿意持续追问，并且接受不舒服但有逻辑的结论', '能跨越具体问题，观察自己的长期模式', '现实能力、执行力、自省能力和好奇心构成了不错的基础盘'],
-    practice: '把好奇心从「理解更多」带到「参与更多」：每周安排一件不以优化和产出为目的的事。',
+    practice: '给好奇心留一个不需要立刻解释的入口：先靠近，再决定它是否值得继续。',
   },
 ];
 
@@ -118,6 +118,7 @@ export function MindTopics() {
         <div className="mind-workspace-heading">
           <p className="eyebrow">Topic index / 主题索引</p>
           <h2 id="mind-workspace-heading">沿着一条线索，回到当时的判断。</h2>
+          <p className={styles.topicNote}>这里的表述是复盘时形成的工作假设；新的经历可以补充、修正或推翻它。</p>
         </div>
 
         <div className="mind-topic-layout">

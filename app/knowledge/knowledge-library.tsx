@@ -9,8 +9,7 @@ type KnowledgeCard = {
 };
 
 /*
- * 这一层只收「人格结构分析」以外的对话。那场对话已经在本页按主题展开、又做过一遍
- * 主动回忆；再放一组同源卡片，只会让同样几句结论在同一页里出现第三遍。
+ * 这一层只收可以从其它对话里反复调用的方法与观察，不再复述主题区的个人结论。
  *
  * 四张卡片全文直出，不再是「点一张、右边换一张」：一共四条，藏起三条既省不了
  * 版面，又让页内查找和搜索引擎只能看到当前选中的那一条。
@@ -59,7 +58,7 @@ export function KnowledgeLibrary() {
     <>
       <section className="knowledge-index" id="mind-library" aria-labelledby="knowledge-index-heading">
         <div className="section-label">
-          <span>05</span>
+          <span>06</span>
           <span lang="en">Card index</span>
         </div>
         <div className="knowledge-index-body">
@@ -67,7 +66,7 @@ export function KnowledgeLibrary() {
             <p className="eyebrow">Distilled notes / 提炼后的卡片</p>
             <h2 id="knowledge-index-heading">把其它对话里的好东西，放进一个可以回来找的地方。</h2>
             <p className="knowledge-index-intro">
-              心理认知那场对话已经在 <a href="#mind-workspace">主题线索</a> 和 <a href="#mind-review">自我复习</a> 里展开，这里不再复述它的结论，只留下别的对话带出来的判断。
+              主题区负责描述地图；这里保留的是可以带到下一次决定里的方法、观察和提醒，不把同一条结论再说一遍。
             </p>
           </div>
           <ol className="knowledge-card-grid">
@@ -91,7 +90,7 @@ export function KnowledgeLibrary() {
       </section>
       <section className="knowledge-method" aria-labelledby="knowledge-method-heading">
         <div className="section-label light">
-          <span>06</span>
+          <span>07</span>
           <span lang="en">How to keep it useful</span>
         </div>
         <div>

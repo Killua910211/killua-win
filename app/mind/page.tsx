@@ -9,7 +9,7 @@ import styles from './mind.module.css';
 
 export const metadata = buildMetadata({
   title: 'Mind',
-  description: '把与 ChatGPT 的心理认知对话，整理成可以预习、复习和回溯的个人认知档案。',
+  description: '将控制、不确定性、关系、意义、身体记录与持续行动整理成可回看的个人认知地图。',
   path: '/mind',
 });
 
@@ -20,10 +20,10 @@ export const metadata = buildMetadata({
  * 主动回忆根本没有发生的机会。答案改成 details，展开与否由读者决定。
  */
 const reviewCards = [
-  { prompt: '我最容易把什么问题当成工程问题？', answer: '爱情、婚姻、孤独、意义，以及任何没有标准答案的人生问题。' },
-  { prompt: '理解情绪，等于消化情绪吗？', answer: '不等于。解释能带来距离，但情绪还需要被感受、表达和经历。' },
-  { prompt: '当前最大的长期风险是什么？', answer: '不是失败，而是外部生活正常，内部却逐渐觉得「什么都没什么意思」。' },
-  { prompt: '现在更重要的问题发生了什么变化？', answer: '从「怎么过得更好」变成「什么才算过得好」。' },
+  { prompt: '我是在收集必要信息，还是在延迟一次经历？', answer: '当问题没有唯一解时，继续分析不一定会带来更多确定感；给一次小规模的真实尝试设定边界，也是一种验证。' },
+  { prompt: '我能把这件事先说成一个可观察的事实吗？', answer: '把“我就是这样”拆成时间、行为和结果，先记录发生了什么，再决定要不要为它命名。' },
+  { prompt: '这段关系里，我有没有只做筛选而没有发出邀请？', answer: '标准可以保护边界，但关系也需要被看见的需要、一次具体的邀请，以及允许对方逐步靠近的空间。' },
+  { prompt: '我愿意连续投入哪件不必立刻产出结果的事？', answer: '意义不必先被解释清楚；先选择一件愿意重复参与的事，再观察它是否慢慢形成方向。' },
 ];
 
 export default function MindPage() {
@@ -32,7 +32,7 @@ export default function MindPage() {
       <SiteHeader current="mind" />
       <main id="main" className="mind-page">
         <PageHero
-          description="整理关于「我是什么样的人」的对话，留下一张可回看的认知地图。下面各区里的「你」，是对话里 AI 对我的称呼。"
+          description="把关于控制、不确定性、关系、意义、身体记录与持续行动的对话，整理成一张可回看的认知地图。这里记录的是观察、提问与复盘，不是诊断。"
           eyebrow="Mind / 心理认知"
           label="Cognitive notebook"
           number="01"
@@ -45,6 +45,7 @@ export default function MindPage() {
             { href: '#mind-overview', label: '核心地图' },
             { href: '#mind-workspace', label: '主题线索' },
             { href: '#mind-review', label: '自我复习' },
+            { href: '#mind-practice', label: '生活验证' },
             { href: '#mind-library', label: '卡片索引' },
           ]}
         />
@@ -57,18 +58,18 @@ export default function MindPage() {
           <div>
             <p className="eyebrow">A compressed view / 压缩后的核心判断</p>
             <h2 id="mind-overview-heading">
-              不是「问题很多」，而是<span className="type-keep">两道核心课题</span>在不同场景里的投影。
+              先看<span className="type-keep">两条主线</span>，再回到具体场景。
             </h2>
             <div className={`mind-core-grid ${styles.coreGrid}`}>
               <article>
                 <span className="mind-card-index" lang="en">01 / CONTROL</span>
-                <h3>把不可控的部分，重新交还给生活。</h3>
-                <p>高控制、高反思、强现实感，是能力的正面；它的背面是很难容忍模糊、等待和没有最优解。</p>
+                <h3>把确定感交给结构，也留出经历的空间。</h3>
+                <p>结构、记录和比较能提高判断质量；它们不必替每一个没有标准答案的问题做决定。</p>
               </article>
               <article>
                 <span className="mind-card-index" lang="en">02 / MEANING</span>
-                <h3>让意义系统追上能力系统。</h3>
-                <p>能力这一侧已经跑在前面；意义这一侧还没有建立新的标准，暂时答不出什么值得长期投入。</p>
+                <h3>从解决问题，走向选择投入什么。</h3>
+                <p>能力回答“怎么做”，意义更像一个持续选择：什么值得重复、连接和承担。</p>
               </article>
             </div>
           </div>
@@ -84,7 +85,7 @@ export default function MindPage() {
           <div className="mind-review-body">
             <p className="eyebrow">Recall / 主动回忆</p>
             <h2 id="mind-review-heading">先自己回答，再展开当时的结论。</h2>
-            <p className="mind-review-intro">把复习从重新阅读，变成一次小型的自我提问：答案折在问题下面，想好了再展开对照。</p>
+            <p className="mind-review-intro">复习不是重新给自己下结论，而是用一个问题检查旧判断是否仍然适用：答案折在问题下面，想好了再展开对照。</p>
             <ol className={`mind-review-grid ${styles.reviewGrid}`}>
               {reviewCards.map((card, index) => (
                 <li className={`mind-review-card ${styles.reviewCard}`} key={card.prompt}>
@@ -100,7 +101,43 @@ export default function MindPage() {
             </ol>
             <div className="mind-closing-note">
               <span className="mind-card-index" lang="en">One sentence</span>
-              <p>你不是一个不知道自己要什么的人；你已经很擅长得到想要的东西。真正的问题开始变成——得到以后呢？</p>
+              <p>你已经很擅长把问题想清楚；下一步，是把足够清楚的部分交给行动。</p>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.validation} id="mind-practice" aria-labelledby="mind-practice-heading">
+          <div className="section-label light">
+            <span>05</span>
+            <span lang="en">From map to practice</span>
+          </div>
+          <div className={styles.validationBody}>
+            <p className="eyebrow">Small experiments / 小型验证</p>
+            <h2 id="mind-practice-heading">让认知回到生活里，而不是停在结论里。</h2>
+            <p className={styles.validationLead}>
+              这页的判断只有在下一次选择里被使用，才算真正属于我。用足够小、可以回看的行动，检验一条想法是否值得保留。
+            </p>
+            <div className={styles.validationGrid}>
+              <article>
+                <span>01 / EVIDENCE</span>
+                <h3>让记录变成提醒，而不是判决。</h3>
+                <p>把身体和生活记录放回长期趋势里，用来提醒下一步，不用一个单点给当下贴标签。</p>
+              </article>
+              <article>
+                <span>02 / EXPERIMENT</span>
+                <h3>把选择变成一段小步试验。</h3>
+                <p>为新的关系、兴趣或工作方式设置低成本尝试和回看时间，让行动提供下一轮判断需要的证据。</p>
+              </article>
+              <article>
+                <span>03 / CONTACT</span>
+                <h3>把理解推进到参与。</h3>
+                <p>每周保留一件不以优化和产出为目的的事，让好奇心有机会遇到真实的人和真实的场景。</p>
+              </article>
+              <article>
+                <span>04 / REVISION</span>
+                <h3>只保留能被调用的判断。</h3>
+                <p>把结果留成一段能回看的文字，新的经历出现后回来修正；不要把旧结论变成固定身份。</p>
+              </article>
             </div>
           </div>
         </section>
