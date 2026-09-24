@@ -39,6 +39,7 @@
 | `argument-maps.ts` | 论证地图：共同主干 → 分歧点 → 各立场的反对、回应与理论代价 | 只给有明确论证骨架的条目 |
 | `thought-experiments.ts` | 改变变量式思想实验 | 需要逼出隐含原则时 |
 | `comparisons.ts` | 跨传统可比问题 | 两个传统能就同一问题对话时 |
+| `people.ts` / `people-content.ts` / `people-history.ts` / `people-metadata.ts` / `people-profiles.ts` | 人物身份与链接、五组历史分期、时代和学派限定；既有精读复用来源账，历史概览另附可定位的学术依据 | 先核对人物级依据；区分概览与精读、约年与精确年；空阶段标缺口，比较不冒充影响；校验见 `people-validation.ts` |
 | `learning-path.ts` | 推荐基础学习路径 | 路线调整时 |
 
 ## 教学结构（2026-09-19 起）

@@ -21,7 +21,7 @@ import {
 
 export const metadata = buildMetadata({
   title: '哲学 · 从问题开始',
-  description: `按问题组织的哲学地图：${questionDomains.length} 个问题域、${coreQuestions.length} 个核心问题，以及 ${traditions.length} 条平行的传统导航。三个入口：从问题开始、按推荐路线系统学习、从传统进入。`,
+  description: `按问题组织的哲学地图：${questionDomains.length} 个问题域、${coreQuestions.length} 个核心问题，以及 ${traditions.length} 条平行的传统导航。支持推荐路线、问题、传统与人物四种进入方式。`,
   path: '/learning/philosophy',
 });
 
@@ -67,18 +67,7 @@ const questionGroups: QuestionGroup[] = questionDomains.map((domain) => ({
     })),
 }));
 
-/**
- * 三个入口。
- *
- * 「系统学习」排第一，是本轮改的：三个入口原来按「从问题开始 / 系统学习 /
- * 从传统进入」排，而第一个入口要求读者**已经**有一个想追问的问题。没有的人
- * 才是最需要帮助的那一种，他得跳过第一栏才找得到给自己的那条路。
- *
- * 另外两个入口没有被降级——它们回答的是另外两种真实需求，只是不该排在
- * 「我什么都不知道」前面。
- *
- * 版式上刻意克制：三条细规则线，不做成三张巨大的卡片。
- */
+/** 推荐路线服务于初学者，其余入口按读者已有的兴趣进入同一知识库。 */
 const entries = [
   {
     id: 'entry-path',
@@ -100,6 +89,13 @@ const entries = [
     href: '#by-tradition',
     for: '我想从某个传统的文本和论辩史进入。',
     note: `${traditions.length} 条平行的历史导航，各自按时段和思想线索展开。不必先读完核心问题再进来。`,
+  },
+  {
+    id: 'entry-person',
+    title: '从人物进入',
+    href: '/learning/philosophy/people',
+    for: '我想读一位思想家，从哪里开始？',
+    note: '沿五条传统历史线，从时代找到人物、学派与关键问题；展开论证、分歧和文本，或按姓名查找。尚未补齐的历史阶段会明确标注。',
   },
 ];
 
@@ -131,7 +127,7 @@ export default function PhilosophyOverviewPage() {
 
         <SectionNav
           items={[
-            { href: '#entries', label: '三个入口' },
+            { href: '#entries', label: '四种进入方式' },
             { href: '#by-question', label: '按问题' },
             { href: '#by-tradition', label: '按传统' },
             { href: '#how-to-read', label: '怎么读' },
@@ -145,12 +141,12 @@ export default function PhilosophyOverviewPage() {
             <span>Ways in</span>
           </div>
           <div className="philosophy-section-body">
-            <p className="eyebrow">Ways in / 三个入口</p>
+            <p className="eyebrow">Ways in / 四种进入方式</p>
             <h2 className="philosophy-section-heading" id="entries-heading">
               你现在是哪一种情况？
             </h2>
             <p className="philosophy-lede">
-              三个入口指向同一批内容，只是起点不同。没有特别想追问的问题，就走第一个。你也可以都不选，直接打开
+              四种进入方式指向同一批内容，只是起点不同。没有特别想追问的问题，就走第一个。你也可以都不选，直接打开
               <Link className="philosophy-inline-map-link" href="/learning/philosophy/map">
                 哲学知识地图
               </Link>

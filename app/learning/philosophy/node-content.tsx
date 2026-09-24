@@ -1,3 +1,4 @@
+import { peopleForNode, peopleHref } from './people';
 import Link from 'next/link';
 import { childOrderNote, getNodeById, nodeHref, orderedChildren, type PhilosophyNode } from './tree';
 import { getStudyGuide } from './study-guides';
@@ -257,6 +258,7 @@ export function NodeBody({
       },
     ledger?.takeaway && { id: `${node.id}-takeaway`, label: '回到问题' },
     guide?.nextQuestions.length && { id: `${node.id}-next-questions`, label: '带着问题继续读' },
+    peopleForNode(node.id).length > 0 && { id: `${node.id}-people`, label: '从人物继续读' },
     relationGroups.length > 0 && { id: `${node.id}-next`, label: '继续学习' },
   ].filter((entry): entry is { id: string; label: string } => Boolean(entry));
 
@@ -718,6 +720,16 @@ function SharedTail({
             {nextQuestions.map((question) => (
               <li key={question}>{question}</li>
             ))}
+          </ul>
+        </section>
+      )}
+
+      {peopleForNode(node.id).length > 0 && (
+        <section aria-labelledby={`${node.id}-people`} className="philosophy-block">
+          <BlockHeading className="philosophy-block-title" id={`${node.id}-people`}>从人物继续读</BlockHeading>
+          <p className="philosophy-block-intro">把具体论证接回人物的阅读入口，查看文本、边界及其他问题。以下是已整理的映射，不是本页提及人物的完整名单。</p>
+          <ul className="philosophy-next-questions">
+            {peopleForNode(node.id).map((person) => <li key={person.id}><Link href={peopleHref(person)}>{person.name}：{person.question} ↗</Link></li>)}
           </ul>
         </section>
       )}

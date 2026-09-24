@@ -1,3 +1,5 @@
+import { philosophyPeople } from './philosophy/people';
+import { peopleHistories } from './philosophy/people-history';
 import Link from 'next/link';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
@@ -83,7 +85,7 @@ export default function LearningPage() {
           ]}
         />
 
-        {/* 科目 01 · 哲学。原有的「按问题」「按传统」两条轴收进同一个分区。 */}
+        {/* 科目 01 · 哲学。「按问题」「按传统」「按人物」三个入口收进同一个分区。 */}
         <section className={philosophy.className} id={philosophy.id} aria-labelledby={philosophy.headingId}>
           <div className="section-label" lang="en">
             <span>{philosophy.number}</span>
@@ -95,7 +97,7 @@ export default function LearningPage() {
               {coreQuestions.length} 个核心问题，<br />每一个都可以单独读完。
             </h2>
             <p className="learning-section-lede">
-              按问题类型排列，而不是按国别、时代或哲学家。传统地图是平行的第二条轴，不是另一条主线。
+              可以按问题、传统或人物进入同一批讨论：问题带你比较理由，传统补充历史语境，人物连接具体论证与文本。
               没读过哲学也能从第一个链接直接开始：那条路线从一辆换光零件的自行车起步，每一步都说明它为下一步准备了什么。
             </p>
             <p className="learning-section-actions">
@@ -162,6 +164,15 @@ export default function LearningPage() {
                 </li>
               ))}
             </ul>
+            <h3 className="learning-block-heading" id="learning-philosophy-people">按人物 / Thinkers & histories</h3>
+            <p className="learning-block-lede">沿传统与时代认识 {philosophyPeople.length} 位人物：先看历史语境，再读学派、关键内容与分歧。各传统分别分期，缺失阶段明确标注。</p>
+            <ul className="learning-entry-grid">
+              {peopleHistories.map((group) => <li key={group.id}>
+                <Link href={`/learning/philosophy/people#history-${group.id}`}><span className="learning-entry-count">传统 → 时代 → 人物</span><strong>{group.title}</strong></Link>
+                <p>{group.intro}</p>
+              </li>)}
+            </ul>
+            <p className="learning-section-actions"><Link className="learning-inline-link" href="/learning/philosophy/people">全部人物、历史阶段与收录范围 <span aria-hidden="true">↗</span></Link></p>
           </div>
         </section>
 

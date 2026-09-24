@@ -35,6 +35,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: index === 0 ? 0.8 : 0.6,
     })),
+    {
+      url: `${SITE.url}/learning/philosophy/people`,
+      lastModified: new Date('2026-09-25T00:00:00+08:00'),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
     // 知识地图与推荐学习路径是哲学空间的两个入口页，不在节点树里。
     {
       url: `${SITE.url}/learning/philosophy/map`,

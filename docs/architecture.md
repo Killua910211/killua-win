@@ -36,8 +36,9 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 | `/health` | 健康时间线、快照、趋势和补剂 | `app/health/`、`app/lib/health.ts` |
 | `/mind` | 认知地图与卡片索引 | `app/mind/`、`app/knowledge/` |
 | `/learning` | 科目分区（当前只有哲学）与学习方法 | `app/learning/page.tsx`、`app/learning/subjects.ts` |
-| `/learning/philosophy` | 哲学总览：三个学习入口、按问题、按传统 | `app/learning/philosophy/page.tsx` |
+| `/learning/philosophy` | 哲学总览：推荐路线、问题、传统、人物四种入口 | `app/learning/philosophy/page.tsx` |
 | `/learning/philosophy/map` | 哲学知识地图：节点之间的语义关系 | `app/learning/philosophy/map/`、`map-view.tsx` |
+| `/learning/philosophy/people` | 按传统和时代的哲学人物地图、论证与文本定位 | `app/learning/philosophy/people/`、`people.ts` |
 | `/learning/philosophy/path` | 推荐基础学习路径 | `app/learning/philosophy/path/`、`learning-path.ts` |
 | `/learning/philosophy/[node]` | 55 个知识节点各一页 | `app/learning/philosophy/[node]/` |
 | `/sitemap.xml`、`/robots.txt`、`/feed.xml` | 搜索索引与订阅 | `app/sitemap.ts`、`app/robots.ts`、`app/feed.xml/route.ts` |
@@ -51,7 +52,7 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 - 首页 OS 区只读公开数字、日期和受限短标签；`system-readout.tsx` 对运行期数据逐项校验，不渲染标题、备注或正文。
 - `/health` 的公开内容来自 `app/lib/health.ts` 中的快照数据和组件；计时器以服务端快照为首屏基准。
 - 哲学知识库的结构化数据来自 `data.json`：当前共 55 个节点，包括 23 个核心问题、6 个问题领域、5 个传统导航、7 个历史时段、10 个传统线索和 1 个方法论争论。本轮不以增加节点为目标，节点数不变。
-- 哲学内容分成九层数据，新增主题通过加数据完成，不重写 UI：`data.json`（节点树与立场）、`content-ledger.ts` 与 `remaining-content-ledgers.ts`（研究层与来源账）、`study-guides.ts` 与 `remaining-study-guides.ts`（精读层）、`relations.ts`（语义关系与横向链条）、`concepts.ts`（跨条目概念，全站唯一定义）、`argument-maps.ts`（论证地图）、`thought-experiments.ts`（改变变量式思想实验）、`comparisons.ts`（跨传统可比问题）、`learning-path.ts`（推荐学习路径）。分工与硬约束写在 `KNOWLEDGE_BASE.md`，修改前必须先读局部 `AGENTS.md`。
+- 哲学内容按职责分层，新增主题通过加数据完成，不重写 UI：`data.json`（节点树与立场）、`content-ledger.ts` 与 `remaining-content-ledgers.ts`（研究层与来源账）、`study-guides.ts` 与 `remaining-study-guides.ts`（精读层）、`relations.ts`（语义关系与横向链条）、`concepts.ts`（跨条目概念，全站唯一定义）、`argument-maps.ts`（论证地图）、`thought-experiments.ts`（改变变量式思想实验）、`comparisons.ts`（跨传统可比问题）、`learning-path.ts`（推荐学习路径）、`people.ts`（人物阅读映射）。分工与硬约束写在 `KNOWLEDGE_BASE.md`，修改前必须先读局部 `AGENTS.md`。
 - 论证路径按立场名索引（`positionArguments`），不按数组下标；`study-guides.ts` 末尾有构建期校验，键名与 `data.json` 的 `position.name` 对不上直接抛错。旧的下标对齐结构曾把论证挂到错误的立场上。
 - 来源核验状态是 `'verified' | 'pending' | 'broken'` 三态（`LedgerSource.checked`），页面显示真实值。此前是字面量 `true` 加硬编码的「已核验」，无法表达待核验。
 - 哲学页的所有展开交互用原生 `<details>`，没有客户端组件；知识地图是服务端渲染的静态结构，不引入 Graph / Canvas 引擎。
@@ -87,3 +88,9 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 环境命名和交付措辞以 `.cursor/rules/deployment-environment-language.mdc` 为准。
 
 最近一次正式网站发布是 Worker Version ID `47fd656e-788b-4990-bda6-43ac3291ef28`（2026-09-22，`/mind` 复审与优化：深色面元信息对比度、主题切换改 WAI-ARIA tab 模式、复习答案改原生 `<details>`、卡片索引全文直出、客户端岛由两个减到一个，同次带上线两条已提交未部署的学习页修复 `9bf35af`、`e651e45`），对应提交 `495d49d`，使用 `pnpm deploy:only`，未触碰远程数据库。再往前是 `724790f9-51bb-454a-bf0f-15f5eeab7d61`（2026-09-20，《心灵、身体与「我」》按三个学习单元重建、技术内容移入重写的进阶区、八条概念与推理订正、来源账新增 12 条本轮逐字核对的中文材料，以及全站 8 页 11 处「展开读」自指链接的修复），对应提交 `015aaf0`，使用 `pnpm deploy:only`，未触碰远程数据库。再往前是 `9fe2c73f-0563-4830-a386-6dffb45f8792`（2026-09-19，哲学专区教学重构：具体入口／默认已知／回到问题三层、概念解释前置、导航页导语与建议阅读顺序、推荐路线 11 步加支线层、15 组译名统一），对应提交 `c997276`，使用 `pnpm deploy:only`，未触碰远程数据库。同一轮的主体发布是 `af3f8505-1431-4715-aa4b-be2e9ed72d78`（对应 `8f30bc3`）。再往前是 `43e4d315-6f83-455c-9a40-8f2837838a78`（2026-09-15，哲学库全范围复审，对应 `96d6072`）、`18d5d178-3f3e-4978-9978-ff8cabfc1ff7`（2026-09-13，内容整改轮）、`a5607b45-d9c0-4369-929c-a38b43f4699b`（2026-09-11，哲学知识库 V2，对应 `f6d9e7e`）、`e2ae9304-77d7-4303-93d7-7b0ec91cae18`（2026-09-09，对应 `cb9b966`）、`70b5ff22-d27a-423e-8fc5-e4dfaf025141` 与 `17741be9-d6dd-4208-8efd-71781982026e`。
+
+## 人物阅读入口（2026-09-25）
+
+`/learning/philosophy/people` 是节点树之外的导航页，不改变 55 个知识节点的计数。学习首页增加第三轴；哲学总览另保留推荐学习路线，共四种进入方式。
+
+`people.ts` 只维护轻量身份、问题与精确内容映射，供首页、段落锚点及共享尾部反链使用；`people-content.ts` 解析 `study-guides` 和来源账，复用论证、边界、阅读指导及逐项核验状态。`people-validation.ts` 纳入本地不变式执行，防止失效映射到线上才暴露。历史语境允许多值，不表示学派唯一归属或影响关系。`people-history.ts` 定义五组本地历史分期与缺口；`people-metadata.ts` 定义逐人的年代、学派限定与来源；`people-profiles.ts` 承载尚未接入问题精读的历史概览。概览以 questionNodeId 连接比较问题，与 stops 的精确段落映射区分。人物页按分期和排序键渲染，姓名索引为辅助，原生 details 无新增客户端脚本。

@@ -39,6 +39,7 @@ import { build } from 'vite';
  * 说明文字只用于报告，真正的判定来自模块自己 throw 不 throw。
  */
 const MODULES = [
+  { file: 'app/learning/philosophy/people-validation.ts', guards: ['人物 ID 与姓名无歧义，映射唯一', '人物论证、文本、来源与历史语境有效，核验状态逐引用检查'] },
   {
     file: 'app/learning/philosophy/tree.ts',
     guards: [

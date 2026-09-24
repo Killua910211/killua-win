@@ -6138,3 +6138,10 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   font-size: 11px;
   letter-spacing: 0.06em;
 }
+
+/* 人物入口定位到具体论证、文本时，给固定导航留出空间。 */
+.philosophy-voices article[id],
+.philosophy-texts li[id],
+#learning-philosophy-people {
+  scroll-margin-top: calc(var(--header-height) + 60px);
+}

@@ -1,3 +1,4 @@
+import { voiceAnchorFor, textAnchorFor } from './people';
 import type { LedgerSource } from './content-ledger';
 import type { StudyGuide } from './study-guides';
 import { ClaimSources } from './citation';
@@ -82,7 +83,7 @@ export function GuideVoices({ guide, nodeId, sources, headingLevel = 'h2' }: Sec
       </p>
       <div className="philosophy-voices">
         {guide.philosopherViews.map((view) => (
-          <article key={`${view.philosopher}-${view.work}`}>
+          <article key={`${view.philosopher}-${view.work}`} id={voiceAnchorFor(nodeId, view.philosopher)}>
             <p className="philosophy-voice-period">{view.period}</p>
             <div>
               <SubHeading>{view.philosopher}</SubHeading>
@@ -143,7 +144,7 @@ export function GuideTexts({ guide, nodeId, sources, headingLevel = 'h2' }: Sect
       </p>
       <ol className="philosophy-texts">
         {guide.texts.map((text, index) => (
-          <li key={`${text.author}-${text.work}`}>
+          <li key={`${text.author}-${text.work}`} id={textAnchorFor(nodeId, text.author)}>
             <p aria-hidden="true" className="philosophy-text-index">
               {String(index + 1).padStart(2, '0')}
             </p>
