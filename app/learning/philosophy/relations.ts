@@ -266,6 +266,54 @@ export type PhilosophyRelation = {
  * 让关系图看起来更满、实际信息更少。
  */
 export const philosophyRelations: PhilosophyRelation[] = [
+  {
+    from: 'pt-right-action',
+    to: 'pt-chinese-later',
+    kind: 'historical-context',
+    why: '戴震从情欲与反躬设想他人处境讨论理，追问规范如何回应具体需要；这种路径仍须交代从事实到应然的理由，也不能用其批评替代朱熹自己的主张。',
+  },
+  {
+    from: 'pt-language-meaning',
+    to: 'pt-chinese-later',
+    kind: 'historical-context',
+    why: '王弼的言、象、意之辨让解释者说明符号如何通达义理；得意忘象仍须接受具体文本检验，不能当作随意发挥的许可。',
+  },
+  {
+    from: 'pt-legitimacy',
+    to: 'pt-western-contemporary',
+    kind: 'historical-context',
+    why: '哈贝马斯从相互给出理由的交往实践寻找批判的规范根据；公共讨论中的实际排除又给平等参与提出压力，形式上能发言不等于已经获得正当性。',
+  },
+  {
+    from: 'pt-mind-self',
+    to: 'pt-western-contemporary',
+    kind: 'historical-context',
+    why: '梅洛-庞蒂通过身体经验重新描述知觉与行动的关系，让身心问题不能只从旁观者描述开始；这种经验描述本身并不否定神经科学的因果解释。',
+  },
+  {
+    from: 'pt-science-reality',
+    to: 'pt-western-contemporary',
+    kind: 'historical-context',
+    why: '逻辑经验主义的证实标准遭遇普遍科学规律的困难，卡尔纳普与石里克等给出不同处理；科学页关于证据与理论的区分可帮助读懂争点，不能把全派合成严格证实主义。',
+  },
+  {
+    from: 'pt-knowledge-sources',
+    to: 'pt-western-contemporary',
+    kind: 'historical-context',
+    why: '皮尔士与杜威把关注点从确定的起点移到可纠错的探究：信念怎样面对反例、共同体怎样修正方法？这不等于把眼前利益当作真理标准。',
+  },
+  {
+    from: 'pt-language-meaning',
+    to: 'pt-western-medieval',
+    kind: 'historical-context',
+    why: '奥卡姆用能够指称多个对象的个别概念解释通名，拒绝由共同名称推出共同实体；这使语言与存在的关系变得具体，但不是现代语言哲学的同义改写。',
+  },
+  {
+    from: 'pt-knowledge-sources',
+    to: 'pt-western-ancient',
+    kind: 'historical-context',
+    why: '塞克斯都把相反理由的均衡引向悬置，又保留依显现生活的方式；它让知识来源的讨论追问行动是否必须先有确定知识，不能把这种方法说成真理不存在。',
+  },
   // ——— 前置理解 ———————————————————————————————————————————————
   {
     from: 'pt-responsibility',
@@ -724,7 +772,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-religion-reason',
     to: 'pt-indian-vedanta',
     kind: 'cross-tradition',
-    why: '可比较的争点是终极实在能否由论证达到，还是要靠经文与实践。不可等同的是吠檀多的「梵」不是有神论论证里那个位格神，把它译成 God，整套解脱论就失去了对象。',
+    why: '可比较的争点是终极实在能否由论证达到，还是要靠经文与实践。不可等同的是吠檀多各派对梵的人格性及其与世界的关系有不同说明，比较必须指明具体派别与解脱语境，不能把梵统一等同或排除为人格神。',
   },
   {
     from: 'pt-knowledge-sources',
@@ -786,7 +834,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-knowledge-sources',
     to: 'pt-western-modern',
     kind: 'historical-context',
-    why: '材料是近代关于经验、理性、证言与知识限度的争论。不能从「理性主义对经验主义」这条教材线推出近代认识论只有两队人，更推不出同期别处没有认识论争论。',
+    why: '洛克、贝克莱与休谟对经验、观念和因果的处理显示经验论内部的分岔；贝克莱对物质基底的反对依赖可争的感知前提，不能读成世界只是个人想象。',
   },
   {
     from: 'pt-mind-self',
@@ -816,7 +864,7 @@ export const philosophyRelations: PhilosophyRelation[] = [
     from: 'pt-being-change',
     to: 'pt-western-ancient',
     kind: 'historical-context',
-    why: '材料是从巴门尼德、赫拉克利特到亚里士多德的自然与实体讨论。不能从它推出一条「变化问题逐步解决」的线；这些文本的保存与作者归属本身也有限度。',
+    why: '从巴门尼德、亚里士多德到普罗提诺，变化、实体与一多关系各有论证。普罗提诺以单纯原因解释统一性，又面临单纯者如何产生多样性的难题；不能据此拼出问题逐步解决的直线。',
   },
   {
     from: 'pt-good-life',
