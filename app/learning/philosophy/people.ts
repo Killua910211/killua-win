@@ -411,7 +411,7 @@ export const philosophyPeople: PhilosophyPerson[] = [
       "nodeId": "pt-religion-reason",
       "view": "托马斯·阿奎那",
       "textAuthor": "托马斯·阿奎那",
-      "why": "从现有问题中的具体论证、反对意见与文本指导进入。"
+      "why": "先读她怎样把「被当作知者」的伤害切成两种，再看两种补救共享什么、又在哪里分开。"
     }
   ],
   "contextIds": [
@@ -430,7 +430,7 @@ export const philosophyPeople: PhilosophyPerson[] = [
       "nodeId": "pt-identity-oppression",
       "view": "米兰达·弗里克",
       "textAuthor": "米兰达·弗里克",
-      "why": "从现有问题中的具体论证、反对意见与文本指导进入。"
+      "why": "先读他怎样安排信仰与理性各自的范围，再看这一安排要付什么代价。"
     }
   ],
   "contextIds": [

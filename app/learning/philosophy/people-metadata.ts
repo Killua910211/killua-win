@@ -31,7 +31,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/mencius/",
       "title": "SEP · mencius",
-      "locator": "导言；§1 Life and Confucian Background；站内关怀入口来源账",
+      "locator": "导言；§1 Life and Confucian Background",
       "checkedOn": "2026-09-25"
     }
   },
@@ -65,7 +65,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/zhu-xi/",
       "title": "SEP · zhu-xi",
-      "locator": "导言；站内解释与自由入口来源账",
+      "locator": "导言",
       "checkedOn": "2026-09-25"
     }
   },
@@ -167,7 +167,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/aristotle/",
       "title": "SEP · aristotle",
-      "locator": "导言；站内逻辑与好生活入口来源账",
+      "locator": "Preamble；§1 Aristotle’s Life",
       "checkedOn": "2026-09-25"
     }
   },
@@ -184,7 +184,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/epicurus/",
       "title": "SEP · epicurus",
-      "locator": "导言；站内死亡与意义来源账",
+      "locator": "导言",
       "checkedOn": "2026-09-25"
     }
   },
@@ -201,7 +201,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/aquinas/",
       "title": "SEP · aquinas",
-      "locator": "导言；§2 God；站内信仰与理性来源账",
+      "locator": "导言；§2 God",
       "checkedOn": "2026-09-25"
     }
   },
@@ -218,7 +218,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/descartes/",
       "title": "SEP · descartes",
-      "locator": "导言；站内知识来源与心灵入口来源账",
+      "locator": "导言",
       "checkedOn": "2026-09-25"
     }
   },
@@ -235,7 +235,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/hume/",
       "title": "SEP · hume",
-      "locator": "导言；站内知识来源、自由与心灵入口来源账",
+      "locator": "导言",
       "checkedOn": "2026-09-25"
     }
   },
@@ -252,7 +252,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/kant/",
       "title": "SEP · kant",
-      "locator": "导言；§3 Transcendental Idealism；站内自由与审美来源账",
+      "locator": "导言；§3 Transcendental Idealism",
       "checkedOn": "2026-09-25"
     }
   },
@@ -303,7 +303,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/wittgenstein/",
       "title": "SEP · wittgenstein",
-      "locator": "导言；站内语言意义入口来源账",
+      "locator": "导言",
       "checkedOn": "2026-09-25"
     }
   },
@@ -320,7 +320,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/beauvoir/",
       "title": "SEP · beauvoir",
-      "locator": "导言；站内身份与压迫来源账",
+      "locator": "导言",
       "checkedOn": "2026-09-25"
     }
   },
@@ -337,7 +337,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/feminism-ethics/",
       "title": "SEP · feminism-ethics",
-      "locator": "§2.2 Care Ethics；站内关怀来源账",
+      "locator": "§2.2 Ethic of Care and Relational Ethics",
       "checkedOn": "2026-09-25"
     }
   },
@@ -350,11 +350,11 @@ export const personHistory: Record<string, PersonHistory> = {
       "女性主义认识论"
     ],
     "qualification": "研究领域标签；不把所有分歧或不被赞同都称为不正义。",
-    "key": "证言可信度与认识不正义",
+    "key": "证言可信度与认知不正义",
     "source": {
       "url": "https://plato.stanford.edu/entries/feminist-social-epistemology/",
       "title": "SEP · feminist-social-epistemology",
-      "locator": "§4.1；站内身份与压迫来源账",
+      "locator": "§4.1（Epistemic Injustice）",
       "checkedOn": "2026-09-25"
     }
   },
@@ -388,7 +388,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/al-ghazali/",
       "title": "SEP · al-ghazali",
-      "locator": "导言；站内信仰与理性来源账",
+      "locator": "导言",
       "checkedOn": "2026-09-25"
     }
   },
@@ -405,7 +405,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/dubois/",
       "title": "SEP · dubois",
-      "locator": "导言；站内身份与压迫来源账",
+      "locator": "导言",
       "checkedOn": "2026-09-25"
     }
   },

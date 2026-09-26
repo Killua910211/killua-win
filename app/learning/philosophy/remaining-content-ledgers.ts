@@ -790,7 +790,7 @@ export const remainingEntryLedgers: Record<string, CoreEntryLedger> = {
       { nodeId: 'pt-african-personhood', label: '人格、共同体与 Ubuntu', note: '关系性人格与照护可以相互照亮，但两者来自不同的道德语言与政治问题。' },
     ],
     sources: [
-      source('CAR-1', 'SEP：Feminist Ethics', 'https://plato.stanford.edu/entries/feminism-ethics/', '§2.2 Ethic of care and relational ethics', '吉利根 1982 年对道德发展研究的批评、诺丁斯把关系语境置于抽象原则之前、基泰的「派生依赖」、关系自主，以及女性主义内部对关怀伦理美化女性化角色、缺少制度改变图景的批评。', 'verified', '2026-09-11'),
+      source('CAR-1', 'SEP：Feminist Ethics', 'https://plato.stanford.edu/entries/feminism-ethics/', '§2.2 Ethic of care and relational ethics', '按人物分述，取用时只取与该人物相关的一条：§2.2 引吉利根 1982 对科尔伯格道德发展研究框架的批评；同节记诺丁斯把关系语境置于抽象原则之前；基泰的「派生依赖」与关系自主另见该节后半；女性主义内部对关怀伦理美化女性化角色、缺少制度改变图景的批评则是对这一整条路线的反对，不属于其中任何一人的主张。', 'verified', '2026-09-11'),
       source('CAR-2', 'SEP：Personal Relationship Goods', 'https://plato.stanford.edu/entries/personal-relationship-goods/', '导论、§2.1、§5–§6', '照护作为关系善、需要、特殊关系的规范力量，以及照护分配与制度责任。'),
       source('CAR-3', 'SEP：Mencius', 'https://plato.stanford.edu/entries/mencius/', '§2 The Virtues and Their Cultivation（含 1A7 由牛及民的恻隐推扩与治理讨论）', '《孟子》从具体受苦对象出发的恻隐如何被推扩为治理责任；不预设其为当代关怀伦理。', 'verified', '2026-09-11'),
     ],
