@@ -65,7 +65,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/zhu-xi/",
       "title": "SEP · zhu-xi",
-      "locator": "导言",
+      "locator": "导言；§1 Life and Works；§3 Ethical Philosophy；§4.1 Investigating Things for Natural Knowledge and Action",
       "checkedOn": "2026-09-25"
     }
   },
@@ -137,6 +137,40 @@ export const personHistory: Record<string, PersonHistory> = {
       "checkedOn": "2026-09-25"
     }
   },
+  "wang-bi": {
+    "stage": "china-middle",
+    "order": 1,
+    "era": "226—249",
+    "schools": [
+      "魏晋玄学",
+      "《老子》《周易》注释"
+    ],
+    "qualification": "「玄学」是后世给这一段学问起的名目，指围绕《周易》《老子》《庄子》及其注释展开的讨论，不是一个有固定教条的学派；王弼与同期的郭象在关键问题上真的对立，不能合成一种主张。",
+    "key": "以无为本；言、象、意之辨",
+    "source": {
+      "url": "https://plato.stanford.edu/entries/neo-daoism/",
+      "title": "SEP · neo-daoism",
+      "locator": "§1 What is Xuanxue?；§2 He Yan and Wang Bi: The “Nothingness” of Dao；§4 Guo Xiang: Nature, Destiny, and Self-Realization",
+      "checkedOn": "2026-09-27"
+    }
+  },
+  "dai-zhen": {
+    "stage": "china-qing",
+    "order": 1,
+    "era": "1724—1777",
+    "schools": [
+      "清代考据学",
+      "《孟子》义理重释"
+    ],
+    "qualification": "「考据」指以训诂、音韵与制度史约束经典解释的做法，不等于只做文字校勘而不谈义理——戴震正是用考据去重订义理的人。把他归进「反理学」也嫌粗：他反对的是特定一种对「理」的理解。",
+    "key": "以情絜情；理即同然",
+    "source": {
+      "url": "https://plato.stanford.edu/entries/dai-zhen/",
+      "title": "SEP · dai-zhen",
+      "locator": "§1 Life and Writings；§3.2 Li 理；§6.1 Sympathetic Consideration；§6.2 Common Affirmability",
+      "checkedOn": "2026-09-27"
+    }
+  },
   "plato": {
     "stage": "west-ancient",
     "order": -420,
@@ -184,7 +218,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/epicurus/",
       "title": "SEP · epicurus",
-      "locator": "导言",
+      "locator": "导言；§1 Sources；§2 Life；§4 Psychology and Ethics",
       "checkedOn": "2026-09-25"
     }
   },
@@ -218,7 +252,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/descartes/",
       "title": "SEP · descartes",
-      "locator": "导言",
+      "locator": "导言；§1 Intellectual Biography；§3 A New Metaphysics and Epistemology",
       "checkedOn": "2026-09-25"
     }
   },
@@ -235,7 +269,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/hume/",
       "title": "SEP · hume",
-      "locator": "导言",
+      "locator": "导言；§1 Life and Works；§2 Philosophy of Mind, Metaphysics, and Epistemology",
       "checkedOn": "2026-09-25"
     }
   },
@@ -303,7 +337,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/wittgenstein/",
       "title": "SEP · wittgenstein",
-      "locator": "导言",
+      "locator": "导言；§1 Biographical Sketch；§2 The Early Wittgenstein；§3 The Later Wittgenstein",
       "checkedOn": "2026-09-25"
     }
   },
@@ -320,7 +354,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/beauvoir/",
       "title": "SEP · beauvoir",
-      "locator": "导言",
+      "locator": "导言；§1 Life and Works；§2 Beauvoir the Philosopher；§7 The Second Sex: Woman As Other",
       "checkedOn": "2026-09-25"
     }
   },
@@ -388,7 +422,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/al-ghazali/",
       "title": "SEP · al-ghazali",
-      "locator": "导言",
+      "locator": "导言；§1 Life；§7 Causality in al-Ghazālī",
       "checkedOn": "2026-09-25"
     }
   },
@@ -405,7 +439,7 @@ export const personHistory: Record<string, PersonHistory> = {
     "source": {
       "url": "https://plato.stanford.edu/entries/dubois/",
       "title": "SEP · dubois",
-      "locator": "导言",
+      "locator": "导言；§1 Du Bois’s Life and Major Publications；§2 Social Philosophy, The Negro Problem, and Race",
       "checkedOn": "2026-09-25"
     }
   },

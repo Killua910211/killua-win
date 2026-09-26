@@ -117,6 +117,28 @@ export const philosophyPeople: PhilosophyPerson[] = [
     ]
   },
   {
+    "id": "wang-bi",
+    "name": "王弼",
+    "aliases": [],
+    "question": "万物是否必须依赖一个共同的根源？",
+    "stops": [],
+    "contextIds": [
+      "pt-chinese-later"
+    ],
+    "questionNodeId": "pt-being-change"
+  },
+  {
+    "id": "dai-zhen",
+    "name": "戴震",
+    "aliases": [],
+    "question": "对「理」的理解，会怎样改变我们怎样对待人的欲求？",
+    "stops": [],
+    "contextIds": [
+      "pt-chinese-later"
+    ],
+    "questionNodeId": "pt-right-action"
+  },
+  {
     "id": "mencius",
     "name": "孟子",
     "aliases": [],
