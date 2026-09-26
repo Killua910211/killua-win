@@ -56,11 +56,14 @@ export const resolvePerson = (person: PhilosophyPerson) => ({
  * 「本页」这类指代在人物页会指错地方（人物页上没有那场分歧）。
  * 只查这几个双页字段；application、concepts、caseStudy 只在问题页出现，不在此列。
  */
-const PAGE_DEIXIS = ['本页', '该页', '这一页', '同一页', '本问题页'];
+// 「本页」后接「码」是「中译本页码」这类词，不是页面指代，排除掉。
+const PAGE_DEIXIS = [/本页(?!码)/, /该页/, /这一页/, /同一页/, /本问题页/];
 
 function assertNoPageDeixis(label: string, value: string | undefined) {
-  for (const word of PAGE_DEIXIS) {
-    if (value?.includes(word)) throw new Error(`[people] 双页字段含会指错的页面指代「${word}」：${label}`);
+  if (!value) return;
+  for (const pattern of PAGE_DEIXIS) {
+    const hit = value.match(pattern);
+    if (hit) throw new Error(`[people] 双页字段含会指错的页面指代「${hit[0]}」：${label}`);
   }
 }
 
@@ -109,6 +112,11 @@ export function assertPeopleIntegrity() {
       assertNoPageDeixis(`${person.id}/view.caution`, first.view.caution);
       assertNoPageDeixis(`${person.id}/text.contribution`, first.text.contribution);
       assertNoPageDeixis(`${person.id}/text.readingQuestion`, first.text.readingQuestion);
+    }
+    // 首个问题的来源账也整条印在人物卡上；supports／locator 同样是双页文字。
+    for (const source of first?.sources ?? []) {
+      assertNoPageDeixis(`${person.id}/${source.id}/supports`, source.supports);
+      assertNoPageDeixis(`${person.id}/${source.id}/locator`, source.locator);
     }
     for (const stop of resolved.stops) {
       assertNoPageDeixis(`${person.id}/${stop.nodeId}/why`, stop.why);
