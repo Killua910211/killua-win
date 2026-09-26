@@ -20,7 +20,11 @@
 .sources li { padding-top: 15px; border-top: 1px solid var(--warm-gray); }
 .sources p { font-size: 14px; }
 .person .back { font-size: 13px; margin-top: 25px; }
-.coverage { max-width: 860px; border-top: 2px solid var(--ember); margin-top: 35px; padding-top: 30px; scroll-margin-top: calc(var(--header-height) + 60px); }
+/* 锚点落点：id 挂在哪个元素上，scroll-margin-top 就得挂在哪个元素上。
+   .coverage 在带 id 的 <section> 内层的 div 上，偏移量对该 section 无效；
+   页面标题 #people-title 是 27 张卡片「返回传统目录 ↑」的目标，原本没有偏移。 */
+.anchorTarget { scroll-margin-top: calc(var(--header-height) + 60px); }
+.coverage { max-width: 860px; border-top: 2px solid var(--ember); margin-top: 35px; padding-top: 30px; }
 .coverage h2 { font-size: 26px; line-height: 1.5; }
 .coverage p, .coverage li { margin-top: 16px; }
 .person :focus-visible, .index :focus-visible, .coverage :focus-visible { outline: 2px solid var(--ember-hot); outline-offset: 5px; }

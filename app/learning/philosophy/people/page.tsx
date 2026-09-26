@@ -76,7 +76,7 @@ export default function PhilosophyPeoplePage() {
       <div className="philosophy-hero-body">
         <nav aria-label="面包屑" className="philosophy-breadcrumb"><Link href="/learning">学习空间</Link><span aria-hidden="true">/</span><Link href="/learning/philosophy">哲学</Link><span aria-hidden="true">/</span><span aria-current="page">人物与思想史</span></nav>
         <p className="eyebrow">传统 → 时代 → 人物 → 学派与问题</p>
-        <h1 id="people-title">把人物放回时代，<br />看见问题如何展开。</h1>
+        <h1 className={styles.anchorTarget} id="people-title">把人物放回时代，<br />看见问题如何展开。</h1>
         <p className="philosophy-question">先选一条传统，沿历史阶段阅读人物；再展开他的理由、分歧与文本。也可以直接按姓名查找。</p>
         <p className="philosophy-summary">{people.length} 位人物，五条历史线。东方／西方是辅助导航，不是文明本质；各传统分别分期，伊斯兰与非洲思想独立呈现。阶段内按生年约数或可考活动、作品时期排序，不表示影响链或进步阶梯。</p>
         <nav aria-label="传统历史导航" className={styles.groupNav}>{peopleHistories.map((group) => <Link href={`#history-${group.id}`} key={group.id}><strong>{group.title}</strong><span>{people.filter((p) => group.stages.some((s) => s.id === p.history.stage)).length} 位人物 · 查看历史阶段 ↗</span></Link>)}</nav>
@@ -99,7 +99,7 @@ export default function PhilosophyPeoplePage() {
         })}</div>
       </div>
     </section>)}
-    <section className="philosophy-section" id="coverage" aria-labelledby="coverage-title"><div className="section-label"><span>07</span><span>Coverage</span></div><div className="philosophy-section-body"><div className={styles.coverage}>
+    <section className={`philosophy-section ${styles.anchorTarget}`} id="coverage" aria-labelledby="coverage-title"><div className="section-label"><span>07</span><span>Coverage</span></div><div className="philosophy-section-body"><div className={styles.coverage}>
       <h2 id="coverage-title">这是可继续补全的历史地图</h2>
       <p>当前 {people.filter(p=>!p.profile).length} 人连接既有问题精读，{people.filter(p=>p.profile).length} 人提供历史概览与学术综述导读。五条线的覆盖并不均衡；空段不表示该时期没有哲学，也不把待研究人物计入可读人数。</p>
       <p>优先补充目录中标出的历史断层，再增加实质论争与可定位文本。新增人物须有具体问题、理由、反对或边界，以及可追溯来源；原典版本、作者归属和争议不能省略。</p>

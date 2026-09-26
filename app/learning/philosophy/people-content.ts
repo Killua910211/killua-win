@@ -51,6 +51,19 @@ export const resolvePerson = (person: PhilosophyPerson) => ({
   }),
 });
 
+/**
+ * study-guides 里的 framing／caution／text／why 同时渲染在问题页和人物页上，
+ * 「本页」这类指代在人物页会指错地方（人物页上没有那场分歧）。
+ * 只查这几个双页字段；application、concepts、caseStudy 只在问题页出现，不在此列。
+ */
+const PAGE_DEIXIS = ['本页', '该页', '这一页', '同一页', '本问题页'];
+
+function assertNoPageDeixis(label: string, value: string | undefined) {
+  for (const word of PAGE_DEIXIS) {
+    if (value?.includes(word)) throw new Error(`[people] 双页字段含会指错的页面指代「${word}」：${label}`);
+  }
+}
+
 export function assertPeopleIntegrity() {
   const stageIds = peopleHistories.flatMap((group) => group.stages.map((stage) => stage.id));
   if (new Set(stageIds).size !== stageIds.length) throw new Error('[people] 分期 ID 重复');
@@ -83,6 +96,32 @@ export function assertPeopleIntegrity() {
     if (!history || !stages.some((stage) => stage.id === history.stage) || !history.era || !Number.isFinite(history.order) || !history.schools.length || !history.qualification || !history.key || !history.source.locator || !history.source.checkedOn || !/^https:\/\//.test(history.source.url)) throw new Error(`[people] 缺少历史定位或依据：${person.id}`);
     const profile = historicalProfiles[person.id];
     if (profile && (!person.questionNodeId || !getNodeById(person.questionNodeId) || !profile.reason || !profile.boundary || !profile.work || !profile.reading || profile.compare.some((id) => !philosophyPeople.some((item) => item.id === id)))) throw new Error(`[people] 历史入口未闭合：${person.id}`);
-    resolvePerson(person);
+    // 人物页上的来源定位必须是外部材料里的位置；写成站内自指等于没给定位。
+    const locator = history.source.locator;
+    for (const word of ['站内', '本站', '本卡', '本页']) {
+      if (locator.includes(word)) throw new Error(`[people] 来源定位不能自指站内：${person.id}`);
+    }
+    if (locator.trim().length < 3 || locator.trim() === '导言') throw new Error(`[people] 来源定位过弱，需给出章节位置：${person.id}`);
+    const resolved = resolvePerson(person);
+    const first = resolved.stops[0];
+    if (first) {
+      assertNoPageDeixis(`${person.id}/view.framing`, first.view.framing);
+      assertNoPageDeixis(`${person.id}/view.caution`, first.view.caution);
+      assertNoPageDeixis(`${person.id}/text.contribution`, first.text.contribution);
+      assertNoPageDeixis(`${person.id}/text.readingQuestion`, first.text.readingQuestion);
+    }
+    for (const stop of resolved.stops) {
+      assertNoPageDeixis(`${person.id}/${stop.nodeId}/why`, stop.why);
+      assertNoPageDeixis(`${person.id}/${stop.nodeId}/view.work`, stop.view.work);
+    }
+  }
+  // 「对照阅读」表示共同问题，两张概览卡之间必须互相列出，否则一边点得过去、一边回不来。
+  for (const person of philosophyPeople) {
+    const profile = historicalProfiles[person.id];
+    if (!profile) continue;
+    for (const otherId of profile.compare) {
+      const other = historicalProfiles[otherId];
+      if (other && !other.compare.includes(person.id)) throw new Error(`[people] 对照阅读只有单向：${person.id} → ${otherId}`);
+    }
   }
 }

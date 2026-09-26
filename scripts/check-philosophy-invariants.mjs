@@ -39,7 +39,16 @@ import { build } from 'vite';
  * 说明文字只用于报告，真正的判定来自模块自己 throw 不 throw。
  */
 const MODULES = [
-  { file: 'app/learning/philosophy/people-validation.ts', guards: ['人物 ID 与姓名无歧义，映射唯一', '人物论证、文本、来源与历史语境有效，核验状态逐引用检查'] },
+  {
+    file: 'app/learning/philosophy/people-validation.ts',
+    guards: [
+      '人物 ID 与姓名无歧义，映射唯一',
+      '人物论证、文本、来源与历史语境有效，核验状态逐引用检查',
+      '同时渲染在问题页和人物页的字段里没有「本页」这类会指错的页面指代',
+      '人物卡的来源定位指向外部材料的章节位置，不自指站内、不是裸「导言」',
+      '两张概览卡之间的对照阅读双向可达',
+    ],
+  },
   {
     file: 'app/learning/philosophy/tree.ts',
     guards: [
