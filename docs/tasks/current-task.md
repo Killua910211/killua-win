@@ -1,6 +1,6 @@
 # 当前任务：全站右侧阅读导航（2026-09-28）
 
-状态：用户于 2026-09-29 明确要求「提交发布」；当前版本已完成发布前检查，正在提交、推送和部署。
+状态：已提交、推送 origin/main 并部署正式 Worker（2026-09-29）；线上代表页面与导航交互复验完成。
 
 ## 需求与验收
 
@@ -17,7 +17,17 @@
 - 首次线上交互复验发现 sticky 页头遮住点击落点；补入实际吸顶页头与分区导航高度，重新 pnpm check / pnpm build 通过后提交修正版。
 - 首版主要栏目逐页可读，人物页预览卡片与位置高亮出现；390px 视口导航隐藏且内容宽度与滚动宽度均 375px。
 
-## 验证进展
+## 最终发布与线上证据（2026-09-29）
+
+- 最终运行时代码提交 77fde8e 已推送 origin/main；Worker 版本 e1538b8a-4586-48c9-9bbe-36d625891775，启动时间 26ms。无远程 D1 迁移。
+- 正式浏览器逐页检查 12 个代表页面：/、/notes、/notes/qq-1706977003、/notes/category/随笔、/health、/mind、/learning、/learning/philosophy、/learning/philosophy/map、/learning/philosophy/path、/learning/philosophy/people、/learning/philosophy/mind-self；标题与阅读导航可见，节点数量 2–20。
+- 人物页点击及 Enter 键跳转验证通过；修正后西方标题 top=96.09px、吸顶页头 bottom=72px，高亮为西方节点，预览卡片可见。
+- 从哲学正文通过 Learn 站内链接切换，导航正确刷新为学习首页的 3 个节点。390px 视口下导航移除，页面 clientWidth 与 scrollWidth 均 375px；已恢复视口。
+- 浏览器打开 sitemap.xml 被客户端阻止，未把站点地图读取计为通过。一次 heading 定位等待因可访问名称空格差异失败，随后直接读取 DOM 确认路径、标题与导航均正确。
+- 上述为代表路由与交互检查，不是全部文章／哲学节点的完整视觉回归，也未核验与 Codex 客户端完全一致。
+- 发布记录以文档提交同步 origin/main，运行时代码不变。
+
+## 初次本地验证（09-28，发布前历史）
 
 - pnpm check 通过（Lint、TypeScript、16 个本地迁移回放、23 条哲学不变式）；pnpm build 五阶段通过，仍有既有路由静态分类 Unknown 提示。构建成功不等于视觉与交互验收。
 - 尝试通过 UI 工具读取 Codex 客户端，被工具安全限制拒绝，未绕过；已询问用户确认目标交互。尚未浏览器验证，不宣称复刻完成。
