@@ -111,7 +111,13 @@ function PageReadingRail() {
           aria-current={index === active ? 'location' : undefined}
           onClick={() => {
             const localNav = document.querySelector('.section-local-nav');
-            const offset = (localNav?.getBoundingClientRect().height ?? 0) + 24;
+            const header = document.querySelector('.site-header');
+            const pinnedHeight = (element: Element | null) => {
+              if (!element) return 0;
+              const position = getComputedStyle(element).position;
+              return position === 'sticky' || position === 'fixed' ? element.getBoundingClientRect().height : 0;
+            };
+            const offset = pinnedHeight(header) + pinnedHeight(localNav) + 24;
             window.scrollTo({
               top: Math.max(0, point.element.getBoundingClientRect().top + window.scrollY - offset),
               behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',

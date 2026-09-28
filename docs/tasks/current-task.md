@@ -13,7 +13,9 @@
 
 - 重新执行 pnpm check 和 pnpm build 均通过；git diff --check 通过。
 - fetch origin 后确认 origin/main 与 HEAD 2654eb5 一致，无额外待推送历史提交。
-- 使用 pnpm deploy:only 发布正式 Worker，不执行远程 D1 迁移。
+- 使用 pnpm deploy:only 发布正式 Worker，不执行远程 D1 迁移。首版提交 1be9e6f，Worker 557a505f-429d-4439-a5c6-024449ef9e5c。
+- 首次线上交互复验发现 sticky 页头遮住点击落点；补入实际吸顶页头与分区导航高度，重新 pnpm check / pnpm build 通过后提交修正版。
+- 首版主要栏目逐页可读，人物页预览卡片与位置高亮出现；390px 视口导航隐藏且内容宽度与滚动宽度均 375px。
 
 ## 验证进展
 
