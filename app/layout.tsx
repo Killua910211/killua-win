@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Barlow, Barlow_Condensed, Bebas_Neue, JetBrains_Mono } from 'next/font/google';
 import { SITE } from '@/app/lib/metadata';
 import './globals.css';
+import { ReadingRail } from '@/app/components/reading-rail';
 
 const barlow = Barlow({
   variable: '--font-barlow',
@@ -66,6 +67,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           banner / contentinfo 这两个 landmark —— 套在 <main> 里会全部失效。
         */}
         {children}
+        <ReadingRail />
       </body>
     </html>
   );

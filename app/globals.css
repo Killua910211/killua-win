@@ -6145,3 +6145,76 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 #learning-philosophy-people {
   scroll-margin-top: calc(var(--header-height) + 60px);
 }
+
+/* Quiet outline in the outer gutter; native page scrolling stays intact. */
+.reading-rail {
+  position: fixed;
+  z-index: 30;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  border-radius: 20px;
+  background: rgba(14, 14, 17, 0.82);
+  box-shadow: 0 0 0 1px rgba(242, 237, 232, 0.06);
+}
+.reading-rail-point {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 36px;
+  height: clamp(12px, 2.5vh, 22px);
+  padding: 0 8px;
+  cursor: pointer;
+}
+.reading-rail-tick {
+  height: 2px;
+  width: 9px;
+  background: #777378;
+  transition: width 160ms ease, background 160ms ease;
+}
+.reading-rail-point[aria-current] .reading-rail-tick { width: 20px; background: var(--warm-white); }
+.reading-rail-point:hover .reading-rail-tick,
+.reading-rail-point:focus-visible .reading-rail-tick { width: 20px; background: var(--ember-hot); }
+.reading-rail-point:focus-visible { outline: 2px solid var(--ember-hot); outline-offset: 2px; border-radius: 4px; }
+.reading-rail-preview {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  gap: 10px;
+  width: 300px;
+  padding: 18px 20px;
+  border: 1px solid rgba(242, 237, 232, 0.14);
+  border-radius: 16px;
+  background: #252529;
+  color: var(--warm-white);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+  text-align: left;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+.reading-rail-point:hover .reading-rail-preview,
+.reading-rail-point:focus-visible .reading-rail-preview { visibility: visible; opacity: 1; }
+.reading-rail-counter { font: 10px var(--font-mono); color: var(--warm-gray); letter-spacing: 0.1em; }
+.reading-rail-preview strong { font-size: 15px; font-weight: 500; line-height: 1.6; }
+.reading-rail-excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--warm-gray);
+}
+@media (max-width: 999px), (max-height: 480px) { .reading-rail { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .reading-rail-tick, .reading-rail-preview { transition: none; }
+}
+@media print { .reading-rail { display: none; } }
