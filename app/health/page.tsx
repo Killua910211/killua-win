@@ -64,7 +64,6 @@ export default function HealthPage() {
             { href: '#health-snapshot', label: '一周均值' },
             { href: '#health-trends', label: '长期趋势' },
             { href: '#health-nutrition', label: '补剂' },
-            { href: '#health-notes', label: '数据观察' },
           ]}
         />
 
@@ -299,33 +298,6 @@ export default function HealthPage() {
           </div>
         </section>
 
-        <section id="health-notes" className="health-notes" aria-labelledby="health-notes-heading">
-          <div className="section-label" lang="en">
-            <span>06</span>
-            <span>Data observations</span>
-          </div>
-          <div className="health-section-body">
-            <p className="eyebrow">Observations / 长期变化</p>
-            <h2 id="health-notes-heading">数字之外，也记录主动改变。</h2>
-            <div className="health-note-grid">
-              <article>
-                <span lang="en">01 / Activity</span>
-                <h3>2025 年出现活动拐点</h3>
-                <p>长期低活动阶段在 2025 年明显结束。</p>
-              </article>
-              <article>
-                <span lang="en">02 / Recovery</span>
-                <h3>恢复指标同向变化</h3>
-                <p>恢复相关读数在长期尺度上呈现同向改善。</p>
-              </article>
-              <article>
-                <span lang="en">03 / Capacity</span>
-                <h3>体能指标缓慢改善</h3>
-                <p>体能读数维持缓慢改善趋势。</p>
-              </article>
-            </div>
-          </div>
-        </section>
       </main>
 
       <SiteFooter />
