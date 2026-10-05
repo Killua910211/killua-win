@@ -13,6 +13,11 @@ import {
   HEALTH_SUPPLEMENTS,
   HEALTH_SMOKING_RECORD,
   HEALTH_TRENDS,
+  HEALTH_TRENDS_UPDATED_AT,
+  HEALTH_WEEKLY_WINDOW_START,
+  HEALTH_WEEKLY_WINDOW_END,
+  HEALTH_WEEKLY_TIME_ZONE,
+  HEALTH_WEEKLY_DATA_UPDATED_AT,
   HEALTH_WEEKLY_AVERAGES,
   getHealthNutritionReferenceLabel,
   getHealthNutritionReferenceStatus,
@@ -123,6 +128,11 @@ export default function HealthPage() {
           <div className="health-section-body">
             <p className="eyebrow">7 日均值</p>
             <h2 id="health-snapshot-heading">身体的日常节奏。</h2>
+            <p>
+              {HEALTH_WEEKLY_WINDOW_START} 至 {HEALTH_WEEKLY_WINDOW_END} · {HEALTH_WEEKLY_TIME_ZONE}
+              <br />
+              数据更新于 {HEALTH_WEEKLY_DATA_UPDATED_AT} · Apple Health 导出快照
+            </p>
             <dl className="health-kpi-grid">
               {HEALTH_WEEKLY_AVERAGES.map((item) => {
                 const display = getHealthWeeklyAverageDisplay(item);
@@ -143,6 +153,11 @@ export default function HealthPage() {
                 );
               })}
             </dl>
+            <p>
+              采用导出前最近 7 个完整日，未纳入 10 月 5 日的未完整数据。
+              均值按有记录的日期计算；静息心率缺少 10 月 4 日读数，按 6 天计算。
+              睡眠合并重叠的已睡时段，排除卧床与清醒时间。
+            </p>
           </div>
         </section>
 
@@ -154,6 +169,9 @@ export default function HealthPage() {
           <div className="health-section-body">
             <p className="eyebrow health-trends-eyebrow">2021 → 2026</p>
             <h2 id="health-trends-heading">把变化放回几年的时间里。</h2>
+            <p className="health-trends-eyebrow">
+              历史报告截至 {HEALTH_TRENDS_UPDATED_AT}；2026 年为截至该日的统计，尚未合并本次导出。
+            </p>
 
             <div className="health-trend-grid">
               {HEALTH_TRENDS.map((trend) => {
@@ -305,7 +323,7 @@ export default function HealthPage() {
             <span>Data observations</span>
           </div>
           <div className="health-section-body">
-            <p className="eyebrow">Observations / 长期变化</p>
+            <p className="eyebrow">Observations / 历史报告观察 · 截至 {HEALTH_TRENDS_UPDATED_AT}</p>
             <h2 id="health-notes-heading">数字之外，也记录主动改变。</h2>
             <div className="health-note-grid">
               <article>
