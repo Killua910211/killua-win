@@ -1,6 +1,6 @@
 # 当前任务：删除健康页“数据观察”模块（2026-10-05）
 
-状态：本地修改与检查完成，待发布。
+状态：已提交、推送 origin/main 并部署正式 Worker；线上复验完成。
 
 ## 需求与验收
 
@@ -18,7 +18,8 @@
 - 页面模块、页内入口及专属样式已删除；全文搜索确认 app/ 不再引用 health-notes、health-note-grid 或对应标题。
 - pnpm check 通过：Lint、TypeScript、16 个迁移回放、23 条哲学不变式；pnpm build 五阶段通过，仍有既有 Unknown 路由分类提示。
 - git diff --check 通过；fetch origin 后无额外待推送历史提交。本次改动仅涉及健康页、共享样式和任务记录。
-- 待记录提交、Worker 版本和线上复验。
+- 运行时代码提交 3b77e61 已推送 origin/main；pnpm deploy:only 成功，Worker Version ID 4867bbc1-e177-4666-b008-60c828cfc184，启动 20 ms。无远程 D1 迁移。
+- 正式浏览器复验 /health：页内导航仅剩时间线、一周均值、长期趋势、补剂；补剂后直接为页脚，无“数据观察”标题、卡片或阅读位置节点。其余健康读数仍可见。代表页面核对，不宣称全站视觉回归。
 
 ---
 
