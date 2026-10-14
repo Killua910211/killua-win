@@ -52,12 +52,10 @@ export default function MindPage() {
           titleId="mind-title"
         />
         <SectionNav
-          label="使用说明分区"
+          label="使用说明条目"
           items={[
-            { href: '#mind-overview', label: '说明总览' },
-            { href: '#mind-skills', label: 'Skills' },
-            { href: '#mind-software', label: '软件说明' },
-            { href: '#mind-boundary', label: '使用边界' },
+            { href: '#collaboration-skill-heading', label: '$codex-chatgpt-collaboration' },
+            { href: '#security-audit-skill-heading', label: '$security-audit' },
           ]}
         />
 
