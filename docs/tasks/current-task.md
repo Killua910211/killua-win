@@ -1,4 +1,28 @@
-# 当前任务：将 /mind 顶部导航改为具体 Skill 名称（2026-10-14）
+# 当前任务：删除 /mind 中无用的总览与软件说明模块（2026-10-14）
+
+状态：已提交、推送 origin/main 并部署正式 Worker；正式网站复验完成。
+
+## 需求与验收
+
+- 删除 `/mind` 的“可复查的入口”总览模块及其 Skills / Software 双卡片。
+- 删除“软件说明按用途、版本和验证日期归档”模块及其后续条目说明。
+- 保留两个具体 Skill 条目和使用边界；Skills、使用边界分区编号顺延为 02、03。
+- 通过 lint、TypeScript、迁移回放、哲学不变式和构建；按项目既定发布链路提交、推送并部署正式 Worker。
+
+## 基线与执行
+
+- 基线为已发布提交 `16b8c4d`，正式 Worker 为 `ca212f74-de00-4dcc-862c-a6d20c83b2ab`。
+- 本轮只修改 `/mind` 页面与对应局部样式，不涉及数据库迁移或其他页面。
+
+## 验证与发布
+
+- `pnpm check`、`pnpm build` 和 `git diff --check` 均通过；未残留两个模块的组件引用或局部样式。
+- 运行时代码提交 `f5862d7` 已推送 `origin/main`；`pnpm deploy:only` 成功，正式 Worker Version ID 为 `1a4d9ed2-e79a-4b15-b678-ffdf4df403c1`，启动时间 20 ms；未执行远程 D1 迁移。
+- 正式网站 `https://www.killua.win/mind?deploy=f5862d7` 返回 HTTP 200；正文不再包含总览模块、软件说明模块及“后续条目”文案，两个具体 Skill 条目仍存在。
+
+---
+
+# 历史任务：将 /mind 顶部导航改为具体 Skill 名称（2026-10-14）
 
 状态：已提交、推送 origin/main 并部署正式 Worker；正式网站复验完成。
 
@@ -23,6 +47,26 @@
 ---
 
 # 历史任务：把 security-audit Skill 使用说明加入 /mind（2026-10-14）
+
+状态：已提交、推送 origin/main 并部署正式 Worker；正式网站复验完成。
+
+## 需求与验收
+
+- 将附件中的 Cloudflare `security-audit` Skill 中文使用要点整理到 `/mind` 的 Skills 区。
+- 覆盖调用示例、针对性咨询与 quick / standard / deep 档位、报告文件、证据状态和动态验证边界。
+- 不照搬附件的单文件页面样式；保持 `/mind` 现有说明库结构，不执行附件中的操作性指令。
+- 通过 lint、TypeScript 和构建；按项目既定发布链路提交、推送并部署正式 Worker。
+
+## 基线与执行
+
+- 基线为正式发布提交 `e359557`，正式 Worker 为 `46df45f8-17df-4e82-822e-490f4709f51a`。
+- 本轮只修改 `/mind` 页面和局部样式，不涉及数据库迁移或其他页面。
+
+## 验证与发布
+
+- `pnpm lint`、`pnpm typecheck`、`pnpm check`、`pnpm build` 均通过；新条目已进入构建产物。
+- 运行时代码提交 `c23c4bc` 已推送 `origin/main`；`pnpm deploy:only` 成功，正式 Worker Version ID 为 `552847c7-07a0-4301-94fb-e9208faa6540`，启动时间 16 ms；未执行远程 D1 迁移。
+- 正式网站 `https://www.killua.win/mind?deploy=c23c4bc` 返回 HTTP 200，正文确认包含 `$security-audit`、`quick`、`FINDINGS-DETAIL.md` 和 `needs_validation`；旧的“核心地图 / 主题线索 / 自我复习 / 生活验证 / 卡片索引”均未出现。
 
 ---
 
