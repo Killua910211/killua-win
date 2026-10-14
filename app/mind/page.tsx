@@ -18,6 +18,20 @@ const collaborationSteps = [
   { label: '04 / AUTHORIZE', title: '把外部写操作留给明确授权。', body: '提交、推送、迁移、部署测试环境或正式网站，都不会因为第二意见自动发生。' },
 ];
 
+const securityAuditModes = [
+  { label: '针对性咨询', body: '一个接口、一段代码或某个具体疑点；按需分析，不默认生成完整审计文件。' },
+  { label: 'quick', body: '首次试用、单个模块或快速复查；限定范围，并在报告中说明覆盖不足。' },
+  { label: 'standard', body: '常规代码安全审计；默认档位，执行完整的审计与独立复核流程。' },
+  { label: 'deep', body: '关键业务或复杂模块；覆盖更细，但耗时和额度也更多。' },
+];
+
+const securityAuditOutputs = [
+  { file: 'REPORT.md', body: '审计概要、主要结论和覆盖情况。' },
+  { file: 'FINDINGS-DETAIL.md', body: '已确认问题的详细证据、影响和修复建议。' },
+  { file: 'NEEDS-VALIDATION.md', body: '尚缺证据，以及下一步验证方式。' },
+  { file: 'findings.json', body: '便于后续处理的结构化问题记录。' },
+];
+
 const boundaryCards = [
   { label: '01 / MINIMUM DATA', title: '只传完成判断所需的信息。', body: '不上传凭据、密钥、私有文件或完整仓库；涉及敏感信息时先取得明确授权。' },
   { label: '02 / LOCAL EVIDENCE', title: '外部建议必须回到本地核验。', body: '检查源文件、运行测试并确认实际输出，不能把顾问意见写成事实、诊断或验证结果。' },
@@ -102,6 +116,39 @@ export default function MindPage() {
                   </li>
                 ))}
               </ol>
+            </article>
+            <article className={styles.skillCard} aria-labelledby="security-audit-skill-heading">
+              <div className={styles.skillCardHeader}>
+                <span className="mind-card-index">Skill / 02</span>
+                <span className="mind-card-index">Cloudflare / Security audit</span>
+              </div>
+              <h3 id="security-audit-skill-heading">让安全审计先找证据，再输出分级报告。</h3>
+              <p>在 Codex 对话中指定代码范围，让 <code>$security-audit</code> 检查安全问题、独立复核证据并生成报告。它默认读取和分析，不会因为发现问题就自动修改代码。</p>
+              <pre className={styles.auditCommand}><code>{`$security-audit 对 3.business/user-service 做 quick 安全审计。
+重点检查登录认证、接口越权和敏感信息泄露，用中文输出报告。`}</code></pre>
+              <div className={styles.auditSection}>
+                <span className="mind-card-index">MODES / 检查方式</span>
+                <div className={styles.auditModeGrid}>
+                  {securityAuditModes.map((mode) => (
+                    <div key={mode.label}>
+                      <strong>{mode.label}</strong>
+                      <p>{mode.body}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className={styles.auditSection}>
+                <span className="mind-card-index">OUTPUT / 结果文件</span>
+                <div className={styles.auditOutputGrid}>
+                  {securityAuditOutputs.map((output) => (
+                    <div key={output.file}>
+                      <code>{output.file}</code>
+                      <p>{output.body}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <p className={styles.auditBoundary}><strong>阅读报告时：</strong> <code>confirmed</code> 代表已确认，<code>needs_validation</code> 代表待验证，<code>rejected</code> 代表已证伪。动态验证只能在满足隔离要求的本地沙盒中执行；一次审计不代表查完所有漏洞。</p>
             </article>
           </div>
         </section>

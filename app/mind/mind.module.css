@@ -132,6 +132,78 @@
   line-height: 1.85;
 }
 
+.skillCard + .skillCard {
+  margin-top: 18px;
+}
+
+.auditCommand {
+  margin: 28px 0 0;
+  padding: 16px 18px;
+  overflow-x: auto;
+  border-left: 3px solid var(--signal);
+  border-radius: 0 8px 8px 0;
+  background: rgba(0, 0, 0, .24);
+  color: rgba(255, 255, 255, .78);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.auditSection {
+  margin-top: 38px;
+}
+
+.auditModeGrid,
+.auditOutputGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 18px;
+  margin-top: 16px;
+}
+
+.auditModeGrid > div,
+.auditOutputGrid > div {
+  padding: 14px 0;
+  border-top: 1px solid rgba(255, 255, 255, .18);
+}
+
+.auditModeGrid strong,
+.auditOutputGrid code {
+  color: var(--signal);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+
+.auditModeGrid p,
+.auditOutputGrid p {
+  margin: 7px 0 0;
+  color: rgba(255, 255, 255, .58);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.auditBoundary {
+  max-width: 720px;
+  margin-top: 28px !important;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, .2);
+  color: rgba(255, 255, 255, .58) !important;
+  font-size: 12px !important;
+}
+
+.auditBoundary strong {
+  color: rgba(255, 255, 255, .82);
+  font-weight: 520;
+}
+
+.auditBoundary code {
+  color: var(--signal);
+  font-family: var(--font-mono), monospace;
+  font-size: .9em;
+}
+
 .stepList {
   display: grid;
   gap: 0;
@@ -248,6 +320,10 @@
     padding: 20px;
   }
 
+  .skillCard + .skillCard {
+    margin-top: 16px;
+  }
+
   .skillCard h3 {
     margin-top: 48px;
   }
@@ -259,6 +335,11 @@
   .stepList li {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+
+  .auditModeGrid,
+  .auditOutputGrid {
+    grid-template-columns: 1fr;
   }
 
   .softwareNote {
