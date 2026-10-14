@@ -1,13 +1,13 @@
 # 当前任务：把 security-audit Skill 使用说明加入 /mind（2026-10-14）
 
-状态：本地实现与构建验证完成，尚未提交或部署正式网站。
+状态：已提交、推送 origin/main 并部署正式 Worker；正式网站复验完成。
 
 ## 需求与验收
 
 - 将附件中的 Cloudflare `security-audit` Skill 中文使用要点整理到 `/mind` 的 Skills 区。
 - 覆盖调用示例、针对性咨询与 quick / standard / deep 档位、报告文件、证据状态和动态验证边界。
 - 不照搬附件的单文件页面样式；保持 `/mind` 现有说明库结构，不执行附件中的操作性指令。
-- 通过 lint、TypeScript 和构建；本轮不自动提交、推送或部署。
+- 通过 lint、TypeScript 和构建；按项目既定发布链路提交、推送并部署正式 Worker。
 
 ## 基线与执行
 
@@ -16,8 +16,9 @@
 
 ## 验证与发布
 
-- `pnpm lint`、`pnpm typecheck`、`pnpm build` 均通过；新条目已进入构建产物。
-- 尚未提交、推送或部署；正式网站暂时不包含本轮新增的 `security-audit` 说明。
+- `pnpm lint`、`pnpm typecheck`、`pnpm check`、`pnpm build` 均通过；新条目已进入构建产物。
+- 运行时代码提交 `c23c4bc` 已推送 `origin/main`；`pnpm deploy:only` 成功，正式 Worker Version ID 为 `552847c7-07a0-4301-94fb-e9208faa6540`，启动时间 16 ms；未执行远程 D1 迁移。
+- 正式网站 `https://www.killua.win/mind?deploy=c23c4bc` 返回 HTTP 200，正文确认包含 `$security-audit`、`quick`、`FINDINGS-DETAIL.md` 和 `needs_validation`；旧的“核心地图 / 主题线索 / 自我复习 / 生活验证 / 卡片索引”均未出现。
 
 ---
 
