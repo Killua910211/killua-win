@@ -1,24 +1,28 @@
-# 当前任务：把 security-audit Skill 使用说明加入 /mind（2026-10-14）
+# 当前任务：将 /mind 顶部导航改为具体 Skill 名称（2026-10-14）
 
 状态：已提交、推送 origin/main 并部署正式 Worker；正式网站复验完成。
 
 ## 需求与验收
 
-- 将附件中的 Cloudflare `security-audit` Skill 中文使用要点整理到 `/mind` 的 Skills 区。
-- 覆盖调用示例、针对性咨询与 quick / standard / deep 档位、报告文件、证据状态和动态验证边界。
-- 不照搬附件的单文件页面样式；保持 `/mind` 现有说明库结构，不执行附件中的操作性指令。
-- 通过 lint、TypeScript 和构建；按项目既定发布链路提交、推送并部署正式 Worker。
+- 顶部页内导航直接展示具体使用条目：`$codex-chatgpt-collaboration` 和 `$security-audit`。
+- 导航链接指向对应 Skill 条目，不再展示“说明总览 / Skills / 软件说明 / 使用边界”等泛化栏目名。
+- 保留页面正文的说明总览、Skill 说明、软件说明和使用边界内容；本轮只调整导航入口。
+- 通过 lint、TypeScript、迁移回放、哲学不变式和构建；按项目既定发布链路提交、推送并部署正式 Worker。
 
 ## 基线与执行
 
-- 基线为正式发布提交 `e359557`，正式 Worker 为 `46df45f8-17df-4e82-822e-490f4709f51a`。
-- 本轮只修改 `/mind` 页面和局部样式，不涉及数据库迁移或其他页面。
+- 基线为已发布提交 `6445fbc`，正式 Worker 为 `552847c7-07a0-4301-94fb-e9208faa6540`。
+- 本轮只修改 `/mind` 的 `SectionNav` 条目，不涉及数据库迁移或其他页面。
 
 ## 验证与发布
 
-- `pnpm lint`、`pnpm typecheck`、`pnpm check`、`pnpm build` 均通过；新条目已进入构建产物。
-- 运行时代码提交 `c23c4bc` 已推送 `origin/main`；`pnpm deploy:only` 成功，正式 Worker Version ID 为 `552847c7-07a0-4301-94fb-e9208faa6540`，启动时间 16 ms；未执行远程 D1 迁移。
-- 正式网站 `https://www.killua.win/mind?deploy=c23c4bc` 返回 HTTP 200，正文确认包含 `$security-audit`、`quick`、`FINDINGS-DETAIL.md` 和 `needs_validation`；旧的“核心地图 / 主题线索 / 自我复习 / 生活验证 / 卡片索引”均未出现。
+- `pnpm check`、`pnpm build` 和 `git diff --check` 均通过；构建产物包含新的两个导航链接。
+- 运行时代码提交 `9450904` 已推送 `origin/main`；`pnpm deploy:only` 成功，正式 Worker Version ID 为 `ca212f74-de00-4dcc-862c-a6d20c83b2ab`，启动时间 15 ms；未执行远程 D1 迁移。
+- 正式网站 `https://www.killua.win/mind?deploy=9450904` 返回 HTTP 200；导航 DOM 确认仅包含 `$codex-chatgpt-collaboration` 和 `$security-audit` 两个具体条目。
+
+---
+
+# 历史任务：把 security-audit Skill 使用说明加入 /mind（2026-10-14）
 
 ---
 
