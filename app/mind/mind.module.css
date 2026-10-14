@@ -1,202 +1,63 @@
-/*
- * Mind 的内容由问题和文字层级组织，而不是用色块提示“哪一项更重要”。
- * 这些局部样式覆盖了早期的卡片皮肤，避免影响其他页面仍需保留的组件。
- */
-.coreGrid {
-  gap: 16px;
-  border: 0;
-}
-
-.coreGrid > article,
-.coreGrid > article:last-child {
-  min-height: 218px;
-  padding: 24px 26px 30px;
-  border: 1px solid var(--black-4);
-  border-top: 2px solid var(--ember);
-  background: linear-gradient(135deg, var(--black-3), var(--black-2));
-  box-shadow: none;
-}
-
-.coreGrid > article:last-child {
-  padding-left: 26px;
-  border-left: 1px solid var(--black-4);
-}
-
-.detail {
-  min-height: 620px;
-  padding: 28px 30px 42px;
-  border: 1px solid var(--black-4);
-  border-top: 2px solid var(--ember);
-  background: linear-gradient(135deg, var(--black-3), var(--black-2));
-  box-shadow: none;
-}
-
-.reviewGrid {
-  gap: 16px;
-  border: 0;
-}
-
-.reviewCard,
-.reviewCard:hover,
-.reviewCard:focus-visible {
-  min-height: 188px;
-  padding: 20px 22px 22px;
-  border: 1px solid var(--black-4);
-  border-top: 2px solid var(--ember);
-  background: linear-gradient(135deg, var(--black-3), var(--black-2));
-  box-shadow: none;
-  transform: none;
-}
-
-.reviewCard:nth-child(even) {
-  padding-left: 22px;
-  border-left: 1px solid var(--black-4);
-}
-
-.reviewCard :global(.mind-review-details) {
-  margin-top: 24px;
-}
-
-.validation {
+.overview,
+.software {
   display: grid;
   grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
   gap: 0;
   padding: 94px 4vw 112px;
-  background: #dfe4c8;
+  background: #e8e5db;
   color: var(--ink);
 }
 
-.validationBody {
+.overviewBody,
+.skillsBody,
+.boundaryBody {
   min-width: 0;
 }
 
-.validationBody :global(.eyebrow) {
-  color: #626853;
-}
-
-.validationBody h2 {
-  max-width: 800px;
+.overviewBody h2,
+.software h2,
+.skillsBody h2,
+.boundaryBody h2 {
+  max-width: 850px;
   font-size: clamp(32px, 4.6vw, 64px);
   font-weight: 520;
   letter-spacing: -.065em;
   line-height: 1.04;
 }
 
-.validationLead {
-  max-width: 610px;
+.overviewLead,
+.skillsLead {
+  max-width: 650px;
   margin: 22px 0 0;
   color: #5d5a53;
   font-size: 15px;
-  line-height: 1.8;
+  line-height: 1.85;
 }
 
-.validationGrid {
+.overviewGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px 18px;
+  gap: 16px;
   margin-top: 58px;
 }
 
-.validationGrid article {
-  min-height: 172px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(21, 21, 21, .38);
+.overviewGrid article {
+  min-height: 190px;
+  padding: 20px 22px 24px;
+  border: 1px solid rgba(21, 21, 21, .26);
+  border-top: 2px solid var(--ember);
 }
 
-.validationGrid article > span {
+.overviewGrid article > span,
+.boundaryGrid article > span {
   color: #667000;
   font-family: var(--font-mono), monospace;
   font-size: 10px;
   letter-spacing: .1em;
 }
 
-.validationGrid h3 {
-  max-width: 330px;
-  margin: 30px 0 0;
-  font-size: 23px;
-  font-weight: 540;
-  letter-spacing: -.04em;
-  line-height: 1.2;
-}
-
-.validationGrid p {
-  max-width: 390px;
-  margin: 12px 0 0;
-  color: #5d5a53;
-  font-size: 13px;
-  line-height: 1.8;
-}
-
-.topicNote {
-  max-width: 560px;
-  margin: 18px 0 0;
-  color: rgba(255, 255, 255, .56);
-  font-size: 13px;
-  line-height: 1.8;
-}
-
-.collaboration {
-  display: grid;
-  grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
-  gap: 0;
-  padding: 94px 4vw 112px;
-  background: var(--black-3);
-  color: #fff;
-}
-
-.collaborationBody {
-  min-width: 0;
-}
-
-.collaborationBody :global(.eyebrow) {
-  color: rgba(255, 255, 255, .52);
-}
-
-.collaborationBody h2 {
-  max-width: 800px;
-  font-size: clamp(32px, 4.6vw, 64px);
-  font-weight: 520;
-  letter-spacing: -.065em;
-  line-height: 1.04;
-}
-
-.collaborationLead {
-  max-width: 680px;
-  margin: 22px 0 0;
-  color: rgba(255, 255, 255, .68);
-  font-size: 15px;
-  line-height: 1.85;
-}
-
-.collaborationLead code {
-  color: var(--signal);
-  font-family: var(--font-mono), monospace;
-  font-size: .9em;
-}
-
-.collaborationGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px 18px;
-  margin: 58px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.collaborationGrid li {
-  min-height: 172px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, .3);
-}
-
-.collaborationGrid li > span {
-  color: var(--signal);
-  font-family: var(--font-mono), monospace;
-  font-size: 10px;
-  letter-spacing: .1em;
-}
-
-.collaborationGrid h3 {
+.overviewGrid h3,
+.boundaryGrid h3 {
   max-width: 360px;
   margin: 30px 0 0;
   font-size: 23px;
@@ -205,96 +66,202 @@
   line-height: 1.2;
 }
 
-.collaborationGrid p {
+.overviewGrid p,
+.boundaryGrid p {
   max-width: 410px;
   margin: 12px 0 0;
-  color: rgba(255, 255, 255, .58);
+  color: #5d5a53;
   font-size: 13px;
   line-height: 1.8;
 }
 
-.collaborationBoundary {
+.skills,
+.boundary {
   display: grid;
-  grid-template-columns: minmax(120px, .32fr) minmax(0, 1fr);
-  gap: 30px;
-  margin-top: 58px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, .3);
+  grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
+  gap: 0;
+  padding: 94px 4vw 112px;
+  background: var(--black-3);
+  color: #fff;
 }
 
-.collaborationBoundary p {
-  margin: 0;
-  color: rgba(255, 255, 255, .62);
-  font-size: 13px;
+.skillsBody :global(.eyebrow),
+.boundaryBody :global(.eyebrow) {
+  color: rgba(255, 255, 255, .52);
+}
+
+.skillsLead {
+  color: rgba(255, 255, 255, .68);
+}
+
+.skillsLead code {
+  color: var(--signal);
+  font-family: var(--font-mono), monospace;
+  font-size: .9em;
+}
+
+.skillCard {
+  max-width: 900px;
+  margin-top: 58px;
+  padding: 24px 26px 30px;
+  border: 1px solid rgba(255, 255, 255, .24);
+  border-top: 2px solid var(--signal);
+  background: rgba(255, 255, 255, .035);
+}
+
+.skillCardHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.skillCard h3 {
+  max-width: 680px;
+  margin: 58px 0 0;
+  font-size: clamp(27px, 3.2vw, 46px);
+  font-weight: 540;
+  letter-spacing: -.055em;
+  line-height: 1.08;
+}
+
+.skillCard > p {
+  max-width: 680px;
+  margin: 22px 0 0;
+  color: rgba(255, 255, 255, .66);
+  font-size: 14px;
   line-height: 1.85;
 }
 
-.collaborationBoundary p:last-child {
-  max-width: 640px;
+.stepList {
+  display: grid;
+  gap: 0;
+  margin: 48px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stepList li {
+  display: grid;
+  grid-template-columns: 145px minmax(0, 1fr);
+  gap: 20px;
+  padding: 18px 0;
+  border-top: 1px solid rgba(255, 255, 255, .2);
+}
+
+.stepList li > span {
+  color: var(--signal);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
+}
+
+.stepList h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 520;
+  letter-spacing: -.025em;
+}
+
+.stepList p {
+  max-width: 540px;
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, .58);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.software {
+  background: #e8e5db;
+}
+
+.softwareNote {
+  max-width: 680px;
+  margin-top: 58px;
+  padding: 20px 0 0 18px;
+  border-left: 3px solid var(--ember);
+}
+
+.softwareNote p {
+  margin: 14px 0 0;
+  color: #5d5a53;
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.boundaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 58px;
+}
+
+.boundaryGrid article {
+  min-height: 190px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, .3);
+}
+
+.boundaryGrid article > span {
+  color: var(--signal);
+}
+
+.boundaryGrid h3 {
+  max-width: 280px;
+  margin-top: 30px;
+}
+
+.boundaryGrid p {
+  color: rgba(255, 255, 255, .58);
 }
 
 @media (max-width: 760px) {
-  .coreGrid > article:last-child {
-    padding-left: 26px;
-    border-left: 0;
-  }
-
-  .reviewCard:nth-child(even) {
-    padding-left: 22px;
-    border-left: 0;
-  }
-
-  .validation {
+  .overview,
+  .skills,
+  .software,
+  .boundary {
     grid-template-columns: 1fr;
     gap: 48px;
     padding: 66px 20px 84px;
   }
 
-  .validationBody h2 {
+  .overviewBody h2,
+  .software h2,
+  .skillsBody h2,
+  .boundaryBody h2 {
     font-size: clamp(32px, 10.5vw, 48px);
   }
 
-  .validationGrid {
+  .overviewGrid,
+  .boundaryGrid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 16px;
     margin-top: 46px;
   }
 
-  .validationGrid article {
+  .overviewGrid article,
+  .boundaryGrid article {
     min-height: 0;
   }
 
-  .validationGrid h3 {
-    margin-top: 22px;
-  }
-
-  .collaboration {
-    grid-template-columns: 1fr;
-    gap: 48px;
-    padding: 66px 20px 84px;
-  }
-
-  .collaborationBody h2 {
-    font-size: clamp(32px, 10.5vw, 48px);
-  }
-
-  .collaborationGrid {
-    grid-template-columns: 1fr;
-    gap: 24px;
+  .skillCard {
     margin-top: 46px;
+    padding: 20px;
   }
 
-  .collaborationGrid li {
-    min-height: 0;
+  .skillCard h3 {
+    margin-top: 48px;
   }
 
-  .collaborationGrid h3 {
-    margin-top: 22px;
+  .stepList {
+    margin-top: 36px;
   }
 
-  .collaborationBoundary {
+  .stepList li {
     grid-template-columns: 1fr;
-    gap: 17px;
+    gap: 10px;
+  }
+
+  .softwareNote {
     margin-top: 46px;
   }
 }

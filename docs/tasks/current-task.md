@@ -1,23 +1,43 @@
-# 当前任务：将 /mind 协作说明发布到正式网站（2026-10-14）
+# 当前任务：把 /mind 改为使用说明库（2026-10-14）
 
-状态：本地实现与构建验证完成，待提交、推送并部署正式 Worker。
+状态：本地改造完成，尚未提交或部署正式网站。
+
+## 需求与验收
+
+- `/mind` 后续只维护 Codex Skill 使用说明与软件使用说明。
+- 删除原心理认知地图、主题切换、自我复习、生活验证和旧卡片索引等页面内容。
+- 优化顶部页内导航为“说明总览 / Skills / 软件说明 / 使用边界”，保持静态服务端内容，不新增客户端交互。
+- 保留并整理 `$codex-chatgpt-collaboration` 作为当前 Skill 条目；为后续软件说明留下清晰归档入口。
+- 通过 lint、TypeScript 和构建；本轮不自动部署，等待用户后续明确发布指令。
+
+## 基线与执行
+
+- 基线为已发布提交 `c6b48ab`；正式网站上一版 Worker 为 `0a754ff5-1bc5-4696-ab6d-4079ff4970cd`。
+- 本次删除两个仅由 `/mind` 使用的旧内容模块：`app/mind/mind-topics.tsx` 和 `app/knowledge/knowledge-library.tsx`；不涉及数据库迁移。
+
+## 验证与发布
+
+- 页面改造已完成；`pnpm lint`、`pnpm typecheck`、`pnpm build` 均通过。构建产物确认包含“说明总览 / Skills / 软件说明 / 使用边界”和 `$codex-chatgpt-collaboration`，旧的“核心地图 / 主题线索 / 自我复习 / 生活验证 / 卡片索引”均不再出现。
+- 本轮尚未提交、推送或部署；正式网站仍保持 `c6b48ab` 对应版本。
+
+---
+
+# 历史任务：将 /mind 协作说明发布到正式网站（2026-10-14）
+
+状态：已提交、推送 origin/main 并部署正式 Worker；线上复验完成。
 
 ## 需求与验收
 
 - 在正式网站 `/mind` 下补充 `$codex-chatgpt-collaboration` 的用户使用说明。
 - 说明第二意见、本地验证、最小信息传输和用户授权边界；不把外部建议写成事实、诊断或自动执行指令。
 - 不新增客户端交互；保持 `/mind` 的阅读节奏，并顺延后续分区编号。
-- 通过 lint、TypeScript 和构建；提交、推送 `origin/main`，使用 `pnpm deploy:only` 发布正式网站并复验 `/mind`。
-
-## 基线与执行
-
-- 开始时工作树干净，HEAD `5662c99`；本次改动仅涉及 `/mind` 页面、其局部样式、卡片索引编号和任务记录。
-- 本轮没有数据库结构或内容迁移，不执行 `pnpm migrate`；正式网站入口是 `https://www.killua.win/`，不把 Site 测试环境称为正式发布。
 
 ## 验证与发布
 
-- `pnpm lint`、`pnpm typecheck`、`pnpm build` 已通过；构建产物已包含协作说明标题、流程和边界文案。
-- `git diff --check` 已通过；正式网站部署和线上复验待完成。
+- `pnpm lint`、`pnpm typecheck`、`pnpm check`、`pnpm build` 已通过；构建产物已包含协作说明标题、流程和边界文案。
+- `git diff --check` 已通过；运行时代码提交 `c6b48ab` 已推送 `origin/main`。
+- `pnpm deploy:only` 成功，Worker Version ID `0a754ff5-1bc5-4696-ab6d-4079ff4970cd`，启动 18 ms；未执行远程 D1 迁移。
+- 正式网站 `https://www.killua.win/mind?deploy=c6b48ab` 返回 HTTP 200，正文确认包含协作说明锚点、标题 `$codex-chatgpt-collaboration` 和测试环境／正式网站边界文案。
 
 ---
 
