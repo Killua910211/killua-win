@@ -59,35 +59,9 @@ export default function MindPage() {
           ]}
         />
 
-        <section className={styles.overview} id="mind-overview" aria-labelledby="mind-overview-heading">
-          <div className="section-label">
-            <span>02</span>
-            <span lang="en">Documentation map</span>
-          </div>
-          <div className={styles.overviewBody}>
-            <p className="eyebrow">A practical index / 可复查的入口</p>
-            <h2 id="mind-overview-heading">把工具说明写成下一次可以直接调用的知识。</h2>
-            <p className={styles.overviewLead}>
-              这里不再记录心理认知主题，而是维护与工作流相关的 Skill 和软件说明。说明以任务为中心，保留调用条件、操作步骤、验证方法和授权边界。
-            </p>
-            <div className={styles.overviewGrid}>
-              <article>
-                <span>01 / SKILLS</span>
-                <h3>给 Codex 的任务协议。</h3>
-                <p>说明什么时候调用某个 Skill、需要准备什么上下文，以及哪些动作仍由用户决定。</p>
-              </article>
-              <article>
-                <span>02 / SOFTWARE</span>
-                <h3>给软件的可复查说明。</h3>
-                <p>按软件、用途、版本和验证日期整理操作，不把一次性的聊天答案当成长期规则。</p>
-              </article>
-            </div>
-          </div>
-        </section>
-
         <section className={styles.skills} id="mind-skills" aria-labelledby="mind-skills-heading">
           <div className="section-label light">
-            <span>03</span>
+            <span>02</span>
             <span lang="en">Skills</span>
           </div>
           <div className={styles.skillsBody}>
@@ -151,24 +125,9 @@ export default function MindPage() {
           </div>
         </section>
 
-        <section className={styles.software} id="mind-software" aria-labelledby="mind-software-heading">
-          <div className="section-label">
-            <span>04</span>
-            <span lang="en">Software notes</span>
-          </div>
-          <div>
-            <p className="eyebrow">Growing index / 持续补充</p>
-            <h2 id="mind-software-heading">软件说明按用途、版本和验证日期归档。</h2>
-            <div className={styles.softwareNote}>
-              <span className="mind-card-index">NEXT ENTRIES / 后续条目</span>
-              <p>当前先维护协作 Skill。后续新增软件说明时，会沿用同一套结构：适用场景、最短操作路径、常见陷阱、验证证据和需要用户确认的动作。</p>
-            </div>
-          </div>
-        </section>
-
         <section className={styles.boundary} id="mind-boundary" aria-labelledby="mind-boundary-heading">
           <div className="section-label light">
-            <span>05</span>
+            <span>03</span>
             <span lang="en">Usage boundary</span>
           </div>
           <div className={styles.boundaryBody}>
