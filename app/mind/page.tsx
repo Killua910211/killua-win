@@ -26,6 +26,13 @@ const reviewCards = [
   { prompt: '我愿意连续投入哪件不必立刻产出结果的事？', answer: '意义不必先被解释清楚；先选择一件愿意重复参与的事，再观察它是否慢慢形成方向。' },
 ];
 
+const collaborationSteps = [
+  { label: '01 / FRAME', title: '先把问题说清楚。', body: '只准备完成判断所需的目标、背景、边界和验收标准，让第二意见有明确的参照。' },
+  { label: '02 / CONSULT', title: '让 ChatGPT 提供第二意见。', body: '在任务中调用 $codex-chatgpt-collaboration；它负责提供独立视角，不执行本地操作。' },
+  { label: '03 / VERIFY', title: '把建议带回本地验证。', body: 'Codex 重新阅读仓库、检查证据并运行相关验证，把外部回答当作待验证的假设，而不是事实或诊断。' },
+  { label: '04 / AUTHORIZE', title: '把外部写操作留给明确授权。', body: '提交、推送、迁移、部署测试环境或正式网站，都要按用户的明确授权执行；不会因为第二意见自动发生。' },
+];
+
 export default function MindPage() {
   return (
     <>
@@ -46,6 +53,7 @@ export default function MindPage() {
             { href: '#mind-workspace', label: '主题线索' },
             { href: '#mind-review', label: '自我复习' },
             { href: '#mind-practice', label: '生活验证' },
+            { href: '#mind-collaboration', label: '协作说明' },
             { href: '#mind-library', label: '卡片索引' },
           ]}
         />
@@ -138,6 +146,33 @@ export default function MindPage() {
                 <h3>只保留能被调用的判断。</h3>
                 <p>把结果留成一段能回看的文字，新的经历出现后回来修正；不要把旧结论变成固定身份。</p>
               </article>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.collaboration} id="mind-collaboration" aria-labelledby="mind-collaboration-heading">
+          <div className="section-label light">
+            <span>06</span>
+            <span lang="en">Collaboration protocol</span>
+          </div>
+          <div className={styles.collaborationBody}>
+            <p className="eyebrow">Second opinion / 协作说明</p>
+            <h2 id="mind-collaboration-heading">先问第二意见，再把判断带回本地验证。</h2>
+            <p className={styles.collaborationLead}>
+              <code>$codex-chatgpt-collaboration</code> 是一条协作流程：ChatGPT 提供独立视角，Codex 负责读取本地项目、修改和验证，用户决定哪些建议值得采纳。外部回答不是事实、诊断，也不会自动变成执行指令。
+            </p>
+            <ol className={styles.collaborationGrid}>
+              {collaborationSteps.map((step) => (
+                <li key={step.label}>
+                  <span>{step.label}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
+                </li>
+              ))}
+            </ol>
+            <div className={styles.collaborationBoundary}>
+              <p className="mind-card-index">BOUNDARY / 边界</p>
+              <p>只发送完成判断所需的最小信息，不上传凭据、密钥、私有文件或完整仓库；涉及敏感信息时先取得明确授权。提交、推送、迁移和部署都需要单独确认，测试环境与正式网站也要分开说明。</p>
             </div>
           </div>
         </section>

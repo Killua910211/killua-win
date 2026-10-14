@@ -58,7 +58,7 @@ export function KnowledgeLibrary() {
     <>
       <section className="knowledge-index" id="mind-library" aria-labelledby="knowledge-index-heading">
         <div className="section-label">
-          <span>06</span>
+          <span>07</span>
           <span lang="en">Card index</span>
         </div>
         <div className="knowledge-index-body">
@@ -90,7 +90,7 @@ export function KnowledgeLibrary() {
       </section>
       <section className="knowledge-method" aria-labelledby="knowledge-method-heading">
         <div className="section-label light">
-          <span>07</span>
+          <span>08</span>
           <span lang="en">How to keep it useful</span>
         </div>
         <div>

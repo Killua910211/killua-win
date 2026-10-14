@@ -135,6 +135,104 @@
   line-height: 1.8;
 }
 
+.collaboration {
+  display: grid;
+  grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
+  gap: 0;
+  padding: 94px 4vw 112px;
+  background: var(--black-3);
+  color: #fff;
+}
+
+.collaborationBody {
+  min-width: 0;
+}
+
+.collaborationBody :global(.eyebrow) {
+  color: rgba(255, 255, 255, .52);
+}
+
+.collaborationBody h2 {
+  max-width: 800px;
+  font-size: clamp(32px, 4.6vw, 64px);
+  font-weight: 520;
+  letter-spacing: -.065em;
+  line-height: 1.04;
+}
+
+.collaborationLead {
+  max-width: 680px;
+  margin: 22px 0 0;
+  color: rgba(255, 255, 255, .68);
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.collaborationLead code {
+  color: var(--signal);
+  font-family: var(--font-mono), monospace;
+  font-size: .9em;
+}
+
+.collaborationGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 18px;
+  margin: 58px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.collaborationGrid li {
+  min-height: 172px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, .3);
+}
+
+.collaborationGrid li > span {
+  color: var(--signal);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
+}
+
+.collaborationGrid h3 {
+  max-width: 360px;
+  margin: 30px 0 0;
+  font-size: 23px;
+  font-weight: 540;
+  letter-spacing: -.04em;
+  line-height: 1.2;
+}
+
+.collaborationGrid p {
+  max-width: 410px;
+  margin: 12px 0 0;
+  color: rgba(255, 255, 255, .58);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.collaborationBoundary {
+  display: grid;
+  grid-template-columns: minmax(120px, .32fr) minmax(0, 1fr);
+  gap: 30px;
+  margin-top: 58px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, .3);
+}
+
+.collaborationBoundary p {
+  margin: 0;
+  color: rgba(255, 255, 255, .62);
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.collaborationBoundary p:last-child {
+  max-width: 640px;
+}
+
 @media (max-width: 760px) {
   .coreGrid > article:last-child {
     padding-left: 26px;
@@ -168,5 +266,35 @@
 
   .validationGrid h3 {
     margin-top: 22px;
+  }
+
+  .collaboration {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    padding: 66px 20px 84px;
+  }
+
+  .collaborationBody h2 {
+    font-size: clamp(32px, 10.5vw, 48px);
+  }
+
+  .collaborationGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-top: 46px;
+  }
+
+  .collaborationGrid li {
+    min-height: 0;
+  }
+
+  .collaborationGrid h3 {
+    margin-top: 22px;
+  }
+
+  .collaborationBoundary {
+    grid-template-columns: 1fr;
+    gap: 17px;
+    margin-top: 46px;
   }
 }
