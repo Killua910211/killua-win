@@ -1,6 +1,6 @@
 # 当前任务：把 /mind 改为使用说明库（2026-10-14）
 
-状态：本地改造完成，尚未提交或部署正式网站。
+状态：已提交、推送 origin/main 并部署正式 Worker；线上复验完成。
 
 ## 需求与验收
 
@@ -8,7 +8,7 @@
 - 删除原心理认知地图、主题切换、自我复习、生活验证和旧卡片索引等页面内容。
 - 优化顶部页内导航为“说明总览 / Skills / 软件说明 / 使用边界”，保持静态服务端内容，不新增客户端交互。
 - 保留并整理 `$codex-chatgpt-collaboration` 作为当前 Skill 条目；为后续软件说明留下清晰归档入口。
-- 通过 lint、TypeScript 和构建；本轮不自动部署，等待用户后续明确发布指令。
+- 通过 lint、TypeScript 和构建；提交、推送 origin/main，使用 `pnpm deploy:only` 发布正式网站并复验 `/mind`。
 
 ## 基线与执行
 
@@ -18,7 +18,8 @@
 ## 验证与发布
 
 - 页面改造已完成；`pnpm lint`、`pnpm typecheck`、`pnpm build` 均通过。构建产物确认包含“说明总览 / Skills / 软件说明 / 使用边界”和 `$codex-chatgpt-collaboration`，旧的“核心地图 / 主题线索 / 自我复习 / 生活验证 / 卡片索引”均不再出现。
-- 本轮尚未提交、推送或部署；正式网站仍保持 `c6b48ab` 对应版本。
+- 运行时代码提交 `e359557` 已推送 `origin/main`；`pnpm deploy:only` 成功，Worker Version ID `46df45f8-17df-4e82-822e-490f4709f51a`，启动 17 ms；未执行远程 D1 迁移。
+- 正式网站 `https://www.killua.win/mind?deploy=e359557` 返回 HTTP 200，正文确认包含“说明总览 / Skills / 软件说明 / 使用边界”和 `$codex-chatgpt-collaboration`；旧的“核心地图 / 主题线索 / 自我复习 / 生活验证 / 卡片索引”均不再出现。
 
 ---
 
