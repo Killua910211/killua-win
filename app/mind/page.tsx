@@ -33,9 +33,21 @@ const securityAuditOutputs = [
 ];
 
 const boundaryCards = [
-  { label: '01 / MINIMUM DATA', title: '只传完成判断所需的信息。', body: '不上传凭据、密钥、私有文件或完整仓库；涉及敏感信息时先取得明确授权。' },
-  { label: '02 / LOCAL EVIDENCE', title: '外部建议必须回到本地核验。', body: '检查源文件、运行测试并确认实际输出，不能把顾问意见写成事实、诊断或验证结果。' },
-  { label: '03 / USER AUTHORITY', title: '权限边界由用户决定。', body: '提交、推送、迁移和部署需要单独确认；测试环境与正式网站始终分开说明。' },
+  { label: 'DATA / 最小信息', title: '只传完成判断所需的信息。', body: '不上传凭据、密钥、私有文件或完整仓库；涉及敏感信息时先取得明确授权。' },
+  { label: 'EVIDENCE / 可核验', title: '外部建议必须回到本地核验。', body: '检查源文件、运行测试并确认实际输出，不能把顾问意见写成事实、诊断或验证结果。' },
+  { label: 'AUTHORITY / 用户决定', title: '权限边界由用户决定。', body: '提交、推送、迁移和部署需要单独确认；测试环境与正式网站始终分开说明。' },
+];
+
+const collaborationFacts = [
+  { label: 'WHEN / 适用', value: '需要第二意见的复杂任务' },
+  { label: 'ACTION / 动作', value: '提供建议，不执行本地操作' },
+  { label: 'CHECK / 回收', value: '由 Codex 在本地验证' },
+];
+
+const securityAuditFacts = [
+  { label: 'WHEN / 适用', value: '需要检查代码安全问题' },
+  { label: 'MODES / 档位', value: 'quick / standard / deep' },
+  { label: 'OUTPUT / 输出', value: '报告与结构化问题记录' },
 ];
 
 export default function MindPage() {
@@ -44,83 +56,125 @@ export default function MindPage() {
       <SiteHeader current="mind" />
       <main id="main" className="mind-page">
         <PageHero
-          description="这里维护 Codex Skill 与软件使用说明，优先记录可重复、可验证的操作边界。每篇说明都区分怎么用、谁来执行，以及什么需要授权。"
-          eyebrow="Usage notes / 使用说明"
-          label="Tools & protocols"
+          description="记录我实际使用的 Skill 和软件：为什么用、怎么调用、输出什么，以及哪些动作必须由我确认。"
+          eyebrow="Tool memo / 工具备忘录"
+          label="Personal tools"
           number="01"
-          title={<>READ THE<br /><span className="outline">TOOLS</span><br />YOU USE.</>}
+          title={<>TOOLS I<br /><span className="outline">KEEP</span><br />CLOSE.</>}
           titleId="mind-title"
         />
         <SectionNav
-          label="使用说明条目"
+          label="工具备忘录条目"
           items={[
             { href: '#collaboration-skill-heading', label: '$codex-chatgpt-collaboration' },
             { href: '#security-audit-skill-heading', label: '$security-audit' },
           ]}
         />
 
-        <section className={styles.skills} id="mind-skills" aria-labelledby="mind-skills-heading">
+        <section className={styles.memos} id="mind-memos" aria-labelledby="mind-memos-heading">
           <div className="section-label light">
             <span>02</span>
-            <span lang="en">Skills</span>
+            <span lang="en">Tool memos</span>
           </div>
-          <div className={styles.skillsBody}>
-            <p className="eyebrow">Current skill / 当前 Skill</p>
-            <h2 id="mind-skills-heading">先问第二意见，再把判断带回本地验证。</h2>
-            <p className={styles.skillsLead}>
-              <code>$codex-chatgpt-collaboration</code> 用来请求 ChatGPT 提供第二意见。它不会替代本地证据，也不会扩大 Codex 已获得的权限。
-            </p>
-            <article className={styles.skillCard} aria-labelledby="collaboration-skill-heading">
-              <div className={styles.skillCardHeader}>
-                <span className="mind-card-index">Skill / 01</span>
-                <span className="mind-card-index">Second opinion</span>
+          <div className={styles.memosBody}>
+            <div className={styles.memosIntro}>
+              <p className="eyebrow">Working index / 当前使用</p>
+              <h2 id="mind-memos-heading">把真正用过的工具，记成下一次能直接复用的步骤。</h2>
+              <p className={styles.memosLead}>每个条目先给最短路径，再收起保存完整流程、输出文件和边界。新增软件时，直接增加一张同结构的备忘录卡片。</p>
+            </div>
+
+            <article className={styles.memoCard} aria-labelledby="collaboration-skill-heading">
+              <header className={styles.memoHeader}>
+                <div className={styles.memoHeaderMeta}>
+                  <span>Skill / 01</span>
+                  <span>协作</span>
+                </div>
+                <span className={styles.memoStatus}>READY TO USE</span>
+              </header>
+              <div className={styles.memoTitle}>
+                <p className="eyebrow">Codex Skill / 第二意见</p>
+                <h3 id="collaboration-skill-heading"><code>$codex-chatgpt-collaboration</code></h3>
+                <p>让 ChatGPT 提供独立视角，再由 Codex 把建议带回本地检查、实现和验证。</p>
               </div>
-              <h3 id="collaboration-skill-heading">一个安全的跨模型协作流程。</h3>
-              <p>明确任务后，先让外部顾问提出独立看法，再由 Codex 在本地检查、实现和验证；最终是否采纳、是否写入仓库、是否发布，仍由用户授权。</p>
-              <ol className={styles.stepList}>
-                {collaborationSteps.map((step) => (
-                  <li key={step.label}>
-                    <span>{step.label}</span>
-                    <div>
-                      <h4>{step.title}</h4>
-                      <p>{step.body}</p>
-                    </div>
-                  </li>
+              <div className={styles.memoFacts}>
+                {collaborationFacts.map((fact) => (
+                  <div key={fact.label}>
+                    <span>{fact.label}</span>
+                    <strong>{fact.value}</strong>
+                  </div>
                 ))}
-              </ol>
+              </div>
+              <div className={styles.quickStart}>
+                <span>QUICK START / 最短调用</span>
+                <pre><code>$codex-chatgpt-collaboration 先给我一个独立的实现建议。</code></pre>
+              </div>
+              <details className={styles.memoDetails}>
+                <summary>查看完整协作流程</summary>
+                <ol className={styles.stepList}>
+                  {collaborationSteps.map((step) => (
+                    <li key={step.label}>
+                      <span>{step.label}</span>
+                      <div>
+                        <h4>{step.title}</h4>
+                        <p>{step.body}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </details>
             </article>
-            <article className={styles.skillCard} aria-labelledby="security-audit-skill-heading">
-              <div className={styles.skillCardHeader}>
-                <span className="mind-card-index">Skill / 02</span>
-                <span className="mind-card-index">Cloudflare / Security audit</span>
-              </div>
-              <h3 id="security-audit-skill-heading">让安全审计先找证据，再输出分级报告。</h3>
-              <p>在 Codex 对话中指定代码范围，让 <code>$security-audit</code> 检查安全问题、独立复核证据并生成报告。它默认读取和分析，不会因为发现问题就自动修改代码。</p>
-              <pre className={styles.auditCommand}><code>{`$security-audit 对 3.business/user-service 做 quick 安全审计。
-重点检查登录认证、接口越权和敏感信息泄露，用中文输出报告。`}</code></pre>
-              <div className={styles.auditSection}>
-                <span className="mind-card-index">MODES / 检查方式</span>
-                <div className={styles.auditModeGrid}>
-                  {securityAuditModes.map((mode) => (
-                    <div key={mode.label}>
-                      <strong>{mode.label}</strong>
-                      <p>{mode.body}</p>
-                    </div>
-                  ))}
+
+            <article className={styles.memoCard} aria-labelledby="security-audit-skill-heading">
+              <header className={styles.memoHeader}>
+                <div className={styles.memoHeaderMeta}>
+                  <span>Skill / 02</span>
+                  <span>安全审计</span>
                 </div>
+                <span className={styles.memoStatus}>READ ONLY BY DEFAULT</span>
+              </header>
+              <div className={styles.memoTitle}>
+                <p className="eyebrow">Cloudflare Skill / 安全</p>
+                <h3 id="security-audit-skill-heading"><code>$security-audit</code></h3>
+                <p>指定代码范围，先找证据、独立复核，再输出分级安全报告；默认只读分析，不自动修改代码。</p>
               </div>
-              <div className={styles.auditSection}>
-                <span className="mind-card-index">OUTPUT / 结果文件</span>
-                <div className={styles.auditOutputGrid}>
-                  {securityAuditOutputs.map((output) => (
-                    <div key={output.file}>
-                      <code>{output.file}</code>
-                      <p>{output.body}</p>
-                    </div>
-                  ))}
+              <div className={styles.memoFacts}>
+                {securityAuditFacts.map((fact) => (
+                  <div key={fact.label}>
+                    <span>{fact.label}</span>
+                    <strong>{fact.value}</strong>
+                  </div>
+                ))}
+              </div>
+              <div className={styles.quickStart}>
+                <span>QUICK START / 最短调用</span>
+                <pre><code>{`$security-audit 对 3.business/user-service 做 quick 安全审计。`}</code></pre>
+              </div>
+              <details className={styles.memoDetails}>
+                <summary>查看审计档位与结果文件</summary>
+                <div className={styles.detailSection}>
+                  <span className="mind-card-index">MODES / 检查方式</span>
+                  <div className={styles.auditModeGrid}>
+                    {securityAuditModes.map((mode) => (
+                      <div key={mode.label}>
+                        <strong>{mode.label}</strong>
+                        <p>{mode.body}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <p className={styles.auditBoundary}><strong>阅读报告时：</strong> <code>confirmed</code> 代表已确认，<code>needs_validation</code> 代表待验证，<code>rejected</code> 代表已证伪。动态验证只能在满足隔离要求的本地沙盒中执行；一次审计不代表查完所有漏洞。</p>
+                <div className={styles.detailSection}>
+                  <span className="mind-card-index">OUTPUT / 结果文件</span>
+                  <div className={styles.auditOutputGrid}>
+                    {securityAuditOutputs.map((output) => (
+                      <div key={output.file}>
+                        <code>{output.file}</code>
+                        <p>{output.body}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <p className={styles.auditBoundary}><strong>阅读报告时：</strong> <code>confirmed</code> 代表已确认，<code>needs_validation</code> 代表待验证，<code>rejected</code> 代表已证伪。动态验证只能在满足隔离要求的本地沙盒中执行；一次审计不代表查完所有漏洞。</p>
+              </details>
             </article>
           </div>
         </section>
@@ -132,7 +186,7 @@ export default function MindPage() {
           </div>
           <div className={styles.boundaryBody}>
             <p className="eyebrow">Keep it accountable / 保持可追责</p>
-            <h2 id="mind-boundary-heading">说明文档不扩大权限。</h2>
+            <h2 id="mind-boundary-heading">工具备忘录只帮我记住怎么用，不替我做决定。</h2>
             <div className={styles.boundaryGrid}>
               {boundaryCards.map((card) => (
                 <article key={card.label}>

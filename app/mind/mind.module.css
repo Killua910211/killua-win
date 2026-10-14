@@ -1,50 +1,4 @@
-.skillsBody,
-.boundaryBody {
-  min-width: 0;
-}
-
-.skillsBody h2,
-.boundaryBody h2 {
-  max-width: 850px;
-  font-size: clamp(32px, 4.6vw, 64px);
-  font-weight: 520;
-  letter-spacing: -.065em;
-  line-height: 1.04;
-}
-
-.skillsLead {
-  max-width: 650px;
-  margin: 22px 0 0;
-  color: #5d5a53;
-  font-size: 15px;
-  line-height: 1.85;
-}
-
-.boundaryGrid article > span {
-  color: #667000;
-  font-family: var(--font-mono), monospace;
-  font-size: 10px;
-  letter-spacing: .1em;
-}
-
-.boundaryGrid h3 {
-  max-width: 360px;
-  margin: 30px 0 0;
-  font-size: 23px;
-  font-weight: 540;
-  letter-spacing: -.04em;
-  line-height: 1.2;
-}
-
-.boundaryGrid p {
-  max-width: 410px;
-  margin: 12px 0 0;
-  color: #5d5a53;
-  font-size: 13px;
-  line-height: 1.8;
-}
-
-.skills,
+.memos,
 .boundary {
   display: grid;
   grid-template-columns: minmax(170px, 22vw) minmax(0, 1fr);
@@ -54,59 +8,139 @@
   color: #fff;
 }
 
-.skillsBody :global(.eyebrow),
+.memosBody,
+.boundaryBody {
+  min-width: 0;
+}
+
+.memosBody h2,
+.boundaryBody h2 {
+  max-width: 850px;
+  font-size: clamp(32px, 4.6vw, 64px);
+  font-weight: 520;
+  letter-spacing: -.065em;
+  line-height: 1.04;
+}
+
+.memosBody :global(.eyebrow),
 .boundaryBody :global(.eyebrow) {
   color: rgba(255, 255, 255, .52);
 }
 
-.skillsLead {
+.memosLead {
+  max-width: 650px;
+  margin: 22px 0 0;
   color: rgba(255, 255, 255, .68);
+  font-size: 15px;
+  line-height: 1.85;
 }
 
-.skillsLead code {
-  color: var(--signal);
-  font-family: var(--font-mono), monospace;
-  font-size: .9em;
-}
-
-.skillCard {
-  max-width: 900px;
-  margin-top: 58px;
+.memoCard {
+  max-width: 980px;
+  margin-top: 52px;
   padding: 24px 26px 30px;
   border: 1px solid rgba(255, 255, 255, .24);
   border-top: 2px solid var(--signal);
   background: rgba(255, 255, 255, .035);
 }
 
-.skillCardHeader {
+.memoCard + .memoCard {
+  margin-top: 18px;
+}
+
+.memoHeader {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 20px;
 }
 
-.skillCard h3 {
-  max-width: 680px;
-  margin: 58px 0 0;
-  font-size: clamp(27px, 3.2vw, 46px);
+.memoHeaderMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  color: var(--signal);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.memoStatus {
+  color: rgba(255, 255, 255, .48);
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-align: right;
+}
+
+.memoTitle {
+  margin-top: 54px;
+}
+
+.memoTitle h3 {
+  max-width: 820px;
+  margin: 16px 0 0;
+  font-size: clamp(28px, 4vw, 56px);
   font-weight: 540;
   letter-spacing: -.055em;
   line-height: 1.08;
 }
 
-.skillCard > p {
-  max-width: 680px;
-  margin: 22px 0 0;
+.memoTitle h3 code {
+  color: var(--signal);
+  font-family: var(--font-mono), monospace;
+  font-size: .72em;
+  letter-spacing: -.06em;
+  overflow-wrap: anywhere;
+}
+
+.memoTitle > p:last-child {
+  max-width: 700px;
+  margin: 20px 0 0;
   color: rgba(255, 255, 255, .66);
   font-size: 14px;
   line-height: 1.85;
 }
 
-.skillCard + .skillCard {
-  margin-top: 18px;
+.memoFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 42px;
 }
 
-.auditCommand {
-  margin: 28px 0 0;
+.memoFacts > div {
+  min-width: 0;
+  padding-top: 13px;
+  border-top: 1px solid rgba(255, 255, 255, .2);
+}
+
+.memoFacts span,
+.quickStart > span {
+  display: block;
+  color: rgba(255, 255, 255, .48);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+
+.memoFacts strong {
+  display: block;
+  margin-top: 10px;
+  color: rgba(255, 255, 255, .82);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.quickStart {
+  margin-top: 32px;
+}
+
+.quickStart pre {
+  margin: 12px 0 0;
   padding: 16px 18px;
   overflow-x: auto;
   border-left: 3px solid var(--signal);
@@ -119,8 +153,76 @@
   white-space: pre-wrap;
 }
 
-.auditSection {
-  margin-top: 38px;
+.memoDetails {
+  margin-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, .2);
+}
+
+.memoDetails summary {
+  padding: 18px 0 2px;
+  color: var(--signal);
+  cursor: pointer;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: .05em;
+  list-style: none;
+}
+
+.memoDetails summary::-webkit-details-marker {
+  display: none;
+}
+
+.memoDetails summary::before {
+  display: inline-block;
+  width: 20px;
+  content: '+';
+  color: rgba(255, 255, 255, .5);
+}
+
+.memoDetails[open] summary::before {
+  content: '−';
+}
+
+.stepList {
+  display: grid;
+  gap: 0;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stepList li {
+  display: grid;
+  grid-template-columns: 145px minmax(0, 1fr);
+  gap: 20px;
+  padding: 18px 0;
+  border-top: 1px solid rgba(255, 255, 255, .2);
+}
+
+.stepList li > span {
+  color: var(--signal);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
+}
+
+.stepList h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 520;
+  letter-spacing: -.025em;
+}
+
+.stepList p {
+  max-width: 540px;
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, .58);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.detailSection {
+  margin-top: 30px;
 }
 
 .auditModeGrid,
@@ -160,6 +262,7 @@
   border-top: 1px solid rgba(255, 255, 255, .2);
   color: rgba(255, 255, 255, .58) !important;
   font-size: 12px !important;
+  line-height: 1.7;
 }
 
 .auditBoundary strong {
@@ -171,44 +274,6 @@
   color: var(--signal);
   font-family: var(--font-mono), monospace;
   font-size: .9em;
-}
-
-.stepList {
-  display: grid;
-  gap: 0;
-  margin: 48px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.stepList li {
-  display: grid;
-  grid-template-columns: 145px minmax(0, 1fr);
-  gap: 20px;
-  padding: 18px 0;
-  border-top: 1px solid rgba(255, 255, 255, .2);
-}
-
-.stepList li > span {
-  color: var(--signal);
-  font-family: var(--font-mono), monospace;
-  font-size: 10px;
-  letter-spacing: .1em;
-}
-
-.stepList h4 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 520;
-  letter-spacing: -.025em;
-}
-
-.stepList p {
-  max-width: 540px;
-  margin: 8px 0 0;
-  color: rgba(255, 255, 255, .58);
-  font-size: 13px;
-  line-height: 1.75;
 }
 
 .boundaryGrid {
@@ -226,55 +291,73 @@
 
 .boundaryGrid article > span {
   color: var(--signal);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
 }
 
 .boundaryGrid h3 {
   max-width: 280px;
-  margin-top: 30px;
+  margin: 30px 0 0;
+  font-size: 23px;
+  font-weight: 540;
+  letter-spacing: -.04em;
+  line-height: 1.2;
 }
 
 .boundaryGrid p {
+  max-width: 410px;
+  margin: 12px 0 0;
   color: rgba(255, 255, 255, .58);
+  font-size: 13px;
+  line-height: 1.8;
 }
 
 @media (max-width: 760px) {
-  .skills,
+  .memos,
   .boundary {
     grid-template-columns: 1fr;
     gap: 48px;
     padding: 66px 20px 84px;
   }
 
-  .skillsBody h2,
+  .memosBody h2,
   .boundaryBody h2 {
     font-size: clamp(32px, 10.5vw, 48px);
   }
 
+  .memoCard {
+    margin-top: 42px;
+    padding: 20px;
+  }
+
+  .memoCard + .memoCard {
+    margin-top: 16px;
+  }
+
+  .memoHeader {
+    display: block;
+  }
+
+  .memoStatus {
+    display: block;
+    margin-top: 12px;
+    text-align: left;
+  }
+
+  .memoTitle {
+    margin-top: 44px;
+  }
+
+  .memoFacts,
   .boundaryGrid {
     grid-template-columns: 1fr;
     gap: 16px;
-    margin-top: 46px;
+    margin-top: 38px;
   }
 
   .boundaryGrid article {
     min-height: 0;
-  }
-
-  .skillCard {
-    margin-top: 46px;
-    padding: 20px;
-  }
-
-  .skillCard + .skillCard {
-    margin-top: 16px;
-  }
-
-  .skillCard h3 {
-    margin-top: 48px;
-  }
-
-  .stepList {
-    margin-top: 36px;
   }
 
   .stepList li {
@@ -286,5 +369,4 @@
   .auditOutputGrid {
     grid-template-columns: 1fr;
   }
-
 }
