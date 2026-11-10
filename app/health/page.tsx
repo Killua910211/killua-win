@@ -13,21 +13,21 @@ import {
   HEALTH_SUPPLEMENTS,
   HEALTH_SMOKING_RECORD,
   HEALTH_TRENDS,
-  HEALTH_WEEKLY_AVERAGES,
   getHealthNutritionReferenceLabel,
   getHealthNutritionReferenceStatus,
   getHealthNutritionUpperLimitStatus,
 } from '@/app/lib/health';
+import { getHealthWeeklyAverages } from '@/app/lib/health-live';
 import { buildMetadata } from '@/app/lib/metadata';
 
 export const metadata = buildMetadata({
   title: 'Health',
-  description: '从 Apple Health 提取的公开健康快照：活动、睡眠、恢复、体能趋势与每日营养补充记录。',
+  description: '从 Apple Health 每日同步的公开健康读数：活动、睡眠、恢复、体能趋势与每日营养补充记录。',
   path: '/health',
 });
 
-// 首屏的两个计时器都以服务端当前时间为基准；不缓存页面，避免部署后旧读数
-// 停留在边缘缓存中，直到客户端接管才更新。
+// 首屏的两个计时器都以服务端当前时间为基准，7 日均值每次请求从 D1 现算；
+// 不缓存页面，避免旧读数停留在边缘缓存中。
 export const revalidate = 0;
 
 function formatValue(value: number, precision: number) {
@@ -37,11 +37,12 @@ function formatValue(value: number, precision: number) {
   });
 }
 
-export default function HealthPage() {
-  // 同一次服务端渲染的时间同时作为已存活时间和戒烟计时的首屏基准，
-  // 避免客户端接管前出现“计算中…”或两个读数基准不一致。
+export default async function HealthPage() {
+  // 同一次服务端渲染的时间同时作为已存活时间、戒烟计时和 7 日窗口的基准，
+  // 避免客户端接管前出现“计算中…”或几个读数基准不一致。
   const lifeProgressSnapshot = getHealthLifeProgressSnapshot();
   const initialNowMilliseconds = lifeProgressSnapshot.asOfMilliseconds;
+  const weeklyAverages = await getHealthWeeklyAverages(initialNowMilliseconds);
 
   return (
     <>
@@ -123,7 +124,7 @@ export default function HealthPage() {
             <p className="eyebrow">7 日均值</p>
             <h2 id="health-snapshot-heading">身体的日常节奏。</h2>
             <dl className="health-kpi-grid">
-              {HEALTH_WEEKLY_AVERAGES.map((item) => {
+              {weeklyAverages.map((item) => {
                 const display = getHealthWeeklyAverageDisplay(item);
                 return (
                   <div className={`health-kpi is-${item.status}`} key={item.label}>

@@ -1,4 +1,3 @@
-import { HEALTH_UPDATED_AT } from '@/app/lib/health';
 import type { MetadataRoute } from 'next';
 import { allNodePaths } from '@/app/learning/philosophy/tree';
 import { SITE } from '@/app/lib/metadata';
@@ -55,12 +54,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
-    {
-      url: `${SITE.url}/health`,
-      lastModified: new Date(`${HEALTH_UPDATED_AT}T00:00:00+08:00`),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
+    // 健康页的 7 日均值每天随同步变化，不写固定的修改时间。
+    { url: `${SITE.url}/health`, changeFrequency: 'daily', priority: 0.7 },
     {
       url: `${SITE.url}/mind`,
       lastModified: new Date('2026-09-22T00:00:00+08:00'),

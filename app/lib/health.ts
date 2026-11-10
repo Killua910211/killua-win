@@ -1,4 +1,5 @@
-export const HEALTH_UPDATED_AT = '2026-10-05';
+import type { HealthDailyMetric } from '@/app/lib/health-sync';
+
 export const HEALTH_COVERAGE_START = '2021-02-20';
 
 export const HEALTH_BIRTH_AT_ISO = '1991-02-11T23:50:00+08:00';
@@ -27,16 +28,6 @@ export function getHealthLifeProgressSnapshot(
 
   return { asOfMilliseconds, elapsedMilliseconds, totalDays, percent };
 }
-
-/**
- * 该窗口来自 2026-10-05 提供的 Apple Health 导出，排除尚未结束的导出当天，
- * 是写死的显式常量，不由页面访问时刻计算得出，避免每次访问漂移。
- */
-export const HEALTH_WEEKLY_WINDOW_START = '2026-09-28';
-export const HEALTH_WEEKLY_WINDOW_END = '2026-10-04';
-export const HEALTH_WEEKLY_TIME_ZONE = '北京时间 (UTC+8)';
-/** 本周窗口数据的更新时间，与页面级 HEALTH_UPDATED_AT 一致。 */
-export const HEALTH_WEEKLY_DATA_UPDATED_AT = HEALTH_UPDATED_AT;
 
 export type HealthMetricStatus = 'ok' | 'zero' | 'unknown' | 'error';
 
@@ -69,19 +60,26 @@ export function getHealthWeeklyAverageDisplay(item: HealthWeeklyAverage): Health
   return { value: item.value, unit: item.unit, note: null };
 }
 
+export type HealthWeeklySpec = {
+  label: string;
+  metric: HealthDailyMetric;
+  unit: string;
+  precision: number;
+  sampleUnit: HealthWeeklyAverage['sampleUnit'];
+};
+
 /**
- * 来源：health_export_2026-09-01_to_2026-10-05_AI.json；计算证据见当前任务记录。
- * 日聚合值按有效日等权平均，不把缺失记作 0；本窗口每个数量指标每天仅一个来源。
- * 睡眠仅纳入 1/3/4/5 类，合并重叠时段，排除卧床与清醒；本窗口均无跨午夜片段。
- * 原始导出含私人明细，不进入仓库或公开资源目录。
+ * 「7 日均值」的指标清单。数值由 app/lib/health-live.ts 在每次请求时从 health_daily
+ * 计算：取北京时间昨天往前 7 个已结束的日期，按有读数的日期等权平均，不把缺失记作 0。
+ * 数据由 iPhone 快捷指令每日推送，口径见 app/lib/health-sync.ts。
  */
-export const HEALTH_WEEKLY_AVERAGES: HealthWeeklyAverage[] = [
-  { label: '日均步数', value: '12,515', unit: '步 / 日', validDays: 7, totalDays: 7, sampleUnit: '天', status: 'ok' },
-  { label: '日均活动能量', value: '369', unit: 'kcal / 日', validDays: 7, totalDays: 7, sampleUnit: '天', status: 'ok' },
-  { label: '平均睡眠', value: '7.8', unit: '小时 / 夜', validDays: 7, totalDays: 7, sampleUnit: '夜', status: 'ok' },
-  { label: '平均静息心率', value: '61.0', unit: 'bpm', validDays: 6, totalDays: 7, sampleUnit: '天', status: 'ok' },
-  { label: '平均 HRV · SDNN', value: '65.8', unit: 'ms', validDays: 7, totalDays: 7, sampleUnit: '天', status: 'ok' },
-  { label: '平均血氧饱和度', value: '95.0', unit: '%', validDays: 7, totalDays: 7, sampleUnit: '天', status: 'ok' },
+export const HEALTH_WEEKLY_SPECS: HealthWeeklySpec[] = [
+  { label: '日均步数', metric: 'steps', unit: '步 / 日', precision: 0, sampleUnit: '天' },
+  { label: '日均活动能量', metric: 'active_energy', unit: 'kcal / 日', precision: 0, sampleUnit: '天' },
+  { label: '平均睡眠', metric: 'sleep', unit: '小时 / 夜', precision: 1, sampleUnit: '夜' },
+  { label: '平均静息心率', metric: 'resting_hr', unit: 'bpm', precision: 1, sampleUnit: '天' },
+  { label: '平均 HRV · SDNN', metric: 'hrv', unit: 'ms', precision: 1, sampleUnit: '天' },
+  { label: '平均血氧饱和度', metric: 'spo2', unit: '%', precision: 1, sampleUnit: '天' },
 ];
 
 export type HealthSupplementDetail = {

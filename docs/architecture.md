@@ -4,7 +4,7 @@
 
 ## 产品边界
 
-KILLUA.WIN 是个人数字空间，不是后台管理系统。它把旧文章、健康快照、使用说明和哲学学习材料组织成可持续回看的个人档案。
+KILLUA.WIN 是个人数字空间，不是后台管理系统。它把旧文章、健康读数、使用说明和哲学学习材料组织成可持续回看的个人档案。
 
 ## 运行结构
 
@@ -35,7 +35,7 @@ iPhone 快捷指令 ──POST /api/health/sync（Bearer 令牌）──→ Work
 | `/notes` | 文章归档与前言 | `app/notes/page.tsx`、`app/components/notes-archive.tsx` |
 | `/notes/[slug]` | 文章详情与 Article JSON-LD | `app/notes/[slug]/page.tsx` |
 | `/notes/category/[category]` | 分类归档 | `app/notes/category/[category]/page.tsx` |
-| `/health` | 健康时间线、快照、趋势和补剂 | `app/health/`、`app/lib/health.ts` |
+| `/health` | 健康时间线、7 日均值（实时）、趋势和补剂 | `app/health/`、`app/lib/health.ts`、`app/lib/health-live.ts` |
 | `/mind` | Skill 与软件使用说明库 | `app/mind/` |
 | `/learning` | 科目分区（当前只有哲学）与学习方法 | `app/learning/page.tsx`、`app/learning/subjects.ts` |
 | `/learning/philosophy` | 哲学总览：推荐路线、问题、传统、人物四种入口 | `app/learning/philosophy/page.tsx` |
@@ -53,7 +53,7 @@ iPhone 快捷指令 ──POST /api/health/sync（Bearer 令牌）──→ Work
 
 - 文章正文的规范来源进入 `migrations/` 并回放到 D1；仓库不维护 Markdown 正文副本。`app/lib/static-posts.ts` 是由迁移生成的只读回退，不是第二套手工内容源。
 - 首页 OS 区只读公开数字、日期和受限短标签；`system-readout.tsx` 对运行期数据逐项校验，不渲染标题、备注或正文。
-- `/health` 的公开内容来自 `app/lib/health.ts` 中的快照数据和组件；计时器以服务端快照为首屏基准。
+- `/health` 的「7 日均值」由 `app/lib/health-live.ts` 每次请求从 D1 `health_daily` 计算（北京时间昨天往前 7 个已结束日期，缺失不记 0，运行期逐行校验，读取失败显示「读取失败」）；「长期趋势」与其余内容仍来自 `app/lib/health.ts` 的静态数据，2026 年柱子待一次性回填核对后再改读 D1。计时器以服务端时间为首屏基准。
 - Apple Health 日汇总由 iPhone 快捷指令每天推送最近 10 天到 `/api/health/sync`，以 Worker secret `HEALTH_SYNC_TOKEN` 做 Bearer 鉴权，写入 D1 `health_daily`（每个指标每天一行，幂等覆盖；当天标记未完成；可写入的指标由解析模块白名单决定，表上不再枚举指标名）。快捷指令文件由 `scripts/build-health-shortcut.mjs` 生成并签名（含令牌，输出在已忽略的 `outputs/`）。接口只写不读，没有公开读取端点；只存按日聚合值，不存原始样本与来源。解析口径在 `app/lib/health-sync.ts`，由 `pnpm test:health-sync` 回归；手机端搭建与排错见 [health-sync.md](health-sync.md)。
 - 哲学知识库的结构化数据来自 `data.json`：当前共 55 个节点，包括 23 个核心问题、6 个问题领域、5 个传统导航、7 个历史时段、10 个传统线索和 1 个方法论争论。本轮不以增加节点为目标，节点数不变。
 - 哲学内容按职责分层，新增主题通过加数据完成，不重写 UI：`data.json`（节点树与立场）、`content-ledger.ts` 与 `remaining-content-ledgers.ts`（研究层与来源账）、`study-guides.ts` 与 `remaining-study-guides.ts`（精读层）、`relations.ts`（语义关系与横向链条）、`concepts.ts`（跨条目概念，全站唯一定义）、`argument-maps.ts`（论证地图）、`thought-experiments.ts`（改变变量式思想实验）、`comparisons.ts`（跨传统可比问题）、`learning-path.ts`（推荐学习路径）、`people.ts`（人物阅读映射）。分工与硬约束写在 `KNOWLEDGE_BASE.md`，修改前必须先读局部 `AGENTS.md`。
