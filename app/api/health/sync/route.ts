@@ -13,6 +13,11 @@ function reply(status: number, body: Record<string, unknown>) {
   });
 }
 
+/** 出错时同样带 summary：快捷指令末尾只取 summary 显示，成功失败都能看到原因。 */
+function fail(status: number, error: string) {
+  return reply(status, { ok: false, error, summary: `同步失败：${error}` });
+}
+
 /**
  * 两边先各自做 SHA-256，再逐字节异或累加比较：两个摘要定长 32 字节，
  * 比较耗时不随令牌内容或长度变化，也不会在第一个不同字节处提前返回。
@@ -41,33 +46,33 @@ export async function POST(request: Request) {
   const expected = env.HEALTH_SYNC_TOKEN;
   if (typeof expected !== 'string' || expected.length < 32) {
     console.error('health.sync.token_not_configured');
-    return reply(503, { ok: false, error: '服务端尚未配置同步令牌。' });
+    return fail(503, '服务端尚未配置同步令牌。');
   }
 
   const authorization = request.headers.get('authorization') ?? '';
   const provided = /^Bearer\s+(.+)$/i.exec(authorization)?.[1]?.trim() ?? '';
   if (!(await tokenMatches(provided, expected))) {
-    return reply(401, { ok: false, error: '同步令牌无效。' });
+    return fail(401, '同步令牌无效。');
   }
 
   const declaredLength = Number(request.headers.get('content-length') ?? '0');
   if (declaredLength > MAX_BODY_BYTES) {
-    return reply(413, { ok: false, error: '请求体过大，请缩短回填范围后分批发送。' });
+    return fail(413, '请求体过大，请缩短回填范围后分批发送。');
   }
   const text = await request.text();
   if (text.length > MAX_BODY_BYTES) {
-    return reply(413, { ok: false, error: '请求体过大，请缩短回填范围后分批发送。' });
+    return fail(413, '请求体过大，请缩短回填范围后分批发送。');
   }
 
   let payload: unknown;
   try {
     payload = JSON.parse(text);
   } catch {
-    return reply(400, { ok: false, error: '请求体不是合法的 JSON：请把请求体类型设为 JSON。' });
+    return fail(400, '请求体不是合法的 JSON：请把请求体类型设为 JSON。');
   }
 
   const result = planHealthSync(payload, Date.now());
-  if (!result.ok) return reply(422, { ok: false, error: result.error });
+  if (!result.ok) return fail(422, result.error);
 
   const { plan } = result;
   const syncedAt = Date.now();
@@ -98,7 +103,7 @@ export async function POST(request: Request) {
         error: error instanceof Error ? error.message : String(error),
         rows: plan.rows.length,
       });
-      return reply(500, { ok: false, error: '写入数据库失败，请稍后重试。' });
+      return fail(500, '写入数据库失败，请稍后重试。');
     }
   }
 

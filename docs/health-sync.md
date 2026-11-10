@@ -9,6 +9,18 @@
 
 界面文字以中文 iOS 为准，括号里是英文界面的名称；不同 iOS 版本的措辞可能略有出入。
 
+## 最快的方式：导入生成好的快捷指令
+
+在本仓库目录的 Mac 上运行：
+
+```bash
+node scripts/build-health-shortcut.mjs
+```
+
+它按下面第二节的结构生成并签名两个文件：`outputs/health-shortcut/Health 同步.shortcut`（最近 10 天）和 `Health 回填.shortcut`（最近 330 天），令牌已写进请求头。双击导入到 Mac 的「快捷指令」，开着 iCloud 同步时几分钟内会出现在 iPhone 上；也可以用隔空投送直接发到手机。之后从第三节「第一次运行」开始即可。
+
+生成物含令牌，不要提交或外传（`outputs/` 已被忽略）。导入后若某个「查找健康样本」的类型显示为空、运行时提示「请选择此“健康”样本的类型」，在那个动作里手动选上对应类型即可，其余设置不受影响。
+
 ## 一、准备
 
 1. 「设置」→「App」→「快捷指令」→「高级」，打开 **允许共享大量数据**（Allow Sharing Large Amounts of Data）。第一次回填一年的数据需要它。
@@ -131,4 +143,4 @@ openssl rand -base64 36 | tr '+/' '-_' | tr -d '=\n' > .health-sync-token
 npx wrangler secret put HEALTH_SYNC_TOKEN < .health-sync-token
 ```
 
-然后把快捷指令里 `Authorization` 头的令牌换成新的。`.health-sync-token` 已被 `.gitignore` 忽略，不会进仓库。
+然后把快捷指令里 `Authorization` 头的令牌换成新的，或重新运行 `node scripts/build-health-shortcut.mjs` 生成并导入。`.health-sync-token` 已被 `.gitignore` 忽略，不会进仓库。

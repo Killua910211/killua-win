@@ -1,0 +1,246 @@
+#!/usr/bin/env node
+/**
+ * 生成可直接导入的 iPhone 快捷指令「Health 同步」与「Health 回填」。
+ *
+ * 结构与 docs/health-sync.md 里手动搭建的步骤一一对应：调整日期 → 七个「查找健康样本」
+ * → 「获取 URL 内容」把各属性逐行发给 /api/health/sync → 显示返回的 summary。
+ * 令牌从仓库根目录的 .health-sync-token 读入并写进请求头；生成物在 outputs/（已忽略），
+ * 含令牌，不要提交或外传。
+ *
+ * 文件格式的依据（macOS 自带，可复查）：
+ *   - WorkflowKit Gallery.bundle 里的 .wflow：筛选模板、ActionOutput 引用、
+ *     WFTextTokenString、获取字典值、显示结果的写法；
+ *   - ActionKit Localizable.loctable：WFHKSampleFilteringGroupBy / FillMissing、
+ *     「开始日期 / 结束日期 / 值」属性名、ISO 8601 与 WFISO8601IncludeTime；
+ *   - HealthKit Localizable-DataTypes.loctable：健康类型的英文名。
+ *
+ * 只能在 macOS 上运行：签名用系统的 `shortcuts sign`，导入后经 iCloud 同步到 iPhone。
+ *
+ *   node scripts/build-health-shortcut.mjs
+ */
+
+import { execFileSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const OUT_DIR = join(ROOT, 'outputs', 'health-shortcut');
+const ENDPOINT = 'https://www.killua.win/api/health/sync';
+const OBJECT_REPLACEMENT = '￼';
+
+const token = readFileSync(join(ROOT, '.health-sync-token'), 'utf8').trim();
+if (token.length < 32) {
+  console.error('✗ .health-sync-token 不存在或太短；先按 docs/health-sync.md「更换令牌」生成。');
+  process.exit(1);
+}
+
+// ------------------------------------------------------------------ plist
+
+function escapeXml(text) {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function toPlist(value, indent = '') {
+  const next = `${indent}\t`;
+  if (value === true) return `${indent}<true/>`;
+  if (value === false) return `${indent}<false/>`;
+  if (typeof value === 'number') {
+    return Number.isInteger(value) ? `${indent}<integer>${value}</integer>` : `${indent}<real>${value}</real>`;
+  }
+  if (typeof value === 'string') return `${indent}<string>${escapeXml(value)}</string>`;
+  if (Array.isArray(value)) {
+    if (value.length === 0) return `${indent}<array/>`;
+    return [`${indent}<array>`, ...value.map((item) => toPlist(item, next)), `${indent}</array>`].join('\n');
+  }
+  const entries = Object.entries(value);
+  if (entries.length === 0) return `${indent}<dict/>`;
+  return [
+    `${indent}<dict>`,
+    ...entries.flatMap(([key, item]) => [`${next}<key>${escapeXml(key)}</key>`, toPlist(item, next)]),
+    `${indent}</dict>`,
+  ].join('\n');
+}
+
+// ------------------------------------------------------------------ 构件
+
+const uuid = () => randomUUID().toUpperCase();
+
+function output(action, name, aggrandizements) {
+  return {
+    OutputUUID: action.WFWorkflowActionParameters.UUID,
+    Type: 'ActionOutput',
+    OutputName: name,
+    ...(aggrandizements ? { Aggrandizements: aggrandizements } : {}),
+  };
+}
+
+function tokenString(text, attachment) {
+  return {
+    Value: attachment
+      ? { string: OBJECT_REPLACEMENT, attachmentsByRange: { '{0, 1}': attachment } }
+      : { string: text },
+    WFSerializationType: 'WFTextTokenString',
+  };
+}
+
+function tokenAttachment(attachment) {
+  return { Value: attachment, WFSerializationType: 'WFTextTokenAttachment' };
+}
+
+function textField(key, value) {
+  return {
+    WFItemType: 0,
+    WFKey: tokenString(key),
+    WFValue: typeof value === 'string' ? tokenString(value) : tokenString('', value),
+  };
+}
+
+function dictionaryField(items) {
+  return { Value: { WFDictionaryFieldValueItems: items }, WFSerializationType: 'WFDictionaryFieldValue' };
+}
+
+const ISO_TIME = { Type: 'WFDateFormatVariableAggrandizement', WFDateFormatStyle: 'ISO 8601', WFISO8601IncludeTime: true };
+const property = (name) => ({ Type: 'WFPropertyVariableAggrandizement', PropertyName: name });
+
+function action(identifier, parameters) {
+  return { WFWorkflowActionIdentifier: identifier, WFWorkflowActionParameters: { UUID: uuid(), ...parameters } };
+}
+
+/** 健康类型按 HealthKit 英文名；字段前缀与 app/lib/health-sync.ts 的 payload 键一致。 */
+const METRICS = [
+  { type: 'Steps', name: '步数', prefix: 'steps', groupBy: 'Day' },
+  { type: 'Active Energy', name: '活动能量', prefix: 'energy', groupBy: 'Day' },
+  { type: 'Walking + Running Distance', name: '步行+跑步距离', prefix: 'distance', groupBy: 'Day' },
+  { type: 'Resting Heart Rate', name: '静息心率', prefix: 'resting_hr', groupBy: 'Day' },
+  { type: 'Heart Rate Variability', name: '心率变异性', prefix: 'hrv', groupBy: 'Day' },
+  { type: 'Blood Oxygen', name: '血氧', prefix: 'spo2', groupBy: 'Day' },
+  { type: 'Sleep', name: '睡眠', prefix: 'sleep', groupBy: 'None' },
+];
+
+function buildShortcut(days) {
+  const actions = [];
+
+  actions.push(
+    action('is.workflow.actions.comment', {
+      WFCommentActionText:
+        `把最近 ${days} 天的 Apple Health 数据发到 killua.win 健康页。\n` +
+        '由 killua-win 仓库 scripts/build-health-shortcut.mjs 生成；搭建说明与排错见 docs/health-sync.md。\n' +
+        '前六项按天分组（由 iPhone 合并多设备记录），睡眠不分组（网站要每段起止时间来合并重叠、排除卧床与清醒）。',
+    }),
+  );
+
+  const since = action('is.workflow.actions.adjustdate', {
+    WFDate: tokenString('', { Type: 'CurrentDate' }),
+    WFAdjustOperation: 'Subtract',
+    WFDuration: { Value: { Magnitude: String(days), Unit: 'days' }, WFSerializationType: 'WFQuantityFieldValue' },
+    CustomOutputName: '起始时间',
+  });
+  actions.push(since);
+
+  const finds = METRICS.map((metric) => {
+    const find = action('is.workflow.actions.filter.health.quantity', {
+      WFContentItemFilter: {
+        Value: {
+          WFActionParameterFilterPrefix: 1,
+          WFContentPredicateBoundedDate: false,
+          WFActionParameterFilterTemplates: [
+            { Operator: 4, Property: 'Type', Removable: false, Values: { Enumeration: metric.type } },
+            {
+              Operator: 2,
+              Property: 'Start Date',
+              Removable: true,
+              Values: { Date: tokenAttachment(output(since, '起始时间')) },
+            },
+          ],
+        },
+        WFSerializationType: 'WFContentPredicateTableTemplate',
+      },
+      WFHKSampleFilteringGroupBy: metric.groupBy,
+      WFHKSampleFilteringFillMissing: false,
+      WFContentItemLimitEnabled: false,
+      CustomOutputName: metric.name,
+    });
+    actions.push(find);
+    return { metric, find };
+  });
+
+  const fields = [textField('since', output(since, '起始时间', [ISO_TIME]))];
+  for (const { metric, find } of finds) {
+    if (metric.prefix === 'sleep') {
+      fields.push(textField('sleep_start', output(find, metric.name, [property('Start Date'), ISO_TIME])));
+      fields.push(textField('sleep_end', output(find, metric.name, [property('End Date'), ISO_TIME])));
+      fields.push(textField('sleep_value', output(find, metric.name, [property('Value')])));
+    } else {
+      fields.push(textField(`${metric.prefix}_date`, output(find, metric.name, [property('Start Date'), ISO_TIME])));
+      fields.push(textField(`${metric.prefix}_value`, output(find, metric.name, [property('Value')])));
+    }
+  }
+
+  const request = action('is.workflow.actions.downloadurl', {
+    WFURL: tokenString(ENDPOINT),
+    WFHTTPMethod: 'POST',
+    ShowHeaders: true,
+    WFHTTPHeaders: dictionaryField([textField('Authorization', `Bearer ${token}`)]),
+    WFHTTPBodyType: 'JSON',
+    WFJSONValues: dictionaryField(fields),
+  });
+  actions.push(request);
+
+  const summary = action('is.workflow.actions.getvalueforkey', {
+    WFInput: tokenAttachment(output(request, 'Contents of URL')),
+    WFDictionaryKey: 'summary',
+  });
+  actions.push(summary);
+
+  actions.push(
+    action('is.workflow.actions.showresult', {
+      Text: tokenString('', output(summary, 'Dictionary Value')),
+    }),
+  );
+
+  return {
+    WFWorkflowMinimumClientVersionString: '900',
+    WFWorkflowMinimumClientVersion: 900,
+    WFWorkflowClientVersion: '900',
+    WFWorkflowIcon: { WFWorkflowIconStartColor: 4282601983, WFWorkflowIconGlyphNumber: 59845 },
+    WFWorkflowTypes: [],
+    WFWorkflowInputContentItemClasses: [],
+    WFWorkflowOutputContentItemClasses: [],
+    WFWorkflowHasOutputFallback: false,
+    WFWorkflowHasShortcutInputVariables: false,
+    WFWorkflowImportQuestions: [],
+    WFQuickActionSurfaces: [],
+    WFWorkflowActions: actions,
+  };
+}
+
+// ------------------------------------------------------------------ 输出
+
+rmSync(OUT_DIR, { recursive: true, force: true });
+mkdirSync(OUT_DIR, { recursive: true });
+
+const targets = [
+  { name: 'Health 同步', days: 10 },
+  { name: 'Health 回填', days: 330 },
+];
+
+for (const target of targets) {
+  const unsigned = join(OUT_DIR, `${target.name}.unsigned.shortcut`);
+  const signed = join(OUT_DIR, `${target.name}.shortcut`);
+  const xml =
+    '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
+    '<plist version="1.0">\n' +
+    toPlist(buildShortcut(target.days)) +
+    '\n</plist>\n';
+  writeFileSync(unsigned, xml);
+  execFileSync('plutil', ['-lint', unsigned], { stdio: 'pipe' });
+  execFileSync('plutil', ['-convert', 'binary1', unsigned], { stdio: 'pipe' });
+  execFileSync('shortcuts', ['sign', '--mode', 'people-who-know-me', '--input', unsigned, '--output', signed], {
+    stdio: 'pipe',
+  });
+  rmSync(unsigned);
+  console.log(`✓ ${signed}`);
+}
