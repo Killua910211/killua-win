@@ -130,12 +130,13 @@ const METRICS = [
 ];
 
 /**
- * 健身圆环的锻炼与站立，单独成一个快捷指令：这两个类型名只有间接证据
- * （Exercise Minutes 见于 iOS 26 真实导出，Stand Hour 见于 ActionKit 标签表），
- * 万一不对，只影响这一个，不拖垮主同步。
+ * 健身圆环的锻炼与站立，单独成一个快捷指令，万一类型名不对只影响这一个。
+ * 类型名都取 ActionKit 标签表：主同步里取自这张表的名字（Active Calories、
+ * Oxygen Saturation 等）2026-11-11 真机全部生效；iOS 26 导出里见过的
+ * Exercise Minutes 实测报「未找到样本」，改用表里的 Exercise Time。
  */
 const FITNESS_METRICS = [
-  { type: 'Exercise Minutes', name: '锻炼分钟数', prefix: 'exercise', groupBy: 'Day' },
+  { type: 'Exercise Time', name: '锻炼分钟数', prefix: 'exercise', groupBy: 'Day' },
   { type: 'Stand Hour', name: '站立', prefix: 'stand', groupBy: 'None' },
 ];
 
