@@ -29,6 +29,8 @@ yarn-error.log*
 
 # local environment
 .env*
+.dev.vars*
+.health-sync-token
 
 # deployment and generated files
 .vercel

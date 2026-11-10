@@ -1,6 +1,6 @@
 # KILLUA.WIN 架构
 
-最后复核：2026-10-14。以下事实以当前工作树为准；工作树尚未提交的内容不等于正式网站已发布内容。
+最后复核：2026-11-11。以下事实以当前工作树为准；工作树尚未提交的内容不等于正式网站已发布内容。
 
 ## 产品边界
 
@@ -14,9 +14,11 @@ KILLUA.WIN 是个人数字空间，不是后台管理系统。它把旧文章、
 vinext / Next App Router 兼容层
   ↓
 Vite 构建 → Cloudflare Worker（wrangler.jsonc）
-  ├─ D1：文章与站点数据（binding DB，正式运行时主存储）
+  ├─ D1：文章、站点数据与 Apple Health 日汇总（binding DB，正式运行时主存储）
   ├─ 静态文章回退：app/lib/static-posts.ts（D1 未初始化时使用）
   └─ 外部公开端点：os.killua.win/api/public/stats
+
+iPhone 快捷指令 ──POST /api/health/sync（Bearer 令牌）──→ Worker → D1 health_daily
 ```
 
 - 包管理器是 pnpm，构建产物在 `dist/`。
@@ -43,6 +45,7 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 | `/learning/philosophy/[node]` | 55 个知识节点各一页 | `app/learning/philosophy/[node]/` |
 | `/sitemap.xml`、`/robots.txt`、`/feed.xml` | 搜索索引与订阅 | `app/sitemap.ts`、`app/robots.ts`、`app/feed.xml/route.ts` |
 | `/api/database` | 数据库健康检查 | `app/api/database/route.ts` |
+| `/api/health/sync` | 接收 iPhone 快捷指令推送的 Apple Health 日汇总（只写） | `app/api/health/sync/route.ts`、`app/lib/health-sync.ts` |
 
 学习空间按科目组织，一门科目一个顶层分区，学习方法排在所有科目之后：`app/learning/subjects.ts` 是科目清单的唯一来源，分区编号、分区锚点、深浅面交替和规划中的科目都从它推出，新增科目先改这份数据。当前已铺开的科目只有哲学；曾短暂上线过 `/learning/ai-workflow`，已于 2026-09-09 撤下。当前没有 `/lab` 或 `/workflow` 应用路由；旧 Lab 图片、样式和旧 Health 设计档案已从当前工作树清理。`public/learning/philosophy-tree.html` 仍作为旧哲学入口的兼容静态文件保留，当前哲学页面的数据源是 `app/learning/philosophy/data.json`。
 
@@ -51,6 +54,7 @@ Vite 构建 → Cloudflare Worker（wrangler.jsonc）
 - 文章正文的规范来源进入 `migrations/` 并回放到 D1；仓库不维护 Markdown 正文副本。`app/lib/static-posts.ts` 是由迁移生成的只读回退，不是第二套手工内容源。
 - 首页 OS 区只读公开数字、日期和受限短标签；`system-readout.tsx` 对运行期数据逐项校验，不渲染标题、备注或正文。
 - `/health` 的公开内容来自 `app/lib/health.ts` 中的快照数据和组件；计时器以服务端快照为首屏基准。
+- Apple Health 日汇总由 iPhone 快捷指令每天推送最近 10 天到 `/api/health/sync`，以 Worker secret `HEALTH_SYNC_TOKEN` 做 Bearer 鉴权，写入 D1 `health_daily`（每个指标每天一行，幂等覆盖；当天标记未完成）。接口只写不读，没有公开读取端点；只存按日聚合值，不存原始样本与来源。解析口径在 `app/lib/health-sync.ts`，由 `pnpm test:health-sync` 回归；手机端搭建与排错见 [health-sync.md](health-sync.md)。
 - 哲学知识库的结构化数据来自 `data.json`：当前共 55 个节点，包括 23 个核心问题、6 个问题领域、5 个传统导航、7 个历史时段、10 个传统线索和 1 个方法论争论。本轮不以增加节点为目标，节点数不变。
 - 哲学内容按职责分层，新增主题通过加数据完成，不重写 UI：`data.json`（节点树与立场）、`content-ledger.ts` 与 `remaining-content-ledgers.ts`（研究层与来源账）、`study-guides.ts` 与 `remaining-study-guides.ts`（精读层）、`relations.ts`（语义关系与横向链条）、`concepts.ts`（跨条目概念，全站唯一定义）、`argument-maps.ts`（论证地图）、`thought-experiments.ts`（改变变量式思想实验）、`comparisons.ts`（跨传统可比问题）、`learning-path.ts`（推荐学习路径）、`people.ts`（人物阅读映射）。分工与硬约束写在 `KNOWLEDGE_BASE.md`，修改前必须先读局部 `AGENTS.md`。
 - 论证路径按立场名索引（`positionArguments`），不按数组下标；`study-guides.ts` 末尾有构建期校验，键名与 `data.json` 的 `position.name` 对不上直接抛错。旧的下标对齐结构曾把论证挂到错误的立场上。
