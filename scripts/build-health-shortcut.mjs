@@ -118,11 +118,17 @@ function action(identifier, parameters) {
   return { WFWorkflowActionIdentifier: identifier, WFWorkflowActionParameters: { UUID: uuid(), ...parameters } };
 }
 
-/** type 是「查找健康样本」类型选单的内部标签；字段前缀与 app/lib/health-sync.ts 的 payload 键一致。 */
+/**
+ * type 是「查找健康样本」类型选单的内部标签；字段前缀与 app/lib/health-sync.ts 的 payload 键一致。
+ *
+ * raw：累计型指标不分组，逐条发开始、结束、数值和来源，由网站按来源优先级去重。
+ * 「按天分组」会把 iPhone 和 Apple Watch 同时记的步数直接相加（2026-11-11 实测约为
+ * 「健康」App 的两倍），网站已拒收累计型的分组格式。
+ */
 const METRICS = [
-  { type: 'Steps', name: '步数', prefix: 'steps', groupBy: 'Day' },
-  { type: 'Active Calories', name: '活动能量', prefix: 'energy', groupBy: 'Day' },
-  { type: 'Walking + Running Distance', name: '步行+跑步距离', prefix: 'distance', groupBy: 'Day' },
+  { type: 'Steps', name: '步数', prefix: 'steps', groupBy: 'None', raw: true },
+  { type: 'Active Calories', name: '活动能量', prefix: 'energy', groupBy: 'None', raw: true },
+  { type: 'Walking + Running Distance', name: '步行+跑步距离', prefix: 'distance', groupBy: 'None', raw: true },
   { type: 'Resting Heart Rate', name: '静息心率', prefix: 'resting_hr', groupBy: 'Day' },
   { type: 'Heart Rate Variability', name: '心率变异性', prefix: 'hrv', groupBy: 'Day' },
   { type: 'Oxygen Saturation', name: '血氧', prefix: 'spo2', groupBy: 'Day' },
@@ -136,7 +142,7 @@ const METRICS = [
  * Exercise Minutes 实测报「未找到样本」，改用表里的 Exercise Time。
  */
 const FITNESS_METRICS = [
-  { type: 'Exercise Time', name: '锻炼分钟数', prefix: 'exercise', groupBy: 'Day' },
+  { type: 'Exercise Time', name: '锻炼分钟数', prefix: 'exercise', groupBy: 'None', raw: true },
   { type: 'Stand Hour', name: '站立', prefix: 'stand', groupBy: 'None' },
 ];
 
@@ -188,7 +194,12 @@ function buildShortcut(days, metrics, note) {
 
   const fields = [textField('days', String(days))];
   for (const { metric, find } of finds) {
-    if (metric.prefix === 'sleep') {
+    if (metric.raw) {
+      fields.push(textField(`${metric.prefix}_start`, output(find, metric.name, [property('Start Date'), ISO_TIME])));
+      fields.push(textField(`${metric.prefix}_end`, output(find, metric.name, [property('End Date'), ISO_TIME])));
+      fields.push(textField(`${metric.prefix}_value`, output(find, metric.name, [property('Value')])));
+      fields.push(textField(`${metric.prefix}_source`, output(find, metric.name, [property('Source')])));
+    } else if (metric.prefix === 'sleep') {
       fields.push(textField('sleep_start', output(find, metric.name, [property('Start Date'), ISO_TIME])));
       fields.push(textField('sleep_end', output(find, metric.name, [property('End Date'), ISO_TIME])));
       fields.push(textField('sleep_value', output(find, metric.name, [property('Value')])));
@@ -245,15 +256,17 @@ rmSync(OUT_DIR, { recursive: true, force: true });
 mkdirSync(OUT_DIR, { recursive: true });
 
 const CORE_NOTE =
-  '前六项按天分组（由 iPhone 合并多设备记录），睡眠不分组（网站要每段起止时间来合并重叠、排除卧床与清醒）。';
-const FITNESS_NOTE =
-  '健身圆环的锻炼分钟数（按天分组）与站立（每小时一条，不分组，网站数「已站立」的小时）。';
+  '步数、活动能量、距离逐条发送并带来源，网站按「健康」App 的来源优先级去重；静息心率、HRV、血氧按天分组；' +
+  '睡眠不分组（网站要每段起止时间来合并重叠、排除卧床与清醒）。';
+const BACKFILL_NOTE =
+  '一次性回填：只含不需要去重的静息心率、HRV、血氧与睡眠；步数等原始样本一年的量太大，不在回填里。';
+const FITNESS_NOTE = '健身圆环的锻炼分钟数（逐条带来源，网站去重）与站立（每小时一条，网站数「已站立」的小时）。';
 
+/** 每日同步发最近 7 天：连续漏跑 5 天以内都能补齐，原始样本的量也可控。 */
 const targets = [
-  { name: 'Health 同步', days: 10, metrics: METRICS, note: CORE_NOTE },
-  { name: 'Health 回填', days: 330, metrics: METRICS, note: CORE_NOTE },
-  { name: 'Health 锻炼', days: 10, metrics: FITNESS_METRICS, note: FITNESS_NOTE },
-  { name: 'Health 锻炼回填', days: 330, metrics: FITNESS_METRICS, note: FITNESS_NOTE },
+  { name: 'Health 同步', days: 7, metrics: METRICS, note: CORE_NOTE },
+  { name: 'Health 回填', days: 330, metrics: METRICS.filter((metric) => !metric.raw), note: BACKFILL_NOTE },
+  { name: 'Health 锻炼', days: 7, metrics: FITNESS_METRICS, note: FITNESS_NOTE },
 ];
 
 for (const target of targets) {

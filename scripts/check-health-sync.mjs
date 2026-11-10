@@ -93,15 +93,19 @@ for (const [text, kind] of sleepCases) {
 // 11-07 只覆盖了一部分不写入；11-08 至 11-10 已结束；11-11 写入但标记未完成。
 const now = Date.UTC(2026, 10, 11, 4, 30);
 const lines = (...items) => items.join('\n');
+/** 每天中午一条 10 分钟的原始样本，单一来源。累计型指标只接受这种带来源的原始样本。 */
+const rawDaily = (prefix, entries, source = 'Killua的Apple Watch') => ({
+  [`${prefix}_start`]: lines(...entries.map(([date]) => `${date}T12:00:00+08:00`)),
+  [`${prefix}_end`]: lines(...entries.map(([date]) => `${date}T12:10:00+08:00`)),
+  [`${prefix}_value`]: lines(...entries.map(([, value]) => value)),
+  [`${prefix}_source`]: lines(...entries.map(() => source)),
+});
 
 const payload = {
   since: '2026-11-07T12:30:00+08:00',
-  steps_date: lines('2026-11-07T00:00:00+08:00', '2026-11-08T00:00:00+08:00', '2026-11-09T00:00:00+08:00', '2026-11-10T00:00:00+08:00', '2026-11-11T00:00:00+08:00'),
-  steps_value: lines('4,000', '12,000', '9,500', '13,001', '3,200'),
-  energy_date: ['2026-11-08', '2026-11-09'],
-  energy_value: ['400', '1673.6 kJ'],
-  distance_date: lines('2026-11-08', '2026-11-09'),
-  distance_value: lines('8.5', '7'),
+  ...rawDaily('steps', [['2026-11-07', '4,000'], ['2026-11-08', '12,000'], ['2026-11-09', '9,500'], ['2026-11-10', '13,001'], ['2026-11-11', '3,200']]),
+  ...rawDaily('energy', [['2026-11-08', '400'], ['2026-11-09', '1673.6 kJ']]),
+  ...rawDaily('distance', [['2026-11-08', '8.5'], ['2026-11-09', '7']]),
   // 静息心率 11-09 两条取均值；11-10 缺失就是缺失，不补 0。
   resting_hr_date: lines('2026-11-08T07:00:00+08:00', '2026-11-09T07:00:00+08:00', '2026-11-09T21:00:00+08:00'),
   resting_hr_value: lines('60', '62', '64'),
@@ -169,14 +173,13 @@ check(
   `越界值应被丢弃：${JSON.stringify(outlier)}`,
 );
 
-// 没有按天分组的步数会出现同日多行：照常相加，但要提醒。
-const ungrouped = planHealthSync(
-  { since: '2026-11-07', steps_date: lines('2026-11-08T08:00:00+08:00', '2026-11-08T09:00:00+08:00'), steps_value: lines('100', '200') },
-  now,
-);
+// 按天分组的累计值已经把多个来源相加，无法去重：拒收，不写入（旧版快捷指令）。
+const groupedCumulative = planHealthSync({ days: '10', steps_date: lines('2026-11-08'), steps_value: lines('24000') }, now);
 check(
-  ungrouped.ok && ungrouped.plan.reports.find((item) => item.metric === 'steps')?.message?.includes('按天分组'),
-  '同日多条步数应提示按天分组',
+  groupedCumulative.ok && groupedCumulative.plan.rows.length === 0 &&
+    groupedCumulative.plan.reports.find((item) => item.metric === 'steps')?.status === 'error' &&
+    groupedCumulative.plan.reports.find((item) => item.metric === 'steps')?.message?.includes('原始样本'),
+  `按天分组的步数应被拒收：${JSON.stringify(groupedCumulative)}`,
 );
 
 // 锻炼分钟数按天求和；站立按小时去重后数「已站立」，只有「未站立」的日子记 0。
@@ -186,8 +189,7 @@ for (const [text, kind] of [['Stood', 'stood'], ['Idle', 'idle'], ['已站立', 
 const fitness = planHealthSync(
   {
     days: '10',
-    exercise_date: lines('2026-11-08', '2026-11-09'),
-    exercise_value: lines('32', '0'),
+    ...rawDaily('exercise', [['2026-11-08', '32'], ['2026-11-09', '0']]),
     stand_date: lines(
       '2026-11-08T09:00:00+08:00',
       '2026-11-08T09:00:00+08:00',
@@ -212,6 +214,44 @@ if (fitness.ok) {
   check(false, `锻炼与站立应当成功：${fitness.error}`);
 }
 
+// 原始样本按来源优先级去重（Apple Watch > iPhone > 其他 App），与「健康」App 一致：
+// 手表 08:00–08:10 记 1000 步；手机同一时段 950 步完全被覆盖、不计；
+// 手机 09:00–09:10 记 300 步（手表没戴）全计；手机 10:00–10:20 记 400 步，手表覆盖其中
+// 10:00–10:10，只计一半 200；第三方 App 08:00–09:00 记 2000 步，被覆盖 10 分钟，计 50/60。
+const t = (hm) => `2026-11-08T${hm}:00+08:00`;
+const dedupe = planHealthSync(
+  {
+    days: '10',
+    steps_start: lines(t('08:00'), t('08:00'), t('09:00'), t('10:00'), t('10:00'), t('08:00')),
+    steps_end: lines(t('08:10'), t('08:10'), t('09:10'), t('10:10'), t('10:20'), t('09:00')),
+    steps_value: lines('1000', '950', '300', '0', '400', '2000'),
+    steps_source: lines('Killua的Apple Watch', 'Killua的iPhone', 'Killua的iPhone', 'Killua的Apple Watch', 'Killua的iPhone', '小米运动'),
+  },
+  now,
+);
+if (dedupe.ok) {
+  const steps = dedupe.plan.rows.find((row) => row.metric === 'steps' && row.date === '2026-11-08');
+  check(near(steps?.value, 1000 + 300 + 200 + 2000 * 50 / 60, 1e-3), `去重后步数应为 3166.667：${steps?.value}`);
+  const report = dedupe.plan.reports.find((item) => item.metric === 'steps');
+  check(report?.message?.startsWith('按来源优先级去重：Killua的Apple Watch 1,000 + Killua的iPhone 1,650 + 小米运动 2,000'), `去重说明：${report?.message}`);
+} else {
+  check(false, `原始样本去重应当成功：${dedupe.error}`);
+}
+const singleSource = planHealthSync(
+  { days: '10', energy_start: t('08:00'), energy_end: t('08:01'), energy_value: '12.5', energy_source: 'Killua的Apple Watch' },
+  now,
+);
+check(
+  singleSource.ok && singleSource.plan.rows.find((row) => row.metric === 'active_energy')?.value === 12.5 &&
+    !singleSource.plan.reports.find((item) => item.metric === 'active_energy')?.message,
+  '单一来源原样计入，不出去重说明',
+);
+const partialRaw = planHealthSync({ days: '10', steps_start: t('08:00'), steps_value: '1' }, now);
+check(
+  partialRaw.ok && partialRaw.plan.reports.find((item) => item.metric === 'steps')?.status === 'error',
+  '原始样本缺字段时报错',
+);
+
 // ------------------------------------------------------------------ 结构错误
 
 const structural = [
@@ -227,24 +267,24 @@ const structural = [
 
 // days=10（快捷指令的「在最近 10 天内」）：起点让到 11-02（不含），写 11-03 至今天。
 const byDays = planHealthSync(
-  { days: '10', steps_date: lines('2026-11-01', '2026-11-02', '2026-11-03', '2026-11-11'), steps_value: lines('1', '2', '3', '4') },
+  { days: '10', resting_hr_date: lines('2026-11-01', '2026-11-02', '2026-11-03', '2026-11-11'), resting_hr_value: lines('61', '62', '63', '64') },
   now,
 );
 check(
   byDays.ok && byDays.plan.since === '2026-11-02' &&
     byDays.plan.rows.map((row) => row.date).join() === '2026-11-03,2026-11-11' &&
-    byDays.plan.reports.find((item) => item.metric === 'steps')?.outOfWindow === 2,
+    byDays.plan.reports.find((item) => item.metric === 'resting_hr')?.outOfWindow === 2,
   `days=10 的窗口：${JSON.stringify(byDays.ok ? { since: byDays.plan.since, rows: byDays.plan.rows } : byDays)}`,
 );
-check(planHealthSync({ days: 10, steps_date: '2026-11-05', steps_value: '1' }, now).ok, 'days 也接受数字');
+check(planHealthSync({ days: 10, resting_hr_date: '2026-11-05', resting_hr_value: '61' }, now).ok, 'days 也接受数字');
 for (const [body, fragment] of structural) {
   const outcome = planHealthSync(body, now);
   check(!outcome.ok && outcome.error.includes(fragment), `结构错误「${fragment}」：${JSON.stringify(outcome)}`);
 }
 
-const mismatched = planHealthSync({ since: '2026-11-07', steps_date: lines('2026-11-08', '2026-11-09'), steps_value: '1' }, now);
+const mismatched = planHealthSync({ since: '2026-11-07', resting_hr_date: lines('2026-11-08', '2026-11-09'), resting_hr_value: '61' }, now);
 check(
-  mismatched.ok && mismatched.plan.reports.find((item) => item.metric === 'steps')?.status === 'error',
+  mismatched.ok && mismatched.plan.reports.find((item) => item.metric === 'resting_hr')?.status === 'error',
   '日期与数值行数不一致时该指标报错，不写入',
 );
 const halfSleep = planHealthSync({ since: '2026-11-07', sleep_start: '2026-11-08T01:00:00+08:00' }, now);
@@ -255,7 +295,8 @@ check(
 
 // ------------------------------------------------------------------ 回填规模
 
-// 330 天：累计和离散指标按天分组，每夜 30 段原始睡眠片段。
+// 回填（330 天）：离散指标按天分组，每夜 30 段原始睡眠片段。累计型指标要原始样本，
+// 一年的量太大，不在回填里。
 const backfillNow = Date.UTC(2026, 10, 11, 4, 30);
 const days = 330;
 const dates = [];
@@ -279,9 +320,6 @@ for (const date of dates) {
 const grouped = (value) => ({ date: dates.map((date) => `${date}T00:00:00+08:00`).join('\n'), value: dates.map(() => value).join('\n') });
 const backfill = {
   since: `${dates[0]}T12:30:00+08:00`,
-  steps_date: grouped('9,000').date, steps_value: grouped('9,000').value,
-  energy_date: grouped('350').date, energy_value: grouped('350').value,
-  distance_date: grouped('6.1').date, distance_value: grouped('6.1').value,
   resting_hr_date: grouped('62').date, resting_hr_value: grouped('62').value,
   hrv_date: grouped('55.5').date, hrv_value: grouped('55.5').value,
   spo2_date: grouped('0.96').date, spo2_value: grouped('0.96').value,
@@ -291,7 +329,41 @@ const bodyText = JSON.stringify(backfill);
 const started = performance.now();
 const parsedBackfill = planHealthSync(JSON.parse(bodyText), backfillNow);
 const elapsed = performance.now() - started;
-check(parsedBackfill.ok && parsedBackfill.plan.rows.length === days * 7, `回填应写入 ${days * 7} 行：${parsedBackfill.ok ? parsedBackfill.plan.rows.length : parsedBackfill.error}`);
+check(parsedBackfill.ok && parsedBackfill.plan.rows.length === days * 4, `回填应写入 ${days * 4} 行：${parsedBackfill.ok ? parsedBackfill.plan.rows.length : parsedBackfill.error}`);
+
+// 每日同步（10 天）的原始累计样本：手表每 5 分钟一条步数与距离、每分钟一条活动能量，
+// 手机每 10 分钟一条步数与距离且与手表重叠。按这个量估一次解析与去重的耗时。
+const dailyNow = backfillNow;
+const recent = dates.slice(-10);
+const rawFields = { steps: [[], [], [], []], distance: [[], [], [], []], energy: [[], [], [], []] };
+const iso = (ms) => new Date(ms + 8 * 3_600_000).toISOString().replace('Z', '+08:00').replace('.000', '');
+const push = (key, start, minutes, value, source) => {
+  const [starts, ends, values, sources] = rawFields[key];
+  starts.push(iso(start)); ends.push(iso(start + minutes * 60_000)); values.push(String(value)); sources.push(source);
+};
+for (const date of recent) {
+  const base = Date.parse(`${date}T07:00:00+08:00`);
+  for (let minute = 0; minute < 16 * 60; minute += 5) {
+    push('steps', base + minute * 60_000, 5, 40, 'Killua的Apple Watch');
+    push('distance', base + minute * 60_000, 5, 0.03, 'Killua的Apple Watch');
+  }
+  for (let minute = 0; minute < 16 * 60; minute += 10) {
+    push('steps', base + minute * 60_000, 10, 78, 'Killua的iPhone');
+    push('distance', base + minute * 60_000, 10, 0.058, 'Killua的iPhone');
+  }
+  for (let minute = 0; minute < 16 * 60; minute += 1) push('energy', base + minute * 60_000, 1, 0.6, 'Killua的Apple Watch');
+}
+const daily = { days: '10' };
+for (const [key, [starts, ends, values, sources]] of Object.entries(rawFields)) {
+  Object.assign(daily, { [`${key}_start`]: starts.join('\n'), [`${key}_end`]: ends.join('\n'), [`${key}_value`]: values.join('\n'), [`${key}_source`]: sources.join('\n') });
+}
+const dailyText = JSON.stringify(daily);
+const dailyStarted = performance.now();
+const parsedDaily = planHealthSync(JSON.parse(dailyText), dailyNow);
+const dailyElapsed = performance.now() - dailyStarted;
+const dailySteps = parsedDaily.ok ? parsedDaily.plan.rows.find((row) => row.metric === 'steps' && row.date === recent[5]) : null;
+check(near(dailySteps?.value, 40 * 16 * 12, 1e-6), `完全被手表覆盖时手机步数不计：${dailySteps?.value}`);
+const sampleCount = Object.values(rawFields).reduce((sum, [starts]) => sum + starts.length, 0);
 
 // ------------------------------------------------------------------ 结果
 
@@ -302,5 +374,6 @@ if (failures.length > 0) {
 }
 console.log(
   `✓ health-sync：日期 ${dateCases.length}、数值 ${numberCases.length}、睡眠类别 ${sleepCases.length} 项与聚合断言全部通过；` +
-    `${days} 天回填（${(bodyText.length / 1024).toFixed(0)} KB、${sleepStarts.length} 段睡眠）解析 ${elapsed.toFixed(1)} ms。`,
+    `${days} 天回填（${(bodyText.length / 1024).toFixed(0)} KB、${sleepStarts.length} 段睡眠）解析 ${elapsed.toFixed(1)} ms；` +
+    `10 天原始累计样本（${(dailyText.length / 1024).toFixed(0)} KB、${sampleCount} 条）解析去重 ${dailyElapsed.toFixed(1)} ms。`,
 );
