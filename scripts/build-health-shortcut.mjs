@@ -129,7 +129,17 @@ const METRICS = [
   { type: 'Sleep', name: '睡眠', prefix: 'sleep', groupBy: 'None' },
 ];
 
-function buildShortcut(days) {
+/**
+ * 健身圆环的锻炼与站立，单独成一个快捷指令：这两个类型名只有间接证据
+ * （Exercise Minutes 见于 iOS 26 真实导出，Stand Hour 见于 ActionKit 标签表），
+ * 万一不对，只影响这一个，不拖垮主同步。
+ */
+const FITNESS_METRICS = [
+  { type: 'Exercise Minutes', name: '锻炼分钟数', prefix: 'exercise', groupBy: 'Day' },
+  { type: 'Stand Hour', name: '站立', prefix: 'stand', groupBy: 'None' },
+];
+
+function buildShortcut(days, metrics, note) {
   const actions = [];
 
   actions.push(
@@ -137,11 +147,11 @@ function buildShortcut(days) {
       WFCommentActionText:
         `把最近 ${days} 天的 Apple Health 数据发到 killua.win 健康页。\n` +
         '由 killua-win 仓库 scripts/build-health-shortcut.mjs 生成；搭建说明与排错见 docs/health-sync.md。\n' +
-        '前六项按天分组（由 iPhone 合并多设备记录），睡眠不分组（网站要每段起止时间来合并重叠、排除卧床与清醒）。',
+        note,
     }),
   );
 
-  const finds = METRICS.map((metric) => {
+  const finds = metrics.map((metric) => {
     const find = action('is.workflow.actions.filter.health.quantity', {
       WFContentItemFilter: {
         Value: {
@@ -181,6 +191,9 @@ function buildShortcut(days) {
       fields.push(textField('sleep_start', output(find, metric.name, [property('Start Date'), ISO_TIME])));
       fields.push(textField('sleep_end', output(find, metric.name, [property('End Date'), ISO_TIME])));
       fields.push(textField('sleep_value', output(find, metric.name, [property('Value')])));
+    } else if (metric.prefix === 'stand') {
+      fields.push(textField('stand_date', output(find, metric.name, [property('Start Date'), ISO_TIME])));
+      fields.push(textField('stand_value', output(find, metric.name, [property('Value')])));
     } else {
       fields.push(textField(`${metric.prefix}_date`, output(find, metric.name, [property('Start Date'), ISO_TIME])));
       fields.push(textField(`${metric.prefix}_value`, output(find, metric.name, [property('Value')])));
@@ -230,9 +243,16 @@ function buildShortcut(days) {
 rmSync(OUT_DIR, { recursive: true, force: true });
 mkdirSync(OUT_DIR, { recursive: true });
 
+const CORE_NOTE =
+  '前六项按天分组（由 iPhone 合并多设备记录），睡眠不分组（网站要每段起止时间来合并重叠、排除卧床与清醒）。';
+const FITNESS_NOTE =
+  '健身圆环的锻炼分钟数（按天分组）与站立（每小时一条，不分组，网站数「已站立」的小时）。';
+
 const targets = [
-  { name: 'Health 同步', days: 10 },
-  { name: 'Health 回填', days: 330 },
+  { name: 'Health 同步', days: 10, metrics: METRICS, note: CORE_NOTE },
+  { name: 'Health 回填', days: 330, metrics: METRICS, note: CORE_NOTE },
+  { name: 'Health 锻炼', days: 10, metrics: FITNESS_METRICS, note: FITNESS_NOTE },
+  { name: 'Health 锻炼回填', days: 330, metrics: FITNESS_METRICS, note: FITNESS_NOTE },
 ];
 
 for (const target of targets) {
@@ -242,7 +262,7 @@ for (const target of targets) {
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
     '<plist version="1.0">\n' +
-    toPlist(buildShortcut(target.days)) +
+    toPlist(buildShortcut(target.days, target.metrics, target.note)) +
     '\n</plist>\n';
   writeFileSync(unsigned, xml);
   execFileSync('plutil', ['-lint', unsigned], { stdio: 'pipe' });

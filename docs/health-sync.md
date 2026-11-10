@@ -17,7 +17,14 @@
 node scripts/build-health-shortcut.mjs
 ```
 
-它按下面第二节的结构生成并签名两个文件：`outputs/health-shortcut/Health 同步.shortcut`（最近 10 天）和 `Health 回填.shortcut`（最近 330 天），令牌已写进请求头。双击导入到 Mac 的「快捷指令」，开着 iCloud 同步时几分钟内会出现在 iPhone 上；也可以用隔空投送直接发到手机。之后从第三节「第一次运行」开始即可。
+它按下面第二节的结构生成并签名四个文件，令牌已写进请求头：
+
+- `outputs/health-shortcut/Health 同步.shortcut`：七项健康指标，最近 10 天，每天自动运行；
+- `Health 回填.shortcut`：同上，最近 330 天，只手动运行一次；
+- `Health 锻炼.shortcut`：健身圆环的锻炼分钟数与站立小时，最近 10 天，每天自动运行；
+- `Health 锻炼回填.shortcut`：同上，最近 330 天，只手动运行一次。
+
+锻炼与站立单独成一个快捷指令，是因为它们的类型名（`Exercise Minutes`、`Stand Hour`）只有间接证据；万一不对，只影响这一个，不拖垮主同步。「健身」App 里每一次体能训练的明细（类型、时长、距离）快捷指令自带动作读不到，没有做。双击导入到 Mac 的「快捷指令」，开着 iCloud 同步时几分钟内会出现在 iPhone 上；也可以用隔空投送直接发到手机。之后从第三节「第一次运行」开始即可。
 
 生成物含令牌，不要提交或外传（`outputs/` 已被忽略）。若导入后某个「查找健康样本」的类型显示为空、运行时提示「请选择此“健康”样本的类型」，在那个动作里手动选上对应类型即可，其余设置不受影响。
 
@@ -87,6 +94,8 @@ node scripts/build-health-shortcut.mjs
 
 所有「日期」类的值（`*_date`、`sleep_start`、`sleep_end`），点一下变量，把 **日期格式** 设成 **ISO 8601**，并打开 **包括 ISO 8601 时间**。没设也能识别「2026年11月10日 13:30」这类默认格式（按北京时间理解），但 ISO 8601 带时区，最稳。
 
+「Health 锻炼」的字段：`days`；`exercise_date`、`exercise_value`（类型 Exercise Minutes，按天分组）；`stand_date`、`stand_value`（类型 Stand Hour，不分组，取开始日期和值）。网站按小时去重后数「已站立」的小时数，只有「未站立」记录的日子记 0。
+
 键名必须和上表一字不差。一个列表放进文本字段时，快捷指令会把每一项放一行，网站按行把日期和数值一一配对。
 
 ### 3. 看结果（建议保留）
@@ -107,6 +116,8 @@ node scripts/build-health-shortcut.mjs
 3. 回填成功后，「Health 回填」可以删掉；以后只靠每天的「Health 同步」。
 
 ## 四、设置每天自动运行
+
+自动化里依次加两个「运行快捷指令」：「Health 同步」和「Health 锻炼」。
 
 「快捷指令」→ 底部「自动化」→ 右上角 `+` → **特定时间**（Time of Day）：
 

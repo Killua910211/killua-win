@@ -123,5 +123,6 @@ export async function POST(request: Request) {
     rows: plan.rows.length,
     reports: plan.reports,
     unknownSleepValues: plan.unknownSleepValues,
+    unknownStandValues: plan.unknownStandValues,
   });
 }

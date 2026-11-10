@@ -27,6 +27,8 @@ export const HEALTH_DAILY_METRICS = [
   'resting_hr',
   'hrv',
   'spo2',
+  'exercise',
+  'stand',
 ] as const;
 
 export type HealthDailyMetric = (typeof HEALTH_DAILY_METRICS)[number];
@@ -39,6 +41,8 @@ export const HEALTH_DAILY_METRIC_LABELS: Record<HealthDailyMetric, string> = {
   resting_hr: '静息心率',
   hrv: 'HRV',
   spo2: '血氧',
+  exercise: '锻炼分钟数',
+  stand: '站立小时',
 };
 
 export type HealthDailyRow = {
@@ -73,6 +77,8 @@ export type HealthSyncPlan = {
   reports: HealthSyncMetricReport[];
   /** 无法归类的睡眠类别原文，最多 10 个。 */
   unknownSleepValues: string[];
+  /** 无法归类的站立类别原文，最多 10 个。 */
+  unknownStandValues: string[];
 };
 
 export type HealthSyncResult = { ok: true; plan: HealthSyncPlan } | { ok: false; error: string };
@@ -86,7 +92,7 @@ const DAY_MS = 86_400_000;
 const MAX_EXAMPLES = 3;
 
 type QuantitySpec = {
-  metric: Exclude<HealthDailyMetric, 'sleep'>;
+  metric: Exclude<HealthDailyMetric, 'sleep' | 'stand'>;
   dateField: string;
   valueField: string;
   aggregate: 'sum' | 'mean';
@@ -139,9 +145,12 @@ const QUANTITY_SPECS: QuantitySpec[] = [
     // 存百分数。HealthKit 内部是 0–1 的比例，快捷指令可能给 0.95 也可能给 95。
     normalize: (value) => (value <= 1 ? value * 100 : value),
   },
+  // 健身圆环的「锻炼」环：Apple 判定的锻炼分钟数，按天求和。
+  { metric: 'exercise', dateField: 'exercise_date', valueField: 'exercise_value', aggregate: 'sum', min: 0, max: 1440 },
 ];
 
 const SLEEP_FIELDS = { start: 'sleep_start', end: 'sleep_end', value: 'sleep_value' } as const;
+const STAND_FIELDS = { date: 'stand_date', value: 'stand_value' } as const;
 const MAX_SLEEP_SEGMENT_MS = DAY_MS;
 
 // ------------------------------------------------------------------ 基础解析
@@ -531,6 +540,84 @@ function planSleep(
   return { report: finishReport(report, rows), rows };
 }
 
+type StandKind = 'stood' | 'idle' | 'unknown';
+
+/**
+ * HKCategoryValueAppleStandHour：0 已站立、1 未站立。快捷指令多半给本地化文字，
+ * 「未站立」本身含「站立」，所以先判否定。
+ */
+export function classifyStandValue(input: string): StandKind {
+  const text = input.replace(/\s+/g, '').toLowerCase();
+  if (text === '0') return 'stood';
+  if (text === '1') return 'idle';
+  if (/idle|未站|没有站|没站|空闲|闲置/.test(text)) return 'idle';
+  if (/stood|站立|已站/.test(text)) return 'stood';
+  return 'unknown';
+}
+
+/** 健身圆环的「站立」环：每小时一条记录，按本地日期数「已站立」的小时数。 */
+function planStand(
+  payload: Record<string, unknown>,
+  window: Window,
+  unknownValues: Set<string>,
+): { report: HealthSyncMetricReport; rows: HealthDailyRow[] } {
+  const report = emptyReport('stand');
+  const dates = readLines(payload, STAND_FIELDS.date);
+  const values = readLines(payload, STAND_FIELDS.value);
+
+  if (dates === null && values === null) return { report, rows: [] };
+  if (dates === 'invalid' || values === 'invalid') {
+    report.status = 'error';
+    report.message = 'stand_date / stand_value 不是文本，或行数超过上限。';
+    return { report, rows: [] };
+  }
+  if (dates === null || values === null) {
+    report.status = 'error';
+    report.message = '站立需要 stand_date、stand_value 两个字段同时提供。';
+    return { report, rows: [] };
+  }
+  if (dates.length !== values.length) {
+    report.status = 'error';
+    report.message = `日期 ${dates.length} 行、类别 ${values.length} 行，对不上。`;
+    return { report, rows: [] };
+  }
+
+  report.status = 'empty';
+  // 同一小时可能有多台设备各记一条，按「日期 + 小时」去重。
+  const stoodHours = new Map<string, Set<string>>();
+  const seenDays = new Set<string>();
+  for (let index = 0; index < dates.length; index += 1) {
+    const date = parseHealthDate(dates[index]);
+    if (!date) {
+      rejectLine(report, `日期无法解析：${dates[index]}`);
+      continue;
+    }
+    if (!inWindow(date.localDate, window)) {
+      report.outOfWindow += 1;
+      continue;
+    }
+    const kind = classifyStandValue(values[index]);
+    if (kind === 'unknown') {
+      if (unknownValues.size < 10) unknownValues.add(values[index].slice(0, 40));
+      continue;
+    }
+    seenDays.add(date.localDate);
+    if (kind !== 'stood') continue;
+    const hour = new Date(date.ms + HEALTH_SYNC_UTC_OFFSET_MINUTES * MINUTE_MS).getUTCHours();
+    const hours = stoodHours.get(date.localDate) ?? new Set<string>();
+    hours.add(String(hour));
+    stoodHours.set(date.localDate, hours);
+  }
+
+  const rows: HealthDailyRow[] = [...seenDays].map((date) => ({
+    metric: 'stand' as const,
+    date,
+    value: stoodHours.get(date)?.size ?? 0,
+    complete: date < window.today ? 1 : 0,
+  }));
+  return { report: finishReport(report, rows), rows };
+}
+
 // ------------------------------------------------------------------ 入口
 
 /**
@@ -596,6 +683,10 @@ export function planHealthSync(payload: unknown, nowMs: number): HealthSyncResul
   const sleep = planSleep(body, window, unknownSleepValues);
   reports.push(sleep.report);
   rows.push(...sleep.rows);
+  const unknownStandValues = new Set<string>();
+  const stand = planStand(body, window, unknownStandValues);
+  reports.push(stand.report);
+  rows.push(...stand.rows);
 
   if (reports.every((report) => report.status === 'missing')) {
     return { ok: false, error: '没有收到任何指标字段，请检查「获取 URL 内容」的请求体。' };
@@ -603,13 +694,24 @@ export function planHealthSync(payload: unknown, nowMs: number): HealthSyncResul
 
   return {
     ok: true,
-    plan: { since: sinceDate, today, rows, reports, unknownSleepValues: [...unknownSleepValues] },
+    plan: {
+      since: sinceDate,
+      today,
+      rows,
+      reports,
+      unknownSleepValues: [...unknownSleepValues],
+      unknownStandValues: [...unknownStandValues],
+    },
   };
 }
 
-/** 给快捷指令「显示结果」看的一段中文摘要。 */
+/**
+ * 给快捷指令「显示结果」看的一段中文摘要。
+ * 只列本次请求带了的指标：主同步和「Health 锻炼」各发一部分，未发送的不必出现。
+ */
 export function summarizeHealthSync(plan: HealthSyncPlan) {
-  const parts = plan.reports.map((report) => {
+  const sent = plan.reports.filter((report) => report.status !== 'missing');
+  const parts = sent.map((report) => {
     if (report.status === 'written') {
       const extra = report.rejected > 0 ? `，丢弃 ${report.rejected} 行` : '';
       return `${report.label} ${report.days} 天${extra}`;
@@ -625,6 +727,9 @@ export function summarizeHealthSync(plan: HealthSyncPlan) {
   }
   if (plan.unknownSleepValues.length > 0) {
     lines.push(`未识别的睡眠类别（已忽略）：${plan.unknownSleepValues.join('、')}`);
+  }
+  if (plan.unknownStandValues.length > 0) {
+    lines.push(`未识别的站立类别（已忽略）：${plan.unknownStandValues.join('、')}`);
   }
   return lines.join('\n');
 }

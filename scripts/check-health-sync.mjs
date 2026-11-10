@@ -14,6 +14,7 @@
 
 import {
   classifySleepValue,
+  classifyStandValue,
   parseHealthDate,
   parseHealthNumber,
   planHealthSync,
@@ -177,6 +178,39 @@ check(
   ungrouped.ok && ungrouped.plan.reports.find((item) => item.metric === 'steps')?.message?.includes('按天分组'),
   '同日多条步数应提示按天分组',
 );
+
+// 锻炼分钟数按天求和；站立按小时去重后数「已站立」，只有「未站立」的日子记 0。
+for (const [text, kind] of [['Stood', 'stood'], ['Idle', 'idle'], ['已站立', 'stood'], ['未站立', 'idle'], ['0', 'stood'], ['1', 'idle'], ['?', 'unknown']]) {
+  check(classifyStandValue(text) === kind, `classifyStandValue(${text}) = ${classifyStandValue(text)}，应为 ${kind}`);
+}
+const fitness = planHealthSync(
+  {
+    days: '10',
+    exercise_date: lines('2026-11-08', '2026-11-09'),
+    exercise_value: lines('32', '0'),
+    stand_date: lines(
+      '2026-11-08T09:00:00+08:00',
+      '2026-11-08T09:00:00+08:00',
+      '2026-11-08T10:00:00+08:00',
+      '2026-11-08T11:00:00+08:00',
+      '2026-11-09T09:00:00+08:00',
+      '2026-11-09T10:00:00+08:00',
+    ),
+    stand_value: lines('Stood', '已站立', 'Stood', 'Idle', '未站立', '神秘'),
+  },
+  now,
+);
+if (fitness.ok) {
+  const row = (metric, date) => fitness.plan.rows.find((item) => item.metric === metric && item.date === date);
+  check(row('exercise', '2026-11-08')?.value === 32 && row('exercise', '2026-11-09')?.value === 0, '锻炼分钟数按天求和，真实 0 保留');
+  check(row('stand', '2026-11-08')?.value === 2, `站立 11-08 应为 2 小时（同一小时去重）：${row('stand', '2026-11-08')?.value}`);
+  check(row('stand', '2026-11-09')?.value === 0, '只有未站立记录的日子记 0');
+  check(fitness.plan.unknownStandValues.join() === '神秘', `未识别站立类别 ${fitness.plan.unknownStandValues}`);
+  const summary = summarizeHealthSync(fitness.plan);
+  check(summary.includes('锻炼分钟数 2 天') && summary.includes('站立小时 2 天') && !summary.includes('未发送'), `摘要只列发送了的指标：${summary}`);
+} else {
+  check(false, `锻炼与站立应当成功：${fitness.error}`);
+}
 
 // ------------------------------------------------------------------ 结构错误
 
