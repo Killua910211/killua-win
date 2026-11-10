@@ -19,7 +19,9 @@ node scripts/build-health-shortcut.mjs
 
 它按下面第二节的结构生成并签名两个文件：`outputs/health-shortcut/Health 同步.shortcut`（最近 10 天）和 `Health 回填.shortcut`（最近 330 天），令牌已写进请求头。双击导入到 Mac 的「快捷指令」，开着 iCloud 同步时几分钟内会出现在 iPhone 上；也可以用隔空投送直接发到手机。之后从第三节「第一次运行」开始即可。
 
-生成物含令牌，不要提交或外传（`outputs/` 已被忽略）。导入后若某个「查找健康样本」的类型显示为空、运行时提示「请选择此“健康”样本的类型」，在那个动作里手动选上对应类型即可，其余设置不受影响。
+生成物含令牌，不要提交或外传（`outputs/` 已被忽略）。若导入后某个「查找健康样本」的类型显示为空、运行时提示「请选择此“健康”样本的类型」，在那个动作里手动选上对应类型即可，其余设置不受影响。
+
+2026-11-11 第一版生成文件把「类型」写成了纯字符串，iOS 编辑器一点类型就闪退、运行报「未找到样本」；已改为 `WFStringSubstitutableState` 结构并换成快捷指令内部的类型名，依据写在生成脚本顶部。
 
 ## 一、准备
 
@@ -43,12 +45,14 @@ node scripts/build-health-shortcut.mjs
 | 类型（Type） | 分组方式（Group By） | 设定变量名 |
 | --- | --- | --- |
 | 步数（Steps） | 天（Day） | `steps` |
-| 活动能量（Active Energy） | 天（Day） | `energy` |
+| 活动能量（Active Calories） | 天（Day） | `energy` |
 | 步行+跑步距离（Walking + Running Distance） | 天（Day） | `distance` |
 | 静息心率（Resting Heart Rate） | 天（Day） | `rhr` |
 | 心率变异性（Heart Rate Variability） | 天（Day） | `hrv` |
-| 血氧饱和度（Blood Oxygen Saturation） | 天（Day） | `spo2` |
-| 睡眠分析（Sleep Analysis） | **不分组**（None） | `sleep` |
+| 血氧（Oxygen Saturation） | 天（Day） | `spo2` |
+| 睡眠（Sleep） | **不分组**（None） | `sleep` |
+
+括号里是快捷指令内部的类型名，和「健康」App 里的叫法不完全一样（活动能量是 Active Calories，血氧是 Oxygen Saturation）。
 
 每个「查找健康样本」里：
 

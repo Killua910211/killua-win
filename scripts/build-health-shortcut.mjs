@@ -7,12 +7,19 @@
  * 令牌从仓库根目录的 .health-sync-token 读入并写进请求头；生成物在 outputs/（已忽略），
  * 含令牌，不要提交或外传。
  *
- * 文件格式的依据（macOS 自带，可复查）：
- *   - WorkflowKit Gallery.bundle 里的 .wflow：筛选模板、ActionOutput 引用、
+ * 文件格式的依据：
+ *   - WorkflowKit Gallery.bundle 里的 .wflow（macOS 自带）：筛选模板、ActionOutput 引用、
  *     WFTextTokenString、获取字典值、显示结果的写法；
- *   - ActionKit Localizable.loctable：WFHKSampleFilteringGroupBy / FillMissing、
+ *   - ActionKit Localizable.loctable（macOS 自带）：WFHKSampleFilteringGroupBy / FillMissing、
  *     「开始日期 / 结束日期 / 值」属性名、ISO 8601 与 WFISO8601IncludeTime；
- *   - HealthKit Localizable-DataTypes.loctable：健康类型的英文名。
+ *   - 健康类型名：ActionKit 二进制里「查找健康样本」类型选单的标签表（dyld 共享缓存中
+ *     Steps|Active Calories|…|Heart Rate Variability|…|Oxygen Saturation 那一段）。
+ *     不是 HealthKit 的显示名：活动能量是 Active Calories，血氧是 Oxygen Saturation；
+ *     睡眠取真实 iOS 导出里观察到的 Sleep；
+ *   - 「类型」行的结构：枚举值必须包成 WFStringSubstitutableState，且带 Bounded。
+ *     写成纯字符串时，iOS 编辑器一点类型就闪退、运行时报「未找到样本」（2026-11-11 实测）。
+ *     依据 viticci/shortcuts-playground-plugin 的 HEALTHKIT.md（真实 iOS 导出）与
+ *     frontboat/shortcutkit 的 shortcut-file-format.md（运算符 2 =「大于」，日期即「在…之后」）。
  *
  * 只能在 macOS 上运行：签名用系统的 `shortcuts sign`，导入后经 iCloud 同步到 iPhone。
  *
@@ -108,14 +115,14 @@ function action(identifier, parameters) {
   return { WFWorkflowActionIdentifier: identifier, WFWorkflowActionParameters: { UUID: uuid(), ...parameters } };
 }
 
-/** 健康类型按 HealthKit 英文名；字段前缀与 app/lib/health-sync.ts 的 payload 键一致。 */
+/** type 是「查找健康样本」类型选单的内部标签；字段前缀与 app/lib/health-sync.ts 的 payload 键一致。 */
 const METRICS = [
   { type: 'Steps', name: '步数', prefix: 'steps', groupBy: 'Day' },
-  { type: 'Active Energy', name: '活动能量', prefix: 'energy', groupBy: 'Day' },
+  { type: 'Active Calories', name: '活动能量', prefix: 'energy', groupBy: 'Day' },
   { type: 'Walking + Running Distance', name: '步行+跑步距离', prefix: 'distance', groupBy: 'Day' },
   { type: 'Resting Heart Rate', name: '静息心率', prefix: 'resting_hr', groupBy: 'Day' },
   { type: 'Heart Rate Variability', name: '心率变异性', prefix: 'hrv', groupBy: 'Day' },
-  { type: 'Blood Oxygen', name: '血氧', prefix: 'spo2', groupBy: 'Day' },
+  { type: 'Oxygen Saturation', name: '血氧', prefix: 'spo2', groupBy: 'Day' },
   { type: 'Sleep', name: '睡眠', prefix: 'sleep', groupBy: 'None' },
 ];
 
@@ -146,7 +153,13 @@ function buildShortcut(days) {
           WFActionParameterFilterPrefix: 1,
           WFContentPredicateBoundedDate: false,
           WFActionParameterFilterTemplates: [
-            { Operator: 4, Property: 'Type', Removable: false, Values: { Enumeration: metric.type } },
+            {
+              Bounded: true,
+              Operator: 4,
+              Property: 'Type',
+              Removable: false,
+              Values: { Enumeration: { Value: metric.type, WFSerializationType: 'WFStringSubstitutableState' } },
+            },
             {
               Operator: 2,
               Property: 'Start Date',
