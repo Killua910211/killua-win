@@ -148,7 +148,7 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
 ```ts
 {
   days: number; records: number;
-  pendingReviews: number; openTasks: number; watchlistItems: number;
+  openTasks: number; watchlistItems: number;
   lastSync: string;                    // yyyy-MM-dd
 
   // 可选。缺失或为空时，首页的「Archive composition」整块不渲染，其余读数照常。
@@ -157,8 +157,12 @@ interface 三方比对。改列名时三处必须同时改，否则 `pnpm check`
 }
 ```
 
-`pendingReviews`、`openTasks` 与 `watchlistItems` 分别只传待审核、未完成、待看事项的
-数量；不传标题、备注、状态详情或任何正文。因此首页能保留四张摘要卡，而不会暴露私人内容。
+`openTasks` 与 `watchlistItems` 分别只传未完成、待看事项的数量；不传标题、备注、
+状态详情或任何正文。因此首页能保留三张摘要卡，而不会暴露私人内容。
+
+契约里曾经还有一个 `pendingReviews`（待审核数）。OS 侧的语音速记待审链路
+2026-11-11 整套删除，该字段同日从 `/api/public/stats` 的响应里移除，官网这边
+也相应去掉了那张摘要卡。
 
 **标签由 OS 给、不在官网本地维护映射**，是那边有意的设计：将来新增一个分类，
 这一行自动多出一项，不用记得回来补一份映射（漏了就会显示成 `PODCAST`）。
