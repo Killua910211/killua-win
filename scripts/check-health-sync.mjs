@@ -182,11 +182,27 @@ check(
 
 const structural = [
   [null, '请求体必须是 JSON 对象'],
-  [{ steps_date: '2026-11-08', steps_value: '1' }, '缺少 since'],
+  [{ steps_date: '2026-11-08', steps_value: '1' }, '缺少 days'],
   [{ since: '2026-11-11T08:00:00+08:00', steps_date: '2026-11-11', steps_value: '1' }, '必须早于今天'],
   [{ since: '2020-01-01', steps_date: '2026-11-08', steps_value: '1' }, '最早只能回溯'],
   [{ since: '2026-11-07' }, '没有收到任何指标字段'],
+  [{ days: '2', steps_date: '2026-11-10', steps_value: '1' }, 'days 至少为 3'],
+  [{ days: 'ten', steps_date: '2026-11-10', steps_value: '1' }, 'days 必须是整数'],
+  [{ days: '900', steps_date: '2026-11-10', steps_value: '1' }, 'days 最多'],
 ];
+
+// days=10（快捷指令的「在最近 10 天内」）：起点让到 11-02（不含），写 11-03 至今天。
+const byDays = planHealthSync(
+  { days: '10', steps_date: lines('2026-11-01', '2026-11-02', '2026-11-03', '2026-11-11'), steps_value: lines('1', '2', '3', '4') },
+  now,
+);
+check(
+  byDays.ok && byDays.plan.since === '2026-11-02' &&
+    byDays.plan.rows.map((row) => row.date).join() === '2026-11-03,2026-11-11' &&
+    byDays.plan.reports.find((item) => item.metric === 'steps')?.outOfWindow === 2,
+  `days=10 的窗口：${JSON.stringify(byDays.ok ? { since: byDays.plan.since, rows: byDays.plan.rows } : byDays)}`,
+);
+check(planHealthSync({ days: 10, steps_date: '2026-11-05', steps_value: '1' }, now).ok, 'days 也接受数字');
 for (const [body, fragment] of structural) {
   const outcome = planHealthSync(body, now);
   check(!outcome.ok && outcome.error.includes(fragment), `结构错误「${fragment}」：${JSON.stringify(outcome)}`);

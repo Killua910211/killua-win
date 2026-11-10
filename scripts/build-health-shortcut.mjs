@@ -2,8 +2,8 @@
 /**
  * 生成可直接导入的 iPhone 快捷指令「Health 同步」与「Health 回填」。
  *
- * 结构与 docs/health-sync.md 里手动搭建的步骤一一对应：调整日期 → 七个「查找健康样本」
- * → 「获取 URL 内容」把各属性逐行发给 /api/health/sync → 显示返回的 summary。
+ * 结构与 docs/health-sync.md 里手动搭建的步骤一一对应：七个「查找健康样本」（开始日期在
+ * 最近 N 天内）→ 「获取 URL 内容」把 N 和各属性逐行发给 /api/health/sync → 显示返回的 summary。
  * 令牌从仓库根目录的 .health-sync-token 读入并写进请求头；生成物在 outputs/（已忽略），
  * 含令牌，不要提交或外传。
  *
@@ -19,7 +19,10 @@
  *   - 「类型」行的结构：枚举值必须包成 WFStringSubstitutableState，且带 Bounded。
  *     写成纯字符串时，iOS 编辑器一点类型就闪退、运行时报「未找到样本」（2026-11-11 实测）。
  *     依据 viticci/shortcuts-playground-plugin 的 HEALTHKIT.md（真实 iOS 导出）与
- *     frontboat/shortcutkit 的 shortcut-file-format.md（运算符 2 =「大于」，日期即「在…之后」）。
+ *     frontboat/shortcutkit 的 shortcut-file-format.md；
+ *   - 日期行用运算符 1001（在最近 N 天内）+ Number + Unit 16（天），同见 shortcutkit。
+ *     第一版用「调整日期」算起点，Unit 写成 'days' 没有生效、起点停在当天（2026-11-11 实测报
+ *     「起点必须早于今天」），所以不再依赖「调整日期」，窗口改由 days 字段告诉网站。
  *
  * 只能在 macOS 上运行：签名用系统的 `shortcuts sign`，导入后经 iCloud 同步到 iPhone。
  *
@@ -138,14 +141,6 @@ function buildShortcut(days) {
     }),
   );
 
-  const since = action('is.workflow.actions.adjustdate', {
-    WFDate: tokenString('', { Type: 'CurrentDate' }),
-    WFAdjustOperation: 'Subtract',
-    WFDuration: { Value: { Magnitude: String(days), Unit: 'days' }, WFSerializationType: 'WFQuantityFieldValue' },
-    CustomOutputName: '起始时间',
-  });
-  actions.push(since);
-
   const finds = METRICS.map((metric) => {
     const find = action('is.workflow.actions.filter.health.quantity', {
       WFContentItemFilter: {
@@ -161,10 +156,11 @@ function buildShortcut(days) {
               Values: { Enumeration: { Value: metric.type, WFSerializationType: 'WFStringSubstitutableState' } },
             },
             {
-              Operator: 2,
+              Bounded: true,
+              Operator: 1001,
               Property: 'Start Date',
-              Removable: true,
-              Values: { Date: tokenAttachment(output(since, '起始时间')) },
+              Removable: false,
+              Values: { Number: String(days), Unit: 16 },
             },
           ],
         },
@@ -179,7 +175,7 @@ function buildShortcut(days) {
     return { metric, find };
   });
 
-  const fields = [textField('since', output(since, '起始时间', [ISO_TIME]))];
+  const fields = [textField('days', String(days))];
   for (const { metric, find } of finds) {
     if (metric.prefix === 'sleep') {
       fields.push(textField('sleep_start', output(find, metric.name, [property('Start Date'), ISO_TIME])));

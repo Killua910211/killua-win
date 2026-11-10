@@ -534,32 +534,56 @@ function planSleep(
 // ------------------------------------------------------------------ 入口
 
 /**
+ * 由 days 推出「完整覆盖」的起点（不含）。
+ *
+ * 快捷指令的「开始日期在最近 N 天内」可能按滚动 N×24 小时算，也可能按自然日算，
+ * 最晚的起点是 N−1 天前的零点：那一天的步数等是完整的，但醒在那天的睡眠可能
+ * 始于前一晚、没被查到。所以再让一天，从 N−2 天前起写入：N=10 时写 8 个整天加今天。
+ */
+function sinceFromDays(raw: unknown, today: string): string | { error: string } {
+  const text = typeof raw === 'number' ? String(raw) : typeof raw === 'string' ? raw.trim() : '';
+  if (!/^\d{1,4}$/.test(text)) return { error: `days 必须是整数天数：${String(raw).slice(0, 20)}` };
+  const days = Number(text);
+  if (days < 3) return { error: 'days 至少为 3：最近两天不足以覆盖一个完整日。' };
+  if (days > MAX_SYNC_DAYS) return { error: `days 最多 ${MAX_SYNC_DAYS} 天，请分批回填。` };
+  return shiftHealthDate(today, 1 - days);
+}
+
+/**
  * 把一次同步请求的 JSON 变成要写入的行。只做解析和校验，不碰数据库。
  *
- * since 是快捷指令里「调整日期」的结果，也是各个「查找健康样本」的起点。
- * since 当天只覆盖了一部分，不写入；since 之后到今天的每一天都由本次数据完整给出。
+ * 窗口由 days（推荐：与各个「查找健康样本」的「在最近 N 天内」同一个 N）或
+ * since（一个时刻，查找的起点）给出。起点所在那天只覆盖了一部分，不写入；
+ * 之后到今天的每一天都由本次数据完整给出。
  */
 export function planHealthSync(payload: unknown, nowMs: number): HealthSyncResult {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     return { ok: false, error: '请求体必须是 JSON 对象。' };
   }
   const body = payload as Record<string, unknown>;
-
-  if (typeof body.since !== 'string' || body.since.trim() === '') {
-    return { ok: false, error: '缺少 since：请把「调整日期」的结果作为 since 字段一起发送。' };
-  }
-  const since = parseHealthDate(body.since);
-  if (!since) return { ok: false, error: `since 无法解析：${body.since.slice(0, 60)}` };
-
   const today = healthLocalDate(nowMs);
-  if (since.localDate >= today) {
-    return { ok: false, error: `since（${since.localDate}）必须早于今天（${today}）。` };
-  }
-  if (since.localDate < shiftHealthDate(today, -MAX_SYNC_DAYS)) {
-    return { ok: false, error: `since 最早只能回溯 ${MAX_SYNC_DAYS} 天，请分批回填。` };
+
+  let sinceDate: string;
+  if (body.days !== undefined && body.days !== null && body.days !== '') {
+    const derived = sinceFromDays(body.days, today);
+    if (typeof derived !== 'string') return { ok: false, error: derived.error };
+    sinceDate = derived;
+  } else if (typeof body.since === 'string' && body.since.trim() !== '') {
+    const since = parseHealthDate(body.since);
+    if (!since) return { ok: false, error: `since 无法解析：${body.since.slice(0, 60)}` };
+    sinceDate = since.localDate;
+  } else {
+    return { ok: false, error: '缺少 days：请把查找的天数（例如 10）作为 days 字段一起发送。' };
   }
 
-  const window: Window = { since: since.localDate, today };
+  if (sinceDate >= today) {
+    return { ok: false, error: `起点（${sinceDate}）必须早于今天（${today}）。` };
+  }
+  if (sinceDate < shiftHealthDate(today, -MAX_SYNC_DAYS)) {
+    return { ok: false, error: `最早只能回溯 ${MAX_SYNC_DAYS} 天，请分批回填。` };
+  }
+
+  const window: Window = { since: sinceDate, today };
   const unknownSleepValues = new Set<string>();
   const reports: HealthSyncMetricReport[] = [];
   const rows: HealthDailyRow[] = [];
@@ -579,7 +603,7 @@ export function planHealthSync(payload: unknown, nowMs: number): HealthSyncResul
 
   return {
     ok: true,
-    plan: { since: since.localDate, today, rows, reports, unknownSleepValues: [...unknownSleepValues] },
+    plan: { since: sinceDate, today, rows, reports, unknownSleepValues: [...unknownSleepValues] },
   };
 }
 
