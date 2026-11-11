@@ -65,6 +65,8 @@ const numberCases = [
   ['95%', 95, '%'],
   ['0.95', 0.95, ''],
   [' 61 ', 61, ''],
+  ['1.2e-05', 0.000012, ''],
+  ['3.5E-4 km', 0.00035, 'km'],
 ];
 for (const [text, value, unitHint] of numberCases) {
   const parsed = parseHealthNumber(text);

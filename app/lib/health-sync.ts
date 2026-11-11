@@ -283,12 +283,13 @@ export type ParsedHealthNumber = { value: number; unitHint: string };
  */
 export function parseHealthNumber(input: string): ParsedHealthNumber | null {
   const text = input.replace(/[\s  ]/g, '');
-  const matched = /^([+-]?\d[\d,]*(?:\.\d+)?)(.*)$/.exec(text);
+  // 极小的读数会以科学计数法给出（2026-11-11 真机：距离每三天约有 10 条，如 1.2e-5）。
+  const matched = /^([+-]?\d[\d,]*(?:\.\d+)?(?:[eE][+-]?\d+)?)(.*)$/.exec(text);
   if (!matched) return null;
 
   let numeric = matched[1];
   if (numeric.includes(',')) {
-    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d+)?$/.test(numeric)) {
+    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d+)?([eE][+-]?\d+)?$/.test(numeric)) {
       numeric = numeric.replace(/,/g, '');
     } else if (/^[+-]?\d+,\d+$/.test(numeric)) {
       numeric = numeric.replace(',', '.');
