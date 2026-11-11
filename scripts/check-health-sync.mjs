@@ -15,6 +15,7 @@
 import {
   classifySleepValue,
   classifyStandValue,
+  healthWeeklyWindow,
   parseHealthDate,
   parseHealthNumber,
   planHealthSync,
@@ -344,6 +345,19 @@ check(
   `试运行摘要：${dry.ok ? summarizeHealthSync(dry.plan) : dry.error}`,
 );
 check(planHealthSync({ days: '10', resting_hr_date: '2026-11-08', resting_hr_value: '60' }, now).ok && !planHealthSync({ days: '10', resting_hr_date: '2026-11-08', resting_hr_value: '60' }, now).plan.dryRun, '默认不是试运行');
+
+// 7 日窗口：以最近一个已同步的完整日为终点；比昨天早超过 7 天时退回昨天往前 7 天。
+for (const [latest, start, end] of [
+  ['2026-11-10', '2026-11-04', '2026-11-10'],
+  ['2026-11-07', '2026-11-01', '2026-11-07'],
+  ['2026-11-03', '2026-10-28', '2026-11-03'],
+  ['2026-11-02', '2026-11-04', '2026-11-10'],
+  [null, '2026-11-04', '2026-11-10'],
+  ['2026-11-11', '2026-11-04', '2026-11-10'],
+]) {
+  const window = healthWeeklyWindow('2026-11-11', latest);
+  check(window.start === start && window.end === end, `7 日窗口（最新 ${latest}）：${JSON.stringify(window)}`);
+}
 
 // ------------------------------------------------------------------ 结构错误
 

@@ -368,12 +368,14 @@ const historySegment = (first, untilDate) => {
 };
 
 /**
- * 每日同步读最近 5 天（写前三天、昨天和今天）：活动能量改按天分组后请求约 300 KB，
- * 自动化连续漏跑 3 天以内都能补齐。
+ * 用户要求每周同步一次（2026-11-11）。读 9 天：网站会扔掉读取范围的第一天（防止跨夜睡眠只算
+ * 半截），今天也没结束，9 天正好写满 7 个完整日，每周跑一次不漏天。步数、距离逐条读 9 天约
+ * 500 KB，在手机能处理的范围内（活动能量已按天分组；逐条读 7 天的活动能量那一版约 1.4 MB 失败）。
  */
+const SYNC_DAYS = 9;
 const targets = [
-  { name: 'Health 同步', segments: [{ days: 5, metrics: METRICS }], note: CORE_NOTE },
-  { name: 'Health 锻炼', segments: [{ days: 3, metrics: FITNESS_METRICS }], note: FITNESS_NOTE },
+  { name: 'Health 同步', segments: [{ days: SYNC_DAYS, metrics: METRICS }], note: CORE_NOTE },
+  { name: 'Health 锻炼', segments: [{ days: SYNC_DAYS, metrics: FITNESS_METRICS }], note: FITNESS_NOTE },
   {
     name: 'Health 来源测试',
     needsExclude: true,

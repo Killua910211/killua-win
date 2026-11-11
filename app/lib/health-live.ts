@@ -3,12 +3,12 @@ import { HEALTH_WEEKLY_SPECS, type HealthWeeklyAverage } from '@/app/lib/health'
 import {
   HEALTH_DAILY_METRICS,
   healthLocalDate,
-  shiftHealthDate,
+  healthWeeklyWindow,
   type HealthDailyMetric,
 } from '@/app/lib/health-sync';
 
 /**
- * 健康页「7 日均值」的服务端读取。
+ * 健康页「7 日均值」的服务端读取。同步每周一次，窗口以最近一个已同步的完整日为终点。
  *
  * 只在服务端组件里调用：health_daily 没有任何公开读取接口，页面只拿到按周聚合后的
  * 均值。D1 返回的是运行期 JSON，所以每一行都重新校验字段、类型和范围，不依赖
@@ -37,16 +37,28 @@ function readAggregate(row: unknown): (Aggregate & { metric: HealthDailyMetric }
   return { metric, days, average };
 }
 
-/** 北京时间昨天往前 7 个已结束的日期；读取失败返回 null，由调用方显示「读取失败」。 */
+/**
+ * 最近 7 个已同步的完整日（窗口规则见 healthWeeklyWindow：同步每周一次，以最新完整日为终点，
+ * 最多比昨天早 7 天）；读取失败返回 null，由调用方显示「读取失败」。
+ */
 async function loadWeekly(today: string): Promise<Map<HealthDailyMetric, Aggregate> | null> {
   try {
+    const latest = await env.DB.prepare(
+      `SELECT MAX(date) AS latest FROM health_daily WHERE complete = 1 AND date < ?`,
+    )
+      .bind(today)
+      .first<{ latest: unknown }>();
+    const latestDate =
+      typeof latest?.latest === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(latest.latest) ? latest.latest : null;
+    const window = healthWeeklyWindow(today, latestDate, WEEK_DAYS);
+
     const result = await env.DB.prepare(
       `SELECT metric, COUNT(*) AS days, AVG(value) AS average
        FROM health_daily
        WHERE complete = 1 AND date >= ? AND date <= ?
        GROUP BY metric`,
     )
-      .bind(shiftHealthDate(today, -WEEK_DAYS), shiftHealthDate(today, -1))
+      .bind(window.start, window.end)
       .all();
 
     const weekly = new Map<HealthDailyMetric, Aggregate>();

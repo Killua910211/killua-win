@@ -339,6 +339,21 @@ export function shiftHealthDate(date: string, days: number) {
   return `${shifted.getUTCFullYear()}-${pad2(shifted.getUTCMonth() + 1)}-${pad2(shifted.getUTCDate())}`;
 }
 
+/**
+ * 「7 日均值」的窗口：结束于最近一个已同步的完整日，但最多比昨天早 7 天。
+ *
+ * 同步每周跑一次时，最新的完整日可能是几天前；以它为终点，页面每周更新一次、始终是
+ * 一整周。最新数据若比昨天早超过 7 天（自动化坏了），就退回「昨天往前 7 天」，让覆盖
+ * 天数如实变少，而不是把旧数字当成最新读数。
+ */
+export function healthWeeklyWindow(today: string, latestComplete: string | null, days = 7) {
+  const yesterday = shiftHealthDate(today, -1);
+  const oldestEnd = shiftHealthDate(yesterday, -7);
+  let end = yesterday;
+  if (latestComplete && latestComplete < yesterday) end = latestComplete < oldestEnd ? yesterday : latestComplete;
+  return { start: shiftHealthDate(end, 1 - days), end };
+}
+
 function round(value: number, digits: number) {
   const factor = 10 ** digits;
   return Math.round(value * factor) / factor;

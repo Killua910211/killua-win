@@ -70,7 +70,8 @@ export type HealthWeeklySpec = {
 
 /**
  * 「7 日均值」的指标清单。数值由 app/lib/health-live.ts 在每次请求时从 health_daily
- * 计算：取北京时间昨天往前 7 个已结束的日期，按有读数的日期等权平均，不把缺失记作 0。
+ * 计算：取最近 7 个已同步的完整日（同步每周一次；最新数据比昨天早超过 7 天时退回昨天往前
+ * 7 天），按有读数的日期等权平均，不把缺失记作 0。
  * 数据由 iPhone 快捷指令每日推送，口径见 app/lib/health-sync.ts。
  */
 export const HEALTH_WEEKLY_SPECS: HealthWeeklySpec[] = [
