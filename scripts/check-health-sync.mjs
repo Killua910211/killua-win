@@ -173,13 +173,23 @@ check(
   `越界值应被丢弃：${JSON.stringify(outlier)}`,
 );
 
-// 按天分组的累计值已经把多个来源相加，无法去重：拒收，不写入（旧版快捷指令）。
+// 不加来源条件的按天汇总会把 iPhone 和手表相加：没有「只取 Apple Watch」声明的拒收，不写入。
 const groupedCumulative = planHealthSync({ days: '10', steps_date: lines('2026-11-08'), steps_value: lines('24000') }, now);
 check(
   groupedCumulative.ok && groupedCumulative.plan.rows.length === 0 &&
     groupedCumulative.plan.reports.find((item) => item.metric === 'steps')?.status === 'error' &&
-    groupedCumulative.plan.reports.find((item) => item.metric === 'steps')?.message?.includes('原始样本'),
-  `按天分组的步数应被拒收：${JSON.stringify(groupedCumulative)}`,
+    groupedCumulative.plan.reports.find((item) => item.metric === 'steps')?.message?.includes('Apple Watch'),
+  `未声明来源的按天汇总步数应被拒收：${JSON.stringify(groupedCumulative)}`,
+);
+// 声明了只取 Apple Watch 的按天汇总照常写入。
+const watchOnly = planHealthSync(
+  { days: '10', cumulative_source: 'watch', steps_date: lines('2026-11-08', '2026-11-09'), steps_value: lines('12,132', '11,020'), energy_date: '2026-11-08', energy_value: '402' },
+  now,
+);
+check(
+  watchOnly.ok && watchOnly.plan.rows.find((row) => row.metric === 'steps' && row.date === '2026-11-08')?.value === 12132 &&
+    watchOnly.plan.rows.find((row) => row.metric === 'active_energy')?.value === 402,
+  `只取 Apple Watch 的按天汇总应写入：${JSON.stringify(watchOnly.ok ? watchOnly.plan.rows : watchOnly)}`,
 );
 
 // 锻炼分钟数按天求和；站立按小时去重后数「已站立」，只有「未站立」的日子记 0。

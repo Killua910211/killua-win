@@ -527,13 +527,17 @@ function planQuantity(
   const prefix = spec.dateField.replace(/_date$/, '');
   if (spec.aggregate === 'sum') {
     if (payload[`${prefix}_start`] !== undefined) return planCumulativeRaw(spec, prefix, payload, window);
-    // 按天分组的累计值已经把多个来源相加，无法再去重：拒收，免得旧版快捷指令写回翻倍的数。
-    const report = emptyReport(spec.metric);
-    if (payload[spec.dateField] !== undefined || payload[spec.valueField] !== undefined) {
-      report.status = 'error';
-      report.message = '这一项需要原始样本（开始、结束、数值、来源）才能按来源去重，本次未写入；请更新快捷指令。';
+    // 不加来源条件按天分组，会把 iPhone 和 Apple Watch 同时记的量直接相加。只接受
+    // 声明了「只取 Apple Watch」（各查找加了「来源 是 Apple Watch」）的按天汇总；
+    // 旧版快捷指令没有这个声明，拒收，免得写回翻倍的数。
+    if (payload.cumulative_source !== 'watch') {
+      const report = emptyReport(spec.metric);
+      if (payload[spec.dateField] !== undefined || payload[spec.valueField] !== undefined) {
+        report.status = 'error';
+        report.message = '按天汇总时需要只取 Apple Watch 来源，否则 iPhone 和手表会重复相加；本次未写入，请用新版快捷指令。';
+      }
+      return { report, rows: [] };
     }
-    return { report, rows: [] };
   }
 
   const report = emptyReport(spec.metric);
@@ -586,13 +590,19 @@ function planQuantity(
   }
 
   const rows: HealthDailyRow[] = [];
+  let duplicatedDays = 0;
   for (const [date, bucket] of buckets) {
-    const value = bucket.sum / bucket.count;
+    if (bucket.count > 1) duplicatedDays += 1;
+    const value = spec.aggregate === 'sum' ? bucket.sum : bucket.sum / bucket.count;
     if (value < spec.min || value > spec.max) {
       rejectLine(report, `${date} 的日值 ${round(value, 2)} 超出合理范围 ${spec.min}–${spec.max}`);
       continue;
     }
     rows.push({ metric: spec.metric, date, value: round(value, 4), complete: date < window.today ? 1 : 0 });
+  }
+
+  if (spec.aggregate === 'sum' && duplicatedDays > 0) {
+    report.message = `${duplicatedDays} 天出现多条记录并已相加；请确认这个「查找健康样本」按天分组。`;
   }
 
   return { report: finishReport(report, rows), rows };
