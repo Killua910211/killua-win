@@ -5,7 +5,7 @@
 - 接收地址：`https://www.killua.win/api/health/sync`（只写，不提供读取）
 - 鉴权：请求头 `Authorization: Bearer <同步令牌>`。令牌单独交付，不写进仓库；丢了就重新生成（见文末）。
 - 每次发送最近 10 天。某天自动化没跑成功，下一次成功时会自动补齐；同一天重复发送只会覆盖，不会重复计数。
-- 步数、活动能量、距离、锻炼分钟数**只取 Apple Watch 来源**：iPhone 和 Apple Watch 会同时记同一段步行，「按天分组」只会把两边相加（实测约为「健康」App 的两倍）。导入后要在这几个「查找健康样本」里手动加一个条件「来源 是 你的 Apple Watch」（来源是你自己的设备，只能在手机上选）。请求里带 `cumulative_source: watch` 声明这一点，没有声明的这几项会被网站拒收。没戴手表的日子这几项会缺。
+- 步数、活动能量、距离、锻炼分钟数**排除 iPhone 来源、只留 Apple Watch**：iPhone 和 Apple Watch 会同时记同一段步行，「按天分组」只会把两边相加（实测 11-08 为 28,200，「健康」App 为 15,327）。生成时用 `--exclude "<iPhone 在健康里的来源名称>"` 写入「来源 不是 这台 iPhone」；用「不是 iPhone」是因为来源里有两块同名手表、手表名的空格也难以确认。请求里带 `cumulative_source: watch` 声明这一点，没有声明的这几项会被网站拒收。没戴手表的日子这几项会缺，手表充电时用手机走的步数不计。
 - 曾试过逐条读原始样本再在网站去重（提交 `8328746`），数据量太大，真机运行失败，已放弃；服务端仍保留这种格式的解析。
 - 网站只保存每天的汇总值（步数合计、睡眠时长等），不保存原始样本、设备或来源。解析规则见 `app/lib/health-sync.ts`。
 
@@ -16,8 +16,10 @@
 在本仓库目录的 Mac 上运行：
 
 ```bash
-node scripts/build-health-shortcut.mjs
+node scripts/build-health-shortcut.mjs --exclude "某某 iPhone 16"
 ```
+
+`--exclude` 填 iPhone 在「健康」里的来源名称：健康 App →「浏览」→「活动」→「步数」→「数据来源与访问」，iPhone 那一行原样照抄。
 
 它按下面第二节的结构生成并签名四个文件，令牌已写进请求头：
 
@@ -46,9 +48,9 @@ node scripts/build-health-shortcut.mjs
 
 | 类型（Type） | 分组方式（Group By） | 设定变量名 |
 | --- | --- | --- |
-| 步数（Steps，加「来源 是 Apple Watch」） | 天（Day） | `steps` |
-| 活动能量（Active Calories，加「来源 是 Apple Watch」） | 天（Day） | `energy` |
-| 步行+跑步距离（Walking + Running Distance，加「来源 是 Apple Watch」） | 天（Day） | `distance` |
+| 步数（Steps，加「来源 不是 你的 iPhone」） | 天（Day） | `steps` |
+| 活动能量（Active Calories，加「来源 不是 你的 iPhone」） | 天（Day） | `energy` |
+| 步行+跑步距离（Walking + Running Distance，加「来源 不是 你的 iPhone」） | 天（Day） | `distance` |
 | 静息心率（Resting Heart Rate） | 天（Day） | `rhr` |
 | 心率变异性（Heart Rate Variability） | 天（Day） | `hrv` |
 | 血氧（Oxygen Saturation） | 天（Day） | `spo2` |
@@ -60,11 +62,11 @@ node scripts/build-health-shortcut.mjs
 
 - 条件一：**类型** 是 上表中的类型。
 - 条件二：**开始日期** **在最近**（is in the last）`10` **天**。七个查找都用同一个天数，下面 `days` 字段也填这个数。
-- 步数、活动能量、距离再加条件三：**来源** **是** 你的 Apple Watch。
+- 步数、活动能量、距离再加条件三：**来源** **不是** 你的 iPhone。
 - **分组方式** 按上表设置。出现「填充缺失」（Fill Missing）开关时保持关闭：没有读数的日子不能当成 0。
 - **限制**（Limit）关闭，不限条数。
 
-前六项按天分组；步数、活动能量、距离靠「来源 是 Apple Watch」避免和 iPhone 重复相加；静息心率、HRV、血氧只有手表会记；睡眠必须不分组，网站要拿到每一段的起止时间，才能合并重叠时段、排除「卧床」和「清醒」。
+前六项按天分组；步数、活动能量、距离靠「来源 不是 iPhone」避免和手表重复相加；静息心率、HRV、血氧只有手表会记；睡眠必须不分组，网站要拿到每一段的起止时间，才能合并重叠时段、排除「卧床」和「清醒」。
 
 ### 2. 发送：获取 URL 内容
 
@@ -97,7 +99,7 @@ node scripts/build-health-shortcut.mjs
 
 所有「日期」类的值（`*_date`、`sleep_start`、`sleep_end`），点一下变量，把 **日期格式** 设成 **ISO 8601**，并打开 **包括 ISO 8601 时间**。没设也能识别「2026年11月10日 13:30」这类默认格式（按北京时间理解），但 ISO 8601 带时区，最稳。
 
-「Health 锻炼」的字段：`days`；`cumulative_source`（`watch`）；`exercise_date`、`exercise_value`（类型 Exercise Time，按天分组，加「来源 是 Apple Watch」）；`stand_date`、`stand_value`（类型 Stand Hour，不分组，取开始日期和值）。网站按小时去重后数「已站立」的小时数，只有「未站立」记录的日子记 0。
+「Health 锻炼」的字段：`days`；`cumulative_source`（`watch`）；`exercise_date`、`exercise_value`（类型 Exercise Time，按天分组，加「来源 不是 你的 iPhone」）；`stand_date`、`stand_value`（类型 Stand Hour，不分组，取开始日期和值）。网站按小时去重后数「已站立」的小时数，只有「未站立」记录的日子记 0。
 
 键名必须和上表一字不差。一个列表放进文本字段时，快捷指令会把每一项放一行，网站按行把日期和数值一一配对。
 
@@ -140,8 +142,8 @@ iPhone 锁屏时，iOS 不允许任何快捷指令读取健康数据，那一次
 | 返回「缺少 days」或「没有收到任何指标字段」（422） | 键名拼错，或 `days` 没加。 |
 | 返回「起点必须早于今天」（422） | `days` 小于 3，或填成了日期。 |
 | 某项「日期 N 行、数值 M 行，对不上」 | 同一个指标的两个字段选了不同的变量。 |
-| 步数等提示「需要只取 Apple Watch 来源」 | 请求里没有 `cumulative_source: watch`，多半是旧版快捷指令；换新版并在这几个查找里加「来源 是 Apple Watch」。 |
-| 步数明显是「健康」App 的两倍 | 那几个查找漏加了「来源 是 Apple Watch」。 |
+| 步数等提示「需要只取 Apple Watch 来源」 | 请求里没有 `cumulative_source: watch`，多半是旧版快捷指令；换新版快捷指令。 |
+| 步数明显高于「健康」App | 那几个查找里的「来源 不是」没有对上你的 iPhone：打开查找，把它重新选成你的 iPhone。 |
 | 回填时报错或超时（例如 1102、503） | 一次发送太多。先把天数（七个查找和 `days`）改成 165 跑一次；再加一个「结束日期 不在最近 165 天内」之类的条件跑剩下的部分，`days` 填 330。同一天重复发送只会覆盖，没有重复计数的问题。 |
 | 自动化总是失败 | 多半是触发时手机锁着。换一个你更常用手机的时间。 |
 

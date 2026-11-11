@@ -26,7 +26,14 @@
  *
  * 只能在 macOS 上运行：签名用系统的 `shortcuts sign`，导入后经 iCloud 同步到 iPhone。
  *
- *   node scripts/build-health-shortcut.mjs
+ *   node scripts/build-health-shortcut.mjs --exclude "某某 iPhone 16"
+ *
+ * --exclude 是 iPhone 在「健康」里的来源名称（健康 App → 步数 → 数据来源与访问，原样照抄）。
+ * 步数、活动能量、距离、锻炼分钟数的查找会加上「来源 不是 这台 iPhone」，否则 iPhone 和手表会重复
+ * 相加。用「不是 iPhone」而不是「是 Apple Watch」：用户的步数来源里有两块同名手表（换过表），
+ * 且手表名里中英文之间是否有空格从截图看不准；iPhone 只有一台、名字明确（2026-11-11）。
+ * 「来源」行的写法与类型行同构（Enumeration 包 WFStringSubstitutableState），参照
+ * JarGad23/fitness-tracker 的 generate-watch-sync.py；运算符 5 =「不是」。名称属于个人设备信息，不写进仓库。
  */
 
 import { execFileSync } from 'node:child_process';
@@ -41,6 +48,12 @@ const ENDPOINT = 'https://www.killua.win/api/health/sync';
 const OBJECT_REPLACEMENT = '￼';
 
 const token = readFileSync(join(ROOT, '.health-sync-token'), 'utf8').trim();
+const excludeFlag = process.argv.indexOf('--exclude');
+const excludedSource = excludeFlag > 0 ? (process.argv[excludeFlag + 1] ?? '').trim() : '';
+if (!excludedSource) {
+  console.error('✗ 需要 --exclude "某某 iPhone 16"：健康 App → 步数 → 数据来源与访问里 iPhone 那一行的名称。');
+  process.exit(1);
+}
 if (token.length < 32) {
   console.error('✗ .health-sync-token 不存在或太短；先按 docs/health-sync.md「更换令牌」生成。');
   process.exit(1);
@@ -155,8 +168,8 @@ function buildShortcut(days, metrics, note) {
     action('is.workflow.actions.comment', {
       WFCommentActionText:
         (watchOnlyNames.length > 0
-          ? `导入后先做一件事：在${watchOnlyNames.join('')}这几个「查找健康样本」里，各点「添加过滤条件」，` +
-            '选「来源」「是」，再选你的 Apple Watch。不加的话 iPhone 和手表会重复相加。\n\n'
+          ? `${watchOnlyNames.join('')}排除来源「${excludedSource}」，只留 Apple Watch，免得和 iPhone 重复相加。` +
+            '若步数仍明显高于「健康」App，打开这几个查找，把「来源 不是」重新选成你的 iPhone。\n\n'
           : '') +
         `把最近 ${days} 天的 Apple Health 数据发到 killua.win 健康页。\n` +
         '由 killua-win 仓库 scripts/build-health-shortcut.mjs 生成；搭建说明与排错见 docs/health-sync.md。\n' +
@@ -185,6 +198,16 @@ function buildShortcut(days, metrics, note) {
               Removable: false,
               Values: { Number: String(days), Unit: 16 },
             },
+            ...(metric.watchOnly
+              ? [
+                  {
+                    Operator: 5,
+                    Property: 'Source',
+                    Removable: true,
+                    Values: { Unit: 4, Enumeration: { Value: excludedSource, WFSerializationType: 'WFStringSubstitutableState' } },
+                  },
+                ]
+              : []),
           ],
         },
         WFSerializationType: 'WFContentPredicateTableTemplate',
