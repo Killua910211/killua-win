@@ -154,7 +154,8 @@ const QUANTITY_SPECS: QuantitySpec[] = [
     aggregate: 'sum',
     min: 0,
     max: 1440,
-    normalize: (value, unit) => (/min|分/i.test(unit) ? value : value / 60),
+    // 按天分组时给秒、无单位（2026-11-11：11-03 为 1260）；原始样本带「单位」属性时按单位换算。
+    normalize: (value, unit) => (/min|分/i.test(unit) ? value : /^h|hr|小时/i.test(unit) ? value * 60 : value / 60),
   },
 ];
 
@@ -385,17 +386,6 @@ function sourceRank(source: string) {
   return 2;
 }
 
-function mergeIntervals(intervals: [number, number][]) {
-  const sorted = [...intervals].sort((left, right) => left[0] - right[0]);
-  const merged: [number, number][] = [];
-  for (const [start, end] of sorted) {
-    const last = merged[merged.length - 1];
-    if (last && start <= last[1]) last[1] = Math.max(last[1], end);
-    else merged.push([start, end]);
-  }
-  return merged;
-}
-
 /** [start, end] 被已合并区间覆盖的时长。coverage 有序且互不重叠。 */
 function coveredLength(coverage: [number, number][], start: number, end: number) {
   let low = 0;
@@ -416,13 +406,36 @@ function isPointCovered(coverage: [number, number][], point: number) {
   return coverage.some(([start, end]) => start <= point && point < end);
 }
 
+/** 把一段时间并入有序、互不重叠的覆盖区间。 */
+function insertInterval(coverage: [number, number][], start: number, end: number) {
+  if (end <= start) return coverage;
+  const merged: [number, number][] = [];
+  let next: [number, number] = [start, end];
+  let placed = false;
+  for (const interval of coverage) {
+    if (interval[1] < next[0]) merged.push(interval);
+    else if (next[1] < interval[0]) {
+      if (!placed) {
+        merged.push(next);
+        placed = true;
+      }
+      merged.push(interval);
+    } else next = [Math.min(next[0], interval[0]), Math.max(next[1], interval[1])];
+  }
+  if (!placed) merged.push(next);
+  return merged;
+}
+
 /**
  * 累计型指标的原始样本去重。
  *
  * iPhone 和 Apple Watch 会同时记同一段步行，「查找健康样本」按天分组只是把两边
- * 相加（2026-11-11 实测步数约为「健康」App 的两倍）。这里按「健康」App 的做法
- * 合并：按来源优先级逐个处理，高优先级来源已覆盖的时段，低优先级样本只按未被
- * 覆盖的时长比例计入。样本按开始时间的本地日期归日。
+ * 相加（2026-11-11 实测 11-08 为 28,200，「健康」App 为 15,327）。这里按「健康」App
+ * 的做法合并：按来源优先级逐个处理，已被覆盖的时段，后来的样本只按未被覆盖的时长
+ * 比例计入。同一来源名称内也逐条去重：用户的来源里有两块同名的 Apple Watch，按名称
+ * 分组会把它们并成一组。样本按开始时间的本地日期归日。
+ *
+ * 可选的 `<prefix>_unit` 每行给出样本单位（来自「单位」属性），优先于数值文本里的单位。
  */
 function planCumulativeRaw(
   spec: QuantitySpec,
@@ -433,6 +446,7 @@ function planCumulativeRaw(
   const report = emptyReport(spec.metric);
   const fields = ['start', 'end', 'value', 'source'].map((name) => `${prefix}_${name}`);
   const lists = fields.map((field) => readLines(payload, field));
+  const units = readLines(payload, `${prefix}_unit`);
 
   if (lists.some((list) => list === 'invalid')) {
     report.status = 'error';
@@ -445,6 +459,7 @@ function planCumulativeRaw(
     return { report, rows: [] };
   }
   const [starts, ends, values, sources] = lists as string[][];
+  const unitLines = Array.isArray(units) && units.length === starts.length ? units : null;
   if (new Set([starts.length, ends.length, values.length, sources.length]).size !== 1) {
     report.status = 'error';
     report.message = `开始 ${starts.length}、结束 ${ends.length}、数值 ${values.length}、来源 ${sources.length} 行，对不上。`;
@@ -465,7 +480,8 @@ function planCumulativeRaw(
       continue;
     }
     const parsed = parseHealthNumber(values[index]);
-    const normalized = parsed ? (spec.normalize ? spec.normalize(parsed.value, parsed.unitHint) : parsed.value) : null;
+    const unitHint = unitLines ? unitLines[index] : (parsed?.unitHint ?? '');
+    const normalized = parsed ? (spec.normalize ? spec.normalize(parsed.value, unitHint) : parsed.value) : null;
     if (normalized === null || normalized < 0) {
       rejectLine(report, `数值无法解析：${values[index]}`);
       continue;
@@ -493,7 +509,7 @@ function planCumulativeRaw(
   const rawTotals: string[] = [];
   let coverage: [number, number][] = [];
   for (const source of orderedSources) {
-    const list = bySource.get(source) ?? [];
+    const list = [...(bySource.get(source) ?? [])].sort((left, right) => left.start - right.start);
     let sourceTotal = 0;
     for (const sample of list) {
       sourceTotal += sample.value;
@@ -504,11 +520,10 @@ function planCumulativeRaw(
           : isPointCovered(coverage, sample.start)
             ? 0
             : 1;
-      if (share <= 0) continue;
-      totals.set(sample.date, (totals.get(sample.date) ?? 0) + sample.value * share);
+      if (share > 0) totals.set(sample.date, (totals.get(sample.date) ?? 0) + sample.value * share);
+      coverage = insertInterval(coverage, sample.start, sample.end);
     }
-    coverage = mergeIntervals([...coverage, ...list.map((sample): [number, number] => [sample.start, sample.end])]);
-    rawTotals.push(`${source} ${Math.round(sourceTotal).toLocaleString('en-US')}`);
+    rawTotals.push(`${source}（${list.length} 条）${Math.round(sourceTotal).toLocaleString('en-US')}`);
   }
 
   const rows: HealthDailyRow[] = [];
@@ -521,8 +536,9 @@ function planCumulativeRaw(
     kept += value;
     rows.push({ metric: spec.metric, date, value: round(value, 4), complete: date < window.today ? 1 : 0 });
   }
-  if (orderedSources.length > 1) {
-    report.message = `按来源优先级去重：${rawTotals.join(' + ')} → ${Math.round(kept).toLocaleString('en-US')}`;
+  const rawSum = samples.reduce((sum, sample) => sum + sample.value, 0);
+  if (orderedSources.length > 1 || Math.round(rawSum) !== Math.round(kept)) {
+    report.message = `按来源去重：${rawTotals.join(' + ')} → ${Math.round(kept).toLocaleString('en-US')}`;
   }
 
   return { report: finishReport(report, rows), rows };

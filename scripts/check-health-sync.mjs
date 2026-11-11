@@ -243,10 +243,42 @@ if (dedupe.ok) {
   const steps = dedupe.plan.rows.find((row) => row.metric === 'steps' && row.date === '2026-11-08');
   check(near(steps?.value, 1000 + 300 + 200 + 2000 * 50 / 60, 1e-3), `去重后步数应为 3166.667：${steps?.value}`);
   const report = dedupe.plan.reports.find((item) => item.metric === 'steps');
-  check(report?.message?.startsWith('按来源优先级去重：Killua的Apple Watch 1,000 + Killua的iPhone 1,650 + 小米运动 2,000'), `去重说明：${report?.message}`);
+  check(report?.message?.startsWith('按来源去重：Killua的Apple Watch（2 条）1,000 + Killua的iPhone（3 条）1,650 + 小米运动（1 条）2,000'), `去重说明：${report?.message}`);
 } else {
   check(false, `原始样本去重应当成功：${dedupe.error}`);
 }
+// 两块同名的 Apple Watch 同时记了同一段：按名称并成一组后，组内也要按时间去重。
+const twinWatches = planHealthSync(
+  {
+    days: '10',
+    steps_start: lines(t('08:00'), t('08:00'), t('09:00')),
+    steps_end: lines(t('08:10'), t('08:10'), t('09:10')),
+    steps_value: lines('1000', '980', '500'),
+    steps_source: lines('Killua的 Apple Watch', 'Killua的 Apple Watch', 'Killua的 Apple Watch'),
+  },
+  now,
+);
+check(
+  twinWatches.ok && twinWatches.plan.rows.find((row) => row.metric === 'steps')?.value === 1500 &&
+    twinWatches.plan.reports.find((item) => item.metric === 'steps')?.message?.includes('（3 条）2,480 → 1,500'),
+  `同名来源内也去重：${JSON.stringify(twinWatches.ok ? [twinWatches.plan.rows, twinWatches.plan.reports.find((item) => item.metric === 'steps')?.message] : twinWatches)}`,
+);
+// 原始样本可带「单位」：锻炼时间给秒就换算成分钟，给分钟就原样。
+const exerciseUnits = planHealthSync(
+  {
+    days: '10',
+    exercise_start: lines(t('08:00'), t('09:00')),
+    exercise_end: lines(t('08:01'), t('09:01')),
+    exercise_value: lines('60', '1'),
+    exercise_source: lines('Killua的 Apple Watch', 'Killua的 Apple Watch'),
+    exercise_unit: lines('s', 'min'),
+  },
+  now,
+);
+check(
+  exerciseUnits.ok && exerciseUnits.plan.rows.find((row) => row.metric === 'exercise')?.value === 2,
+  `原始样本按单位换算：${JSON.stringify(exerciseUnits.ok ? exerciseUnits.plan.rows : exerciseUnits)}`,
+);
 const singleSource = planHealthSync(
   { days: '10', energy_start: t('08:00'), energy_end: t('08:01'), energy_value: '12.5', energy_source: 'Killua的Apple Watch' },
   now,
