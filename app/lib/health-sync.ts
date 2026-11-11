@@ -145,8 +145,17 @@ const QUANTITY_SPECS: QuantitySpec[] = [
     // 存百分数。HealthKit 内部是 0–1 的比例，快捷指令可能给 0.95 也可能给 95。
     normalize: (value) => (value <= 1 ? value * 100 : value),
   },
-  // 健身圆环的「锻炼」环：Apple 判定的锻炼分钟数，按天求和。
-  { metric: 'exercise', dateField: 'exercise_date', valueField: 'exercise_value', aggregate: 'sum', min: 0, max: 1440 },
+  // 健身圆环的「锻炼」环：Apple 判定的锻炼分钟数，按天求和，存分钟。
+  // 快捷指令给的是秒（2026-11-11 真机：11-03 为 1260，即 21 分钟），只有带分钟单位时才不换算。
+  {
+    metric: 'exercise',
+    dateField: 'exercise_date',
+    valueField: 'exercise_value',
+    aggregate: 'sum',
+    min: 0,
+    max: 1440,
+    normalize: (value, unit) => (/min|分/i.test(unit) ? value : value / 60),
+  },
 ];
 
 const SLEEP_FIELDS = { start: 'sleep_start', end: 'sleep_end', value: 'sleep_value' } as const;

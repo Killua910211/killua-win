@@ -199,7 +199,7 @@ for (const [text, kind] of [['Stood', 'stood'], ['Idle', 'idle'], ['已站立', 
 const fitness = planHealthSync(
   {
     days: '10',
-    ...rawDaily('exercise', [['2026-11-08', '32'], ['2026-11-09', '0']]),
+    ...rawDaily('exercise', [['2026-11-08', '32 min'], ['2026-11-09', '0']]),
     stand_date: lines(
       '2026-11-08T09:00:00+08:00',
       '2026-11-08T09:00:00+08:00',
@@ -214,7 +214,7 @@ const fitness = planHealthSync(
 );
 if (fitness.ok) {
   const row = (metric, date) => fitness.plan.rows.find((item) => item.metric === metric && item.date === date);
-  check(row('exercise', '2026-11-08')?.value === 32 && row('exercise', '2026-11-09')?.value === 0, '锻炼分钟数按天求和，真实 0 保留');
+  check(row('exercise', '2026-11-08')?.value === 32 && row('exercise', '2026-11-09')?.value === 0, '锻炼分钟数按天求和（带分钟单位不换算），真实 0 保留');
   check(row('stand', '2026-11-08')?.value === 2, `站立 11-08 应为 2 小时（同一小时去重）：${row('stand', '2026-11-08')?.value}`);
   check(row('stand', '2026-11-09')?.value === 0, '只有未站立记录的日子记 0');
   check(fitness.plan.unknownStandValues.join() === '神秘', `未识别站立类别 ${fitness.plan.unknownStandValues}`);
@@ -260,6 +260,18 @@ const partialRaw = planHealthSync({ days: '10', steps_start: t('08:00'), steps_v
 check(
   partialRaw.ok && partialRaw.plan.reports.find((item) => item.metric === 'steps')?.status === 'error',
   '原始样本缺字段时报错',
+);
+
+// 快捷指令给锻炼时间的是秒：1260 → 21 分钟，2700 → 45 分钟（不再因超过 1440 被拒）。
+const exerciseSeconds = planHealthSync(
+  { days: '10', cumulative_source: 'watch', exercise_date: lines('2026-11-03', '2026-11-04'), exercise_value: lines('1260', '2700') },
+  now,
+);
+check(
+  exerciseSeconds.ok &&
+    exerciseSeconds.plan.rows.find((row) => row.metric === 'exercise' && row.date === '2026-11-03')?.value === 21 &&
+    exerciseSeconds.plan.rows.find((row) => row.metric === 'exercise' && row.date === '2026-11-04')?.value === 45,
+  `锻炼时间按秒换算为分钟：${JSON.stringify(exerciseSeconds.ok ? exerciseSeconds.plan.rows : exerciseSeconds)}`,
 );
 
 // ------------------------------------------------------------------ 结构错误
