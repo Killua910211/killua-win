@@ -224,10 +224,10 @@ if (fitness.ok) {
   check(false, `锻炼与站立应当成功：${fitness.error}`);
 }
 
-// 原始样本按来源优先级去重（Apple Watch > iPhone > 其他 App），与「健康」App 一致：
-// 手表 08:00–08:10 记 1000 步；手机同一时段 950 步完全被覆盖、不计；
-// 手机 09:00–09:10 记 300 步（手表没戴）全计；手机 10:00–10:20 记 400 步，手表覆盖其中
-// 10:00–10:10，只计一半 200；第三方 App 08:00–09:00 记 2000 步，被覆盖 10 分钟，计 50/60。
+// 原始样本按来源优先级去重（Apple Watch > iPhone > 其他 App）。写入口径：与已覆盖时段有任何
+// 重叠的样本整条不计。手表 08:00–08:10 记 1000 步；手机同一时段 950 步不计；手机 09:00–09:10
+// 记 300 步（手表没戴）全计；手机 10:00–10:20 记 400 步与手表重叠，不计；第三方 App
+// 08:00–09:00 记 2000 步与手表重叠，不计。写入 1300；按比例口径为 1000+300+200+2000×50/60。
 const t = (hm) => `2026-11-08T${hm}:00+08:00`;
 const dedupe = planHealthSync(
   {
@@ -241,7 +241,12 @@ const dedupe = planHealthSync(
 );
 if (dedupe.ok) {
   const steps = dedupe.plan.rows.find((row) => row.metric === 'steps' && row.date === '2026-11-08');
-  check(near(steps?.value, 1000 + 300 + 200 + 2000 * 50 / 60, 1e-3), `去重后步数应为 3166.667：${steps?.value}`);
+  check(steps?.value === 1300, `去重后步数应为 1300：${steps?.value}`);
+  const variant = dedupe.plan.reports.find((item) => item.metric === 'steps')?.variants?.[0];
+  check(
+    variant?.date === '2026-11-08' && variant.drop === 1300 && near(variant.prorata, 3166.7, 0.05) && variant.watch === 1000,
+    `三种口径：${JSON.stringify(variant)}`,
+  );
   const report = dedupe.plan.reports.find((item) => item.metric === 'steps');
   check(report?.message?.startsWith('按来源去重：Killua的Apple Watch（2 条）1,000 + Killua的iPhone（3 条）1,650 + 小米运动（1 条）2,000'), `去重说明：${report?.message}`);
 } else {
@@ -285,7 +290,7 @@ if (dedupe.ok) {
   const byKind = Object.fromEntries(kinds.map((item) => [item.kind, item]));
   check(
     byKind.watch?.count === 2 && byKind.watch?.raw === 1000 && byKind.watch?.kept === 1000 &&
-      byKind.iphone?.raw === 1650 && byKind.iphone?.kept === 500 && near(byKind.other?.kept, 2000 * 50 / 60, 0.1),
+      byKind.iphone?.raw === 1650 && byKind.iphone?.kept === 300 && byKind.other?.kept === 0,
     `来源构成：${JSON.stringify(kinds)}`,
   );
 }

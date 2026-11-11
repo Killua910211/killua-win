@@ -69,6 +69,12 @@ export type HealthSyncMetricReport = {
   message?: string;
   /** 原始样本去重时各类来源的条数、原始合计与去重后计入的量（不含设备名）。 */
   sources?: { kind: 'watch' | 'iphone' | 'other'; count: number; raw: number; kept: number }[];
+  /**
+   * 每天三种去重口径的结果，用来和「健康」App 的读数对照、选定口径：
+   * drop＝与更高优先级已覆盖时段有任何重叠的样本整条不计（写入的就是这个）；
+   * prorata＝按未被覆盖的时长比例计入；watch＝只算 Apple Watch。
+   */
+  variants?: { date: string; drop: number; prorata: number; watch: number }[];
 };
 
 export type HealthSyncPlan = {
@@ -509,6 +515,9 @@ function planCumulativeRaw(
   );
 
   const totals = new Map<string, number>();
+  const prorata = new Map<string, number>();
+  const watchOnly = new Map<string, number>();
+  const add = (map: Map<string, number>, date: string, value: number) => map.set(date, (map.get(date) ?? 0) + value);
   const rawTotals: string[] = [];
   const kinds = new Map<'watch' | 'iphone' | 'other', { count: number; raw: number; kept: number }>();
   let coverage: [number, number][] = [];
@@ -521,15 +530,15 @@ function planCumulativeRaw(
     for (const sample of list) {
       sourceTotal += sample.value;
       const duration = sample.end - sample.start;
-      const share =
-        duration > 0
-          ? 1 - coveredLength(coverage, sample.start, sample.end) / duration
-          : isPointCovered(coverage, sample.start)
-            ? 0
-            : 1;
-      if (share > 0) {
-        totals.set(sample.date, (totals.get(sample.date) ?? 0) + sample.value * share);
-        stats.kept += sample.value * share;
+      const covered = duration > 0 ? coveredLength(coverage, sample.start, sample.end) : isPointCovered(coverage, sample.start) ? 1 : 0;
+      const share = duration > 0 ? 1 - covered / duration : covered > 0 ? 0 : 1;
+      if (share > 0) add(prorata, sample.date, sample.value * share);
+      // 写入口径：与已覆盖时段有任何重叠就整条不计。低优先级来源（iPhone）的一条记录往往
+      // 跨好几十分钟，手表只在其中一段记了同一批步数；按比例摊开会把这批步数再算一遍。
+      if (covered <= 0) {
+        add(totals, sample.date, sample.value);
+        stats.kept += sample.value;
+        if (rank === 0) add(watchOnly, sample.date, sample.value);
       }
       coverage = insertInterval(coverage, sample.start, sample.end);
     }
@@ -538,6 +547,12 @@ function planCumulativeRaw(
     kinds.set(kind, stats);
     rawTotals.push(`${source}（${list.length} 条）${Math.round(sourceTotal).toLocaleString('en-US')}`);
   }
+  report.variants = [...new Set([...totals.keys(), ...prorata.keys()])].sort().map((date) => ({
+    date,
+    drop: round(totals.get(date) ?? 0, 1),
+    prorata: round(prorata.get(date) ?? 0, 1),
+    watch: round(watchOnly.get(date) ?? 0, 1),
+  }));
   report.sources = [...kinds.entries()].map(([kind, stats]) => ({
     kind,
     count: stats.count,

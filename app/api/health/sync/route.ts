@@ -115,7 +115,7 @@ export async function POST(request: Request) {
     // 原始样本去重的来源构成：只记类别（手表 / iPhone / 其他）、条数与数量，不记设备名。
     sources: plan.reports
       .filter((report) => report.sources)
-      .map((report) => ({ metric: report.metric, sources: report.sources })),
+      .map((report) => ({ metric: report.metric, sources: report.sources, variants: report.variants })),
     unknownSleepValues: plan.unknownSleepValues.length,
   });
 
