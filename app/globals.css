@@ -1752,6 +1752,8 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .health-recovery-source a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 980px) {
   .health-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* 九张卡排两列时最后一张落单，让它占满一行，网格底边对齐。 */
+  .health-kpi:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .health-memorial-grid { grid-template-columns: 1fr; }
 }
 

@@ -75,9 +75,13 @@ export type HealthWeeklySpec = {
  * 数据由 iPhone 快捷指令每日推送，口径见 app/lib/health-sync.ts。
  */
 export const HEALTH_WEEKLY_SPECS: HealthWeeklySpec[] = [
+  // 三列网格按行分组：日常活动 / 健身圆环（活动、锻炼、站立）/ 身体恢复。
   { label: '日均步数', metric: 'steps', unit: '步 / 日', precision: 0, sampleUnit: '天' },
-  { label: '日均活动能量', metric: 'active_energy', unit: 'kcal / 日', precision: 0, sampleUnit: '天' },
+  { label: '日均步行 + 跑步距离', metric: 'distance', unit: 'km / 日', precision: 1, sampleUnit: '天' },
   { label: '平均睡眠', metric: 'sleep', unit: '小时 / 夜', precision: 1, sampleUnit: '夜' },
+  { label: '日均活动能量', metric: 'active_energy', unit: 'kcal / 日', precision: 0, sampleUnit: '天' },
+  { label: '日均锻炼时间', metric: 'exercise', unit: '分钟 / 日', precision: 0, sampleUnit: '天' },
+  { label: '日均站立', metric: 'stand', unit: '小时 / 日', precision: 1, sampleUnit: '天' },
   { label: '平均静息心率', metric: 'resting_hr', unit: 'bpm', precision: 1, sampleUnit: '天' },
   { label: '平均 HRV · SDNN', metric: 'hrv', unit: 'ms', precision: 1, sampleUnit: '天' },
   { label: '平均血氧饱和度', metric: 'spo2', unit: '%', precision: 1, sampleUnit: '天' },

@@ -41,7 +41,9 @@ function readAggregate(row: unknown): (Aggregate & { metric: HealthDailyMetric }
  * 最近 7 个已同步的完整日（窗口规则见 healthWeeklyWindow：同步每周一次，以最新完整日为终点，
  * 最多比昨天早 7 天）；读取失败返回 null，由调用方显示「读取失败」。
  */
-async function loadWeekly(today: string): Promise<Map<HealthDailyMetric, Aggregate> | null> {
+async function loadWeekly(
+  today: string,
+): Promise<{ weekly: Map<HealthDailyMetric, Aggregate>; window: { start: string; end: string } } | null> {
   try {
     const latest = await env.DB.prepare(
       `SELECT MAX(date) AS latest FROM health_daily WHERE complete = 1 AND date < ?`,
@@ -66,7 +68,7 @@ async function loadWeekly(today: string): Promise<Map<HealthDailyMetric, Aggrega
       const aggregate = readAggregate(row);
       if (aggregate) weekly.set(aggregate.metric, { days: aggregate.days, average: aggregate.average });
     }
-    return weekly;
+    return { weekly, window };
   } catch (error) {
     console.error('d1.health.weekly_failed', {
       error: error instanceof Error ? error.message : String(error),
@@ -83,10 +85,23 @@ function formatAverage(value: number, precision: number) {
 }
 
 /** 以服务端当前时刻为准，算出「7 日均值」的六张卡片。 */
-export async function getHealthWeeklyAverages(nowMilliseconds: number): Promise<HealthWeeklyAverage[]> {
-  const weekly = await loadWeekly(healthLocalDate(nowMilliseconds));
+export type HealthWeeklySection = {
+  items: HealthWeeklyAverage[];
+  /** 实际参与计算的 7 天；读取失败时为 null。 */
+  window: { start: string; end: string } | null;
+};
 
-  return HEALTH_WEEKLY_SPECS.map((spec) => {
+/** 「11.04 – 11.10」：页面眉题上标出的数据周期。 */
+export function formatHealthWindow(window: { start: string; end: string }) {
+  const short = (date: string) => `${date.slice(5, 7)}.${date.slice(8, 10)}`;
+  return `${short(window.start)} – ${short(window.end)}`;
+}
+
+export async function getHealthWeeklyAverages(nowMilliseconds: number): Promise<HealthWeeklySection> {
+  const loaded = await loadWeekly(healthLocalDate(nowMilliseconds));
+  const weekly = loaded?.weekly ?? null;
+
+  const items = HEALTH_WEEKLY_SPECS.map((spec) => {
     const base = { label: spec.label, unit: spec.unit, totalDays: WEEK_DAYS, sampleUnit: spec.sampleUnit };
     if (!weekly) return { ...base, value: '', validDays: null, status: 'error' as const };
 
@@ -100,4 +115,5 @@ export async function getHealthWeeklyAverages(nowMilliseconds: number): Promise<
       status: aggregate.average === 0 ? ('zero' as const) : ('ok' as const),
     };
   });
+  return { items, window: loaded?.window ?? null };
 }

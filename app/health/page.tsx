@@ -17,7 +17,7 @@ import {
   getHealthNutritionReferenceStatus,
   getHealthNutritionUpperLimitStatus,
 } from '@/app/lib/health';
-import { getHealthWeeklyAverages } from '@/app/lib/health-live';
+import { formatHealthWindow, getHealthWeeklyAverages } from '@/app/lib/health-live';
 import { buildMetadata } from '@/app/lib/metadata';
 
 export const metadata = buildMetadata({
@@ -42,7 +42,7 @@ export default async function HealthPage() {
   // 避免客户端接管前出现“计算中…”或几个读数基准不一致。
   const lifeProgressSnapshot = getHealthLifeProgressSnapshot();
   const initialNowMilliseconds = lifeProgressSnapshot.asOfMilliseconds;
-  const weeklyAverages = await getHealthWeeklyAverages(initialNowMilliseconds);
+  const weekly = await getHealthWeeklyAverages(initialNowMilliseconds);
 
   return (
     <>
@@ -121,10 +121,13 @@ export default async function HealthPage() {
             <span>Seven-day averages</span>
           </div>
           <div className="health-section-body">
-            <p className="eyebrow">7 日均值</p>
+            {/* 数据周期并进眉题，不另起段落：同步每周一次，读者要知道这 7 天是哪 7 天。 */}
+            <p className="eyebrow">
+              7 日均值{weekly.window ? ` · ${formatHealthWindow(weekly.window)}` : ''}
+            </p>
             <h2 id="health-snapshot-heading">身体的日常节奏。</h2>
             <dl className="health-kpi-grid">
-              {weeklyAverages.map((item) => {
+              {weekly.items.map((item) => {
                 const display = getHealthWeeklyAverageDisplay(item);
                 return (
                   <div className={`health-kpi is-${item.status}`} key={item.label}>
