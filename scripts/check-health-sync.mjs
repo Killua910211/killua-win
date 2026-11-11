@@ -333,6 +333,18 @@ check(
   `锻炼时间按秒换算为分钟：${JSON.stringify(exerciseSeconds.ok ? exerciseSeconds.plan.rows : exerciseSeconds)}`,
 );
 
+// 试运行：照常计算，摘要标明未写入并列出每天的数值。
+const dry = planHealthSync(
+  { days: '10', dry_run: '1', cumulative_source: 'watch', steps_date: lines('2026-11-08', '2026-11-09'), steps_value: lines('15,283', '13,688') },
+  now,
+);
+check(
+  dry.ok && dry.plan.dryRun && dry.plan.rows.length === 2 &&
+    summarizeHealthSync(dry.plan).startsWith('试运行（未写入）') && summarizeHealthSync(dry.plan).includes('步数：11-08 15283 / 11-09 13688'),
+  `试运行摘要：${dry.ok ? summarizeHealthSync(dry.plan) : dry.error}`,
+);
+check(planHealthSync({ days: '10', resting_hr_date: '2026-11-08', resting_hr_value: '60' }, now).ok && !planHealthSync({ days: '10', resting_hr_date: '2026-11-08', resting_hr_value: '60' }, now).plan.dryRun, '默认不是试运行');
+
 // ------------------------------------------------------------------ 结构错误
 
 const structural = [

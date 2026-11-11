@@ -81,6 +81,10 @@ export type HealthSyncPlan = {
   /** 本次数据完整覆盖的起点（不含当天）。 */
   since: string;
   today: string;
+  /** 分段回填的上限（不含当天）。 */
+  until?: string;
+  /** 试运行：只计算、不写入，摘要里列出每天的数值，用来核对快捷指令的新写法。 */
+  dryRun: boolean;
   rows: HealthDailyRow[];
   reports: HealthSyncMetricReport[];
   /** 无法归类的睡眠类别原文，最多 10 个。 */
@@ -937,6 +941,8 @@ export function planHealthSync(payload: unknown, nowMs: number): HealthSyncResul
     plan: {
       since: sinceDate,
       today,
+      ...(untilDate ? { until: untilDate } : {}),
+      dryRun: body.dry_run === true || body.dry_run === '1' || body.dry_run === 'true',
       rows,
       reports,
       unknownSleepValues: [...unknownSleepValues],
@@ -960,7 +966,19 @@ export function summarizeHealthSync(plan: HealthSyncPlan) {
     if (report.status === 'missing') return `${report.label} 未发送`;
     return `${report.label} 出错`;
   });
-  const lines = [`同步 ${plan.since} 之后至 ${plan.today}：${parts.join('、')}。`];
+  const range = plan.until ? `${plan.until} 之前` : plan.today;
+  const lines = [
+    `${plan.dryRun ? '试运行（未写入）' : '同步'} ${plan.since} 之后至 ${range}：${parts.join('、')}。`,
+  ];
+  if (plan.dryRun) {
+    for (const report of sent) {
+      const days = plan.rows
+        .filter((row) => row.metric === report.metric)
+        .sort((left, right) => left.date.localeCompare(right.date))
+        .map((row) => `${row.date.slice(5)} ${Math.round(row.value * 100) / 100}`);
+      if (days.length > 0) lines.push(`${report.label}：${days.join(' / ')}`);
+    }
+  }
   for (const report of plan.reports) {
     if (report.message) lines.push(`${report.label}：${report.message}`);
     if (report.examples.length > 0) lines.push(`${report.label} 例：${report.examples.join('；')}`);

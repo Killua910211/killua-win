@@ -77,7 +77,7 @@ export async function POST(request: Request) {
   const { plan } = result;
   const syncedAt = Date.now();
 
-  if (plan.rows.length > 0) {
+  if (plan.rows.length > 0 && !plan.dryRun) {
     try {
       // 整批行作为一个 JSON 参数交给 json_each，一条语句写完：
       // 不受 D1 每条语句 100 个绑定参数、每次调用查询条数的限制。
@@ -110,6 +110,10 @@ export async function POST(request: Request) {
   console.log('health.sync.ok', {
     since: plan.since,
     today: plan.today,
+    until: plan.until ?? null,
+    dryRun: plan.dryRun,
+    // 试运行时把每天的数值记下来，便于和已核对过的数据比较（只有数字，没有原始样本）。
+    ...(plan.dryRun ? { dryRunRows: plan.rows.map((row) => `${row.metric}:${row.date}:${Math.round(row.value * 100) / 100}`) } : {}),
     rows: plan.rows.length,
     reports: plan.reports.map((report) => `${report.metric}:${report.status}:${report.days}:${report.rejected}`),
     // 原始样本去重的来源构成：只记类别（手表 / iPhone / 其他）、条数与数量，不记设备名。

@@ -68,6 +68,15 @@ const VERSION = (() => {
   );
   return `v${parts.month}${parts.day}-${parts.hour}${parts.minute}`;
 })();
+/**
+ * --exclude：iPhone 在「健康」里的来源名称（健康 App → 步数 → 数据来源与访问）。历史回填的步数、
+ * 距离按天汇总，加「来源 不是 这台 iPhone」只留手表：与逐条去重相比约低 1%（11-08：15,283 对
+ * 15,389），但一次能读几十天。名称属于个人设备信息，只从命令行传入，不写进仓库。
+ */
+const excludeFlag = process.argv.indexOf('--exclude');
+const excludedSource = excludeFlag > 0 ? (process.argv[excludeFlag + 1] ?? '').trim() : '';
+const onlyFlag = process.argv.indexOf('--only');
+const onlyNames = onlyFlag > 0 ? (process.argv[onlyFlag + 1] ?? '').split(',').map((name) => name.trim()) : null;
 if (token.length < 32) {
   console.error('✗ .health-sync-token 不存在或太短；先按 docs/health-sync.md「更换令牌」生成。');
   process.exit(1);
@@ -175,6 +184,15 @@ const FITNESS_METRICS = [
   { type: 'Stand Hour', name: '站立', prefix: 'stand', groupBy: 'None' },
 ];
 
+function sourceRow() {
+  return {
+    Operator: 5,
+    Property: 'Source',
+    Removable: true,
+    Values: { Unit: 4, Enumeration: { Value: excludedSource, WFSerializationType: 'WFStringSubstitutableState' } },
+  };
+}
+
 function dateRow(window) {
   if (window.days) {
     return { Bounded: true, Operator: 1001, Property: 'Start Date', Removable: false, Values: { Number: String(window.days), Unit: 16 } };
@@ -200,6 +218,7 @@ function buildSegment(actions, segment) {
               Values: { Enumeration: { Value: metric.type, WFSerializationType: 'WFStringSubstitutableState' } },
             },
             dateRow(segment),
+            ...(metric.excludeIphone ? [sourceRow()] : []),
           ],
         },
         WFSerializationType: 'WFContentPredicateTableTemplate',
@@ -217,6 +236,7 @@ function buildSegment(actions, segment) {
     ? [textField('days', String(segment.days))]
     : [textField('since', segment.since), textField('until', segment.until)];
   if (segment.metrics.some((metric) => metric.groupedCumulative)) fields.push(textField('cumulative_source', 'watch'));
+  if (segment.dryRun) fields.push(textField('dry_run', '1'));
   for (const { metric, find } of finds) {
     if (metric.raw) {
       fields.push(textField(`${metric.prefix}_start`, output(find, metric.name, [property('Start Date'), ISO_TIME])));
@@ -310,9 +330,9 @@ mkdirSync(OUT_DIR, { recursive: true });
 const CORE_NOTE =
   '步数、距离、静息心率逐条带来源发送，网站按时间重叠去重或按天取平均；活动能量、HRV、血氧按天分组；' +
   '睡眠不分组（网站要每段起止时间来合并重叠、排除卧床与清醒）。';
-const BACKFILL_NOTE =
-  '一次性回填：第一段是最近 60 天的静息心率、HRV、血氧与睡眠；后两段各补 3 天的步数、距离（逐条）与活动能量（按天）' +
-  '（逐条读取一次超过约 3 天就会在手机上失败，所以分段）。后面的段失败不影响前面已写入的。';
+const HISTORY_NOTE =
+  '一次性回填今年的历史：每两个月一段，步数、距离按天汇总并排除 iPhone（只留手表，约低 1%），' +
+  '活动能量、HRV、血氧按天分组，静息心率、睡眠逐条。后面的段失败不影响前面已写入的。';
 const FITNESS_NOTE = '健身圆环的锻炼分钟数（逐条带来源和单位，网站去重）与站立（每小时一条，网站数「已站立」的小时）。';
 
 /** 北京时间某天零点往后若干小时的时刻。 */
@@ -322,35 +342,64 @@ function beijing(date, hours = 0) {
 function shiftDate(date, days) {
   return new Date(Date.parse(`${date}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
 }
-const TODAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai' }).format(new Date());
+
+/** 步数、距离按天汇总、只留手表（排除 iPhone）：给试运行与历史回填用。 */
+const WATCH_DAILY = [
+  { type: 'Steps', name: '步数', prefix: 'steps', groupBy: 'Day', groupedCumulative: true, excludeIphone: true },
+  { type: 'Walking + Running Distance', name: '步行+跑步距离', prefix: 'distance', groupBy: 'Day', groupedCumulative: true, excludeIphone: true },
+];
+const ENERGY = METRICS.find((metric) => metric.prefix === 'energy');
+const LIGHT = METRICS.filter((metric) => !metric.raw && !metric.groupedCumulative);
 
 /**
- * 分段补步数：每段从 since 当天 22:00（北京时间）读到 until 当天 02:00，多读的边角让网站按
- * since / until 截掉，所以手机在日本时间（快一小时）或北京时间都能完整覆盖中间三天。
- * 两段写今天往前第 7～5 天和第 4～2 天；昨天和今天由每日同步写。
+ * 历史回填按两个月一段：每段 since 前一天中午读到 until 当天 02:00，多读的边角由网站按
+ * since / until 截掉（兼容日本时间，也让醒在首日的那一夜完整）。步数等写到 11-03 为止：
+ * 11-04 起已是逐条去重的值，不覆盖。
  */
-const cumulative = METRICS.filter((metric) => metric.raw || metric.groupedCumulative);
-const stepSegment = (fromBack) => {
-  const since = shiftDate(TODAY, -fromBack - 1);
-  const until = shiftDate(TODAY, -fromBack + 3);
-  return { metrics: cumulative, since, until, from: beijing(since, 22), to: beijing(until, 2) };
+const historySegment = (first, untilDate) => {
+  const since = shiftDate(first, -1);
+  return {
+    metrics: [...WATCH_DAILY, ENERGY, ...LIGHT],
+    since,
+    until: untilDate,
+    from: beijing(since, 12),
+    to: beijing(untilDate, 2),
+  };
 };
 
 /**
- * 每日同步只读最近 3 天（写入昨天和今天）：逐条读 7 天、9 天在真机上数据量过大而失败。
- * 自动化每天跑，昨天总会在今天被写成完整日；连续漏跑一天以上，那天的累计型指标会缺。
+ * 每日同步读最近 5 天（写前三天、昨天和今天）：活动能量改按天分组后请求约 300 KB，
+ * 自动化连续漏跑 3 天以内都能补齐。
  */
 const targets = [
-  { name: 'Health 同步', segments: [{ days: 3, metrics: METRICS }], note: CORE_NOTE },
-  {
-    name: 'Health 回填',
-    segments: [{ days: 60, metrics: METRICS.filter((metric) => !metric.raw && !metric.groupedCumulative) }, stepSegment(7), stepSegment(4)],
-    note: BACKFILL_NOTE,
-  },
+  { name: 'Health 同步', segments: [{ days: 5, metrics: METRICS }], note: CORE_NOTE },
   { name: 'Health 锻炼', segments: [{ days: 3, metrics: FITNESS_METRICS }], note: FITNESS_NOTE },
+  {
+    name: 'Health 来源测试',
+    needsExclude: true,
+    segments: [{ days: 10, metrics: WATCH_DAILY, dryRun: true }],
+    note: '试运行，不写入：按天汇总、排除 iPhone 来源的步数与距离，用来和逐条去重的结果对照。',
+  },
+  {
+    name: 'Health 回填 1-6月',
+    needsExclude: true,
+    segments: [historySegment('2026-01-01', '2026-03-01'), historySegment('2026-03-01', '2026-05-01'), historySegment('2026-05-01', '2026-07-01')],
+    note: HISTORY_NOTE,
+  },
+  {
+    name: 'Health 回填 7-11月',
+    needsExclude: true,
+    segments: [historySegment('2026-07-01', '2026-09-01'), historySegment('2026-09-01', '2026-11-04')],
+    note: HISTORY_NOTE,
+  },
 ];
 
 for (const target of targets) {
+  if (onlyNames && !onlyNames.includes(target.name)) continue;
+  if (target.needsExclude && !excludedSource) {
+    console.log(`- 跳过「${target.name}」：需要 --exclude "<iPhone 的来源名称>"`);
+    continue;
+  }
   const label = `${target.name} ${VERSION}`;
   const unsigned = join(OUT_DIR, `${label}.unsigned.shortcut`);
   const signed = join(OUT_DIR, `${label}.shortcut`);
