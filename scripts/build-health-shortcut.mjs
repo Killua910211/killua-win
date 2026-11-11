@@ -152,7 +152,9 @@ function action(identifier, parameters) {
  */
 const METRICS = [
   { type: 'Steps', name: '步数', prefix: 'steps', groupBy: 'None', raw: true },
-  { type: 'Active Calories', name: '活动能量', prefix: 'energy', groupBy: 'None', raw: true },
+  // 活动能量只有手表在记：11-10 按天分组与逐条去重同为 455.45。逐条读取最慢（手表约每分钟一条），
+  // 所以按天分组；累计型的按天汇总要带 cumulative_source 声明，网站才接受。
+  { type: 'Active Calories', name: '活动能量', prefix: 'energy', groupBy: 'Day', groupedCumulative: true },
   { type: 'Walking + Running Distance', name: '步行+跑步距离', prefix: 'distance', groupBy: 'None', raw: true },
   // 静息心率不分组：某天有两条（两块同名手表各记一条）时，按天分组会相加（09-29 得 122），
   // 逐条发、由网站按天取平均。每天只有一两条，数据量很小。
@@ -169,7 +171,7 @@ const METRICS = [
  * Exercise Minutes 实测报「未找到样本」，改用表里的 Exercise Time。
  */
 const FITNESS_METRICS = [
-  { type: 'Exercise Time', name: '锻炼分钟数', prefix: 'exercise', groupBy: 'None', raw: true },
+  { type: 'Exercise Time', name: '锻炼分钟数', prefix: 'exercise', groupBy: 'None', raw: true, withUnit: true },
   { type: 'Stand Hour', name: '站立', prefix: 'stand', groupBy: 'None' },
 ];
 
@@ -214,13 +216,15 @@ function buildSegment(actions, segment) {
   const fields = segment.days
     ? [textField('days', String(segment.days))]
     : [textField('since', segment.since), textField('until', segment.until)];
+  if (segment.metrics.some((metric) => metric.groupedCumulative)) fields.push(textField('cumulative_source', 'watch'));
   for (const { metric, find } of finds) {
     if (metric.raw) {
       fields.push(textField(`${metric.prefix}_start`, output(find, metric.name, [property('Start Date'), ISO_TIME])));
       fields.push(textField(`${metric.prefix}_end`, output(find, metric.name, [property('End Date'), ISO_TIME])));
       fields.push(textField(`${metric.prefix}_value`, output(find, metric.name, [property('Value')])));
       fields.push(textField(`${metric.prefix}_source`, output(find, metric.name, [property('Source')])));
-      fields.push(textField(`${metric.prefix}_unit`, output(find, metric.name, [property('Unit')])));
+      // 单位只有锻炼时间需要（秒或分钟）；步数、距离省掉这一列，少取一个属性能快一些。
+      if (metric.withUnit) fields.push(textField(`${metric.prefix}_unit`, output(find, metric.name, [property('Unit')])));
     } else if (metric.prefix === 'sleep') {
       fields.push(textField('sleep_start', output(find, metric.name, [property('Start Date'), ISO_TIME])));
       fields.push(textField('sleep_end', output(find, metric.name, [property('End Date'), ISO_TIME])));
@@ -304,10 +308,10 @@ rmSync(OUT_DIR, { recursive: true, force: true });
 mkdirSync(OUT_DIR, { recursive: true });
 
 const CORE_NOTE =
-  '步数、活动能量、距离、静息心率逐条带来源发送，网站按时间重叠去重或按天取平均；HRV、血氧按天分组；' +
+  '步数、距离、静息心率逐条带来源发送，网站按时间重叠去重或按天取平均；活动能量、HRV、血氧按天分组；' +
   '睡眠不分组（网站要每段起止时间来合并重叠、排除卧床与清醒）。';
 const BACKFILL_NOTE =
-  '一次性回填：第一段是最近 60 天的静息心率、HRV、血氧与睡眠；后两段各补 3 天的步数、活动能量、距离' +
+  '一次性回填：第一段是最近 60 天的静息心率、HRV、血氧与睡眠；后两段各补 3 天的步数、距离（逐条）与活动能量（按天）' +
   '（逐条读取一次超过约 3 天就会在手机上失败，所以分段）。后面的段失败不影响前面已写入的。';
 const FITNESS_NOTE = '健身圆环的锻炼分钟数（逐条带来源和单位，网站去重）与站立（每小时一条，网站数「已站立」的小时）。';
 
@@ -325,7 +329,7 @@ const TODAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai' }).fo
  * since / until 截掉，所以手机在日本时间（快一小时）或北京时间都能完整覆盖中间三天。
  * 两段写今天往前第 7～5 天和第 4～2 天；昨天和今天由每日同步写。
  */
-const cumulative = METRICS.filter((metric) => metric.raw);
+const cumulative = METRICS.filter((metric) => metric.raw || metric.groupedCumulative);
 const stepSegment = (fromBack) => {
   const since = shiftDate(TODAY, -fromBack - 1);
   const until = shiftDate(TODAY, -fromBack + 3);
@@ -340,7 +344,7 @@ const targets = [
   { name: 'Health 同步', segments: [{ days: 3, metrics: METRICS }], note: CORE_NOTE },
   {
     name: 'Health 回填',
-    segments: [{ days: 60, metrics: METRICS.filter((metric) => !metric.raw) }, stepSegment(7), stepSegment(4)],
+    segments: [{ days: 60, metrics: METRICS.filter((metric) => !metric.raw && !metric.groupedCumulative) }, stepSegment(7), stepSegment(4)],
     note: BACKFILL_NOTE,
   },
   { name: 'Health 锻炼', segments: [{ days: 3, metrics: FITNESS_METRICS }], note: FITNESS_NOTE },
