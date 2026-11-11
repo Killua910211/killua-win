@@ -47,6 +47,26 @@ const ENDPOINT = 'https://www.killua.win/api/health/sync';
 const OBJECT_REPLACEMENT = '￼';
 
 const token = readFileSync(join(ROOT, '.health-sync-token'), 'utf8').trim();
+
+/**
+ * 版本号＝生成时刻（北京时间），写进文件名、导入后的快捷指令名和运行结果第一行，
+ * 用户在 iCloud 云盘和快捷指令列表里一眼能分清新旧（2026-11-11 用户导入后误跑了旧版）。
+ */
+const VERSION = (() => {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Shanghai',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    })
+      .formatToParts(new Date())
+      .map((part) => [part.type, part.value]),
+  );
+  return `v${parts.month}${parts.day}-${parts.hour}${parts.minute}`;
+})();
 if (token.length < 32) {
   console.error('✗ .health-sync-token 不存在或太短；先按 docs/health-sync.md「更换令牌」生成。');
   process.exit(1);
@@ -149,13 +169,13 @@ const FITNESS_METRICS = [
   { type: 'Stand Hour', name: '站立', prefix: 'stand', groupBy: 'None' },
 ];
 
-function buildShortcut(days, metrics, note) {
+function buildShortcut(label, days, metrics, note) {
   const actions = [];
 
   actions.push(
     action('is.workflow.actions.comment', {
       WFCommentActionText:
-        `把最近 ${days} 天的 Apple Health 数据发到 killua.win 健康页。\n` +
+        `${label}：把最近 ${days} 天的 Apple Health 数据发到 killua.win 健康页。\n` +
         '由 killua-win 仓库 scripts/build-health-shortcut.mjs 生成；搭建说明与排错见 docs/health-sync.md。\n' +
         note,
     }),
@@ -232,9 +252,17 @@ function buildShortcut(days, metrics, note) {
   });
   actions.push(summary);
 
+  // 结果第一行是快捷指令名（含版本号），第二行起是网站返回的摘要。
+  const heading = `${label}\n`;
   actions.push(
     action('is.workflow.actions.showresult', {
-      Text: tokenString('', output(summary, 'Dictionary Value')),
+      Text: {
+        Value: {
+          string: `${heading}${OBJECT_REPLACEMENT}`,
+          attachmentsByRange: { [`{${heading.length}, 1}`]: output(summary, 'Dictionary Value') },
+        },
+        WFSerializationType: 'WFTextTokenString',
+      },
     }),
   );
 
@@ -280,13 +308,14 @@ const targets = [
 ];
 
 for (const target of targets) {
-  const unsigned = join(OUT_DIR, `${target.name}.unsigned.shortcut`);
-  const signed = join(OUT_DIR, `${target.name}.shortcut`);
+  const label = `${target.name} ${VERSION}`;
+  const unsigned = join(OUT_DIR, `${label}.unsigned.shortcut`);
+  const signed = join(OUT_DIR, `${label}.shortcut`);
   const xml =
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
     '<plist version="1.0">\n' +
-    toPlist(buildShortcut(target.days, target.metrics, target.note)) +
+    toPlist(buildShortcut(label, target.days, target.metrics, target.note)) +
     '\n</plist>\n';
   writeFileSync(unsigned, xml);
   execFileSync('plutil', ['-lint', unsigned], { stdio: 'pipe' });
