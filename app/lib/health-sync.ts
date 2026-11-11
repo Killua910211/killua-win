@@ -67,6 +67,8 @@ export type HealthSyncMetricReport = {
   rejected: number;
   examples: string[];
   message?: string;
+  /** 原始样本去重时各类来源的条数、原始合计与去重后计入的量（不含设备名）。 */
+  sources?: { kind: 'watch' | 'iphone' | 'other'; count: number; raw: number; kept: number }[];
 };
 
 export type HealthSyncPlan = {
@@ -350,10 +352,11 @@ function rejectLine(report: HealthSyncMetricReport, example: string) {
   if (report.examples.length < MAX_EXAMPLES) report.examples.push(example.slice(0, 80));
 }
 
-type Window = { since: string; today: string };
+type Window = { since: string; today: string; until?: string };
 
+/** 写入范围：since 之后到今天；带 until 时只写 until 之前（分段回填用）。 */
 function inWindow(date: string, window: Window) {
-  return date > window.since && date <= window.today;
+  return date > window.since && date <= window.today && (!window.until || date < window.until);
 }
 
 function finishReport(
@@ -507,9 +510,13 @@ function planCumulativeRaw(
 
   const totals = new Map<string, number>();
   const rawTotals: string[] = [];
+  const kinds = new Map<'watch' | 'iphone' | 'other', { count: number; raw: number; kept: number }>();
   let coverage: [number, number][] = [];
   for (const source of orderedSources) {
     const list = [...(bySource.get(source) ?? [])].sort((left, right) => left.start - right.start);
+    const rank = sourceRank(source);
+    const kind = rank === 0 ? 'watch' : rank === 1 ? 'iphone' : 'other';
+    const stats = kinds.get(kind) ?? { count: 0, raw: 0, kept: 0 };
     let sourceTotal = 0;
     for (const sample of list) {
       sourceTotal += sample.value;
@@ -520,11 +527,23 @@ function planCumulativeRaw(
           : isPointCovered(coverage, sample.start)
             ? 0
             : 1;
-      if (share > 0) totals.set(sample.date, (totals.get(sample.date) ?? 0) + sample.value * share);
+      if (share > 0) {
+        totals.set(sample.date, (totals.get(sample.date) ?? 0) + sample.value * share);
+        stats.kept += sample.value * share;
+      }
       coverage = insertInterval(coverage, sample.start, sample.end);
     }
+    stats.count += list.length;
+    stats.raw += sourceTotal;
+    kinds.set(kind, stats);
     rawTotals.push(`${source}（${list.length} 条）${Math.round(sourceTotal).toLocaleString('en-US')}`);
   }
+  report.sources = [...kinds.entries()].map(([kind, stats]) => ({
+    kind,
+    count: stats.count,
+    raw: round(stats.raw, 1),
+    kept: round(stats.kept, 1),
+  }));
 
   const rows: HealthDailyRow[] = [];
   let kept = 0;
@@ -862,11 +881,20 @@ export function planHealthSync(payload: unknown, nowMs: number): HealthSyncResul
   if (sinceDate >= today) {
     return { ok: false, error: `起点（${sinceDate}）必须早于今天（${today}）。` };
   }
+  let untilDate: string | undefined;
+  if (typeof body.until === 'string' && body.until.trim() !== '') {
+    const until = parseHealthDate(body.until);
+    if (!until) return { ok: false, error: `until 无法解析：${body.until.slice(0, 60)}` };
+    untilDate = until.localDate;
+    if (untilDate <= shiftHealthDate(sinceDate, 1)) {
+      return { ok: false, error: `until（${untilDate}）必须晚于起点后一天（${sinceDate}）。` };
+    }
+  }
   if (sinceDate < shiftHealthDate(today, -MAX_SYNC_DAYS)) {
     return { ok: false, error: `最早只能回溯 ${MAX_SYNC_DAYS} 天，请分批回填。` };
   }
 
-  const window: Window = { since: sinceDate, today };
+  const window: Window = { since: sinceDate, today, ...(untilDate ? { until: untilDate } : {}) };
   const unknownSleepValues = new Set<string>();
   const reports: HealthSyncMetricReport[] = [];
   const rows: HealthDailyRow[] = [];

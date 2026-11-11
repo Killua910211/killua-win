@@ -112,6 +112,10 @@ export async function POST(request: Request) {
     today: plan.today,
     rows: plan.rows.length,
     reports: plan.reports.map((report) => `${report.metric}:${report.status}:${report.days}:${report.rejected}`),
+    // 原始样本去重的来源构成：只记类别（手表 / iPhone / 其他）、条数与数量，不记设备名。
+    sources: plan.reports
+      .filter((report) => report.sources)
+      .map((report) => ({ metric: report.metric, sources: report.sources })),
     unknownSleepValues: plan.unknownSleepValues.length,
   });
 

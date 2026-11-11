@@ -279,6 +279,26 @@ check(
   exerciseUnits.ok && exerciseUnits.plan.rows.find((row) => row.metric === 'exercise')?.value === 2,
   `原始样本按单位换算：${JSON.stringify(exerciseUnits.ok ? exerciseUnits.plan.rows : exerciseUnits)}`,
 );
+// 来源构成：按类别汇总条数、原始合计与去重后计入的量。
+if (dedupe.ok) {
+  const kinds = dedupe.plan.reports.find((item) => item.metric === 'steps')?.sources ?? [];
+  const byKind = Object.fromEntries(kinds.map((item) => [item.kind, item]));
+  check(
+    byKind.watch?.count === 2 && byKind.watch?.raw === 1000 && byKind.watch?.kept === 1000 &&
+      byKind.iphone?.raw === 1650 && byKind.iphone?.kept === 500 && near(byKind.other?.kept, 2000 * 50 / 60, 0.1),
+    `来源构成：${JSON.stringify(kinds)}`,
+  );
+}
+// until：分段回填只写 until 之前的日期。
+const untilWindow = planHealthSync(
+  { since: '2026-11-03', until: '2026-11-07', resting_hr_date: lines('2026-11-03', '2026-11-04', '2026-11-06', '2026-11-07'), resting_hr_value: lines('60', '61', '62', '63') },
+  now,
+);
+check(
+  untilWindow.ok && untilWindow.plan.rows.map((row) => row.date).join() === '2026-11-04,2026-11-06',
+  `until 之前才写入：${JSON.stringify(untilWindow.ok ? untilWindow.plan.rows : untilWindow)}`,
+);
+check(!planHealthSync({ since: '2026-11-03', until: '2026-11-04', resting_hr_date: '2026-11-04', resting_hr_value: '60' }, now).ok, 'until 太早时拒绝');
 const singleSource = planHealthSync(
   { days: '10', energy_start: t('08:00'), energy_end: t('08:01'), energy_value: '12.5', energy_source: 'Killua的Apple Watch' },
   now,

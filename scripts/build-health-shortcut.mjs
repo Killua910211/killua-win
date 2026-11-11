@@ -87,6 +87,7 @@ function toPlist(value, indent = '') {
     return Number.isInteger(value) ? `${indent}<integer>${value}</integer>` : `${indent}<real>${value}</real>`;
   }
   if (typeof value === 'string') return `${indent}<string>${escapeXml(value)}</string>`;
+  if (value instanceof Date) return `${indent}<date>${value.toISOString().replace(/\.\d{3}Z$/, 'Z')}</date>`;
   if (Array.isArray(value)) {
     if (value.length === 0) return `${indent}<array/>`;
     return [`${indent}<array>`, ...value.map((item) => toPlist(item, next)), `${indent}</array>`].join('\n');
@@ -153,7 +154,9 @@ const METRICS = [
   { type: 'Steps', name: '步数', prefix: 'steps', groupBy: 'None', raw: true },
   { type: 'Active Calories', name: '活动能量', prefix: 'energy', groupBy: 'None', raw: true },
   { type: 'Walking + Running Distance', name: '步行+跑步距离', prefix: 'distance', groupBy: 'None', raw: true },
-  { type: 'Resting Heart Rate', name: '静息心率', prefix: 'resting_hr', groupBy: 'Day' },
+  // 静息心率不分组：某天有两条（两块同名手表各记一条）时，按天分组会相加（09-29 得 122），
+  // 逐条发、由网站按天取平均。每天只有一两条，数据量很小。
+  { type: 'Resting Heart Rate', name: '静息心率', prefix: 'resting_hr', groupBy: 'None' },
   { type: 'Heart Rate Variability', name: '心率变异性', prefix: 'hrv', groupBy: 'Day' },
   { type: 'Oxygen Saturation', name: '血氧', prefix: 'spo2', groupBy: 'Day' },
   { type: 'Sleep', name: '睡眠', prefix: 'sleep', groupBy: 'None' },
@@ -170,19 +173,17 @@ const FITNESS_METRICS = [
   { type: 'Stand Hour', name: '站立', prefix: 'stand', groupBy: 'None' },
 ];
 
-function buildShortcut(label, days, metrics, note) {
-  const actions = [];
+function dateRow(window) {
+  if (window.days) {
+    return { Bounded: true, Operator: 1001, Property: 'Start Date', Removable: false, Values: { Number: String(window.days), Unit: 16 } };
+  }
+  // 分段回填：开始日期介于两个固定时刻之间（运算符 1003，Date 与 AnotherDate）。
+  return { Bounded: true, Operator: 1003, Property: 'Start Date', Removable: false, Values: { Date: window.from, AnotherDate: window.to } };
+}
 
-  actions.push(
-    action('is.workflow.actions.comment', {
-      WFCommentActionText:
-        `${label}：把最近 ${days} 天的 Apple Health 数据发到 killua.win 健康页。\n` +
-        '由 killua-win 仓库 scripts/build-health-shortcut.mjs 生成；搭建说明与排错见 docs/health-sync.md。\n' +
-        note,
-    }),
-  );
-
-  const finds = metrics.map((metric) => {
+/** 一段：一组「查找健康样本」加一次「获取 URL 内容」，返回摘要所在的「获取字典值」动作。 */
+function buildSegment(actions, segment) {
+  const finds = segment.metrics.map((metric) => {
     const find = action('is.workflow.actions.filter.health.quantity', {
       WFContentItemFilter: {
         Value: {
@@ -196,13 +197,7 @@ function buildShortcut(label, days, metrics, note) {
               Removable: false,
               Values: { Enumeration: { Value: metric.type, WFSerializationType: 'WFStringSubstitutableState' } },
             },
-            {
-              Bounded: true,
-              Operator: 1001,
-              Property: 'Start Date',
-              Removable: false,
-              Values: { Number: String(days), Unit: 16 },
-            },
+            dateRow(segment),
           ],
         },
         WFSerializationType: 'WFContentPredicateTableTemplate',
@@ -216,7 +211,9 @@ function buildShortcut(label, days, metrics, note) {
     return { metric, find };
   });
 
-  const fields = [textField('days', String(days))];
+  const fields = segment.days
+    ? [textField('days', String(segment.days))]
+    : [textField('since', segment.since), textField('until', segment.until)];
   for (const { metric, find } of finds) {
     if (metric.raw) {
       fields.push(textField(`${metric.prefix}_start`, output(find, metric.name, [property('Start Date'), ISO_TIME])));
@@ -252,18 +249,36 @@ function buildShortcut(label, days, metrics, note) {
     WFDictionaryKey: 'summary',
   });
   actions.push(summary);
+  return summary;
+}
 
-  // 结果第一行是快捷指令名（含版本号），第二行起是网站返回的摘要。
-  const heading = `${label}\n`;
+/**
+ * segments 依次发送；每段独立成一次请求，前面的段先写进网站，后面的段失败不影响前面。
+ * 结果第一行是快捷指令名（含版本号），之后每段一个摘要。
+ */
+function buildShortcut(label, segments, note) {
+  const actions = [];
+  actions.push(
+    action('is.workflow.actions.comment', {
+      WFCommentActionText:
+        `${label}：把 Apple Health 数据发到 killua.win 健康页。\n` +
+        '由 killua-win 仓库 scripts/build-health-shortcut.mjs 生成；搭建说明与排错见 docs/health-sync.md。\n' +
+        note,
+    }),
+  );
+
+  const summaries = segments.map((segment) => buildSegment(actions, segment));
+
+  let text = `${label}`;
+  const attachments = {};
+  for (const summary of summaries) {
+    text += '\n';
+    attachments[`{${text.length}, 1}`] = output(summary, 'Dictionary Value');
+    text += OBJECT_REPLACEMENT;
+  }
   actions.push(
     action('is.workflow.actions.showresult', {
-      Text: {
-        Value: {
-          string: `${heading}${OBJECT_REPLACEMENT}`,
-          attachmentsByRange: { [`{${heading.length}, 1}`]: output(summary, 'Dictionary Value') },
-        },
-        WFSerializationType: 'WFTextTokenString',
-      },
+      Text: { Value: { string: text, attachmentsByRange: attachments }, WFSerializationType: 'WFTextTokenString' },
     }),
   );
 
@@ -289,23 +304,46 @@ rmSync(OUT_DIR, { recursive: true, force: true });
 mkdirSync(OUT_DIR, { recursive: true });
 
 const CORE_NOTE =
-  '步数、活动能量、距离逐条带来源发送，网站按时间重叠去重；静息心率、HRV、血氧按天分组；' +
+  '步数、活动能量、距离、静息心率逐条带来源发送，网站按时间重叠去重或按天取平均；HRV、血氧按天分组；' +
   '睡眠不分组（网站要每段起止时间来合并重叠、排除卧床与清醒）。';
 const BACKFILL_NOTE =
-  '一次性回填最近 60 天的静息心率、HRV、血氧与睡眠，用来和 10 月快照核对口径。';
-const STEPS_BACKFILL_NOTE =
-  '可选、一次性：逐条读最近 9 天的步数、活动能量、距离，把 7 日均值窗口一次补成去重后的数。数据量较大，失败也不影响每日同步。';
+  '一次性回填：第一段是最近 60 天的静息心率、HRV、血氧与睡眠；后两段各补 3 天的步数、活动能量、距离' +
+  '（逐条读取一次超过约 3 天就会在手机上失败，所以分段）。后面的段失败不影响前面已写入的。';
 const FITNESS_NOTE = '健身圆环的锻炼分钟数（逐条带来源和单位，网站去重）与站立（每小时一条，网站数「已站立」的小时）。';
 
+/** 北京时间某天零点往后若干小时的时刻。 */
+function beijing(date, hours = 0) {
+  return new Date(Date.parse(`${date}T00:00:00+08:00`) + hours * 3_600_000);
+}
+function shiftDate(date, days) {
+  return new Date(Date.parse(`${date}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
+}
+const TODAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai' }).format(new Date());
+
 /**
- * 每日同步只读最近 3 天（写入昨天和今天）：逐条读 7 天在真机上数据量过大而失败。
+ * 分段补步数：每段从 since 当天 22:00（北京时间）读到 until 当天 02:00，多读的边角让网站按
+ * since / until 截掉，所以手机在日本时间（快一小时）或北京时间都能完整覆盖中间三天。
+ * 两段写今天往前第 7～5 天和第 4～2 天；昨天和今天由每日同步写。
+ */
+const cumulative = METRICS.filter((metric) => metric.raw);
+const stepSegment = (fromBack) => {
+  const since = shiftDate(TODAY, -fromBack - 1);
+  const until = shiftDate(TODAY, -fromBack + 3);
+  return { metrics: cumulative, since, until, from: beijing(since, 22), to: beijing(until, 2) };
+};
+
+/**
+ * 每日同步只读最近 3 天（写入昨天和今天）：逐条读 7 天、9 天在真机上数据量过大而失败。
  * 自动化每天跑，昨天总会在今天被写成完整日；连续漏跑一天以上，那天的累计型指标会缺。
  */
 const targets = [
-  { name: 'Health 同步', days: 3, metrics: METRICS, note: CORE_NOTE },
-  { name: 'Health 回填', days: 60, metrics: METRICS.filter((metric) => !metric.raw), note: BACKFILL_NOTE },
-  { name: 'Health 步数回填', days: 9, metrics: METRICS.filter((metric) => metric.raw), note: STEPS_BACKFILL_NOTE },
-  { name: 'Health 锻炼', days: 3, metrics: FITNESS_METRICS, note: FITNESS_NOTE },
+  { name: 'Health 同步', segments: [{ days: 3, metrics: METRICS }], note: CORE_NOTE },
+  {
+    name: 'Health 回填',
+    segments: [{ days: 60, metrics: METRICS.filter((metric) => !metric.raw) }, stepSegment(7), stepSegment(4)],
+    note: BACKFILL_NOTE,
+  },
+  { name: 'Health 锻炼', segments: [{ days: 3, metrics: FITNESS_METRICS }], note: FITNESS_NOTE },
 ];
 
 for (const target of targets) {
@@ -316,7 +354,7 @@ for (const target of targets) {
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
     '<plist version="1.0">\n' +
-    toPlist(buildShortcut(label, target.days, target.metrics, target.note)) +
+    toPlist(buildShortcut(label, target.segments, target.note)) +
     '\n</plist>\n';
   writeFileSync(unsigned, xml);
   execFileSync('plutil', ['-lint', unsigned], { stdio: 'pipe' });
