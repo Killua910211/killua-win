@@ -4146,9 +4146,14 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .home-page .home-first-screen .page-hero--home,
 .home-page .home-first-screen .page-hero--home .page-hero__grid { min-height: 0; }
 .home-first-screen .page-hero--home {
+  display: flex;
   flex: 1 0 auto;
+  flex-direction: column;
   border-bottom: 0;
 }
+/* 栅格跟着 Hero 一起撑满剩余高度，标题才会像其他页面一样落在这一段的垂直中线上；
+   少了这一条，栅格只有内容高度，整块文字会贴到站点页眉下沿。 */
+.home-page .home-first-screen .page-hero--home .page-hero__grid { flex: 1 0 auto; }
 .home-first-screen__rail {
   position: relative;
   z-index: 2;
@@ -4162,7 +4167,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   color: var(--warm-white);
 }
 /* 取数还没回来时先占住同样的高度，数据到了不把下面的内容顶一下。
-   197px / 窄屏 218px 是实测的渲染高度（窄屏上「现在」那一行会折到第二行）。 */
+   197px / 窄屏 215px 是实测的渲染高度（窄屏上「现在」那一行会折到第二行）。 */
 .home-weather.is-pending { min-height: 197px; }
 
 .home-weather-head {
@@ -4588,7 +4593,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   /* 手机上「现在」那一行会折到第二行，天气条更高一些。 */
   .home-first-screen__rail { padding-bottom: 0; }
   .home-weather { padding-top: 13px; }
-  .home-weather.is-pending { min-height: 218px; }
+  .home-weather.is-pending { min-height: 215px; }
   .page-hero__decoration { display: none; }
   .page-hero--home .page-hero__decoration { display: block; }
   .page-hero--home .home-hero-aura { width: 120vw; opacity: 0.42; }

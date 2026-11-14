@@ -71,7 +71,7 @@ iPhone 快捷指令 ──POST /api/health/sync（Bearer 令牌）──→ Work
 - 每页通过 `app/lib/metadata.ts` 的 `buildMetadata()` 生成完整 metadata，避免 vinext 的整体覆盖语义丢失 OG 字段。
 - 构建期没有 D1；不要在 `generateStaticParams` 等构建阶段查询数据库。
 - 顶层页面通过共享 `PageHero` 使用同一首屏内容骨架；默认栏目提供标题、说明和标签，首页额外提供装饰层。当前接口不再提供 Hero 内嵌 CTA/footer 槽位，页内导航由 `SectionNav` 承担。
-- 首页首屏是 Hero 加天气条两块，由 `.home-first-screen` 按 `--hero-height` 分配高度：天气条按自身高度占位，Hero 以 `flex: 1 0 auto` 吃掉剩余高度，短屏上整块变高而不挤压标题。天气条是首页自己的内容模块，不扩大共享 `PageHero` 的接口。
+- 首页首屏是 Hero 加天气条两块，由 `.home-first-screen` 按 `--hero-height` 分配高度：天气条按自身高度占位，Hero 以 `flex: 1 0 auto` 吃掉剩余高度，短屏上整块变高而不挤压标题。天气条是首页自己的内容模块，不扩大共享 `PageHero` 的接口。Hero 让出高度时，内部 `.page-hero__grid` 必须一起撑满（同样 `flex: 1 0 auto`）：栅格靠 `align-items: center` 定位标题，只按内容高度排版的话文字会贴到页眉下沿，首页的垂直节奏就和其他栏目对不上。
 - Hero 的扫描层是低对比装饰，不应遮挡内容；当前包含斜向、横向、纵向、网格面和径向五种形式，并通过不同周期、相位和 `prefers-reduced-motion` 控制重叠。
 - `/mind` 是纯服务端渲染的使用说明库，不再保留心理认知主题切换、复习卡和卡片索引；页面内容以静态说明、页内导航和可复查的授权边界为主。
 - 深色面上 9–12px 的元信息文字用 `--meta-on-dark`，不要用 `--rock-gray`：后者在 `#080809`/`#0e0e11` 上只有 3.1–3.5:1。哲学专区与 `/mind` 已经改过，`/notes`、`/health` 与首页尚有同类选择器未改。

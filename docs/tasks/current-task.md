@@ -14,8 +14,8 @@
 - 缓存放在模块作用域：同一个 isolate 半小时只打一次上游，并发请求共用一次取数；刷新失败时 6 小时内的旧数据仍可显示，并在页面上标明「未能刷新」，再旧就显示读取失败。缓存只存按日期排好的天，「今天是哪天」每次请求当场判定，跨午夜不会把昨天标成今天。
 - 两个上游域名依次尝试：`api.open-meteo.com` 为主，`historical-forecast-api.open-meteo.com` 为备。开发机所在网络连不通前者（其 IP 超时），线上 Worker 两者都可达；有备用域名才能在本地用真实数据验证渲染。
 - `app/components/tokyo-weather.tsx` 服务端渲染 15 格，`weather-icon.tsx` 按 WMO 分组画线条图标，`weather-track.tsx` 是唯一的客户端部分：窄屏放不下时把「今天」滚到可视区中间（直接改 scrollLeft，不用 scrollIntoView，避免把整页顶走）。
-- 首屏结构：新增 `.home-first-screen` 容器按 `--hero-height` 分配高度，天气条按自身高度占位，Hero 用 `flex: 1 0 auto` 吃掉剩余高度。天气是首页自己的内容模块，不往共享 `PageHero` 上加 footer 槽位 —— 那条接口约束见 `docs/decisions/0004-hero-content-density.md`。
-- 取数挂在独立的 Suspense 边界下，fallback 占住同样的高度（桌面 197px、窄屏 218px，实测值），首页标题和正文不等这次取数。
+- 首屏结构：新增 `.home-first-screen` 容器按 `--hero-height` 分配高度，天气条按自身高度占位，Hero 用 `flex: 1 0 auto` 吃掉剩余高度。Hero 自身也改成列向 flex，内部 `.page-hero__grid` 同样 `flex: 1 0 auto` 撑满 —— 栅格靠 `align-items: center` 定位标题，不撑满就只有内容高度，整块文字会贴到站点页眉下沿，和其他页面的垂直居中对不上。天气是首页自己的内容模块，不往共享 `PageHero` 上加 footer 槽位 —— 那条接口约束见 `docs/decisions/0004-hero-content-density.md`。
+- 取数挂在独立的 Suspense 边界下，fallback 占住同样的高度（桌面 197px、窄屏 215px，实测值），首页标题和正文不等这次取数。
 
 ## 基线与执行
 
@@ -28,6 +28,14 @@
 - `pnpm check` 全绿（含新增的 `pnpm test:weather`）、`pnpm build` 通过。
 - 本地 `vinext dev` 以真实数据预览：1440×900、1280×700 两种桌面尺寸下 15 天一排放下，天气条底边分别在 831px / 637px，都在首屏内；375×812 窄屏横向滚动并把 11.14 居中，天气条底边 763px，仍在首屏内。
 - 本地控制台可见一条 `weather.fetch_failed`（`api.open-meteo.com` 超时），随后由备用域名取到数据 —— 这正是降级路径在本机网络下的表现。
+
+### 11-15 回访：首屏版式与其他页面对不上（已修）
+
+- 用户反馈首页版式和其他页面不一样。实测 1440×900：Hero 高 562px，但 `.page-hero__grid` 只有内容高度 320px 并顶在 Hero 上沿，眉题的 top 与 Hero 的 top 同为 72px —— 文字直接贴着站点页眉，而 `/health`、`/notes` 的同一块内容是垂直居中的。原因是首屏改造时把 `.page-hero__grid` 的 `min-height` 置 0，却没让它跟着 Hero 撑满。
+- 修法见上：Hero 改列向 flex，栅格 `flex: 1 0 auto`。
+- 复验（内容块中线 vs Hero 中线，应相等）：1440×900 → 353 / 353；1280×700 → 255 / 255；1024×768 → 288 / 288；375×812 下栅格连编号标签一起居中。
+- 四种尺寸下「页眉 + 首屏 + 分区栏」仍正好等于一屏：72+780+48 = 900、72+580+48 = 700、72+648+48 = 768、64+700+48 = 812。
+- 顺带把窄屏 fallback 高度从 218px 校到实测的 215px，数据到达时不再有 3px 位移；桌面 197px 与实测一致。
 
 ---
 
