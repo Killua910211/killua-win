@@ -4106,6 +4106,10 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .page-hero--home h1 { max-width: 9.5ch; }
 .page-hero__description {
   max-width: var(--hero-copy-width);
+  /* 说明固定留两行的位置（1.65 × 2 = 3.3em）。首屏整块是垂直居中的，说明少一行
+     就会把上面的眉题和标题整体顶高半行 —— 这正是 /notes、/health 比
+     /mind、/learning 高 14px 的原因。留足两行，各栏目的水平线才一致。 */
+  min-height: 3.3em;
   margin-top: 22px;
   color: rgba(242, 237, 232, 0.68);
   font-size: 17px;
@@ -4134,12 +4138,28 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
    docs/decisions/0004-hero-content-density.md。
    宽屏一排正好放下 15 天；放不下时横向滚动，由 WeatherTrack 把今天挪到中间。 */
 .home-first-screen {
+  /* 天气条连下边距一共占掉的高度。首屏文字要按整屏居中、与其他栏目对齐，
+     就得知道底下这一条吃掉了多少；197px 是天气条的实测渲染高度。 */
+  --home-weather-rail: calc(197px + clamp(8px, 2.2vh, 26px));
+  /* Hero 里除了这段位移之外还必须放得下的高度：桌面就是首屏文字块本身（实测
+     348px），窄屏是 268px（编号标签 + 文字块）。位移只能用掉剩下的空间 ——
+     超出的话 Hero 会被自己的内容撑高（flex-shrink 是 0），天气条和分区栏就被
+     挤出首屏，一屏的约束先破了。 */
+  --home-text-floor: 348px;
+  /* 文字要往下挪多少。够高时正好等于天气条的高度（推导见下），不够就按上面的
+     下限收窄：宁可那时对不齐，也不破坏一屏和不压到天气条上。 */
+  --home-text-shift: min(
+    var(--home-weather-rail),
+    max(0px, calc(var(--hero-height) - var(--home-weather-rail) - var(--home-text-floor)))
+  );
+
   display: flex;
   min-height: var(--hero-height);
   flex-direction: column;
   border-bottom: 1px solid var(--hero-rule);
-  /* Hero 的背景渐变收在 --black 上，容器用同一个底色，天气条接得上。 */
-  background: var(--black);
+  /* 整个首屏只有一张底：表面渐变改由容器按整屏铺，底部那段收黑落在首屏下沿
+     而不是 Hero 下沿，天气条因此落在渐变里，而不是另贴一块平涂的黑板。 */
+  background: var(--first-surface);
 }
 /* Hero 在这里不再自己占满一屏，改为吃掉天气条之外的剩余高度；
    flex-shrink 保持 0，短屏上宁可整块变高，也不把标题挤扁。 */
@@ -4150,10 +4170,27 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   flex: 1 0 auto;
   flex-direction: column;
   border-bottom: 0;
+  /* 背景由 .home-first-screen 整屏铺，Hero 自己不再画一层。 */
+  background: none;
 }
-/* 栅格跟着 Hero 一起撑满剩余高度，标题才会像其他页面一样落在这一段的垂直中线上；
-   少了这一条，栅格只有内容高度，整块文字会贴到站点页眉下沿。 */
+/* 栅格跟着 Hero 一起撑满剩余高度，否则它只有内容高度，整块文字会贴到页眉下沿。 */
 .home-page .home-first-screen .page-hero--home .page-hero__grid { flex: 1 0 auto; }
+/*
+  首屏文字按「整屏」居中，而不是按让出天气条之后的 Hero 居中 —— 这样首页的眉题、
+  标题和说明与 /notes、/health、/mind、/learning 落在同一条水平线上。
+
+  推导：Hero 高 = H − R（H 是首屏高度，R 是天气条高度），栅格再留 R 的上内距，
+  内容框就是 H − 2R，内容上沿 = R + (H − 2R − 块高)/2 = (H − 块高)/2，正好等于
+  其他栏目在整屏里居中的位置，与 R 无关。
+
+  屏幕矮到放不下时，--home-text-shift 自动收窄到还能放下为止：宁可那时对不齐，
+  也不让文字叠到天气条上。
+*/
+@media (min-width: 761px) {
+  .home-page .home-first-screen .page-hero--home .page-hero__grid {
+    padding-top: var(--home-text-shift);
+  }
+}
 .home-first-screen__rail {
   position: relative;
   z-index: 2;
@@ -4163,7 +4200,17 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 
 .home-weather {
   padding-top: 15px;
-  border-top: 1px solid rgba(242, 237, 232, 0.14);
+  /* 顶上这条分隔线两端淡出。整条实线会把天气条框成另一块面板；淡出之后它只是
+     一条地平线，天气条仍然落在首屏那张底上。 */
+  background-image: linear-gradient(
+    to right,
+    rgba(242, 237, 232, 0),
+    rgba(242, 237, 232, 0.16) 16%,
+    rgba(242, 237, 232, 0.16) 84%,
+    rgba(242, 237, 232, 0)
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
   color: var(--warm-white);
 }
 /* 取数还没回来时先占住同样的高度，数据到了不把下面的内容顶一下。
@@ -4589,9 +4636,21 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
     letter-spacing: -0.06em;
     line-height: 0.94;
   }
-  .page-hero__description { margin-top: 18px; font-size: 16px; }
-  /* 手机上「现在」那一行会折到第二行，天气条更高一些。 */
+  /* 手机上 /mind 和 /learning 的说明要三行，/notes、/health、首页两行；
+     窄屏因此按三行留位，各栏目的水平线才一致。 */
+  .page-hero__description { min-height: 4.95em; margin-top: 18px; font-size: 16px; }
+  /* 手机上「现在」那一行会折到第二行，天气条更高一些；下边距在窄屏是 0。 */
   .home-first-screen__rail { padding-bottom: 0; }
+  .home-first-screen {
+    --home-weather-rail: 215px;
+    --home-text-floor: 268px;
+  }
+  /* 窄屏上位移取代栅格原本的 42px/32px 上下内距：天气条已经把文字和下面隔开了，
+     再留一段只会把可用高度吃掉，让文字离其他栏目的水平线更远。 */
+  .home-page .home-first-screen .page-hero--home .page-hero__grid {
+    padding-top: var(--home-text-shift);
+    padding-bottom: 0;
+  }
   .home-weather { padding-top: 13px; }
   .home-weather.is-pending { min-height: 215px; }
   .page-hero__decoration { display: none; }

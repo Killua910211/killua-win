@@ -71,7 +71,10 @@ iPhone 快捷指令 ──POST /api/health/sync（Bearer 令牌）──→ Work
 - 每页通过 `app/lib/metadata.ts` 的 `buildMetadata()` 生成完整 metadata，避免 vinext 的整体覆盖语义丢失 OG 字段。
 - 构建期没有 D1；不要在 `generateStaticParams` 等构建阶段查询数据库。
 - 顶层页面通过共享 `PageHero` 使用同一首屏内容骨架；默认栏目提供标题、说明和标签，首页额外提供装饰层。当前接口不再提供 Hero 内嵌 CTA/footer 槽位，页内导航由 `SectionNav` 承担。
-- 首页首屏是 Hero 加天气条两块，由 `.home-first-screen` 按 `--hero-height` 分配高度：天气条按自身高度占位，Hero 以 `flex: 1 0 auto` 吃掉剩余高度，短屏上整块变高而不挤压标题。天气条是首页自己的内容模块，不扩大共享 `PageHero` 的接口。Hero 让出高度时，内部 `.page-hero__grid` 必须一起撑满（同样 `flex: 1 0 auto`）：栅格靠 `align-items: center` 定位标题，只按内容高度排版的话文字会贴到页眉下沿，首页的垂直节奏就和其他栏目对不上。
+- 五个栏目首屏的眉题、标题和说明落在同一条水平线上，这是一条要守的约束。首屏文字整块垂直居中，所以块高一变、水平线就跟着变：`.page-hero__description` 因此固定留两行位（窄屏三行），说明写一行还是两行都不影响上沿。改首屏文案或说明的行高、字号时要一起复核这条线。
+- 首页首屏是 Hero 加天气条两块，由 `.home-first-screen` 按 `--hero-height` 分配高度：天气条按自身高度占位，Hero 以 `flex: 1 0 auto` 吃掉剩余高度。天气条是首页自己的内容模块，不扩大共享 `PageHero` 的接口。Hero 让出高度时，内部 `.page-hero__grid` 必须一起撑满（同样 `flex: 1 0 auto`），否则栅格只有内容高度，文字会贴到页眉下沿。
+- 首屏表面渐变 `--first-surface` 画在 `.home-first-screen` 上、Hero 自身 `background: none`，渐变按整屏铺开：画在 Hero 上的话，底部那段收黑会提前在 Hero 下沿收完，天气条落在平涂底色上，看着像另贴的一块板。
+- 首页文字要和其他栏目对齐，就得按整屏居中而不是按让出天气条后的 Hero 居中，靠 `--home-text-shift`（栅格上内距）补这段差。它的上限 `--home-text-floor` 必须按 **Hero 还要放下多少内容** 来定，而不是按文字离天气条多远：Hero 的 `flex-shrink` 是 0，上内距一超过剩余空间，Hero 就被自己的内容撑高，天气条和分区栏被挤出首屏。视口高约 900px 以上能完全对齐，更矮时位移收到上限为止，优先保一屏。
 - Hero 的扫描层是低对比装饰，不应遮挡内容；当前包含斜向、横向、纵向、网格面和径向五种形式，并通过不同周期、相位和 `prefers-reduced-motion` 控制重叠。
 - `/mind` 是纯服务端渲染的使用说明库，不再保留心理认知主题切换、复习卡和卡片索引；页面内容以静态说明、页内导航和可复查的授权边界为主。
 - 深色面上 9–12px 的元信息文字用 `--meta-on-dark`，不要用 `--rock-gray`：后者在 `#080809`/`#0e0e11` 上只有 3.1–3.5:1。哲学专区与 `/mind` 已经改过，`/notes`、`/health` 与首页尚有同类选择器未改。
