@@ -1,6 +1,6 @@
 # KILLUA.WIN 架构
 
-最后复核：2026-11-11。以下事实以当前工作树为准；工作树尚未提交的内容不等于正式网站已发布内容。
+最后复核：2026-11-14。以下事实以当前工作树为准；工作树尚未提交的内容不等于正式网站已发布内容。
 
 ## 产品边界
 
@@ -16,7 +16,8 @@ vinext / Next App Router 兼容层
 Vite 构建 → Cloudflare Worker（wrangler.jsonc）
   ├─ D1：文章、站点数据与 Apple Health 日汇总（binding DB，正式运行时主存储）
   ├─ 静态文章回退：app/lib/static-posts.ts（D1 未初始化时使用）
-  └─ 外部公开端点：os.killua.win/api/public/stats
+  ├─ 外部公开端点：os.killua.win/api/public/stats（首页 OS 汇总）
+  └─ 外部公开端点：open-meteo.com/v1/forecast（首页首屏东京天气，无密钥）
 
 iPhone 快捷指令 ──POST /api/health/sync（Bearer 令牌）──→ Worker → D1 health_daily
 ```
@@ -31,7 +32,7 @@ iPhone 快捷指令 ──POST /api/health/sync（Bearer 令牌）──→ Work
 
 | 路径 | 责任 | 主要来源 |
 | --- | --- | --- |
-| `/` | 首页、Hero、OS 脱敏汇总 | `app/page.tsx`、`app/components/system-readout.tsx` |
+| `/` | 首页、Hero、首屏东京天气、OS 脱敏汇总 | `app/page.tsx`、`app/components/tokyo-weather.tsx`、`app/components/system-readout.tsx` |
 | `/notes` | 文章归档与前言 | `app/notes/page.tsx`、`app/components/notes-archive.tsx` |
 | `/notes/[slug]` | 文章详情与 Article JSON-LD | `app/notes/[slug]/page.tsx` |
 | `/notes/category/[category]` | 分类归档 | `app/notes/category/[category]/page.tsx` |
@@ -53,6 +54,7 @@ iPhone 快捷指令 ──POST /api/health/sync（Bearer 令牌）──→ Work
 
 - 文章正文的规范来源进入 `migrations/` 并回放到 D1；仓库不维护 Markdown 正文副本。`app/lib/static-posts.ts` 是由迁移生成的只读回退，不是第二套手工内容源。
 - 首页 OS 区只读公开数字、日期和受限短标签；`system-readout.tsx` 对运行期数据逐项校验，不渲染标题、备注或正文。
+- 首页首屏的东京天气来自 Open-Meteo 的公开 `/v1/forecast`（无密钥、不带任何本站数据出站），一次请求取过去 7 天、今天和未来 7 天共 15 天加当前实况。`app/lib/weather.ts` 逐日逐字段做运行期校验（日期格式、WMO 代码 0–99 整数、气温 −80–70 ℃、降水 0–2000 mm、概率 0–100），不合法只丢那一天；解析口径由 `pnpm test:weather` 回归。模块作用域缓存 30 分钟，刷新失败时 6 小时内显示上一次数据并在页面上标明，再旧则显示读取失败；缓存不存「今天是哪天」，跨午夜由每次请求重新判定。主域名不可达时退到 `historical-forecast-api.open-meteo.com`。
 - `/health` 的「7 日均值」由 `app/lib/health-live.ts` 每次请求从 D1 `health_daily` 计算（以最近一个已同步的完整日为终点的 7 天，最多比昨天早 7 天；同步每周一次，缺失不记 0，运行期逐行校验，读取失败显示「读取失败」）；「长期趋势」与其余内容仍来自 `app/lib/health.ts` 的静态数据，2026 年柱子待一次性回填核对后再改读 D1。计时器以服务端时间为首屏基准。
 - Apple Health 日汇总由 iPhone 快捷指令每天推送最近 10 天到 `/api/health/sync`，以 Worker secret `HEALTH_SYNC_TOKEN` 做 Bearer 鉴权，写入 D1 `health_daily`（累计型指标以带来源与单位的原始样本上送，按时间重叠去重，优先级同「健康」App，同名来源内也去重；按天汇总只在带 `cumulative_source: watch` 声明时接受；每个指标每天一行，幂等覆盖；当天标记未完成；可写入的指标由解析模块白名单决定，表上不再枚举指标名）。快捷指令文件由 `scripts/build-health-shortcut.mjs` 生成并签名（含令牌，输出在已忽略的 `outputs/`）。接口只写不读，没有公开读取端点；只存按日聚合值，不存原始样本与来源。解析口径在 `app/lib/health-sync.ts`，由 `pnpm test:health-sync` 回归；手机端搭建与排错见 [health-sync.md](health-sync.md)。
 - 哲学知识库的结构化数据来自 `data.json`：当前共 55 个节点，包括 23 个核心问题、6 个问题领域、5 个传统导航、7 个历史时段、10 个传统线索和 1 个方法论争论。本轮不以增加节点为目标，节点数不变。
@@ -69,6 +71,7 @@ iPhone 快捷指令 ──POST /api/health/sync（Bearer 令牌）──→ Work
 - 每页通过 `app/lib/metadata.ts` 的 `buildMetadata()` 生成完整 metadata，避免 vinext 的整体覆盖语义丢失 OG 字段。
 - 构建期没有 D1；不要在 `generateStaticParams` 等构建阶段查询数据库。
 - 顶层页面通过共享 `PageHero` 使用同一首屏内容骨架；默认栏目提供标题、说明和标签，首页额外提供装饰层。当前接口不再提供 Hero 内嵌 CTA/footer 槽位，页内导航由 `SectionNav` 承担。
+- 首页首屏是 Hero 加天气条两块，由 `.home-first-screen` 按 `--hero-height` 分配高度：天气条按自身高度占位，Hero 以 `flex: 1 0 auto` 吃掉剩余高度，短屏上整块变高而不挤压标题。天气条是首页自己的内容模块，不扩大共享 `PageHero` 的接口。
 - Hero 的扫描层是低对比装饰，不应遮挡内容；当前包含斜向、横向、纵向、网格面和径向五种形式，并通过不同周期、相位和 `prefers-reduced-motion` 控制重叠。
 - `/mind` 是纯服务端渲染的使用说明库，不再保留心理认知主题切换、复习卡和卡片索引；页面内容以静态说明、页内导航和可复查的授权边界为主。
 - 深色面上 9–12px 的元信息文字用 `--meta-on-dark`，不要用 `--rock-gray`：后者在 `#080809`/`#0e0e11` 上只有 3.1–3.5:1。哲学专区与 `/mind` 已经改过，`/notes`、`/health` 与首页尚有同类选择器未改。
@@ -79,7 +82,7 @@ iPhone 快捷指令 ──POST /api/health/sync（Bearer 令牌）──→ Work
 - CI 当前执行 `pnpm install --frozen-lockfile`、`pnpm lint`、`pnpm exec tsc --noEmit` 和 `node scripts/replay-migrations.mjs`。
 - CI 当前不执行 `pnpm build`，也不负责 Site 测试环境或正式网站部署；构建和部署仍由协作流程按需执行。
 - 项目没有独立的测试目录；数据库结构和迁移内容的回放脚本是当前主要的自动化验证脚本。
-- 本地 `pnpm check` 是 CI 三项检查的快捷串联；完整发布前仍需另跑 `pnpm build`。
+- 本地 `pnpm check` 串联 CI 的三项检查，另加 `pnpm test:philosophy`、`pnpm test:health-sync` 和 `pnpm test:weather`；完整发布前仍需另跑 `pnpm build`。
 - 普通无数据库改动的正式发布使用 `pnpm deploy:only`；数据库结构或内容迁移才使用 `pnpm deploy`。
 
 ## 环境地图

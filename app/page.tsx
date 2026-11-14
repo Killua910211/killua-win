@@ -1,8 +1,10 @@
 import { Suspense } from 'react';
+import { ContentContainer } from '@/app/components/content-container';
 import { SiteFooter } from '@/app/components/site-footer';
 import { SiteHeader } from '@/app/components/site-header';
 import { PageHero } from '@/app/components/page-hero';
 import { SystemReadout } from '@/app/components/system-readout';
+import { TokyoWeather } from '@/app/components/tokyo-weather';
 import { buildMetadata, SITE } from '@/app/lib/metadata';
 
 export const metadata = buildMetadata({
@@ -27,31 +29,51 @@ export default function Home() {
       <SiteHeader current="home" />
 
       <main id="main" className="home-page">
-        <PageHero
-          decoration={
-            <div className="home-hero-effects">
-              <span className="home-hero-aura" />
-              <span className="home-hero-orbit-bloom" />
-              <span className="hero-scan hero-scan--diagonal" />
-              <span className="hero-scan hero-scan--horizontal" />
-              <span className="hero-scan hero-scan--vertical" />
-              <span className="hero-scan hero-scan--grid" />
-              <span className="hero-scan hero-scan--radial" />
-              <span className="home-hero-dust home-hero-dust-one" />
-              <span className="home-hero-dust home-hero-dust-two" />
-              <span className="home-hero-dust home-hero-dust-three" />
-              <div className="orb"><div className="orb-ring" /><div className="orb-core" /><span>K</span></div>
-            </div>
-          }
-          description="写下长期思考，记录身体的变化，也整理我和 AI 一起思考的过程。"
-          eyebrow="PERSONAL SPACE / 东京"
-          id="top"
-          label="Personal index"
-          number="01"
-          title={<><span>A QUIET</span><br />PLACE FOR<br /><span className="outline">LOUD</span> IDEAS.</>}
-          titleId="home-title"
-          variant="home"
-        />
+        {/*
+          首屏是 Hero 加天气条两块，放在同一个容器里分配 100dvh 的高度：
+          Hero 让出天气条占掉的那一段，合起来仍然正好一屏。天气是首页自己的
+          内容模块，不走共享 PageHero 的接口 —— 那个接口按
+          docs/decisions/0004-hero-content-density.md 只保留标签、标题、说明
+          和装饰。
+        */}
+        <div className="home-first-screen">
+          <PageHero
+            decoration={
+              <div className="home-hero-effects">
+                <span className="home-hero-aura" />
+                <span className="home-hero-orbit-bloom" />
+                <span className="hero-scan hero-scan--diagonal" />
+                <span className="hero-scan hero-scan--horizontal" />
+                <span className="hero-scan hero-scan--vertical" />
+                <span className="hero-scan hero-scan--grid" />
+                <span className="hero-scan hero-scan--radial" />
+                <span className="home-hero-dust home-hero-dust-one" />
+                <span className="home-hero-dust home-hero-dust-two" />
+                <span className="home-hero-dust home-hero-dust-three" />
+                <div className="orb"><div className="orb-ring" /><div className="orb-core" /><span>K</span></div>
+              </div>
+            }
+            description="写下长期思考，记录身体的变化，也整理我和 AI 一起思考的过程。"
+            eyebrow="PERSONAL SPACE / 东京"
+            id="top"
+            label="Personal index"
+            number="01"
+            title={<><span>A QUIET</span><br />PLACE FOR<br /><span className="outline">LOUD</span> IDEAS.</>}
+            titleId="home-title"
+            variant="home"
+          />
+
+          {/*
+            天气要跨站取 Open-Meteo。首屏的标题和正文不该等这次取数，所以单独
+            给它一个 Suspense 边界；fallback 占住同样的高度，数据回来时不会把
+            整屏顶一下。
+          */}
+          <ContentContainer className="home-first-screen__rail">
+            <Suspense fallback={<div className="home-weather is-pending" aria-hidden="true" />}>
+              <TokyoWeather />
+            </Suspense>
+          </ContentContainer>
+        </div>
 
         <div className="section-local-nav home-section-bar" aria-hidden="true" />
 

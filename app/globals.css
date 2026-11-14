@@ -4127,6 +4127,176 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 }
 .page-hero--default .page-hero__label,
 .page-hero--default .page-hero__body { position: relative; z-index: 2; }
+/* ── 首屏天气条 ──────────────────────────────────────────────
+   首页首屏 = Hero + 东京天气（过去 7 天 / 今天 / 未来 7 天）。
+   两块放在同一个 100dvh 的容器里：天气按自身高度占位，Hero 伸缩吃掉剩下的，
+   合起来仍是一屏。天气不进共享 PageHero 的接口，见
+   docs/decisions/0004-hero-content-density.md。
+   宽屏一排正好放下 15 天；放不下时横向滚动，由 WeatherTrack 把今天挪到中间。 */
+.home-first-screen {
+  display: flex;
+  min-height: var(--hero-height);
+  flex-direction: column;
+  border-bottom: 1px solid var(--hero-rule);
+  /* Hero 的背景渐变收在 --black 上，容器用同一个底色，天气条接得上。 */
+  background: var(--black);
+}
+/* Hero 在这里不再自己占满一屏，改为吃掉天气条之外的剩余高度；
+   flex-shrink 保持 0，短屏上宁可整块变高，也不把标题挤扁。 */
+.home-page .home-first-screen .page-hero--home,
+.home-page .home-first-screen .page-hero--home .page-hero__grid { min-height: 0; }
+.home-first-screen .page-hero--home {
+  flex: 1 0 auto;
+  border-bottom: 0;
+}
+.home-first-screen__rail {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  padding-bottom: clamp(8px, 2.2vh, 26px);
+}
+
+.home-weather {
+  padding-top: 15px;
+  border-top: 1px solid rgba(242, 237, 232, 0.14);
+  color: var(--warm-white);
+}
+/* 取数还没回来时先占住同样的高度，数据到了不把下面的内容顶一下。
+   197px / 窄屏 218px 是实测的渲染高度（窄屏上「现在」那一行会折到第二行）。 */
+.home-weather.is-pending { min-height: 197px; }
+
+.home-weather-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 22px;
+  margin-bottom: 11px;
+}
+.home-weather-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-weight: 400;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.home-weather-city { color: rgba(242, 237, 232, 0.9); }
+.home-weather-note { color: rgba(242, 237, 232, 0.44); }
+
+.home-weather-now {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: rgba(242, 237, 232, 0.5);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.home-weather-now-icon { width: 21px; height: 23px; color: var(--ember); }
+.home-weather-now-temp {
+  color: var(--warm-white);
+  font-family: var(--font-body);
+  font-size: 21px;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.home-weather-now-label { color: rgba(242, 237, 232, 0.76); font-size: 12px; letter-spacing: 0.04em; }
+.home-weather-now-meta + .home-weather-now-meta::before {
+  margin-right: 9px;
+  color: rgba(242, 237, 232, 0.26);
+  content: '/';
+}
+.home-weather-stale {
+  width: 100%;
+  margin: 0;
+  color: #ffd166;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.home-weather-track {
+  display: grid;
+  overflow-x: auto;
+  margin: 0;
+  padding: 0;
+  gap: 1px;
+  grid-auto-columns: minmax(72px, 1fr);
+  grid-auto-flow: column;
+  list-style: none;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+.home-weather-track::-webkit-scrollbar { display: none; }
+
+.home-weather-day {
+  display: grid;
+  justify-items: center;
+  padding: 9px 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  gap: 5px;
+  scroll-snap-align: center;
+  text-align: center;
+  transition: border-color var(--motion-base) ease, background var(--motion-base) ease;
+}
+/* 已经过去的日子压暗，视线先落在今天和之后。 */
+.home-weather-day.is-past { opacity: 0.58; }
+.home-weather-day.is-today {
+  border-color: rgba(224, 99, 42, 0.5);
+  background: rgba(224, 99, 42, 0.09);
+}
+.home-weather-day:hover { border-color: rgba(242, 237, 232, 0.2); }
+.home-weather-day.is-today:hover { border-color: rgba(224, 99, 42, 0.72); }
+
+.home-weather-day-when {
+  display: grid;
+  margin: 0;
+  gap: 2px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.07em;
+}
+.home-weather-day-name { color: rgba(242, 237, 232, 0.82); }
+.home-weather-day-date { color: rgba(242, 237, 232, 0.4); }
+.home-weather-day.is-today .home-weather-day-name { color: var(--ember); }
+
+.home-weather-day .weather-icon { color: rgba(242, 237, 232, 0.7); }
+.home-weather-day.is-today .weather-icon { color: var(--ember); }
+
+.home-weather-day-label {
+  margin: 0;
+  color: rgba(242, 237, 232, 0.58);
+  font-size: 11px;
+  line-height: 1.25;
+}
+.home-weather-day-temp {
+  display: flex;
+  gap: 7px;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.home-weather-day-high { color: var(--warm-white); }
+.home-weather-day-low { color: rgba(242, 237, 232, 0.44); }
+.home-weather-day-rain {
+  margin: 0;
+  color: rgba(242, 237, 232, 0.3);
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+.home-weather-day-rain.is-wet { color: var(--glacier); }
+
+.weather-icon { display: block; width: 24px; height: 26px; }
+
 .page-hero__ambient {
   position: absolute;
   inset: 0;
@@ -4415,6 +4585,10 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
     line-height: 0.94;
   }
   .page-hero__description { margin-top: 18px; font-size: 16px; }
+  /* 手机上「现在」那一行会折到第二行，天气条更高一些。 */
+  .home-first-screen__rail { padding-bottom: 0; }
+  .home-weather { padding-top: 13px; }
+  .home-weather.is-pending { min-height: 218px; }
   .page-hero__decoration { display: none; }
   .page-hero--home .page-hero__decoration { display: block; }
   .page-hero--home .home-hero-aura { width: 120vw; opacity: 0.42; }
