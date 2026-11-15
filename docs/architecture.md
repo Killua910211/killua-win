@@ -74,6 +74,7 @@ iPhone 快捷指令 ──POST /api/health/sync（Bearer 令牌）──→ Work
 - 五个栏目首屏的眉题、标题和说明落在同一条水平线上，这是一条要守的约束。首屏文字整块垂直居中，所以块高一变、水平线就跟着变：`.page-hero__description` 因此固定留两行位（窄屏三行），说明写一行还是两行都不影响上沿。改首屏文案或说明的行高、字号时要一起复核这条线。
 - 首页首屏是 Hero 加天气条两块，由 `.home-first-screen` 按 `--hero-height` 分配高度：天气条按自身高度占位，Hero 以 `flex: 1 0 auto` 吃掉剩余高度。天气条是首页自己的内容模块，不扩大共享 `PageHero` 的接口。Hero 让出高度时，内部 `.page-hero__grid` 必须一起撑满（同样 `flex: 1 0 auto`），否则栅格只有内容高度，文字会贴到页眉下沿。
 - 首屏表面渐变 `--first-surface` 画在 `.home-first-screen` 上、Hero 自身 `background: none`，渐变按整屏铺开：画在 Hero 上的话，底部那段收黑会提前在 Hero 下沿收完，天气条落在平涂底色上，看着像另贴的一块板。
+- 天气条放不下时横向滚动，被切在轨道边上的半张卡要渐隐，不能硬切：360px 宽上硬切会把「晴间少云」切成「间少云」，看着是排版坏了而不是「还能滑」。渐隐由 `weather-track.tsx` 按滚动位置分别打开两侧（`data-edge-start` / `data-edge-end`），滑到头的那侧关掉，完整的首尾卡片不会被无端压暗；窄屏另把轨道拉到屏幕两边（`margin-inline: calc(50% - 50vw)` 配等量内距），切口落在屏幕边而不是栏距里。
 - 首屏的特效层（`.page-hero__decoration` 下的环境光、扫描线、尘点，以及 `.page-hero::before` 的网格底纹）同样要按整屏铺：它们都是 `inset: 0` 的绝对定位，所以 `.home-first-screen .page-hero--home` 取 `position: static`，把定位上下文和 `overflow` 让给 `.home-first-screen`。否则特效在 Hero 下沿齐刷刷断掉，底色虽然连着，天气条那一段却只剩平涂。两处连带约束：orb 的百分比定位会往下漂「锚点 × 天气条高」，锚点写成 `--orb-anchor` 并在 `transform` 里按同一个数减回去（`top` 和补偿必须同源）；指针光晕的百分比要按特效层而不是 Hero 的盒子换算，见 `app/components/page-hero.tsx`。
 - 首页文字要和其他栏目对齐，就得按整屏居中而不是按让出天气条后的 Hero 居中，靠 `--home-text-shift`（栅格上内距）补这段差。它的上限 `--home-text-floor` 必须按 **Hero 还要放下多少内容** 来定，而不是按文字离天气条多远：Hero 的 `flex-shrink` 是 0，上内距一超过剩余空间，Hero 就被自己的内容撑高，天气条和分区栏被挤出首屏。视口高约 900px 以上能完全对齐，更矮时位移收到上限为止，优先保一屏。
 - Hero 的扫描层是低对比装饰，不应遮挡内容；当前包含斜向、横向、纵向、网格面和径向五种形式，并通过不同周期、相位和 `prefers-reduced-motion` 控制重叠。

@@ -4291,6 +4291,14 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 }
 
 .home-weather-track {
+  /* 放不下时两端渐隐。没有它，被切在轨道边上的半张卡是从文字中间齐刷刷截断的
+     （360px 宽上「晴间少云」只剩「间少云」），看着像排版坏了而不是「还能滑」。
+     宽度取 0 就等于没有遮罩：由 weather-track.tsx 按滚动位置只给还有内容的
+     那一侧打开，滑到头的一侧保持清晰，完整的首尾卡片不会被无端压暗。 */
+  --weather-fade: 72px;
+  --weather-fade-start: 0px;
+  --weather-fade-end: 0px;
+
   display: grid;
   overflow-x: auto;
   margin: 0;
@@ -4299,10 +4307,27 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   grid-auto-columns: minmax(72px, 1fr);
   grid-auto-flow: column;
   list-style: none;
+  /* iOS 15.4 之前只认带前缀的那个，这条渐隐在那些机器上也要生效。 */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--weather-fade-start),
+    #000 calc(100% - var(--weather-fade-end)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--weather-fade-start),
+    #000 calc(100% - var(--weather-fade-end)),
+    transparent 100%
+  );
   overscroll-behavior-x: contain;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
 }
+.home-weather-track[data-edge-start='true'] { --weather-fade-start: var(--weather-fade); }
+.home-weather-track[data-edge-end='true'] { --weather-fade-end: var(--weather-fade); }
 .home-weather-track::-webkit-scrollbar { display: none; }
 
 .home-weather-day {
@@ -4674,6 +4699,18 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   }
   .home-weather { padding-top: 13px; }
   .home-weather.is-pending { min-height: 215px; }
+  /* 窄屏上轨道拉到屏幕两边：半张卡切在屏幕边上，而不是切在栏距里、后面还留
+     一条空白 —— 后者看着是卡片被截断，前者是再正常不过的「右边还有」。首尾
+     仍按栏距内缩，第一张卡和上面的「东京」对齐。渐隐也相应收窄：窄屏一屏只
+     放得下四五张卡，72px 会吃掉太多。 */
+  .home-weather-track {
+    --weather-fade: 52px;
+
+    margin-right: calc(50% - 50vw);
+    margin-left: calc(50% - 50vw);
+    padding-right: calc(50vw - 50%);
+    padding-left: calc(50vw - 50%);
+  }
   .page-hero__decoration { display: none; }
   .page-hero--home .page-hero__decoration { display: block; }
   .page-hero--home .home-hero-aura { width: 120vw; opacity: 0.42; }
