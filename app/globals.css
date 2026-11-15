@@ -4153,12 +4153,17 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
     max(0px, calc(var(--hero-height) - var(--home-weather-rail) - var(--home-text-floor)))
   );
 
+  position: relative;
   display: flex;
+  overflow: hidden;
   min-height: var(--hero-height);
   flex-direction: column;
   border-bottom: 1px solid var(--hero-rule);
   /* 整个首屏只有一张底：表面渐变改由容器按整屏铺，底部那段收黑落在首屏下沿
-     而不是 Hero 下沿，天气条因此落在渐变里，而不是另贴一块平涂的黑板。 */
+     而不是 Hero 下沿，天气条因此落在渐变里，而不是另贴一块平涂的黑板。
+     定位和裁剪也归这里：Hero 让出定位上下文之后，网格底纹、环境光、扫描线和
+     尘点都按这个盒子铺，天气条那一段才一起被罩住；溢出的部分在这里收掉，
+     不会把横向滚动条带出来。 */
   background: var(--first-surface);
 }
 /* Hero 在这里不再自己占满一屏，改为吃掉天气条之外的剩余高度；
@@ -4166,7 +4171,15 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 .home-page .home-first-screen .page-hero--home,
 .home-page .home-first-screen .page-hero--home .page-hero__grid { min-height: 0; }
 .home-first-screen .page-hero--home {
+  /*
+    Hero 在首屏里不当定位上下文。它里面的特效层和 .page-hero::before 的网格底纹
+    都是 inset: 0 的绝对定位，position: static 之后它们改按 .home-first-screen
+    定位，于是一直铺到天气条下沿 —— 否则特效在 Hero 下沿齐刷刷断掉，天气条看着
+    就是另贴的一块平板。裁剪同样交给 .home-first-screen，这里必须放开。
+  */
+  position: static;
   display: flex;
+  overflow: visible;
   flex: 1 0 auto;
   flex-direction: column;
   border-bottom: 0;
@@ -4175,6 +4188,12 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
 }
 /* 栅格跟着 Hero 一起撑满剩余高度，否则它只有内容高度，整块文字会贴到页眉下沿。 */
 .home-page .home-first-screen .page-hero--home .page-hero__grid { flex: 1 0 auto; }
+/* 特效层比 Hero 高出一条天气条，orb 的 top 百分比会跟着往下挪 锚点 × 天气条高
+   这么多；这里按同一个锚点减回去，它就停在原处 —— 这次改的是背景铺到哪儿，
+   不是重新摆这颗球。锚点写成 --orb-anchor，是为了让 top 和这里只有一个来源。 */
+.home-first-screen .page-hero--home .orb {
+  transform: translateY(calc(-50% - var(--orb-anchor) * var(--home-weather-rail)));
+}
 /*
   首屏文字按「整屏」居中，而不是按让出天气条之后的 Hero 居中 —— 这样首页的眉题、
   标题和说明与 /notes、/health、/mind、/learning 落在同一条水平线上。
@@ -4529,7 +4548,9 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
     radial-gradient(circle at 98% 15%, rgba(242, 237, 232, 0.28) 0 0.8px, transparent 1.4px);
   animation: home-dust-three 43s ease-in-out infinite;
 }
-.page-hero--home .orb { top: 50%; right: clamp(140px, 13vw, 216px); width: min(24vw, 310px); transform: translateY(-50%); }
+/* --orb-anchor 是这颗球在特效层里的纵向锚点；首屏里的位移补偿要用同一个数，
+   见上面 .home-first-screen .page-hero--home .orb。 */
+.page-hero--home .orb { --orb-anchor: 0.5; top: calc(var(--orb-anchor) * 100%); right: clamp(140px, 13vw, 216px); width: min(24vw, 310px); transform: translateY(-50%); }
 .page-hero--home .orb-ring { animation: home-orbit 18s linear infinite; }
 @keyframes home-orbit { to { transform: rotate(360deg); } }
 @keyframes home-orbit-bloom { 50% { opacity: 0.84; transform: translateY(-50%) scale(1.1); } }
@@ -4657,7 +4678,7 @@ summary.health-recovery-heading:focus-visible::after { color: var(--ink); }
   .page-hero--home .page-hero__decoration { display: block; }
   .page-hero--home .home-hero-aura { width: 120vw; opacity: 0.42; }
   .page-hero--home .home-hero-orbit-bloom { width: 90vw; right: -38vw; opacity: 0.38; }
-  .page-hero--home .orb { top: 32%; right: -14vw; width: 58vw; opacity: 0.55; }
+  .page-hero--home .orb { --orb-anchor: 0.32; right: -14vw; width: 58vw; opacity: 0.55; }
   .page-hero__ambient-glow { left: 78%; width: 110vw; opacity: 0.36; }
   .page-hero--default .home-hero-dust { opacity: 0.48; }
   .section-local-nav { top: var(--header-height); padding-right: var(--page-gutter); padding-left: var(--page-gutter); }

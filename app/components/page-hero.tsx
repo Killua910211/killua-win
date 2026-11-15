@@ -18,9 +18,15 @@ type PageHeroProps = {
 function updateHomePointer(event: PointerEvent<HTMLElement>) {
   if (event.pointerType === 'touch' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const bounds = event.currentTarget.getBoundingClientRect();
-  event.currentTarget.style.setProperty('--pointer-x', `${((event.clientX - bounds.left) / bounds.width) * 100}%`);
-  event.currentTarget.style.setProperty('--pointer-y', `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
+  /*
+    百分比要按特效层自己的盒子算，不能按 Hero 算：首页的特效层比 Hero 高出一条
+    天气条（见 globals.css 里 .home-first-screen 的注释）。按 Hero 换算的话光晕
+    会整体偏上半条天气条，越往下越跟不住光标。
+  */
+  const layer = event.currentTarget.querySelector<HTMLElement>('.page-hero__decoration') ?? event.currentTarget;
+  const bounds = layer.getBoundingClientRect();
+  layer.style.setProperty('--pointer-x', `${((event.clientX - bounds.left) / bounds.width) * 100}%`);
+  layer.style.setProperty('--pointer-y', `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
 }
 
 function HeroScanLayers() {
